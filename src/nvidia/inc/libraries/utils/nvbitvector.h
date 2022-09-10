@@ -243,8 +243,8 @@ struct NV_BITVECTOR
 #define FOR_EACH_IN_BITVECTOR_PAIR(pBitVectorA, indexA, pBitVectorB, indexB)\
     {                                                                       \
         MAKE_ANON_BITVECTOR(sizeof(((pBitVectorA)->last->_))) localMaskA;   \
-        bitVectorCopy(&localMaskA, (pBitVectorA));                          \
         MAKE_ANON_BITVECTOR(sizeof(((pBitVectorB)->last->_))) localMaskB;   \
+        bitVectorCopy(&localMaskA, (pBitVectorA));                          \
         bitVectorCopy(&localMaskB, (pBitVectorB));                          \
         for ((indexA) = bitVectorCountTrailingZeros(&localMaskA),           \
              (indexB) = bitVectorCountTrailingZeros(&localMaskB);           \

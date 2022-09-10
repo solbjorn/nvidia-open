@@ -1584,7 +1584,7 @@ typedef NvU32 (*TMR_CALLBACK_FUNCTION)(void *pCallbackData);
 
 typedef struct
 {
-    TMR_CALLBACK_FUNCTION       pTimeProc;
+    /*TMR_CALLBACK_FUNCTION*/TIMEPROC       pTimeProc;
     void                       *pCallbackData;
 } wrapperStorage_t;
 
@@ -1602,14 +1602,14 @@ static NV_STATUS _tmrCallbackWrapperfunction
     void *pCallbackData_Outer   = pEvent->pUserData;
 
     // Swap in the inner function and data
-    pEvent->pTimeProc = (TIMEPROC) pObj_Inner->pTimeProc; // Intentionally the wrong type!
+    pEvent->pTimeProc = /*(TIMEPROC)*/ pObj_Inner->pTimeProc; // Intentionally the wrong type!
     pEvent->pUserData = pObj_Inner->pCallbackData;
 
     // Perform the actual callback the way the user expects it
-    pObj_Inner->pTimeProc((void *)pEvent->pUserData);
+    pObj_Inner->pTimeProc((void *)pEvent->pUserData, NULL, NULL);
 
     // Rewrap whatever changes the user may have made
-    pObj_Inner->pTimeProc     = (TMR_CALLBACK_FUNCTION) pEvent->pTimeProc;
+    pObj_Inner->pTimeProc     = /*(TMR_CALLBACK_FUNCTION)*/ pEvent->pTimeProc;
     pObj_Inner->pCallbackData = pEvent->pUserData;
 
     // Restore the wrapper function and data
@@ -1643,7 +1643,7 @@ tmrCtrlCmdEventCreate
     {
         return NV_ERR_NO_MEMORY;
     }
-    pWrapper->pTimeProc     = (TMR_CALLBACK_FUNCTION)NvP64_VALUE(pParams->pTimeProc);
+    pWrapper->pTimeProc     = (/*TMR_CALLBACK_FUNCTION*/TIMEPROC)NvP64_VALUE(pParams->pTimeProc);
     pWrapper->pCallbackData = NvP64_VALUE(pParams->pCallbackData);
 
     rc = tmrEventCreate(pTmr,

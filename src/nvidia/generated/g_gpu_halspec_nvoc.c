@@ -23,9 +23,12 @@ void __nvoc_init_dataField_RmHalspecOwner(RmHalspecOwner*);
 void __nvoc_dtor_RmHalspecOwner(RmHalspecOwner*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_RmHalspecOwner;
 
+#define __NVOC_CB_TYPE RmHalspecOwner
+NVOC_BUILD_DTOR(__nvoc_dtor_RmHalspecOwner);
+
 static const struct NVOC_RTTI __nvoc_rtti_RmHalspecOwner_RmHalspecOwner = {
     /*pClassDef=*/          &__nvoc_class_def_RmHalspecOwner,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_RmHalspecOwner,
+    /*dtor=*/               __nvoc_dtor_RmHalspecOwner_dtor,
     /*offset=*/             0,
 };
 
@@ -36,7 +39,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_RmHalspecOwner = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_RmHalspecOwner = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_RmHalspecOwner =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(RmHalspecOwner),
@@ -46,12 +49,12 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_RmHalspecOwner =
         /*name=*/               "RmHalspecOwner",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) NULL,
+    /*objCreatefn=*/        NULL,
     /*pCastInfo=*/          &__nvoc_castinfo_RmHalspecOwner,
     /*pExportInfo=*/        &__nvoc_export_info_RmHalspecOwner
 };
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_RmHalspecOwner = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_RmHalspecOwner =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -93,4 +96,3 @@ void __nvoc_init_RmHalspecOwner(RmHalspecOwner *pThis,
     __nvoc_init_halspec_DispIpHal(&pThis->dispIpHal, DispIpHal_ipver);
     __nvoc_init_funcTable_RmHalspecOwner(pThis);
 }
-

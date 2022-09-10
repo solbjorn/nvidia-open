@@ -108,7 +108,7 @@ ct_assert(NVBIT32(SMDBG_EXCEPTION_TYPE_PREEMPTION_STARTED) ==
 #define PRIVATE_FIELD(x) NVOC_PRIVATE_FIELD(x)
 #endif
 struct RmDebuggerSession {
-    const struct NVOC_RTTI *__nvoc_rtti;
+    struct __rtti_marker __nvoc_rtti;
     struct RsSession __nvoc_base_RsSession;
     struct Object *__nvoc_pbase_Object;
     struct RsShared *__nvoc_pbase_RsShared;
@@ -169,7 +169,7 @@ static inline void dbgSessionRemoveDependency_DISPATCH(struct RmDebuggerSession 
 #define PRIVATE_FIELD(x) NVOC_PRIVATE_FIELD(x)
 #endif
 struct KernelSMDebuggerSession {
-    const struct NVOC_RTTI *__nvoc_rtti;
+    struct __rtti_marker __nvoc_rtti;
     struct GpuResource __nvoc_base_GpuResource;
     struct Notifier __nvoc_base_Notifier;
     struct Object *__nvoc_pbase_Object;

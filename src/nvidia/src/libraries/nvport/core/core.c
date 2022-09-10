@@ -39,7 +39,7 @@ static PORT_STATE portState;
 
 
 /// @todo Add better way to initialize all modules
-NV_STATUS portInitialize()
+NV_STATUS portInitialize(void)
 {
     if (PORT_INC(portState.initCount) == 1)
     {
@@ -62,7 +62,7 @@ NV_STATUS portInitialize()
     return NV_OK;
 }
 
-void portShutdown()
+void portShutdown(void)
 {
     if (PORT_DEC(portState.initCount) == 0)
     {
@@ -88,7 +88,7 @@ void portShutdown()
     }
 }
 
-NvBool portIsInitialized()
+NvBool portIsInitialized(void)
 {
     return portState.initCount > 0;
 }

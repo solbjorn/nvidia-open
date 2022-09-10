@@ -28,9 +28,12 @@ void __nvoc_init_dataField_MIGConfigSession(MIGConfigSession*);
 void __nvoc_dtor_MIGConfigSession(MIGConfigSession*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_MIGConfigSession;
 
+#define __NVOC_CB_TYPE MIGConfigSession
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_MIGConfigSession, __nvoc_dtor_MIGConfigSession);
+
 static const struct NVOC_RTTI __nvoc_rtti_MIGConfigSession_MIGConfigSession = {
     /*pClassDef=*/          &__nvoc_class_def_MIGConfigSession,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_MIGConfigSession,
+    /*dtor=*/               __nvoc_dtor_MIGConfigSession_dtor,
     /*offset=*/             0,
 };
 
@@ -69,7 +72,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_MIGConfigSession = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_MIGConfigSession = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_MIGConfigSession =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(MIGConfigSession),
@@ -79,7 +82,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_MIGConfigSession =
         /*name=*/               "MIGConfigSession",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_MIGConfigSession,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_MIGConfigSession_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_MIGConfigSession,
     /*pExportInfo=*/        &__nvoc_export_info_MIGConfigSession
 };
@@ -156,7 +159,7 @@ static NvBool __nvoc_thunk_RmResource_migconfigsessionAccessCallback(struct MIGC
     return rmresAccessCallback((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_MIGConfigSession_RmResource.offset), pInvokingClient, pAllocParams, accessRight);
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_MIGConfigSession = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_MIGConfigSession =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -291,4 +294,3 @@ NV_STATUS __nvoc_objCreateDynamic_MIGConfigSession(MIGConfigSession **ppThis, Dy
 
     return status;
 }
-

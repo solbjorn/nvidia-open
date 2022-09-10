@@ -489,17 +489,17 @@ _gmmuSwToHwLevel
 
 const MMU_TRACE_CALLBACKS g_gmmuTraceCallbacks =
 {
-    _gmmuIsPte,          // isPte
-    _gmmuGetFmtPde,      // getFmtPde
-    _gmmuGetFmtPte,      // getFmtPte
-    _gmmuGetPdePa,       // getPdePa
-    _gmmuGetPtePa,       // getPtePa
-    _gmmuPrintPdb,       // printPdb
-    _gmmuPrintPde,       // printPde
-    _gmmuPrintPt,        // printPt
-    _gmmuPrintPte,       // printPte
-    _gmmuIsInvalidPdeOk, // isInvalidPdeOk
-    _gmmuPdeAddrSpace,   // pdeAddrSpace
-    _gmmuPteAddrSpace,   // pteAddrSpace
-    _gmmuSwToHwLevel,    // swToHwLevel
+    .isPte = _gmmuIsPte,          // isPte
+    .getFmtPde = _gmmuGetFmtPde,      // getFmtPde
+    .getFmtPte = _gmmuGetFmtPte,      // getFmtPte
+    .getPdePa = _gmmuGetPdePa,       // getPdePa
+    .getPtePa = _gmmuGetPtePa,       // getPtePa
+    .printPdb = _gmmuPrintPdb,       // printPdb
+    .printPde = _gmmuPrintPde,       // printPde
+    .printPt = _gmmuPrintPt,        // printPt
+    .printPte = _gmmuPrintPte,       // printPte
+    .isInvalidPdeOk = _gmmuIsInvalidPdeOk, // isInvalidPdeOk
+    .pdeAddrSpace = _gmmuPdeAddrSpace,   // pdeAddrSpace
+    .pteAddrSpace = _gmmuPteAddrSpace,   // pteAddrSpace
+    .swToHwLevel = _gmmuSwToHwLevel,    // swToHwLevel
 };

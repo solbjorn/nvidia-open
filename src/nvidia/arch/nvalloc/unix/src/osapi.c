@@ -715,10 +715,10 @@ static NV_STATUS RmAccessRegistry(
                 goto done;
 
             RmStatus = rmGpuGroupLockAcquire(pSubdevice->subDeviceInst,
-                    GPU_LOCK_GRP_SUBDEVICE, 
+                    GPU_LOCK_GRP_SUBDEVICE,
                     GPUS_LOCK_FLAGS_NONE,
-                    RM_LOCK_MODULES_GPU, 
-                    &gpuMask); 
+                    RM_LOCK_MODULES_GPU,
+                    &gpuMask);
             if (RmStatus != NV_OK)
                 return RmStatus;
 
@@ -728,10 +728,10 @@ static NV_STATUS RmAccessRegistry(
         else
         {
             RmStatus = rmGpuGroupLockAcquire(pDevice->deviceInst,
-                    GPU_LOCK_GRP_DEVICE, 
+                    GPU_LOCK_GRP_DEVICE,
                     GPUS_LOCK_FLAGS_NONE,
-                    RM_LOCK_MODULES_GPU, 
-                    &gpuMask); 
+                    RM_LOCK_MODULES_GPU,
+                    &gpuMask);
             if (RmStatus != NV_OK)
                 return RmStatus;
 
@@ -945,10 +945,10 @@ static NV_STATUS RmUpdateDeviceMappingInfo(
             goto done;
 
         status = rmGpuGroupLockAcquire(pSubdevice->subDeviceInst,
-                                       GPU_LOCK_GRP_SUBDEVICE, 
+                                       GPU_LOCK_GRP_SUBDEVICE,
                                        GPUS_LOCK_FLAGS_NONE,
-                                       RM_LOCK_MODULES_GPU, 
-                                       &gpuMask); 
+                                       RM_LOCK_MODULES_GPU,
+                                       &gpuMask);
         if (status != NV_OK)
             goto done;
 
@@ -957,10 +957,10 @@ static NV_STATUS RmUpdateDeviceMappingInfo(
     else
     {
         status = rmGpuGroupLockAcquire(pDevice->deviceInst,
-                                       GPU_LOCK_GRP_DEVICE, 
+                                       GPU_LOCK_GRP_DEVICE,
                                        GPUS_LOCK_FLAGS_NONE,
-                                       RM_LOCK_MODULES_GPU, 
-                                       &gpuMask); 
+                                       RM_LOCK_MODULES_GPU,
+                                       &gpuMask);
         if (status != NV_OK)
             goto done;
 
@@ -2229,7 +2229,7 @@ void NV_API_CALL rm_get_vbios_version(
     NV2080_CTRL_BIOS_GET_INFO_V2_PARAMS *params;
     RM_API *pRmApi;
     THREAD_STATE_NODE threadState;
-    const size_t vbiosStringLen = 15; // "xx.xx.xx.xx.xx"
+    const NvU32 vbiosStringLen = 15; // "xx.xx.xx.xx.xx"
 
     os_snprintf(vbiosString, vbiosStringLen, "??.??.??.??.??");
 
@@ -2996,7 +2996,7 @@ NV_STATUS rm_access_registry(
 )
 {
     NV_STATUS RmStatus;
-    NvBool bReadOnly = (AccessType == NVOS38_ACCESS_TYPE_READ_DWORD) || 
+    NvBool bReadOnly = (AccessType == NVOS38_ACCESS_TYPE_READ_DWORD) ||
                        (AccessType == NVOS38_ACCESS_TYPE_READ_BINARY);
 
     // LOCK: acquire API lock
@@ -3355,7 +3355,7 @@ static NV_STATUS RmNonDPAuxI2CTransfer
     {
         case NV_I2C_CMD_WRITE:
             params->transData.i2cBlockData.bWrite = NV_TRUE;
-            /* fall through*/
+            fallthrough;
 
         case NV_I2C_CMD_READ:
             params->transType = NV402C_CTRL_I2C_TRANSACTION_TYPE_I2C_BLOCK_RW;
@@ -3365,7 +3365,7 @@ static NV_STATUS RmNonDPAuxI2CTransfer
 
         case NV_I2C_CMD_SMBUS_WRITE:
             params->transData.smbusByteData.bWrite = NV_TRUE;
-            /* fall through*/
+            fallthrough;
 
         case NV_I2C_CMD_SMBUS_READ:
             params->transType = NV402C_CTRL_I2C_TRANSACTION_TYPE_SMBUS_BYTE_RW;
@@ -3375,7 +3375,7 @@ static NV_STATUS RmNonDPAuxI2CTransfer
 
         case NV_I2C_CMD_SMBUS_BLOCK_WRITE:
             params->transData.smbusBlockData.bWrite = NV_TRUE;
-            /* fall through*/
+            fallthrough;
 
         case NV_I2C_CMD_SMBUS_BLOCK_READ:
             params->transType = NV402C_CTRL_I2C_TRANSACTION_TYPE_SMBUS_BLOCK_RW;
@@ -3386,7 +3386,7 @@ static NV_STATUS RmNonDPAuxI2CTransfer
 
         case NV_I2C_CMD_SMBUS_QUICK_WRITE:
             params->transData.smbusQuickData.bWrite = NV_TRUE;
-            /* fall through*/
+            fallthrough;
 
         case NV_I2C_CMD_SMBUS_QUICK_READ:
             params->transType = NV402C_CTRL_I2C_TRANSACTION_TYPE_SMBUS_QUICK_RW;
@@ -4316,9 +4316,9 @@ static void rm_set_firmware_logs(
     status = RmReadRegistryDword(nv, NV_REG_ENABLE_GPU_FIRMWARE_LOGS, &data);
     if (status == NV_OK)
     {
-        if ((data == NV_REG_ENABLE_GPU_FIRMWARE_LOGS_ENABLE)
-#if defined(DEBUG) || defined(DEVELOP)         
-            || (data == NV_REG_ENABLE_GPU_FIRMWARE_LOGS_ENABLE_ON_DEBUG)
+        if (data == NV_REG_ENABLE_GPU_FIRMWARE_LOGS_ENABLE
+#if defined(DEBUG) || defined(DEVELOP)
+            || data == NV_REG_ENABLE_GPU_FIRMWARE_LOGS_ENABLE_ON_DEBUG
 #endif
            )
         {

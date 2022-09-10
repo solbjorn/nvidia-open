@@ -400,6 +400,7 @@ AssignProposedModeSetHwState(NVDevEvoRec *pDevEvo,
     FOR_ALL_EVO_DISPLAYS(pDispEvo, sd, pDevEvo) {
         const struct NvKmsSetModeOneDispRequest *pRequestDisp =
             &pRequest->disp[sd];
+        NVProposedModeSetHwStateOneDisp *pProposedDisp;
         NvBool shutDownAllHeads = FALSE;
         NvU32 head;
 
@@ -411,7 +412,7 @@ AssignProposedModeSetHwState(NVDevEvoRec *pDevEvo,
             }
         }
 
-        NVProposedModeSetHwStateOneDisp *pProposedDisp =
+        pProposedDisp =
             &pProposed->disp[sd];
 
         pDispEvo = pDevEvo->pDispEvo[sd];
@@ -424,6 +425,7 @@ AssignProposedModeSetHwState(NVDevEvoRec *pDevEvo,
                 &pProposedDisp->head[head];
             NVDpyIdList newDpyIdList;
             NvBool clearAndContinue = FALSE;
+            NVFlipEvoHwState *pFlip;
 
             if ((pRequestDisp->requestedHeadsBitMask & (1 << head)) == 0 ||
                 shutDownAllHeads) {
@@ -542,7 +544,7 @@ AssignProposedModeSetHwState(NVDevEvoRec *pDevEvo,
                 pProposedHead->lut.input.specified = FALSE;
             }
 
-            NVFlipEvoHwState *pFlip =
+            pFlip =
                 &pProposed->sd[sd].head[head].flip;
 
             /*
@@ -2126,6 +2128,7 @@ ValidateRequest(const NVDevEvoRec *pDevEvo,
     }
 
     for (dispIndex = 0; dispIndex < NVKMS_MAX_SUBDEVICES; dispIndex++) {
+        const struct NvKmsSetModeOneDispRequest *pRequestDisp;
 
         if ((pRequest->requestedDispsBitMask & (1 << dispIndex)) == 0) {
             continue;
@@ -2138,7 +2141,7 @@ ValidateRequest(const NVDevEvoRec *pDevEvo,
             continue;
         }
 
-        const struct NvKmsSetModeOneDispRequest *pRequestDisp =
+        pRequestDisp =
             &pRequest->disp[dispIndex];
 
         /* Check for invalid heads in requestedHeadsBitMask. */
@@ -2150,6 +2153,8 @@ ValidateRequest(const NVDevEvoRec *pDevEvo,
         }
 
         for (head = 0; head < NVKMS_MAX_HEADS_PER_DISP; head++) {
+            const struct NvKmsSetModeOneHeadRequest *pRequestHead;
+            NVDpyIdList permDpyIdList;
 
             if ((pRequestDisp->requestedHeadsBitMask & (1 << head)) == 0) {
                 continue;
@@ -2162,10 +2167,10 @@ ValidateRequest(const NVDevEvoRec *pDevEvo,
                 continue;
             }
 
-            const NVDpyIdList permDpyIdList =
+            permDpyIdList =
                 pPermissions->disp[dispIndex].head[head].dpyIdList;
 
-            const struct NvKmsSetModeOneHeadRequest *pRequestHead =
+            pRequestHead =
                 &pRequestDisp->head[head];
 
             /*

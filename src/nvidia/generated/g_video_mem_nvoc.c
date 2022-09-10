@@ -32,9 +32,12 @@ void __nvoc_init_dataField_VideoMemory(VideoMemory*);
 void __nvoc_dtor_VideoMemory(VideoMemory*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_VideoMemory;
 
+#define __NVOC_CB_TYPE VideoMemory
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_VideoMemory, __nvoc_dtor_VideoMemory);
+
 static const struct NVOC_RTTI __nvoc_rtti_VideoMemory_VideoMemory = {
     /*pClassDef=*/          &__nvoc_class_def_VideoMemory,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_VideoMemory,
+    /*dtor=*/               __nvoc_dtor_VideoMemory_dtor,
     /*offset=*/             0,
 };
 
@@ -87,7 +90,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_VideoMemory = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_VideoMemory = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_VideoMemory =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(VideoMemory),
@@ -97,7 +100,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_VideoMemory =
         /*name=*/               "VideoMemory",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_VideoMemory,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_VideoMemory_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_VideoMemory,
     /*pExportInfo=*/        &__nvoc_export_info_VideoMemory
 };
@@ -186,7 +189,7 @@ static NvBool __nvoc_thunk_RmResource_vidmemAccessCallback(struct VideoMemory *p
     return rmresAccessCallback((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_VideoMemory_RmResource.offset), pInvokingClient, pAllocParams, accessRight);
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_VideoMemory = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_VideoMemory =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -331,4 +334,3 @@ NV_STATUS __nvoc_objCreateDynamic_VideoMemory(VideoMemory **ppThis, Dynamic *pPa
 
     return status;
 }
-

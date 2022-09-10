@@ -573,6 +573,10 @@ hdmiPacketWrite9171(NVHDMIPKT_CLASS*   pThis,
         // Enable HDMI only on GCP unmute i.e. AVMUTE DISABLE
         if (pPacket[HDMI_PKT_HDR_SIZE] == HDMI_GENCTRL_PACKET_MUTE_DISABLE)
         {
+#if !NVHDMIPKT_RM_CALLS_INTERNAL
+            NvBool bSuccess;
+#endif
+
             // Enable HDMI.
             NVMISC_MEMSET(&params, 0, sizeof(params));
             params.subDeviceInstance = (NvU8)subDevice;
@@ -587,7 +591,7 @@ hdmiPacketWrite9171(NVHDMIPKT_CLASS*   pThis,
                             sizeof(params)) != NVOS_STATUS_SUCCESS)
 
 #else // !NVHDMIPKT_RM_CALLS_INTERNAL
-            NvBool bSuccess = pThis->callback.rmDispControl2(pThis->cbHandle,
+            bSuccess = pThis->callback.rmDispControl2(pThis->cbHandle,
                                                              params.subDeviceInstance,
                                                              NV0073_CTRL_CMD_SPECIFIC_CTRL_HDMI, 
                                                              &params, 

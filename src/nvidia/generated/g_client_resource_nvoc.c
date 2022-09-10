@@ -32,9 +32,12 @@ void __nvoc_init_dataField_RmClientResource(RmClientResource*);
 void __nvoc_dtor_RmClientResource(RmClientResource*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_RmClientResource;
 
+#define __NVOC_CB_TYPE RmClientResource
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_RmClientResource, __nvoc_dtor_RmClientResource);
+
 static const struct NVOC_RTTI __nvoc_rtti_RmClientResource_RmClientResource = {
     /*pClassDef=*/          &__nvoc_class_def_RmClientResource,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_RmClientResource,
+    /*dtor=*/               __nvoc_dtor_RmClientResource_dtor,
     /*offset=*/             0,
 };
 
@@ -87,7 +90,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_RmClientResource = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_RmClientResource = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_RmClientResource =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(RmClientResource),
@@ -97,7 +100,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_RmClientResource =
         /*name=*/               "RmClientResource",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_RmClientResource,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_RmClientResource_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_RmClientResource,
     /*pExportInfo=*/        &__nvoc_export_info_RmClientResource
 };
@@ -182,17 +185,92 @@ static NV_STATUS __nvoc_thunk_Notifier_cliresGetOrAllocNotifShare(struct RmClien
     return notifyGetOrAllocNotifShare((struct Notifier *)(((unsigned char *)pNotifier) + __nvoc_rtti_RmClientResource_Notifier.offset), hNotifierClient, hNotifierResource, ppNotifShare);
 }
 
+NVOC_BUILD_CALLBACK(cliresCtrlCmdSystemGetCpuInfo_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdSystemGetFeatures_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdSystemGetBuildVersionV2_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdSystemGetChipsetInfo_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdSystemSetMemorySize_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdSystemGetClassList_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdSystemNotifyEvent_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdSystemGetPlatformType_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdSystemDebugCtrlRmMsg_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdSystemGetHwbcInfo_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdSystemGetP2pCaps_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdSystemGetP2pCapsV2_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdSystemGetP2pCapsMatrix_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdSystemGetPerfSensorCounters_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdSystemGetExtendedPerfSensorCounters_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdSystemGetGpusPowerStatus_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdSystemGetPrivilegedStatus_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdSystemGetFabricStatus_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdSystemGetRmInstanceId_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdSystemGetClientDatabaseInfo_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdNvdGetDumpSize_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdNvdGetDump_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdNvdGetTimestamp_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdNvdGetNvlogInfo_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdNvdGetNvlogBufferInfo_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdNvdGetNvlog_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdNvdGetRcerrRpt_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdClientGetAddrSpaceType_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdClientGetHandleInfo_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdClientGetAccessRights_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdClientSetInheritedSharePolicy_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdClientShareObject_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdClientGetChildHandle_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdGpuGetAttachedIds_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdGpuGetIdInfo_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdGpuGetIdInfoV2_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdGpuGetInitStatus_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdGpuGetDeviceIds_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdGpuGetProbedIds_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdGpuAttachIds_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdGpuDetachIds_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdGpuGetSvmSize_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdGpuGetPciInfo_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdGpuGetUuidInfo_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdGpuGetUuidFromGpuId_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdGpuModifyGpuDrainState_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdGpuQueryGpuDrainState_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdGpuGetMemOpEnable_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdGpuDisableNvlinkInit_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdLegacyConfig_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdIdleChannels_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdGsyncGetAttachedIds_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdGsyncGetIdInfo_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdEventSetNotification_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdEventGetSystemEventStatus_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdOsUnixExportObjectToFd_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdOsUnixImportObjectFromFd_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdOsUnixGetExportObjectInfo_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdOsUnixCreateExportObjectFd_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdOsUnixExportObjectsToFd_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdOsUnixImportObjectsFromFd_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdOsUnixFlushUserCache_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdGpuAcctSetAccountingState_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdGpuAcctGetAccountingState_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdGpuAcctGetProcAccountingInfo_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdGpuAcctGetAccountingPids_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdGpuAcctClearAccountingData_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdSetSubProcessID_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdDisableSubProcessUserdIsolation_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdSyncGpuBoostInfo_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdSyncGpuBoostGroupCreate_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdSyncGpuBoostGroupDestroy_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdSyncGpuBoostGroupInfo_IMPL);
+NVOC_BUILD_CALLBACK(cliresCtrlCmdSystemSyncExternalFabricMgmt_IMPL);
+
 #if !defined(NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG)
 #define NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(x)      (0)
 #endif
 
-static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClientResource[] = 
+static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClientResource[] =
 {
     {               /*  [0] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x13u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdSystemGetCpuInfo_IMPL,
+        /*pFunc=*/      cliresCtrlCmdSystemGetCpuInfo_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x13u)
         /*flags=*/      0x13u,
         /*accessRight=*/0x0u,
@@ -205,9 +283,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [1] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x4013u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdSystemGetChipsetInfo_IMPL,
+        /*pFunc=*/      cliresCtrlCmdSystemGetChipsetInfo_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x4013u)
         /*flags=*/      0x4013u,
         /*accessRight=*/0x0u,
@@ -220,9 +298,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [2] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x0u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdSystemSetMemorySize_IMPL,
+        /*pFunc=*/      cliresCtrlCmdSystemSetMemorySize_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x0u)
         /*flags=*/      0x0u,
         /*accessRight=*/0x0u,
@@ -235,9 +313,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [3] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdSystemGetClassList_IMPL,
+        /*pFunc=*/      cliresCtrlCmdSystemGetClassList_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*flags=*/      0x10u,
         /*accessRight=*/0x0u,
@@ -250,9 +328,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [4] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdSystemNotifyEvent_IMPL,
+        /*pFunc=*/      cliresCtrlCmdSystemNotifyEvent_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*flags=*/      0x10u,
         /*accessRight=*/0x0u,
@@ -265,9 +343,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [5] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x11u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdSystemGetPlatformType_IMPL,
+        /*pFunc=*/      cliresCtrlCmdSystemGetPlatformType_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x11u)
         /*flags=*/      0x11u,
         /*accessRight=*/0x0u,
@@ -280,9 +358,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [6] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdSystemDebugCtrlRmMsg_IMPL,
+        /*pFunc=*/      cliresCtrlCmdSystemDebugCtrlRmMsg_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*flags=*/      0x10u,
         /*accessRight=*/0x0u,
@@ -295,9 +373,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [7] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdSystemGetHwbcInfo_IMPL,
+        /*pFunc=*/      cliresCtrlCmdSystemGetHwbcInfo_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*flags=*/      0x10u,
         /*accessRight=*/0x0u,
@@ -310,9 +388,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [8] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x811u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdSystemGetP2pCaps_IMPL,
+        /*pFunc=*/      cliresCtrlCmdSystemGetP2pCaps_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x811u)
         /*flags=*/      0x811u,
         /*accessRight=*/0x0u,
@@ -325,9 +403,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [9] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x811u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdSystemGetP2pCapsV2_IMPL,
+        /*pFunc=*/      cliresCtrlCmdSystemGetP2pCapsV2_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x811u)
         /*flags=*/      0x811u,
         /*accessRight=*/0x0u,
@@ -340,9 +418,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [10] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdSystemGetPerfSensorCounters_IMPL,
+        /*pFunc=*/      cliresCtrlCmdSystemGetPerfSensorCounters_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*flags=*/      0x10u,
         /*accessRight=*/0x0u,
@@ -355,9 +433,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [11] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdSystemGetExtendedPerfSensorCounters_IMPL,
+        /*pFunc=*/      cliresCtrlCmdSystemGetExtendedPerfSensorCounters_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*flags=*/      0x10u,
         /*accessRight=*/0x0u,
@@ -370,9 +448,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [12] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x11u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdSystemGetGpusPowerStatus_IMPL,
+        /*pFunc=*/      cliresCtrlCmdSystemGetGpusPowerStatus_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x11u)
         /*flags=*/      0x11u,
         /*accessRight=*/0x0u,
@@ -385,9 +463,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [13] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdSystemGetPrivilegedStatus_IMPL,
+        /*pFunc=*/      cliresCtrlCmdSystemGetPrivilegedStatus_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*flags=*/      0x10u,
         /*accessRight=*/0x0u,
@@ -400,9 +478,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [14] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x810u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdSystemGetFabricStatus_IMPL,
+        /*pFunc=*/      cliresCtrlCmdSystemGetFabricStatus_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x810u)
         /*flags=*/      0x810u,
         /*accessRight=*/0x0u,
@@ -415,9 +493,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [15] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x13u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdSystemGetRmInstanceId_IMPL,
+        /*pFunc=*/      cliresCtrlCmdSystemGetRmInstanceId_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x13u)
         /*flags=*/      0x13u,
         /*accessRight=*/0x0u,
@@ -430,9 +508,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [16] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x11u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdSystemGetP2pCapsMatrix_IMPL,
+        /*pFunc=*/      cliresCtrlCmdSystemGetP2pCapsMatrix_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x11u)
         /*flags=*/      0x11u,
         /*accessRight=*/0x0u,
@@ -445,9 +523,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [17] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x4u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdSystemSyncExternalFabricMgmt_IMPL,
+        /*pFunc=*/      cliresCtrlCmdSystemSyncExternalFabricMgmt_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x4u)
         /*flags=*/      0x4u,
         /*accessRight=*/0x0u,
@@ -460,9 +538,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [18] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x13u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdSystemGetClientDatabaseInfo_IMPL,
+        /*pFunc=*/      cliresCtrlCmdSystemGetClientDatabaseInfo_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x13u)
         /*flags=*/      0x13u,
         /*accessRight=*/0x0u,
@@ -475,9 +553,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [19] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x811u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdSystemGetBuildVersionV2_IMPL,
+        /*pFunc=*/      cliresCtrlCmdSystemGetBuildVersionV2_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x811u)
         /*flags=*/      0x811u,
         /*accessRight=*/0x0u,
@@ -490,9 +568,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [20] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdSystemGetFeatures_IMPL,
+        /*pFunc=*/      cliresCtrlCmdSystemGetFeatures_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*flags=*/      0x10u,
         /*accessRight=*/0x0u,
@@ -505,9 +583,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [21] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x811u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdGpuGetAttachedIds_IMPL,
+        /*pFunc=*/      cliresCtrlCmdGpuGetAttachedIds_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x811u)
         /*flags=*/      0x811u,
         /*accessRight=*/0x0u,
@@ -520,9 +598,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [22] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x810u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdGpuGetIdInfo_IMPL,
+        /*pFunc=*/      cliresCtrlCmdGpuGetIdInfo_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x810u)
         /*flags=*/      0x810u,
         /*accessRight=*/0x0u,
@@ -535,9 +613,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [23] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x11u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdGpuGetInitStatus_IMPL,
+        /*pFunc=*/      cliresCtrlCmdGpuGetInitStatus_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x11u)
         /*flags=*/      0x11u,
         /*accessRight=*/0x0u,
@@ -550,9 +628,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [24] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x13u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdGpuGetDeviceIds_IMPL,
+        /*pFunc=*/      cliresCtrlCmdGpuGetDeviceIds_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x13u)
         /*flags=*/      0x13u,
         /*accessRight=*/0x0u,
@@ -565,9 +643,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [25] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x810u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdGpuGetIdInfoV2_IMPL,
+        /*pFunc=*/      cliresCtrlCmdGpuGetIdInfoV2_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x810u)
         /*flags=*/      0x810u,
         /*accessRight=*/0x0u,
@@ -580,9 +658,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [26] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x811u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdGpuGetProbedIds_IMPL,
+        /*pFunc=*/      cliresCtrlCmdGpuGetProbedIds_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x811u)
         /*flags=*/      0x811u,
         /*accessRight=*/0x0u,
@@ -595,9 +673,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [27] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x11u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdGpuAttachIds_IMPL,
+        /*pFunc=*/      cliresCtrlCmdGpuAttachIds_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x11u)
         /*flags=*/      0x11u,
         /*accessRight=*/0x0u,
@@ -610,9 +688,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [28] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x11u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdGpuDetachIds_IMPL,
+        /*pFunc=*/      cliresCtrlCmdGpuDetachIds_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x11u)
         /*flags=*/      0x11u,
         /*accessRight=*/0x0u,
@@ -625,9 +703,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [29] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x810u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdGpuGetPciInfo_IMPL,
+        /*pFunc=*/      cliresCtrlCmdGpuGetPciInfo_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x810u)
         /*flags=*/      0x810u,
         /*accessRight=*/0x0u,
@@ -640,9 +718,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [30] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdGpuGetSvmSize_IMPL,
+        /*pFunc=*/      cliresCtrlCmdGpuGetSvmSize_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*flags=*/      0x10u,
         /*accessRight=*/0x0u,
@@ -655,9 +733,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [31] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdGpuGetUuidInfo_IMPL,
+        /*pFunc=*/      cliresCtrlCmdGpuGetUuidInfo_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*flags=*/      0x10u,
         /*accessRight=*/0x0u,
@@ -670,9 +748,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [32] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdGpuGetUuidFromGpuId_IMPL,
+        /*pFunc=*/      cliresCtrlCmdGpuGetUuidFromGpuId_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*flags=*/      0x10u,
         /*accessRight=*/0x0u,
@@ -685,9 +763,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [33] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x4u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdGpuModifyGpuDrainState_IMPL,
+        /*pFunc=*/      cliresCtrlCmdGpuModifyGpuDrainState_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x4u)
         /*flags=*/      0x4u,
         /*accessRight=*/0x0u,
@@ -700,9 +778,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [34] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x11u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdGpuQueryGpuDrainState_IMPL,
+        /*pFunc=*/      cliresCtrlCmdGpuQueryGpuDrainState_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x11u)
         /*flags=*/      0x11u,
         /*accessRight=*/0x0u,
@@ -715,9 +793,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [35] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x811u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdGpuGetMemOpEnable_IMPL,
+        /*pFunc=*/      cliresCtrlCmdGpuGetMemOpEnable_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x811u)
         /*flags=*/      0x811u,
         /*accessRight=*/0x0u,
@@ -730,9 +808,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [36] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x13u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdGpuDisableNvlinkInit_IMPL,
+        /*pFunc=*/      cliresCtrlCmdGpuDisableNvlinkInit_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x13u)
         /*flags=*/      0x13u,
         /*accessRight=*/0x0u,
@@ -745,9 +823,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [37] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdLegacyConfig_IMPL,
+        /*pFunc=*/      cliresCtrlCmdLegacyConfig_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*flags=*/      0x10u,
         /*accessRight=*/0x0u,
@@ -760,9 +838,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [38] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x11u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdIdleChannels_IMPL,
+        /*pFunc=*/      cliresCtrlCmdIdleChannels_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x11u)
         /*flags=*/      0x11u,
         /*accessRight=*/0x0u,
@@ -775,9 +853,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [39] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdGsyncGetAttachedIds_IMPL,
+        /*pFunc=*/      cliresCtrlCmdGsyncGetAttachedIds_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*flags=*/      0x10u,
         /*accessRight=*/0x0u,
@@ -790,9 +868,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [40] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdGsyncGetIdInfo_IMPL,
+        /*pFunc=*/      cliresCtrlCmdGsyncGetIdInfo_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*flags=*/      0x10u,
         /*accessRight=*/0x0u,
@@ -805,9 +883,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [41] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdEventSetNotification_IMPL,
+        /*pFunc=*/      cliresCtrlCmdEventSetNotification_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*flags=*/      0x10u,
         /*accessRight=*/0x0u,
@@ -820,9 +898,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [42] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdEventGetSystemEventStatus_IMPL,
+        /*pFunc=*/      cliresCtrlCmdEventGetSystemEventStatus_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*flags=*/      0x10u,
         /*accessRight=*/0x0u,
@@ -835,9 +913,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [43] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdNvdGetDumpSize_IMPL,
+        /*pFunc=*/      cliresCtrlCmdNvdGetDumpSize_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*flags=*/      0x10u,
         /*accessRight=*/0x0u,
@@ -850,9 +928,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [44] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdNvdGetDump_IMPL,
+        /*pFunc=*/      cliresCtrlCmdNvdGetDump_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*flags=*/      0x10u,
         /*accessRight=*/0x0u,
@@ -865,9 +943,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [45] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x813u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdNvdGetTimestamp_IMPL,
+        /*pFunc=*/      cliresCtrlCmdNvdGetTimestamp_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x813u)
         /*flags=*/      0x813u,
         /*accessRight=*/0x0u,
@@ -880,9 +958,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [46] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x7u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdNvdGetNvlogInfo_IMPL,
+        /*pFunc=*/      cliresCtrlCmdNvdGetNvlogInfo_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x7u)
         /*flags=*/      0x7u,
         /*accessRight=*/0x0u,
@@ -895,9 +973,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [47] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x7u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdNvdGetNvlogBufferInfo_IMPL,
+        /*pFunc=*/      cliresCtrlCmdNvdGetNvlogBufferInfo_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x7u)
         /*flags=*/      0x7u,
         /*accessRight=*/0x0u,
@@ -910,9 +988,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [48] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x7u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdNvdGetNvlog_IMPL,
+        /*pFunc=*/      cliresCtrlCmdNvdGetNvlog_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x7u)
         /*flags=*/      0x7u,
         /*accessRight=*/0x0u,
@@ -925,9 +1003,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [49] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdNvdGetRcerrRpt_IMPL,
+        /*pFunc=*/      cliresCtrlCmdNvdGetRcerrRpt_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*flags=*/      0x10u,
         /*accessRight=*/0x0u,
@@ -940,9 +1018,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [50] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdSetSubProcessID_IMPL,
+        /*pFunc=*/      cliresCtrlCmdSetSubProcessID_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*flags=*/      0x10u,
         /*accessRight=*/0x0u,
@@ -955,9 +1033,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [51] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdDisableSubProcessUserdIsolation_IMPL,
+        /*pFunc=*/      cliresCtrlCmdDisableSubProcessUserdIsolation_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*flags=*/      0x10u,
         /*accessRight=*/0x0u,
@@ -970,9 +1048,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [52] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x811u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdSyncGpuBoostInfo_IMPL,
+        /*pFunc=*/      cliresCtrlCmdSyncGpuBoostInfo_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x811u)
         /*flags=*/      0x811u,
         /*accessRight=*/0x0u,
@@ -985,9 +1063,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [53] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x5u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdSyncGpuBoostGroupCreate_IMPL,
+        /*pFunc=*/      cliresCtrlCmdSyncGpuBoostGroupCreate_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x5u)
         /*flags=*/      0x5u,
         /*accessRight=*/0x0u,
@@ -1000,9 +1078,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [54] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x5u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdSyncGpuBoostGroupDestroy_IMPL,
+        /*pFunc=*/      cliresCtrlCmdSyncGpuBoostGroupDestroy_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x5u)
         /*flags=*/      0x5u,
         /*accessRight=*/0x0u,
@@ -1015,9 +1093,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [55] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x811u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdSyncGpuBoostGroupInfo_IMPL,
+        /*pFunc=*/      cliresCtrlCmdSyncGpuBoostGroupInfo_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x811u)
         /*flags=*/      0x811u,
         /*accessRight=*/0x0u,
@@ -1030,9 +1108,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [56] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x4u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdGpuAcctSetAccountingState_IMPL,
+        /*pFunc=*/      cliresCtrlCmdGpuAcctSetAccountingState_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x4u)
         /*flags=*/      0x4u,
         /*accessRight=*/0x0u,
@@ -1045,9 +1123,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [57] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdGpuAcctGetAccountingState_IMPL,
+        /*pFunc=*/      cliresCtrlCmdGpuAcctGetAccountingState_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*flags=*/      0x10u,
         /*accessRight=*/0x0u,
@@ -1060,9 +1138,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [58] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdGpuAcctGetProcAccountingInfo_IMPL,
+        /*pFunc=*/      cliresCtrlCmdGpuAcctGetProcAccountingInfo_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*flags=*/      0x10u,
         /*accessRight=*/0x0u,
@@ -1075,9 +1153,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [59] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdGpuAcctGetAccountingPids_IMPL,
+        /*pFunc=*/      cliresCtrlCmdGpuAcctGetAccountingPids_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*flags=*/      0x10u,
         /*accessRight=*/0x0u,
@@ -1090,9 +1168,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [60] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x4u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdGpuAcctClearAccountingData_IMPL,
+        /*pFunc=*/      cliresCtrlCmdGpuAcctClearAccountingData_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x4u)
         /*flags=*/      0x4u,
         /*accessRight=*/0x0u,
@@ -1105,9 +1183,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [61] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x810u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdClientGetAddrSpaceType_IMPL,
+        /*pFunc=*/      cliresCtrlCmdClientGetAddrSpaceType_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x810u)
         /*flags=*/      0x810u,
         /*accessRight=*/0x0u,
@@ -1120,9 +1198,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [62] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x11u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdClientGetHandleInfo_IMPL,
+        /*pFunc=*/      cliresCtrlCmdClientGetHandleInfo_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x11u)
         /*flags=*/      0x11u,
         /*accessRight=*/0x0u,
@@ -1135,9 +1213,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [63] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x11u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdClientGetAccessRights_IMPL,
+        /*pFunc=*/      cliresCtrlCmdClientGetAccessRights_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x11u)
         /*flags=*/      0x11u,
         /*accessRight=*/0x0u,
@@ -1150,9 +1228,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [64] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x11u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdClientSetInheritedSharePolicy_IMPL,
+        /*pFunc=*/      cliresCtrlCmdClientSetInheritedSharePolicy_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x11u)
         /*flags=*/      0x11u,
         /*accessRight=*/0x0u,
@@ -1165,9 +1243,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [65] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x11u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdClientGetChildHandle_IMPL,
+        /*pFunc=*/      cliresCtrlCmdClientGetChildHandle_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x11u)
         /*flags=*/      0x11u,
         /*accessRight=*/0x0u,
@@ -1180,9 +1258,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [66] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x11u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdClientShareObject_IMPL,
+        /*pFunc=*/      cliresCtrlCmdClientShareObject_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x11u)
         /*flags=*/      0x11u,
         /*accessRight=*/0x0u,
@@ -1195,9 +1273,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [67] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdOsUnixFlushUserCache_IMPL,
+        /*pFunc=*/      cliresCtrlCmdOsUnixFlushUserCache_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*flags=*/      0x10u,
         /*accessRight=*/0x0u,
@@ -1210,9 +1288,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [68] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x11u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdOsUnixExportObjectToFd_IMPL,
+        /*pFunc=*/      cliresCtrlCmdOsUnixExportObjectToFd_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x11u)
         /*flags=*/      0x11u,
         /*accessRight=*/0x0u,
@@ -1225,9 +1303,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [69] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x11u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdOsUnixImportObjectFromFd_IMPL,
+        /*pFunc=*/      cliresCtrlCmdOsUnixImportObjectFromFd_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x11u)
         /*flags=*/      0x11u,
         /*accessRight=*/0x0u,
@@ -1240,9 +1318,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [70] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x11u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdOsUnixGetExportObjectInfo_IMPL,
+        /*pFunc=*/      cliresCtrlCmdOsUnixGetExportObjectInfo_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x11u)
         /*flags=*/      0x11u,
         /*accessRight=*/0x0u,
@@ -1255,9 +1333,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [71] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x11u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdOsUnixCreateExportObjectFd_IMPL,
+        /*pFunc=*/      cliresCtrlCmdOsUnixCreateExportObjectFd_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x11u)
         /*flags=*/      0x11u,
         /*accessRight=*/0x0u,
@@ -1270,9 +1348,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [72] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x11u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdOsUnixExportObjectsToFd_IMPL,
+        /*pFunc=*/      cliresCtrlCmdOsUnixExportObjectsToFd_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x11u)
         /*flags=*/      0x11u,
         /*accessRight=*/0x0u,
@@ -1285,9 +1363,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
     },
     {               /*  [73] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x11u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cliresCtrlCmdOsUnixImportObjectsFromFd_IMPL,
+        /*pFunc=*/      cliresCtrlCmdOsUnixImportObjectsFromFd_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x11u)
         /*flags=*/      0x11u,
         /*accessRight=*/0x0u,
@@ -1301,7 +1379,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_RmClient
 
 };
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_RmClientResource = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_RmClientResource =
 {
     /*numEntries=*/     74,
     /*pExportEntries=*/ __nvoc_exported_method_def_RmClientResource
@@ -1760,4 +1838,3 @@ NV_STATUS __nvoc_objCreateDynamic_RmClientResource(RmClientResource **ppThis, Dy
 
     return status;
 }
-

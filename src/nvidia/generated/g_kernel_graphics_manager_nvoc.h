@@ -65,7 +65,7 @@ struct GRMGR_LEGACY_KGRAPHICS_STATIC_INFO {
 
 
 struct KernelGraphicsManager {
-    const struct NVOC_RTTI *__nvoc_rtti;
+    struct __rtti_marker __nvoc_rtti;
     struct OBJENGSTATE __nvoc_base_OBJENGSTATE;
     struct Object *__nvoc_pbase_Object;
     struct OBJENGSTATE *__nvoc_pbase_OBJENGSTATE;

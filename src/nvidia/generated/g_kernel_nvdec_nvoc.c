@@ -28,9 +28,12 @@ void __nvoc_init_dataField_KernelNvdec(KernelNvdec*, RmHalspecOwner* );
 void __nvoc_dtor_KernelNvdec(KernelNvdec*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_KernelNvdec;
 
+#define __NVOC_CB_TYPE KernelNvdec
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_KernelNvdec, __nvoc_dtor_KernelNvdec);
+
 static const struct NVOC_RTTI __nvoc_rtti_KernelNvdec_KernelNvdec = {
     /*pClassDef=*/          &__nvoc_class_def_KernelNvdec,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_KernelNvdec,
+    /*dtor=*/               __nvoc_dtor_KernelNvdec_dtor,
     /*offset=*/             0,
 };
 
@@ -69,7 +72,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_KernelNvdec = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_KernelNvdec = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_KernelNvdec =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(KernelNvdec),
@@ -79,7 +82,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_KernelNvdec =
         /*name=*/               "KernelNvdec",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_KernelNvdec,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_KernelNvdec_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_KernelNvdec,
     /*pExportInfo=*/        &__nvoc_export_info_KernelNvdec
 };
@@ -188,7 +191,7 @@ static NV_STATUS __nvoc_thunk_OBJENGSTATE_knvdecSetTunableState(POBJGPU pGpu, st
     return engstateSetTunableState(pGpu, (struct OBJENGSTATE *)(((unsigned char *)pEngstate) + __nvoc_rtti_KernelNvdec_OBJENGSTATE.offset), pTunableState);
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_KernelNvdec = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_KernelNvdec =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -254,7 +257,7 @@ static void __nvoc_init_funcTable_KernelNvdec_1(KernelNvdec *pThis, RmHalspecOwn
     PORT_UNREFERENCED_VARIABLE(chipHal_HalVarIdx);
 
     // Hal function -- knvdecConstructEngine
-    if (( ((rmVariantHal_HalVarIdx >> 5) == 0UL) && ((1UL << (rmVariantHal_HalVarIdx & 0x1f)) & 0x00000002UL) )) /* RmVariantHal: PF_KERNEL_ONLY */ 
+    if (( ((rmVariantHal_HalVarIdx >> 5) == 0UL) && ((1UL << (rmVariantHal_HalVarIdx & 0x1f)) & 0x00000002UL) )) /* RmVariantHal: PF_KERNEL_ONLY */
     {
         pThis->__knvdecConstructEngine__ = &knvdecConstructEngine_IMPL;
     }
@@ -263,17 +266,17 @@ static void __nvoc_init_funcTable_KernelNvdec_1(KernelNvdec *pThis, RmHalspecOwn
     }
 
     // Hal function -- knvdecConfigureFalcon
-    if (( ((rmVariantHal_HalVarIdx >> 5) == 0UL) && ((1UL << (rmVariantHal_HalVarIdx & 0x1f)) & 0x00000002UL) )) /* RmVariantHal: PF_KERNEL_ONLY */ 
+    if (( ((rmVariantHal_HalVarIdx >> 5) == 0UL) && ((1UL << (rmVariantHal_HalVarIdx & 0x1f)) & 0x00000002UL) )) /* RmVariantHal: PF_KERNEL_ONLY */
     {
-        if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x000003e0UL) )) /* ChipHal: TU102 | TU104 | TU106 | TU116 | TU117 */ 
+        if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x000003e0UL) )) /* ChipHal: TU102 | TU104 | TU106 | TU116 | TU117 */
         {
             pThis->__knvdecConfigureFalcon__ = &knvdecConfigureFalcon_TU102;
         }
-        else if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x00000400UL) )) /* ChipHal: GA100 */ 
+        else if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x00000400UL) )) /* ChipHal: GA100 */
         {
             pThis->__knvdecConfigureFalcon__ = &knvdecConfigureFalcon_GA100;
         }
-        else if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x0000f800UL) )) /* ChipHal: GA102 | GA103 | GA104 | GA106 | GA107 */ 
+        else if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x0000f800UL) )) /* ChipHal: GA102 | GA103 | GA104 | GA106 | GA107 */
         {
             pThis->__knvdecConfigureFalcon__ = &knvdecConfigureFalcon_GA102;
         }
@@ -286,9 +289,9 @@ static void __nvoc_init_funcTable_KernelNvdec_1(KernelNvdec *pThis, RmHalspecOwn
     }
 
     // Hal function -- knvdecResetHw
-    if (( ((rmVariantHal_HalVarIdx >> 5) == 0UL) && ((1UL << (rmVariantHal_HalVarIdx & 0x1f)) & 0x00000002UL) )) /* RmVariantHal: PF_KERNEL_ONLY */ 
+    if (( ((rmVariantHal_HalVarIdx >> 5) == 0UL) && ((1UL << (rmVariantHal_HalVarIdx & 0x1f)) & 0x00000002UL) )) /* RmVariantHal: PF_KERNEL_ONLY */
     {
-        if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x0000ffe0UL) )) /* ChipHal: TU102 | TU104 | TU106 | TU116 | TU117 | GA100 | GA102 | GA103 | GA104 | GA106 | GA107 */ 
+        if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x0000ffe0UL) )) /* ChipHal: TU102 | TU104 | TU106 | TU116 | TU117 | GA100 | GA102 | GA103 | GA104 | GA106 | GA107 */
         {
             pThis->__knvdecResetHw__ = &knvdecResetHw_ac1694;
         }
@@ -303,17 +306,17 @@ static void __nvoc_init_funcTable_KernelNvdec_1(KernelNvdec *pThis, RmHalspecOwn
     pThis->__knvdecIsEngineInReset__ = &knvdecIsEngineInReset_167f46;
 
     // Hal function -- knvdecIsEngineDisabled
-    if (( ((rmVariantHal_HalVarIdx >> 5) == 0UL) && ((1UL << (rmVariantHal_HalVarIdx & 0x1f)) & 0x00000002UL) )) /* RmVariantHal: PF_KERNEL_ONLY */ 
+    if (( ((rmVariantHal_HalVarIdx >> 5) == 0UL) && ((1UL << (rmVariantHal_HalVarIdx & 0x1f)) & 0x00000002UL) )) /* RmVariantHal: PF_KERNEL_ONLY */
     {
-        if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x000003e0UL) )) /* ChipHal: TU102 | TU104 | TU106 | TU116 | TU117 */ 
+        if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x000003e0UL) )) /* ChipHal: TU102 | TU104 | TU106 | TU116 | TU117 */
         {
             pThis->__knvdecIsEngineDisabled__ = &knvdecIsEngineDisabled_TU102;
         }
-        else if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x00000400UL) )) /* ChipHal: GA100 */ 
+        else if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x00000400UL) )) /* ChipHal: GA100 */
         {
             pThis->__knvdecIsEngineDisabled__ = &knvdecIsEngineDisabled_GA100;
         }
-        else if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x0000f800UL) )) /* ChipHal: GA102 | GA103 | GA104 | GA106 | GA107 */ 
+        else if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x0000f800UL) )) /* ChipHal: GA102 | GA103 | GA104 | GA106 | GA107 */
         {
             pThis->__knvdecIsEngineDisabled__ = &knvdecIsEngineDisabled_GA102;
         }
@@ -326,13 +329,13 @@ static void __nvoc_init_funcTable_KernelNvdec_1(KernelNvdec *pThis, RmHalspecOwn
     }
 
     // Hal function -- knvdecReadUcodeFuseVersion
-    if (( ((rmVariantHal_HalVarIdx >> 5) == 0UL) && ((1UL << (rmVariantHal_HalVarIdx & 0x1f)) & 0x00000002UL) )) /* RmVariantHal: PF_KERNEL_ONLY */ 
+    if (( ((rmVariantHal_HalVarIdx >> 5) == 0UL) && ((1UL << (rmVariantHal_HalVarIdx & 0x1f)) & 0x00000002UL) )) /* RmVariantHal: PF_KERNEL_ONLY */
     {
-        if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x000003e0UL) )) /* ChipHal: TU102 | TU104 | TU106 | TU116 | TU117 */ 
+        if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x000003e0UL) )) /* ChipHal: TU102 | TU104 | TU106 | TU116 | TU117 */
         {
             pThis->__knvdecReadUcodeFuseVersion__ = &knvdecReadUcodeFuseVersion_b2b553;
         }
-        else if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x0000fc00UL) )) /* ChipHal: GA100 | GA102 | GA103 | GA104 | GA106 | GA107 */ 
+        else if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x0000fc00UL) )) /* ChipHal: GA100 | GA102 | GA103 | GA104 | GA106 | GA107 */
         {
             pThis->__knvdecReadUcodeFuseVersion__ = &knvdecReadUcodeFuseVersion_GA100;
         }
@@ -467,4 +470,3 @@ NV_STATUS __nvoc_objCreateDynamic_KernelNvdec(KernelNvdec **ppThis, Dynamic *pPa
 
     return status;
 }
-

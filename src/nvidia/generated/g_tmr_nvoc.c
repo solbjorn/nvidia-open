@@ -34,9 +34,12 @@ void __nvoc_init_dataField_TimerApi(TimerApi*);
 void __nvoc_dtor_TimerApi(TimerApi*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_TimerApi;
 
+#define __NVOC_CB_TYPE TimerApi
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_TimerApi, __nvoc_dtor_TimerApi);
+
 static const struct NVOC_RTTI __nvoc_rtti_TimerApi_TimerApi = {
     /*pClassDef=*/          &__nvoc_class_def_TimerApi,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_TimerApi,
+    /*dtor=*/               __nvoc_dtor_TimerApi_dtor,
     /*offset=*/             0,
 };
 
@@ -96,7 +99,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_TimerApi = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_TimerApi = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_TimerApi =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(TimerApi),
@@ -106,7 +109,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_TimerApi =
         /*name=*/               "TimerApi",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_TimerApi,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_TimerApi_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_TimerApi,
     /*pExportInfo=*/        &__nvoc_export_info_TimerApi
 };
@@ -219,17 +222,19 @@ static NvBool __nvoc_thunk_RmResource_tmrapiAccessCallback(struct TimerApi *pRes
     return rmresAccessCallback((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_TimerApi_RmResource.offset), pInvokingClient, pAllocParams, accessRight);
 }
 
+NVOC_BUILD_CALLBACK(tmrapiCtrlCmdTmrSetAlarmNotify_IMPL);
+
 #if !defined(NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG)
 #define NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(x)      (0)
 #endif
 
-static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_TimerApi[] = 
+static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_TimerApi[] =
 {
     {               /*  [0] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) tmrapiCtrlCmdTmrSetAlarmNotify_IMPL,
+        /*pFunc=*/      tmrapiCtrlCmdTmrSetAlarmNotify_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*flags=*/      0x10u,
         /*accessRight=*/0x0u,
@@ -243,7 +248,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_TimerApi
 
 };
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_TimerApi = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_TimerApi =
 {
     /*numEntries=*/     1,
     /*pExportEntries=*/ __nvoc_exported_method_def_TimerApi
@@ -414,4 +419,3 @@ NV_STATUS __nvoc_objCreateDynamic_TimerApi(TimerApi **ppThis, Dynamic *pParent, 
 
     return status;
 }
-

@@ -72,7 +72,7 @@ NvBool rmapiControlIsCacheable(NvU32 flags, NvBool isGSPClient)
     return NV_FALSE;
 }
 
-void rmapiControlCacheInit()
+void rmapiControlCacheInit(void)
 {
     RmapiControlCache.mode = NV_REG_STR_RM_CACHEABLE_CONTROLS_GSP_ONLY;
 
@@ -93,9 +93,11 @@ void rmapiControlCacheInit()
 
 void* rmapiControlCacheGet(NvHandle hClient, NvHandle hObject, NvU32 cmd)
 {
+    RmapiControlCacheEntry* entry;
+
     NV_PRINTF(LEVEL_INFO, "cache lookup for 0x%x 0x%x 0x%x\n", hClient, hObject, cmd);
     portSyncMutexAcquire(RmapiControlCache.mtx);
-    RmapiControlCacheEntry* entry = multimapFindItem(&RmapiControlCache.cachedCallParams, handlesToKey(hClient, hObject), cmd);
+    entry = multimapFindItem(&RmapiControlCache.cachedCallParams, handlesToKey(hClient, hObject), cmd);
     portSyncMutexRelease(RmapiControlCache.mtx);
     NV_PRINTF(LEVEL_INFO, "cache entry for 0x%x 0x%x 0x%x: entry 0x%p\n", hClient, hObject, cmd, entry);
     if (entry)
@@ -112,10 +114,13 @@ NV_STATUS rmapiControlCacheSet
     NvU32 paramsSize
 )
 {
-    portSyncMutexAcquire(RmapiControlCache.mtx);
-    NV_STATUS status = NV_OK;
-    RmapiControlCacheEntry* entry = multimapFindItem(&RmapiControlCache.cachedCallParams, handlesToKey(hClient, hObject), cmd);
     CachedCallParamsSubmap* insertedSubmap = NULL;
+    RmapiControlCacheEntry* entry;
+    NV_STATUS status = NV_OK;
+
+    portSyncMutexAcquire(RmapiControlCache.mtx);
+
+    entry = multimapFindItem(&RmapiControlCache.cachedCallParams, handlesToKey(hClient, hObject), cmd);
 
     if (!entry)
     {
@@ -197,6 +202,7 @@ void rmapiControlCacheFreeClient(NvHandle hClient)
     {
         CachedCallParamsSubmap* start = multimapFindSubmapGEQ(&RmapiControlCache.cachedCallParams, handlesToKey(hClient, 0));
         CachedCallParamsSubmap* end = multimapFindSubmapLEQ(&RmapiControlCache.cachedCallParams, handlesToKey(hClient, NV_U32_MAX));
+        CachedCallParamsSupermapIter it;
 
         if (!start || !end ||
             keyToClient(multimapSubmapKey(&RmapiControlCache.cachedCallParams, start)) != hClient ||
@@ -205,7 +211,7 @@ void rmapiControlCacheFreeClient(NvHandle hClient)
             break;
         }
 
-        CachedCallParamsSupermapIter it = multimapSubmapIterRange(&RmapiControlCache.cachedCallParams, start, end);
+        it = multimapSubmapIterRange(&RmapiControlCache.cachedCallParams, start, end);
 
         if (multimapSubmapIterNext(&it))
         {

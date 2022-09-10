@@ -91,21 +91,23 @@ NV_STATUS kceGetP2PCes_GV100(KernelCE *pKCe, OBJGPU *pGpu, NvU32 gpuMask, NvU32 
 
         for (NvU32 i = NVLINK_MIN_P2P_LCE; i < gpuGetNumCEs(pGpu); i++)
         {
+            NV2080_CTRL_CE_GET_CE_PCE_MASK_PARAMS params = {0};
+            NV_STATUS rmStatus;
+            NvU32 numPces;
+
             pKCeLoop = GPU_GET_KCE(pGpu, i);
             if (pKCeLoop == NULL || pKCeLoop->bStubbed)
             {
                 continue;
             }
 
-            NV2080_CTRL_CE_GET_CE_PCE_MASK_PARAMS params = {0};
-
             // If we don't find a match, will use LCE with most PCEs
             params.ceEngineType = NV2080_ENGINE_TYPE_COPY(pKCeLoop->publicID);
-            NV_STATUS rmStatus = knvlinkExecGspRmRpc(pGpu, pKernelNvlink,
+            rmStatus = knvlinkExecGspRmRpc(pGpu, pKernelNvlink,
                                                      NV2080_CTRL_CMD_CE_GET_CE_PCE_MASK,
                                                      (void *)&params, sizeof(params));
             NV_ASSERT_OK_OR_RETURN(rmStatus);
-            NvU32 numPces = nvPopCount32(params.pceMask);
+            numPces = nvPopCount32(params.pceMask);
 
             //
             // Only save the LCE with the maximum PCEs if it is not

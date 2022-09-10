@@ -35,6 +35,35 @@
 typedef NV_STATUS (*NVOC_DYNAMIC_OBJ_CREATE)(Dynamic**, Dynamic *pParent, NvU32 createFlags, va_list);
 typedef void (*NVOC_DYNAMIC_DTOR)(Dynamic*);
 
+#define NVOC_BUILD_CTOR_DTOR(ctor, dtor)				\
+static NV_STATUS ctor##_ctor(Dynamic **ptr, Dynamic *pParent,		\
+			     NvU32 createFlags, va_list args)		\
+{									\
+	__NVOC_CB_TYPE *this;						\
+	NV_STATUS ret;							\
+									\
+	ret = ctor(&this, pParent, createFlags, args);			\
+	if (ret == NV_OK)						\
+		*ptr = nvoc_to_dynamic(this, __NVOC_CB_TYPE);		\
+									\
+	return ret;							\
+}									\
+									\
+static void dtor##_dtor(Dynamic *ptr)					\
+{									\
+	__NVOC_CB_TYPE *this = nvoc_from_dynamic(ptr, __NVOC_CB_TYPE);	\
+									\
+	dtor(this);							\
+}
+
+#define NVOC_BUILD_DTOR(dtor)						\
+static void dtor##_dtor(Dynamic *ptr)					\
+{									\
+	__NVOC_CB_TYPE *this = nvoc_from_dynamic(ptr, __NVOC_CB_TYPE);	\
+									\
+	dtor(this);							\
+}
+
 // struct NVOC_CLASS_METADATA
 // {
 //     // NvBool                isMixedMode;

@@ -30,9 +30,12 @@ void __nvoc_init_dataField_MemoryHwResources(MemoryHwResources*);
 void __nvoc_dtor_MemoryHwResources(MemoryHwResources*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_MemoryHwResources;
 
+#define __NVOC_CB_TYPE MemoryHwResources
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_MemoryHwResources, __nvoc_dtor_MemoryHwResources);
+
 static const struct NVOC_RTTI __nvoc_rtti_MemoryHwResources_MemoryHwResources = {
     /*pClassDef=*/          &__nvoc_class_def_MemoryHwResources,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_MemoryHwResources,
+    /*dtor=*/               __nvoc_dtor_MemoryHwResources_dtor,
     /*offset=*/             0,
 };
 
@@ -78,7 +81,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_MemoryHwResources = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_MemoryHwResources = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_MemoryHwResources =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(MemoryHwResources),
@@ -88,7 +91,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_MemoryHwResources =
         /*name=*/               "MemoryHwResources",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_MemoryHwResources,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_MemoryHwResources_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_MemoryHwResources,
     /*pExportInfo=*/        &__nvoc_export_info_MemoryHwResources
 };
@@ -177,7 +180,7 @@ static NvBool __nvoc_thunk_RmResource_hwresAccessCallback(struct MemoryHwResourc
     return rmresAccessCallback((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_MemoryHwResources_RmResource.offset), pInvokingClient, pAllocParams, accessRight);
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_MemoryHwResources = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_MemoryHwResources =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -321,4 +324,3 @@ NV_STATUS __nvoc_objCreateDynamic_MemoryHwResources(MemoryHwResources **ppThis, 
 
     return status;
 }
-

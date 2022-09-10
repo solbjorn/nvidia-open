@@ -430,6 +430,15 @@ _intrEnableStall_TU102
     NvU32 val, idx;
 
     //
+    // Compile time assert to make sure we have only one client shared subtree.
+    // The below code assumes that.
+    //
+    ct_assert(NV_CPU_INTR_UVM_SHARED_SUBTREE_START == NV_CPU_INTR_UVM_SHARED_SUBTREE_LAST);
+
+    // We use the assumption that 1 == ENABLE below
+    ct_assert(NV_VIRTUAL_FUNCTION_PRIV_CPU_INTR_TOP_EN_SET_SUBTREE_ENABLE == 1);
+
+    //
     // 1. Enable the UVM interrupts that RM currently owns at INTR_LEAF
     // level.
     //
@@ -445,11 +454,6 @@ _intrEnableStall_TU102
     // level, based on the cached value.
     //
 
-    //
-    // Compile time assert to make sure we have only one client shared subtree.
-    // The below code assumes that.
-    //
-    ct_assert(NV_CPU_INTR_UVM_SHARED_SUBTREE_START == NV_CPU_INTR_UVM_SHARED_SUBTREE_LAST);
     idx = NV_CPU_INTR_UVM_SHARED_SUBTREE_START;
 
     if (NvU64_HI32(pIntr->uvmSharedCpuLeafEn) != 0)
@@ -466,9 +470,6 @@ _intrEnableStall_TU102
                                   NvU64_LO32(pIntr->uvmSharedCpuLeafEn),
                                   pThreadState);
     }
-
-    // We use the assumption that 1 == ENABLE below
-    ct_assert(NV_VIRTUAL_FUNCTION_PRIV_CPU_INTR_TOP_EN_SET_SUBTREE_ENABLE == 1);
 
     //
     // 3. Enable all interrupt subtrees (except nonstall) at top level. Nonstall
@@ -498,6 +499,12 @@ _intrDisableStall_TU102
 {
     NvU32 idx, val;
 
+    //
+    // Compile time assert to make sure we have only one client shared subtree.
+    // The below code assumes that.
+    //
+    ct_assert(NV_CPU_INTR_UVM_SHARED_SUBTREE_START == NV_CPU_INTR_UVM_SHARED_SUBTREE_LAST);
+
     // 1. Disable the UVM interrupts that RM currently owns at INTR_LEAF level
     idx = NV_CTRL_INTR_GPU_VECTOR_TO_LEAF_REG(pIntr->replayableFaultIntrVector);
     val = _intrGetUvmLeafMask_TU102(pGpu, pIntr);
@@ -511,11 +518,6 @@ _intrDisableStall_TU102
     // level, except the ones that can be handled outside the GPU lock.
     //
 
-    //
-    // Compile time assert to make sure we have only one client shared subtree.
-    // The below code assumes that.
-    //
-    ct_assert(NV_CPU_INTR_UVM_SHARED_SUBTREE_START == NV_CPU_INTR_UVM_SHARED_SUBTREE_LAST);
     idx = NV_CPU_INTR_UVM_SHARED_SUBTREE_START;
 
     if (!gpuIsStateLoaded(pGpu))
@@ -683,6 +685,19 @@ intrGetUvmSharedLeafEnDisableMask_TU102
     NvU32 intrVectorFifoNonstall = NV_INTR_VECTOR_INVALID;
     NvU64 mask = 0;
 
+    //
+    // Compile-time ascertain that we only have 1 client subtree (we assume
+    // this since we cache only 64 bits).
+    //
+    ct_assert(NV_CPU_INTR_UVM_SHARED_SUBTREE_START == NV_CPU_INTR_UVM_SHARED_SUBTREE_LAST);
+
+    //
+    // Compile-time ascertain that we only have 2 subtrees as this is what we currently support
+    // by only caching 64 bits
+    //
+    ct_assert((NV_CTRL_INTR_SUBTREE_TO_LEAF_IDX_END(NV_CPU_INTR_UVM_SHARED_SUBTREE_LAST) - 1) ==
+               NV_CTRL_INTR_SUBTREE_TO_LEAF_IDX_START(NV_CPU_INTR_UVM_SHARED_SUBTREE_START));
+
     // GSP RM services both MMU non-replayable fault and FIFO interrupts
     if (IS_GSP_CLIENT(pGpu))
     {
@@ -708,19 +723,6 @@ intrGetUvmSharedLeafEnDisableMask_TU102
     // Ascertain that they're in the first leaf
     NV_ASSERT(NV_CTRL_INTR_GPU_VECTOR_TO_LEAF_REG(intrVectorNonReplayableFault) ==
               NV_CTRL_INTR_SUBTREE_TO_LEAF_IDX_START(NV_CPU_INTR_UVM_SHARED_SUBTREE_START));
-
-    //
-    // Compile-time ascertain that we only have 1 client subtree (we assume
-    // this since we cache only 64 bits).
-    //
-    ct_assert(NV_CPU_INTR_UVM_SHARED_SUBTREE_START == NV_CPU_INTR_UVM_SHARED_SUBTREE_LAST);
-
-    //
-    // Compile-time ascertain that we only have 2 subtrees as this is what we currently support
-    // by only caching 64 bits
-    //
-    ct_assert((NV_CTRL_INTR_SUBTREE_TO_LEAF_IDX_END(NV_CPU_INTR_UVM_SHARED_SUBTREE_LAST) - 1) ==
-               NV_CTRL_INTR_SUBTREE_TO_LEAF_IDX_START(NV_CPU_INTR_UVM_SHARED_SUBTREE_START));
 
     mask |= NVBIT64(NV_CTRL_INTR_GPU_VECTOR_TO_LEAF_BIT(intrVectorNonReplayableFault));
 
@@ -756,11 +758,11 @@ intrGetPendingStallEngines_TU102
     INTR_TABLE_ENTRY *pIntrTable;
     KernelGmmu *pKernelGmmu = GPU_GET_KERNEL_GMMU(pGpu);
     NvU32 intrTableSz, i;
-
     NvU32 stallSubtreeLast = intrGetStallSubtreeLast_HAL(pGpu, pIntr);
     NvU32 numIntrLeaves = intrGetNumLeaves_HAL(pGpu, pIntr);
-    NV_ASSERT(numIntrLeaves <= NV_MAX_INTR_LEAVES);
     NvU32 intrLeafValues[NV_MAX_INTR_LEAVES];
+
+    NV_ASSERT(numIntrLeaves <= NV_MAX_INTR_LEAVES);
 
     portMemSet(intrLeafValues, 0, numIntrLeaves * sizeof(NvU32));
     bitVectorClrAll(pEngines);
@@ -1054,13 +1056,16 @@ intrSetDisplayInterruptEnable_TU102
     THREAD_STATE_NODE *pThreadState
 )
 {
+    NvU32 leafBit;
+    NvU32 reg;
+
     if (pIntr->displayIntrVector == NV_INTR_VECTOR_INVALID)
     {
         return;
     }
 
-    NvU32 reg = NV_CTRL_INTR_GPU_VECTOR_TO_LEAF_REG(pIntr->displayIntrVector);
-    NvU32 leafBit = NV_CTRL_INTR_GPU_VECTOR_TO_LEAF_BIT(pIntr->displayIntrVector);
+    reg = NV_CTRL_INTR_GPU_VECTOR_TO_LEAF_REG(pIntr->displayIntrVector);
+    leafBit = NV_CTRL_INTR_GPU_VECTOR_TO_LEAF_BIT(pIntr->displayIntrVector);
 
     if (bEnable)
     {

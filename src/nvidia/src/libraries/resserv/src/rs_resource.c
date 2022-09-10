@@ -121,10 +121,10 @@ NV_STATUS resControlLookup_IMPL
     const struct NVOC_EXPORTED_METHOD_DEF **ppEntry
 )
 {
-    const struct NVOC_EXPORTED_METHOD_DEF *pEntry;    
-    NvU32 cmd = pRsParams->cmd;    
+    const struct NVOC_EXPORTED_METHOD_DEF *pEntry;
+    NvU32 cmd = pRsParams->cmd;
 
-    *ppEntry = NULL;    
+    *ppEntry = NULL;
     pEntry = objGetExportedMethodDef(staticCast(objFullyDerive(pResource), Dynamic), cmd);
 
     if (pEntry == NULL)
@@ -145,8 +145,8 @@ NV_STATUS resControlLookup_IMPL
     return NV_OK;
 }
 
-typedef NV_STATUS (*CONTROL_EXPORT_FNPTR)(void*, void*);
-typedef NV_STATUS (*CONTROL_EXPORT_FNPTR_NO_PARAMS)(void*);
+//typedef NV_STATUS (*CONTROL_EXPORT_FNPTR)(void*, void*);
+//typedef NV_STATUS (*CONTROL_EXPORT_FNPTR_NO_PARAMS)(void*);
 
 NV_STATUS
 resControl_IMPL
@@ -201,13 +201,11 @@ resControl_IMPL
         // Zero size means the exported method only have one param (pResource)
         if (pEntry->paramSize == 0)
         {
-            CONTROL_EXPORT_FNPTR_NO_PARAMS pFunc = ((CONTROL_EXPORT_FNPTR_NO_PARAMS) pEntry->pFunc);
-            status = pFunc(pDynamicObj);
+            status = pEntry->pFunc(pDynamicObj, NULL);
         }
         else
         {
-            CONTROL_EXPORT_FNPTR pFunc = ((CONTROL_EXPORT_FNPTR) pEntry->pFunc);
-            status = pFunc(pDynamicObj, pRsParams->pParams);
+            status = pEntry->pFunc(pDynamicObj, pRsParams->pParams);
         }
     }
 

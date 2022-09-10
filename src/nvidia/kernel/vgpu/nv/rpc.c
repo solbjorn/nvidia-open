@@ -1212,6 +1212,8 @@ NV_STATUS rpcGspSetSystemInfo_v17_00
     {
         GspSystemInfo *rpcInfo = (GspSystemInfo *)&rpc_message->gsp_set_system_info_v17_00.data;
         const NvU32 messageLength = sizeof(rpc_message_header_v) + sizeof(*rpcInfo);
+        KernelBif *pKernelBif;
+        OBJCL *pCl;
 
         if (messageLength > pRpc->maxRpcSize)
         {
@@ -1235,7 +1237,7 @@ NV_STATUS rpcGspSetSystemInfo_v17_00
         rpcInfo->nvDomainBusDeviceFunc = pGpu->busInfo.nvDomainBusDeviceFunc;
         rpcInfo->oorArch               = (NvU8)pGpu->busInfo.oorArch;
 
-        KernelBif *pKernelBif = GPU_GET_KERNEL_BIF(pGpu);
+        pKernelBif = GPU_GET_KERNEL_BIF(pGpu);
         if (pKernelBif != NULL)
         {
             NV_ASSERT_OK(kbifGetPciConfigSpacePriMirror_HAL(pGpu, pKernelBif,
@@ -1254,7 +1256,7 @@ NV_STATUS rpcGspSetSystemInfo_v17_00
         }
         rpcInfo->consoleMemSize = GPU_GET_MEMORY_MANAGER(pGpu)->Ram.ReservedConsoleDispMemSize;
 
-        OBJCL *pCl = SYS_GET_CL(SYS_GET_INSTANCE());
+        pCl = SYS_GET_CL(SYS_GET_INSTANCE());
         if (pCl != NULL)
         {
             clSyncWithGsp(pCl, rpcInfo);

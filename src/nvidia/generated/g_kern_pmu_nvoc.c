@@ -24,9 +24,12 @@ void __nvoc_init_dataField_KernelPmu(KernelPmu*);
 void __nvoc_dtor_KernelPmu(KernelPmu*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_KernelPmu;
 
+#define __NVOC_CB_TYPE KernelPmu
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_KernelPmu, __nvoc_dtor_KernelPmu);
+
 static const struct NVOC_RTTI __nvoc_rtti_KernelPmu_KernelPmu = {
     /*pClassDef=*/          &__nvoc_class_def_KernelPmu,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_KernelPmu,
+    /*dtor=*/               __nvoc_dtor_KernelPmu_dtor,
     /*offset=*/             0,
 };
 
@@ -51,7 +54,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_KernelPmu = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_KernelPmu = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_KernelPmu =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(KernelPmu),
@@ -61,7 +64,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_KernelPmu =
         /*name=*/               "KernelPmu",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_KernelPmu,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_KernelPmu_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_KernelPmu,
     /*pExportInfo=*/        &__nvoc_export_info_KernelPmu
 };
@@ -146,7 +149,7 @@ static NvBool __nvoc_thunk_OBJENGSTATE_kpmuIsPresent(POBJGPU pGpu, struct Kernel
     return engstateIsPresent(pGpu, (struct OBJENGSTATE *)(((unsigned char *)pEngstate) + __nvoc_rtti_KernelPmu_OBJENGSTATE.offset));
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_KernelPmu = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_KernelPmu =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -278,4 +281,3 @@ NV_STATUS __nvoc_objCreateDynamic_KernelPmu(KernelPmu **ppThis, Dynamic *pParent
 
     return status;
 }
-

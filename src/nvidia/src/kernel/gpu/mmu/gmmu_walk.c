@@ -328,6 +328,7 @@ _gmmuWalkCBLevelAlloc
                                          (RM_POOL_ALLOC_MEMDESC*)pMemDescTemp);
                         break;
                     }
+                    fallthrough;
                 case ADDR_SYSMEM:
                     status = memdescAlloc(pMemDescTemp);
                     break;
@@ -498,8 +499,9 @@ _gmmuMemDescCacheAlloc
          pParentMemDesc != NULL;
          pParentMemDesc = pParentMemDescNext)
     {
-        pParentMemDescNext = listNext(&pUserCtx->pGpuState->unpackedMemDescList, pParentMemDesc);
         MEMORY_DESCRIPTOR *pChild;
+
+        pParentMemDescNext = listNext(&pUserCtx->pGpuState->unpackedMemDescList, pParentMemDesc);
         pChild = listTail(pParentMemDesc->pSubMemDescList);
         listRemove(pParentMemDesc->pSubMemDescList, pChild);
         if (NULL != pChild)
@@ -988,11 +990,11 @@ _gmmuWalkCBCopyEntries
 
 const MMU_WALK_CALLBACKS g_gmmuWalkCallbacks =
 {
-    _gmmuWalkCBLevelAlloc,
-    _gmmuWalkCBLevelFree,
-    _gmmuWalkCBUpdatePdb,
-    _gmmuWalkCBUpdatePde,
-    _gmmuWalkCBFillEntries,
-    _gmmuWalkCBCopyEntries,
-    NULL,
+    .LevelAlloc = _gmmuWalkCBLevelAlloc,
+    .LevelFree = _gmmuWalkCBLevelFree,
+    .UpdatePdb = _gmmuWalkCBUpdatePdb,
+    .UpdatePde = _gmmuWalkCBUpdatePde,
+    .FillEntries = _gmmuWalkCBFillEntries,
+    .CopyEntries = _gmmuWalkCBCopyEntries,
+    .WriteBuffer = NULL,
 };

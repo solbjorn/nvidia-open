@@ -24,9 +24,12 @@ void __nvoc_init_dataField_OBJIOVASPACE(OBJIOVASPACE*);
 void __nvoc_dtor_OBJIOVASPACE(OBJIOVASPACE*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJIOVASPACE;
 
+#define __NVOC_CB_TYPE OBJIOVASPACE
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_OBJIOVASPACE, __nvoc_dtor_OBJIOVASPACE);
+
 static const struct NVOC_RTTI __nvoc_rtti_OBJIOVASPACE_OBJIOVASPACE = {
     /*pClassDef=*/          &__nvoc_class_def_OBJIOVASPACE,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_OBJIOVASPACE,
+    /*dtor=*/               __nvoc_dtor_OBJIOVASPACE_dtor,
     /*offset=*/             0,
 };
 
@@ -51,7 +54,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_OBJIOVASPACE = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_OBJIOVASPACE = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_OBJIOVASPACE =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(OBJIOVASPACE),
@@ -61,7 +64,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_OBJIOVASPACE =
         /*name=*/               "OBJIOVASPACE",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_OBJIOVASPACE,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_OBJIOVASPACE_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_OBJIOVASPACE,
     /*pExportInfo=*/        &__nvoc_export_info_OBJIOVASPACE
 };
@@ -182,7 +185,7 @@ static NV_STATUS __nvoc_thunk_OBJVASPACE_iovaspaceMap(struct OBJIOVASPACE *pVAS,
     return vaspaceMap((struct OBJVASPACE *)(((unsigned char *)pVAS) + __nvoc_rtti_OBJIOVASPACE_OBJVASPACE.offset), pGpu, vaLo, vaHi, pTarget, flags);
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJIOVASPACE = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJIOVASPACE =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -346,4 +349,3 @@ NV_STATUS __nvoc_objCreateDynamic_OBJIOVASPACE(OBJIOVASPACE **ppThis, Dynamic *p
 
     return status;
 }
-

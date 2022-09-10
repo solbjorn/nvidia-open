@@ -28,9 +28,12 @@ void __nvoc_init_dataField_GpuManagementApi(GpuManagementApi*);
 void __nvoc_dtor_GpuManagementApi(GpuManagementApi*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_GpuManagementApi;
 
+#define __NVOC_CB_TYPE GpuManagementApi
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_GpuManagementApi, __nvoc_dtor_GpuManagementApi);
+
 static const struct NVOC_RTTI __nvoc_rtti_GpuManagementApi_GpuManagementApi = {
     /*pClassDef=*/          &__nvoc_class_def_GpuManagementApi,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_GpuManagementApi,
+    /*dtor=*/               __nvoc_dtor_GpuManagementApi_dtor,
     /*offset=*/             0,
 };
 
@@ -69,7 +72,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_GpuManagementApi = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_GpuManagementApi = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_GpuManagementApi =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(GpuManagementApi),
@@ -79,7 +82,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_GpuManagementApi =
         /*name=*/               "GpuManagementApi",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_GpuManagementApi,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_GpuManagementApi_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_GpuManagementApi,
     /*pExportInfo=*/        &__nvoc_export_info_GpuManagementApi
 };
@@ -156,17 +159,19 @@ static NvBool __nvoc_thunk_RmResource_gpumgmtapiAccessCallback(struct GpuManagem
     return rmresAccessCallback((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_GpuManagementApi_RmResource.offset), pInvokingClient, pAllocParams, accessRight);
 }
 
+NVOC_BUILD_CALLBACK(gpumgmtapiCtrlCmdSetShutdownState_IMPL);
+
 #if !defined(NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG)
 #define NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(x)      (0)
 #endif
 
-static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_GpuManagementApi[] = 
+static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_GpuManagementApi[] =
 {
     {               /*  [0] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x7u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) gpumgmtapiCtrlCmdSetShutdownState_IMPL,
+        /*pFunc=*/      gpumgmtapiCtrlCmdSetShutdownState_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x7u)
         /*flags=*/      0x7u,
         /*accessRight=*/0x0u,
@@ -180,7 +185,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_GpuManag
 
 };
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_GpuManagementApi = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_GpuManagementApi =
 {
     /*numEntries=*/     1,
     /*pExportEntries=*/ __nvoc_exported_method_def_GpuManagementApi
@@ -319,4 +324,3 @@ NV_STATUS __nvoc_objCreateDynamic_GpuManagementApi(GpuManagementApi **ppThis, Dy
 
     return status;
 }
-

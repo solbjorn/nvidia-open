@@ -30,9 +30,12 @@ void __nvoc_init_dataField_DispSfUser(DispSfUser*);
 void __nvoc_dtor_DispSfUser(DispSfUser*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_DispSfUser;
 
+#define __NVOC_CB_TYPE DispSfUser
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_DispSfUser, __nvoc_dtor_DispSfUser);
+
 static const struct NVOC_RTTI __nvoc_rtti_DispSfUser_DispSfUser = {
     /*pClassDef=*/          &__nvoc_class_def_DispSfUser,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_DispSfUser,
+    /*dtor=*/               __nvoc_dtor_DispSfUser_dtor,
     /*offset=*/             0,
 };
 
@@ -78,7 +81,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_DispSfUser = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_DispSfUser = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_DispSfUser =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(DispSfUser),
@@ -88,7 +91,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_DispSfUser =
         /*name=*/               "DispSfUser",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_DispSfUser,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_DispSfUser_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_DispSfUser,
     /*pExportInfo=*/        &__nvoc_export_info_DispSfUser
 };
@@ -181,7 +184,7 @@ static NvBool __nvoc_thunk_RmResource_dispsfAccessCallback(struct DispSfUser *pR
     return rmresAccessCallback((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispSfUser_RmResource.offset), pInvokingClient, pAllocParams, accessRight);
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_DispSfUser = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_DispSfUser =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -326,4 +329,3 @@ NV_STATUS __nvoc_objCreateDynamic_DispSfUser(DispSfUser **ppThis, Dynamic *pPare
 
     return status;
 }
-

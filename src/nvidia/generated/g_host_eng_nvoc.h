@@ -55,7 +55,7 @@ typedef struct OBJHOSTENG *POBJHOSTENG;
 #define PRIVATE_FIELD(x) NVOC_PRIVATE_FIELD(x)
 #endif
 struct OBJHOSTENG {
-    const struct NVOC_RTTI *__nvoc_rtti;
+    struct __rtti_marker __nvoc_rtti;
     struct OBJHOSTENG *__nvoc_pbase_OBJHOSTENG;
     NV_STATUS (*__hostengHaltEngine__)(struct OBJGPU *, struct OBJHOSTENG *);
     NV_STATUS (*__hostengHaltAndReset__)(struct OBJGPU *, struct OBJHOSTENG *, RMTIMEOUT *);

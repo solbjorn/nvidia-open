@@ -22,9 +22,12 @@ void __nvoc_init_dataField_OBJREFCNT(OBJREFCNT*);
 void __nvoc_dtor_OBJREFCNT(OBJREFCNT*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJREFCNT;
 
+#define __NVOC_CB_TYPE OBJREFCNT
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_OBJREFCNT, __nvoc_dtor_OBJREFCNT);
+
 static const struct NVOC_RTTI __nvoc_rtti_OBJREFCNT_OBJREFCNT = {
     /*pClassDef=*/          &__nvoc_class_def_OBJREFCNT,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_OBJREFCNT,
+    /*dtor=*/               __nvoc_dtor_OBJREFCNT_dtor,
     /*offset=*/             0,
 };
 
@@ -42,7 +45,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_OBJREFCNT = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_OBJREFCNT = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_OBJREFCNT =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(OBJREFCNT),
@@ -52,12 +55,12 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_OBJREFCNT =
         /*name=*/               "OBJREFCNT",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_OBJREFCNT,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_OBJREFCNT_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_OBJREFCNT,
     /*pExportInfo=*/        &__nvoc_export_info_OBJREFCNT
 };
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJREFCNT = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJREFCNT =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -155,4 +158,3 @@ NV_STATUS __nvoc_objCreateDynamic_OBJREFCNT(OBJREFCNT **ppThis, Dynamic *pParent
 
     return status;
 }
-

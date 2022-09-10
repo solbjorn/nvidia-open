@@ -72,7 +72,7 @@ struct __nvoc_inner_struc_KernelHead_1__ {
 
 
 struct KernelHead {
-    const struct NVOC_RTTI *__nvoc_rtti;
+    struct __rtti_marker __nvoc_rtti;
     struct Object __nvoc_base_Object;
     struct Object *__nvoc_pbase_Object;
     struct KernelHead *__nvoc_pbase_KernelHead;

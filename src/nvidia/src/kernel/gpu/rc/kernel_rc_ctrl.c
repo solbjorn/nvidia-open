@@ -252,10 +252,11 @@ krcSubdeviceCtrlCmdRcGetErrorV2_IMPL
     NV_STATUS             status = NV_OK;
     NvU32                 i;
 
+    ct_assert(sizeof(pErrorParams->recordBuffer) > sizeof(RmProtoBuf_RECORD));
+
     // Set Output Size to zero
     pErrorParams->outputRecordSize = 0;
 
-    ct_assert(sizeof(pErrorParams->recordBuffer) > sizeof(RmProtoBuf_RECORD));
 
     // Check error list
     if (pSysErrorInfo->pErrorList == NULL)

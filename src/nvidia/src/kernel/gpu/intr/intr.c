@@ -767,6 +767,8 @@ intrStateInitLocked_IMPL
     Intr     *pIntr
 )
 {
+    KernelGmmu *pKernelGmmu;
+
     // Enable interrupts in the HAL
     pIntr->halIntrEnabled = NV_TRUE;
 
@@ -777,7 +779,7 @@ intrStateInitLocked_IMPL
     pIntr->intrMask.cached = INTERRUPT_MASK_ENABLED;
 
     //initialize all GPU interrupts to be serviced by RM
-    KernelGmmu *pKernelGmmu = GPU_GET_KERNEL_GMMU(pGpu);
+    pKernelGmmu = GPU_GET_KERNEL_GMMU(pGpu);
     pGpu->pmcRmOwnsIntrMask        = INTERRUPT_MASK_ENABLED;
     if (pKernelGmmu != NULL)
     {

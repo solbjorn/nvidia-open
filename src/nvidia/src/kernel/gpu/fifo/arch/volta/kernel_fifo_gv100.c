@@ -232,8 +232,10 @@ kfifoGetSubctxType_GV100
     NvU32            *pSubctxType
 )
 {
-    NvU32 subctxType;
+    KernelChannelGroup *pKernelChannelGroup;
     KernelCtxShare *pKernelCtxShare = NULL;
+    PEMEMBLOCK pBlock;
+    NvU32 subctxType;
 
     NV_ASSERT_OR_RETURN_VOID(pKernelChannel != NULL);
 
@@ -246,8 +248,8 @@ kfifoGetSubctxType_GV100
 
     NV_ASSERT(pKernelChannel->subctxId != FIFO_PDB_IDX_BASE);
 
-    KernelChannelGroup *pKernelChannelGroup = pKernelChannel->pKernelChannelGroupApi->pKernelChannelGroup;
-    PEMEMBLOCK pBlock = pKernelChannelGroup->pSubctxIdHeap->eheapGetBlock(
+    pKernelChannelGroup = pKernelChannel->pKernelChannelGroupApi->pKernelChannelGroup;
+    pBlock = pKernelChannelGroup->pSubctxIdHeap->eheapGetBlock(
         pKernelChannelGroup->pSubctxIdHeap,
         pKernelChannel->subctxId,
         NV_FALSE);

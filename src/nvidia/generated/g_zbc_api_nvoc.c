@@ -30,9 +30,12 @@ void __nvoc_init_dataField_ZbcApi(ZbcApi*, RmHalspecOwner* );
 void __nvoc_dtor_ZbcApi(ZbcApi*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_ZbcApi;
 
+#define __NVOC_CB_TYPE ZbcApi
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_ZbcApi, __nvoc_dtor_ZbcApi);
+
 static const struct NVOC_RTTI __nvoc_rtti_ZbcApi_ZbcApi = {
     /*pClassDef=*/          &__nvoc_class_def_ZbcApi,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_ZbcApi,
+    /*dtor=*/               __nvoc_dtor_ZbcApi_dtor,
     /*offset=*/             0,
 };
 
@@ -78,7 +81,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_ZbcApi = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_ZbcApi = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_ZbcApi =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(ZbcApi),
@@ -88,7 +91,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_ZbcApi =
         /*name=*/               "ZbcApi",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_ZbcApi,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_ZbcApi_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_ZbcApi,
     /*pExportInfo=*/        &__nvoc_export_info_ZbcApi
 };
@@ -181,17 +184,25 @@ static NvBool __nvoc_thunk_RmResource_zbcapiAccessCallback(struct ZbcApi *pResou
     return rmresAccessCallback((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_ZbcApi_RmResource.offset), pInvokingClient, pAllocParams, accessRight);
 }
 
+NVOC_BUILD_CALLBACK(zbcapiCtrlCmdSetZbcColorClear_IMPL);
+NVOC_BUILD_CALLBACK(zbcapiCtrlCmdSetZbcDepthClear_IMPL);
+NVOC_BUILD_CALLBACK(zbcapiCtrlCmdGetZbcClearTable_IMPL);
+NVOC_BUILD_CALLBACK(zbcapiCtrlCmdSetZbcClearTable_IMPL);
+NVOC_BUILD_CALLBACK(zbcapiCtrlCmdSetZbcStencilClear_IMPL);
+NVOC_BUILD_CALLBACK(zbcapiCtrlCmdGetZbcClearTableSize_IMPL);
+NVOC_BUILD_CALLBACK(zbcapiCtrlCmdGetZbcClearTableEntry_IMPL);
+
 #if !defined(NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG)
 #define NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(x)      (0)
 #endif
 
-static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_ZbcApi[] = 
+static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_ZbcApi[] =
 {
     {               /*  [0] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2210u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) zbcapiCtrlCmdSetZbcColorClear_IMPL,
+        /*pFunc=*/      zbcapiCtrlCmdSetZbcColorClear_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2210u)
         /*flags=*/      0x2210u,
         /*accessRight=*/0x0u,
@@ -204,9 +215,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_ZbcApi[]
     },
     {               /*  [1] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2210u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) zbcapiCtrlCmdSetZbcDepthClear_IMPL,
+        /*pFunc=*/      zbcapiCtrlCmdSetZbcDepthClear_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2210u)
         /*flags=*/      0x2210u,
         /*accessRight=*/0x0u,
@@ -219,9 +230,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_ZbcApi[]
     },
     {               /*  [2] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2210u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) zbcapiCtrlCmdGetZbcClearTable_IMPL,
+        /*pFunc=*/      zbcapiCtrlCmdGetZbcClearTable_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2210u)
         /*flags=*/      0x2210u,
         /*accessRight=*/0x0u,
@@ -234,9 +245,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_ZbcApi[]
     },
     {               /*  [3] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2210u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) zbcapiCtrlCmdSetZbcClearTable_IMPL,
+        /*pFunc=*/      zbcapiCtrlCmdSetZbcClearTable_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2210u)
         /*flags=*/      0x2210u,
         /*accessRight=*/0x0u,
@@ -249,9 +260,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_ZbcApi[]
     },
     {               /*  [4] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2210u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) zbcapiCtrlCmdSetZbcStencilClear_IMPL,
+        /*pFunc=*/      zbcapiCtrlCmdSetZbcStencilClear_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2210u)
         /*flags=*/      0x2210u,
         /*accessRight=*/0x0u,
@@ -264,9 +275,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_ZbcApi[]
     },
     {               /*  [5] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x210u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) zbcapiCtrlCmdGetZbcClearTableSize_IMPL,
+        /*pFunc=*/      zbcapiCtrlCmdGetZbcClearTableSize_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x210u)
         /*flags=*/      0x210u,
         /*accessRight=*/0x0u,
@@ -279,9 +290,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_ZbcApi[]
     },
     {               /*  [6] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2210u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) zbcapiCtrlCmdGetZbcClearTableEntry_IMPL,
+        /*pFunc=*/      zbcapiCtrlCmdGetZbcClearTableEntry_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2210u)
         /*flags=*/      0x2210u,
         /*accessRight=*/0x0u,
@@ -295,7 +306,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_ZbcApi[]
 
 };
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_ZbcApi = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_ZbcApi =
 {
     /*numEntries=*/     7,
     /*pExportEntries=*/ __nvoc_exported_method_def_ZbcApi
@@ -482,4 +493,3 @@ NV_STATUS __nvoc_objCreateDynamic_ZbcApi(ZbcApi **ppThis, Dynamic *pParent, NvU3
 
     return status;
 }
-

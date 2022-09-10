@@ -1566,13 +1566,14 @@ static NV_STATUS getPCIELinkRateMBps(struct gpuDevice *device, NvU32 *pcieLinkRa
     NV2080_CTRL_BUS_INFO busInfo = {0};
     NV2080_CTRL_BUS_GET_INFO_PARAMS busInfoParams = {0};
     NvU32 linkRate = 0;
+    NV_STATUS status;
     NvU32 lanes;
 
     busInfo.index = NV2080_CTRL_BUS_INFO_INDEX_PCIE_GPU_LINK_CAPS;
     busInfoParams.busInfoListSize = 1;
     busInfoParams.busInfoList = NV_PTR_TO_NvP64(&busInfo);
 
-    NV_STATUS status = pRmApi->Control(pRmApi,
+    status = pRmApi->Control(pRmApi,
                                        device->session->handle,
                                        device->subhandle,
                                        NV2080_CTRL_CMD_BUS_GET_INFO,
@@ -1765,6 +1766,8 @@ NV_STATUS nvGpuOpsDeviceCreate(struct gpuSession *session,
             NV_PRINTF(LEVEL_ERROR, "Unsupported sysmem connection type: %d\n",
                      sysmemConnType);
             NV_ASSERT(0);
+
+            linkBandwidthMBps = 0;
             break;
         }
     }
@@ -2421,14 +2424,16 @@ static NV_STATUS rmSystemP2PCapsControl(struct gpuDevice *device1,
                                         NV0000_CTRL_SYSTEM_GET_P2P_CAPS_V2_PARAMS *p2pCapsParams)
 {
     RM_API *pRmApi = rmapiGetInterface(RMAPI_EXTERNAL_KERNEL);
+    NV_STATUS status;
+    NvHandle handle;
 
     portMemSet(p2pCapsParams, 0, sizeof(*p2pCapsParams));
     p2pCapsParams->gpuIds[0] = device1->gpuId;
     p2pCapsParams->gpuIds[1] = device2->gpuId;
     p2pCapsParams->gpuCount = 2;
 
-    NvHandle handle = device1->session->handle;
-    NV_STATUS status = pRmApi->Control(pRmApi,
+    handle = device1->session->handle;
+    status = pRmApi->Control(pRmApi,
                                        handle,
                                        handle,
                                        NV0000_CTRL_CMD_SYSTEM_GET_P2P_CAPS_V2,
@@ -7901,6 +7906,7 @@ static NV_STATUS _nvGpuOpsRetainChannelResources(struct gpuDevice *device,
     {
         // get engine context memdesc, then get its PTEs.
         MEMORY_DESCRIPTOR *pMemDesc = NULL;
+        gpuMemoryInfo *pGpuMemoryInfo;
 
         // single buffer
         NV_ASSERT_OR_GOTO(NV_ARRAY_ELEMENTS(channelInstanceInfo->resourceInfo) >= 1, done);
@@ -7926,7 +7932,7 @@ static NV_STATUS _nvGpuOpsRetainChannelResources(struct gpuDevice *device,
         if (status != NV_OK)
             goto done;
 
-        gpuMemoryInfo *pGpuMemoryInfo = &channelResourceInfo[0].resourceInfo;
+        pGpuMemoryInfo = &channelResourceInfo[0].resourceInfo;
 
         channelResourceInfo[0].resourceDescriptor = pFlcnParams->bufferHandle;
         channelResourceInfo[0].alignment = pFlcnParams->alignment;

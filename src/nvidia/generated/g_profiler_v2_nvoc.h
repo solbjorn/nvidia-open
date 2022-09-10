@@ -58,7 +58,7 @@ typedef struct
 #define PRIVATE_FIELD(x) NVOC_PRIVATE_FIELD(x)
 #endif
 struct ProfilerBase {
-    const struct NVOC_RTTI *__nvoc_rtti;
+    struct __rtti_marker __nvoc_rtti;
     struct GpuResource __nvoc_base_GpuResource;
     struct Object *__nvoc_pbase_Object;
     struct RsResource *__nvoc_pbase_RsResource;
@@ -406,7 +406,7 @@ void profilerBaseDestruct_IMPL(struct ProfilerBase *pProf);
 #define PRIVATE_FIELD(x) NVOC_PRIVATE_FIELD(x)
 #endif
 struct ProfilerDev {
-    const struct NVOC_RTTI *__nvoc_rtti;
+    struct __rtti_marker __nvoc_rtti;
     struct ProfilerBase __nvoc_base_ProfilerBase;
     struct Object *__nvoc_pbase_Object;
     struct RsResource *__nvoc_pbase_RsResource;

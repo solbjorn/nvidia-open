@@ -26,9 +26,12 @@ void __nvoc_init_dataField_KernelGraphics(KernelGraphics*, RmHalspecOwner* );
 void __nvoc_dtor_KernelGraphics(KernelGraphics*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_KernelGraphics;
 
+#define __NVOC_CB_TYPE KernelGraphics
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_KernelGraphics, __nvoc_dtor_KernelGraphics);
+
 static const struct NVOC_RTTI __nvoc_rtti_KernelGraphics_KernelGraphics = {
     /*pClassDef=*/          &__nvoc_class_def_KernelGraphics,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_KernelGraphics,
+    /*dtor=*/               __nvoc_dtor_KernelGraphics_dtor,
     /*offset=*/             0,
 };
 
@@ -60,7 +63,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_KernelGraphics = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_KernelGraphics = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_KernelGraphics =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(KernelGraphics),
@@ -70,7 +73,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_KernelGraphics =
         /*name=*/               "KernelGraphics",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_KernelGraphics,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_KernelGraphics_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_KernelGraphics,
     /*pExportInfo=*/        &__nvoc_export_info_KernelGraphics
 };
@@ -171,7 +174,7 @@ static NV_STATUS __nvoc_thunk_OBJENGSTATE_kgraphicsSetTunableState(POBJGPU pGpu,
     return engstateSetTunableState(pGpu, (struct OBJENGSTATE *)(((unsigned char *)pEngstate) + __nvoc_rtti_KernelGraphics_OBJENGSTATE.offset), pTunableState);
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_KernelGraphics = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_KernelGraphics =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -199,7 +202,7 @@ void __nvoc_init_dataField_KernelGraphics(KernelGraphics *pThis, RmHalspecOwner 
     PORT_UNREFERENCED_VARIABLE(rmVariantHal_HalVarIdx);
 
     // Hal field -- bCtxswLoggingSupported
-    if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x0000ffe0UL) )) /* ChipHal: TU102 | TU104 | TU106 | TU116 | TU117 | GA100 | GA102 | GA103 | GA104 | GA106 | GA107 */ 
+    if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x0000ffe0UL) )) /* ChipHal: TU102 | TU104 | TU106 | TU116 | TU117 | GA100 | GA102 | GA103 | GA104 | GA106 | GA107 */
     {
         pThis->bCtxswLoggingSupported = ((NvBool)(0 == 0));
     }
@@ -210,7 +213,7 @@ void __nvoc_init_dataField_KernelGraphics(KernelGraphics *pThis, RmHalspecOwner 
     }
 
     // Hal field -- bDeferContextInit
-    if (( ((rmVariantHal_HalVarIdx >> 5) == 0UL) && ((1UL << (rmVariantHal_HalVarIdx & 0x1f)) & 0x00000002UL) )) /* RmVariantHal: PF_KERNEL_ONLY */ 
+    if (( ((rmVariantHal_HalVarIdx >> 5) == 0UL) && ((1UL << (rmVariantHal_HalVarIdx & 0x1f)) & 0x00000002UL) )) /* RmVariantHal: PF_KERNEL_ONLY */
     {
         pThis->bDeferContextInit = ((NvBool)(0 != 0));
     }
@@ -219,7 +222,7 @@ void __nvoc_init_dataField_KernelGraphics(KernelGraphics *pThis, RmHalspecOwner 
     }
 
     // Hal field -- bPerSubcontextContextHeaderSupported
-    if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x0000ffe0UL) )) /* ChipHal: TU102 | TU104 | TU106 | TU116 | TU117 | GA100 | GA102 | GA103 | GA104 | GA106 | GA107 */ 
+    if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x0000ffe0UL) )) /* ChipHal: TU102 | TU104 | TU106 | TU116 | TU117 | GA100 | GA102 | GA103 | GA104 | GA106 | GA107 */
     {
         pThis->bPerSubcontextContextHeaderSupported = ((NvBool)(0 == 0));
     }
@@ -230,7 +233,7 @@ void __nvoc_init_dataField_KernelGraphics(KernelGraphics *pThis, RmHalspecOwner 
     }
 
     // Hal field -- bSetContextBuffersGPUPrivileged
-    if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x0000ffe0UL) )) /* ChipHal: TU102 | TU104 | TU106 | TU116 | TU117 | GA100 | GA102 | GA103 | GA104 | GA106 | GA107 */ 
+    if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x0000ffe0UL) )) /* ChipHal: TU102 | TU104 | TU106 | TU116 | TU117 | GA100 | GA102 | GA103 | GA104 | GA106 | GA107 */
     {
         pThis->bSetContextBuffersGPUPrivileged = ((NvBool)(0 == 0));
     }
@@ -241,7 +244,7 @@ void __nvoc_init_dataField_KernelGraphics(KernelGraphics *pThis, RmHalspecOwner 
     }
 
     // Hal field -- bUcodeSupportsPrivAccessMap
-    if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x0000ffe0UL) )) /* ChipHal: TU102 | TU104 | TU106 | TU116 | TU117 | GA100 | GA102 | GA103 | GA104 | GA106 | GA107 */ 
+    if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x0000ffe0UL) )) /* ChipHal: TU102 | TU104 | TU106 | TU116 | TU117 | GA100 | GA102 | GA103 | GA104 | GA106 | GA107 */
     {
         pThis->bUcodeSupportsPrivAccessMap = ((NvBool)(0 == 0));
     }
@@ -252,7 +255,7 @@ void __nvoc_init_dataField_KernelGraphics(KernelGraphics *pThis, RmHalspecOwner 
     }
 
     // Hal field -- bRtvCbSupported
-    if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x0000ffe0UL) )) /* ChipHal: TU102 | TU104 | TU106 | TU116 | TU117 | GA100 | GA102 | GA103 | GA104 | GA106 | GA107 */ 
+    if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x0000ffe0UL) )) /* ChipHal: TU102 | TU104 | TU106 | TU116 | TU117 | GA100 | GA102 | GA103 | GA104 | GA106 | GA107 */
     {
         pThis->bRtvCbSupported = ((NvBool)(0 == 0));
     }
@@ -315,7 +318,7 @@ static void __nvoc_init_funcTable_KernelGraphics_1(KernelGraphics *pThis, RmHals
     pThis->__kgraphicsServiceNotificationInterrupt__ = &kgraphicsServiceNotificationInterrupt_IMPL;
 
     // Hal function -- kgraphicsClearInterrupt
-    if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x0000ffe0UL) )) /* ChipHal: TU102 | TU104 | TU106 | TU116 | TU117 | GA100 | GA102 | GA103 | GA104 | GA106 | GA107 */ 
+    if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x0000ffe0UL) )) /* ChipHal: TU102 | TU104 | TU106 | TU116 | TU117 | GA100 | GA102 | GA103 | GA104 | GA106 | GA107 */
     {
         pThis->__kgraphicsClearInterrupt__ = &kgraphicsClearInterrupt_GP100;
     }
@@ -324,7 +327,7 @@ static void __nvoc_init_funcTable_KernelGraphics_1(KernelGraphics *pThis, RmHals
     }
 
     // Hal function -- kgraphicsServiceInterrupt
-    if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x0000ffe0UL) )) /* ChipHal: TU102 | TU104 | TU106 | TU116 | TU117 | GA100 | GA102 | GA103 | GA104 | GA106 | GA107 */ 
+    if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x0000ffe0UL) )) /* ChipHal: TU102 | TU104 | TU106 | TU116 | TU117 | GA100 | GA102 | GA103 | GA104 | GA106 | GA107 */
     {
         pThis->__kgraphicsServiceInterrupt__ = &kgraphicsServiceInterrupt_GP100;
     }
@@ -444,4 +447,3 @@ NV_STATUS __nvoc_objCreateDynamic_KernelGraphics(KernelGraphics **ppThis, Dynami
 
     return status;
 }
-

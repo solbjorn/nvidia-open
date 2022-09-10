@@ -34,9 +34,12 @@ void __nvoc_init_dataField_VirtualMemoryRange(VirtualMemoryRange*);
 void __nvoc_dtor_VirtualMemoryRange(VirtualMemoryRange*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_VirtualMemoryRange;
 
+#define __NVOC_CB_TYPE VirtualMemoryRange
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_VirtualMemoryRange, __nvoc_dtor_VirtualMemoryRange);
+
 static const struct NVOC_RTTI __nvoc_rtti_VirtualMemoryRange_VirtualMemoryRange = {
     /*pClassDef=*/          &__nvoc_class_def_VirtualMemoryRange,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_VirtualMemoryRange,
+    /*dtor=*/               __nvoc_dtor_VirtualMemoryRange_dtor,
     /*offset=*/             0,
 };
 
@@ -96,7 +99,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_VirtualMemoryRange = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_VirtualMemoryRange = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_VirtualMemoryRange =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(VirtualMemoryRange),
@@ -106,7 +109,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_VirtualMemoryRange =
         /*name=*/               "VirtualMemoryRange",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_VirtualMemoryRange,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_VirtualMemoryRange_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_VirtualMemoryRange,
     /*pExportInfo=*/        &__nvoc_export_info_VirtualMemoryRange
 };
@@ -195,7 +198,7 @@ static NvBool __nvoc_thunk_RmResource_vmrangeAccessCallback(struct VirtualMemory
     return rmresAccessCallback((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_VirtualMemoryRange_RmResource.offset), pInvokingClient, pAllocParams, accessRight);
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_VirtualMemoryRange = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_VirtualMemoryRange =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -338,4 +341,3 @@ NV_STATUS __nvoc_objCreateDynamic_VirtualMemoryRange(VirtualMemoryRange **ppThis
 
     return status;
 }
-

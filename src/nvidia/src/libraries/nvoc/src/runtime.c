@@ -35,7 +35,7 @@
 
 static NV_FORCEINLINE Dynamic *__nvoc_fullyDerive_IMPL(Dynamic *pDynamic)
 {
-    return (Dynamic*)((NvU8*)pDynamic - pDynamic->__nvoc_rtti->offset);
+    return (Dynamic*)((NvU8*)pDynamic - pDynamic->__nvoc_rtti.__ptr->offset);
 }
 
 Dynamic *fullyDeriveWrapper(Dynamic *pDynamic)
@@ -48,13 +48,13 @@ const struct NVOC_RTTI_PROVIDER __nvoc_rtti_provider = { 0 };
 NVOC_CLASS_ID __nvoc_objGetClassId(Dynamic *pObj)
 {
     Dynamic *pDerivedObj = __nvoc_fullyDerive(pObj);
-    return pDerivedObj->__nvoc_rtti->pClassDef->classInfo.classId;
+    return pDerivedObj->__nvoc_rtti.__ptr->pClassDef->classInfo.classId;
 }
 
 const NVOC_CLASS_INFO *__nvoc_objGetClassInfo(Dynamic *pObj)
 {
     Dynamic *pDerivedObj = __nvoc_fullyDerive(pObj);
-    return &pDerivedObj->__nvoc_rtti->pClassDef->classInfo;
+    return &pDerivedObj->__nvoc_rtti.__ptr->pClassDef->classInfo;
 }
 
 Dynamic *objFindAncestor_IMPL(Dynamic *pDynamic, NVOC_CLASS_ID classId)
@@ -127,7 +127,7 @@ void __nvoc_objDelete(Dynamic *pDynamic)
         return;
     }
 
-    pDynamic->__nvoc_rtti->dtor(pDynamic);
+    pDynamic->__nvoc_rtti.__ptr->dtor(pDynamic);
 
     pObj = dynamicCast(pDynamic, Object);
     if (pObj->pParent != NULL)
@@ -157,7 +157,7 @@ void __nvoc_initRtti(Dynamic *pNewObject, const struct NVOC_CLASS_DEF *pClassDef
     for (relativeIdx = 0; relativeIdx < pClassDef->pCastInfo->numRelatives; relativeIdx++)
     {
         const struct NVOC_RTTI *pRelative = pClassDef->pCastInfo->relatives[relativeIdx];
-        const struct NVOC_RTTI **ppRelativeRtti = &((Dynamic*)((NvU8*)pNewObject + pRelative->offset))->__nvoc_rtti;
+        const struct NVOC_RTTI **ppRelativeRtti = &((Dynamic*)((NvU8*)pNewObject + pRelative->offset))->__nvoc_rtti.__ptr;
         *ppRelativeRtti = pRelative;
     }
 }
@@ -197,7 +197,7 @@ Dynamic *objDynamicCastById_IMPL(Dynamic *pFromObj, NVOC_CLASS_ID classId)
         return NULL;
     }
 
-    pFromRtti = pFromObj->__nvoc_rtti;
+    pFromRtti = pFromObj->__nvoc_rtti.__ptr;
 
     // fastpath, we're dynamic casting to what we already have
     if (classId == pFromRtti->pClassDef->classInfo.classId)
@@ -206,7 +206,7 @@ Dynamic *objDynamicCastById_IMPL(Dynamic *pFromObj, NVOC_CLASS_ID classId)
     }
 
     pDerivedObj = __nvoc_fullyDerive(pFromObj);
-    pDerivedRtti = pDerivedObj->__nvoc_rtti;
+    pDerivedRtti = pDerivedObj->__nvoc_rtti.__ptr;
 
     // fastpath, we're dynamic casting to the fully derived class
     if (classId == pDerivedRtti->pClassDef->classInfo.classId)
@@ -244,13 +244,13 @@ Dynamic *__nvoc_dynamicCast(Dynamic *pFromObj, const NVOC_CLASS_INFO *pClassInfo
 void __nvoc_destructFromBase(Dynamic *pDynamic)
 {
     Dynamic *pDerivedObj = __nvoc_fullyDerive(pDynamic);
-    pDerivedObj->__nvoc_rtti->dtor(pDerivedObj);
+    pDerivedObj->__nvoc_rtti.__ptr->dtor(pDerivedObj);
 }
 
 
 const struct NVOC_EXPORTED_METHOD_DEF *objGetExportedMethodDef_IMPL(Dynamic *pObj, NvU32 methodId)
 {
-    const struct NVOC_CASTINFO *const pCastInfo = pObj->__nvoc_rtti->pClassDef->pCastInfo;
+    const struct NVOC_CASTINFO *const pCastInfo = pObj->__nvoc_rtti.__ptr->pClassDef->pCastInfo;
     const NvU32 numRelatives = pCastInfo->numRelatives;
     const struct NVOC_RTTI *const *relatives = pCastInfo->relatives;
     NvU32 i;
@@ -294,4 +294,3 @@ const struct NVOC_EXPORTED_METHOD_DEF *objGetExportedMethodDef_IMPL(Dynamic *pOb
 
     return NULL;
 }
-

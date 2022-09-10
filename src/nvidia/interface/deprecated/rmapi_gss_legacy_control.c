@@ -43,6 +43,7 @@ NV_STATUS RmGssLegacyRpcCmd
     NV_STATUS  status         = NV_OK;
     GPU_MASK   gpuMaskRelease = 0;
     void      *pKernelParams  = NULL;
+    RM_API *pRmApi;
 
     NV_ASSERT_OR_RETURN((pArgs->cmd & RM_GSS_LEGACY_MASK),
                         NV_ERR_INVALID_STATE);
@@ -63,7 +64,7 @@ NV_STATUS RmGssLegacyRpcCmd
                         gpuGetByHandle(pClient, pArgs->hObject, NULL, &pGpu),
                         return NV_ERR_INVALID_ARGUMENT);
 
-    RM_API *pRmApi = GPU_GET_PHYSICAL_RMAPI(pGpu);
+    pRmApi = GPU_GET_PHYSICAL_RMAPI(pGpu);
 
     if (pSecInfo->paramLocation == PARAM_LOCATION_USER)
     {

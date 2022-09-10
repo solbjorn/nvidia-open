@@ -2255,14 +2255,14 @@ DeviceHDCPDetection::start()
 
 NativeDPCDHDCPCAPRead:
 
-        BCaps bCaps = {0};
+        BCaps bCaps = { };
 
         parent->hal->getBCaps(bCaps, parent->BCAPS);
         *(parent->nvBCaps) = *(parent->BCAPS);
 
         if (bCaps.HDCPCapable)
         {
-            NvU8 tempBKSV[HDCP_KSV_SIZE] = {0};
+            NvU8 tempBKSV[HDCP_KSV_SIZE] = { };
             if (parent->hal->getBKSV(tempBKSV))
             {
                 if (hdcpValidateKsv(tempBKSV, HDCP_KSV_SIZE))

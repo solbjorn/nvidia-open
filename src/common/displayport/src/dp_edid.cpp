@@ -194,7 +194,7 @@ Edid::Edid(): buffer()
     patchedChecksum = false;
 
     // clear the WARFlags
-    _WARFlags temp = {0};
+    _WARFlags temp = { };
     WARFlags = temp;
 }
 

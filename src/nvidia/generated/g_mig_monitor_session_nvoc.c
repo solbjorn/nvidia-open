@@ -28,9 +28,12 @@ void __nvoc_init_dataField_MIGMonitorSession(MIGMonitorSession*);
 void __nvoc_dtor_MIGMonitorSession(MIGMonitorSession*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_MIGMonitorSession;
 
+#define __NVOC_CB_TYPE MIGMonitorSession
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_MIGMonitorSession, __nvoc_dtor_MIGMonitorSession);
+
 static const struct NVOC_RTTI __nvoc_rtti_MIGMonitorSession_MIGMonitorSession = {
     /*pClassDef=*/          &__nvoc_class_def_MIGMonitorSession,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_MIGMonitorSession,
+    /*dtor=*/               __nvoc_dtor_MIGMonitorSession_dtor,
     /*offset=*/             0,
 };
 
@@ -69,7 +72,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_MIGMonitorSession = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_MIGMonitorSession = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_MIGMonitorSession =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(MIGMonitorSession),
@@ -79,7 +82,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_MIGMonitorSession =
         /*name=*/               "MIGMonitorSession",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_MIGMonitorSession,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_MIGMonitorSession_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_MIGMonitorSession,
     /*pExportInfo=*/        &__nvoc_export_info_MIGMonitorSession
 };
@@ -156,7 +159,7 @@ static NvBool __nvoc_thunk_RmResource_migmonitorsessionAccessCallback(struct MIG
     return rmresAccessCallback((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_MIGMonitorSession_RmResource.offset), pInvokingClient, pAllocParams, accessRight);
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_MIGMonitorSession = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_MIGMonitorSession =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -291,4 +294,3 @@ NV_STATUS __nvoc_objCreateDynamic_MIGMonitorSession(MIGMonitorSession **ppThis, 
 
     return status;
 }
-

@@ -86,13 +86,15 @@ vaspaceapiConstruct_IMPL
     {
         if (!rmGpuGroupLockIsOwner(pGpu->gpuInstance, GPU_LOCK_GRP_ALL, &gpuMask))
         {
+            NvU32 lockFlag;
+
             //
             // If we hold some GPU locks already then acquiring more GPU locks
             // may violate lock ordering and cause dead-lock. To avoid dead-lock in this case,
             // attempt to take the locks with a conditional acquire.
             //
             gpuMaskInitial = rmGpuLocksGetOwnedMask();
-            NvU32 lockFlag = (gpuMaskInitial == 0)
+            lockFlag = (gpuMaskInitial == 0)
                 ? GPUS_LOCK_FLAGS_NONE
                 : GPUS_LOCK_FLAGS_COND_ACQUIRE;
 
@@ -219,7 +221,7 @@ vaspaceapiConstruct_IMPL
             {
                 // In case of SR-IOV, the BAR1 and FLA is managed by the guest. So, no need
                 // to communicate with the host for BAR1 and FLA VA.
-                if ((pNvVASpaceAllocParams->index == NV_VASPACE_ALLOCATION_INDEX_GPU_HOST))
+                if (pNvVASpaceAllocParams->index == NV_VASPACE_ALLOCATION_INDEX_GPU_HOST)
                     bSendRPC = NV_FALSE;
             }
 

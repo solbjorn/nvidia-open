@@ -453,6 +453,7 @@ krcWatchdogInit_IMPL
                              rmapiGetInterface(RMAPI_API_LOCK_INTERNAL);
     NvBool          bClientUserd = IsVOLTAorBetter(pGpu);
     NvBool          bAcquireLock = NV_FALSE;
+    KernelBif *pKernelBif;
 
     union
     {
@@ -649,7 +650,7 @@ krcWatchdogInit_IMPL
         (sizeof(NvNotification) * WATCHDOG_GRAPHICS_NOTIFIERS *
          NV_MAX_SUBDEVICES));
 
-    KernelBif *pKernelBif = GPU_GET_KERNEL_BIF(pGpu);
+    pKernelBif = GPU_GET_KERNEL_BIF(pGpu);
     bCacheSnoop = FLD_TEST_REF(BIF_DMA_CAPS_SNOOP, _CTXDMA,
                                kbifGetDmaCaps(pGpu, pKernelBif));
 

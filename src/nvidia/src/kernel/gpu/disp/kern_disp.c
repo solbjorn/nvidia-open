@@ -535,10 +535,12 @@ kdispRegisterRgLineCallback_IMPL
     NvBool bEnable
 )
 {
+    RgLineCallback **slot;
+
     NV_ASSERT_OR_RETURN(head < OBJ_MAX_HEADS, NV_ERR_INVALID_ARGUMENT);
     NV_ASSERT_OR_RETURN(rgIntrLine < MAX_RG_LINE_CALLBACKS_PER_HEAD, NV_ERR_INVALID_ARGUMENT);
 
-    RgLineCallback **slot = &pKernelDisplay->rgLineCallbackPerHead[head][rgIntrLine];
+    slot = &pKernelDisplay->rgLineCallbackPerHead[head][rgIntrLine];
 
     if (bEnable && *slot == NULL)
     {
@@ -574,10 +576,12 @@ kdispInvokeRgLineCallback_KERNEL
     NvBool bIsIrqlIsr
 )
 {
+    RgLineCallback *pCallbackObject;
+
     NV_ASSERT_OR_RETURN_VOID(head < OBJ_MAX_HEADS);
     NV_ASSERT_OR_RETURN_VOID(rgIntrLine < MAX_RG_LINE_CALLBACKS_PER_HEAD);
 
-    RgLineCallback *pCallbackObject = pKernelDisplay->rgLineCallbackPerHead[head][rgIntrLine];
+    pCallbackObject = pKernelDisplay->rgLineCallbackPerHead[head][rgIntrLine];
 
     if (pCallbackObject != NULL)
     {
@@ -959,6 +963,7 @@ kdispInvokeDisplayModesetCallback_KERNEL
 )
 {
     NV_STATUS   status;
+    OBJGPU *pGpu;
 
     NV_PRINTF(LEVEL_INFO,
               "Kernel RM received \"%s of modeset\" notification "
@@ -967,7 +972,7 @@ kdispInvokeDisplayModesetCallback_KERNEL
               minRequiredIsoBandwidthKBPS,
               minRequiredFloorBandwidthKBPS);
 
-    OBJGPU *pGpu = ENG_GET_GPU(pKernelDisplay);
+    pGpu = ENG_GET_GPU(pKernelDisplay);
     status =
         kdispArbAndAllocDisplayBandwidth_HAL(pGpu,
                                              pKernelDisplay,

@@ -28,6 +28,8 @@
 #ifndef _NVOC_PRELUDE_H_
 #define _NVOC_PRELUDE_H_
 
+#include <linux/container_of.h>		/* container_of() */
+
 #include "utils/nvmacro.h"
 
 /* Calls the macro named in the first parameter with the rest of the given arguments. Written
@@ -169,6 +171,10 @@
     __nvoc_objCreateDynamic((ppNewObj), staticCast((pParent), Dynamic),            \
                             (pClassInfo), (flags), ##__VA_ARGS__)
 
+struct __rtti_marker {
+	const struct NVOC_RTTI	*__ptr;
+};
+
 /*!
  * @brief Cast any object supporting Run-Time Type Information (RTTI) to 'Dynamic'.
  *
@@ -176,8 +182,24 @@
  * The purpose of this expression is to force a compile-time error if
  * pObj does not contain RTTI information
  */
-#define __staticCast_Dynamic(pObj) ((Dynamic*) &(pObj)->__nvoc_rtti)
+#define nvoc_to_dynamic(ptr, type) ({			\
+	const type *__dptr = (ptr);			\
+	const struct __rtti_marker *__base =		\
+		&__dptr->__nvoc_rtti;			\
+							\
+	container_of(__base, Dynamic, __nvoc_rtti);	\
+})
 
+#define __staticCast_Dynamic(ptr)			\
+	nvoc_to_dynamic(ptr, typeof(*(ptr)))
+
+#define nvoc_from_dynamic(ptr, type) ({			\
+	const Dynamic *__dptr = (ptr);			\
+	const struct __rtti_marker *__base =		\
+		&__dptr->__nvoc_rtti;			\
+							\
+	container_of(__base, type, __nvoc_rtti);	\
+})
 
 /*
  * Helper macros for "pObject->getProperty(pObject, prop)"
@@ -211,7 +233,7 @@
  * that support RTTI because the RTTI pointer is always first in memory,
  */
 typedef struct {
-    const struct NVOC_RTTI *__nvoc_rtti;
+    struct __rtti_marker __nvoc_rtti;
 } Dynamic;
 
 typedef NvU32 NVOC_CLASS_ID;

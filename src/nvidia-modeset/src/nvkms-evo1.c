@@ -143,7 +143,7 @@ static void AssignPerHeadImpParams(const NVDevEvoRec *pDevEvo,
         switch (pTimings->protocol) {
             default:
                 nvAssert(!"Unknown protocol");
-                /* fall through */
+                fallthrough;
             case NVKMS_PROTOCOL_SOR_LVDS_CUSTOM:
                 protocol = NV5070_CTRL_CMD_SOR_PROTOCOL_LVDS_CUSTOM;
                 break;
@@ -173,7 +173,7 @@ static void AssignPerHeadImpParams(const NVDevEvoRec *pDevEvo,
         switch (pTimings->protocol) {
             default:
                 nvAssert(!"Unknown protocol");
-                /* fall through */
+                fallthrough;
             case NVKMS_PROTOCOL_PIOR_EXT_TMDS_ENC:
                 protocol = NV5070_CTRL_CMD_PIOR_PROTOCOL_EXT_TMDS_ENC;
                 break;

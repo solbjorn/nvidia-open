@@ -106,7 +106,7 @@ struct _def_client_system_event_info
 #define PRIVATE_FIELD(x) NVOC_PRIVATE_FIELD(x)
 #endif
 struct NotifShare {
-    const struct NVOC_RTTI *__nvoc_rtti;
+    struct __rtti_marker __nvoc_rtti;
     struct RsShared __nvoc_base_RsShared;
     struct Object *__nvoc_pbase_Object;
     struct RsShared *__nvoc_pbase_RsShared;
@@ -161,7 +161,7 @@ void shrnotifDestruct_IMPL(struct NotifShare *pNotifShare);
 #define PRIVATE_FIELD(x) NVOC_PRIVATE_FIELD(x)
 #endif
 struct Event {
-    const struct NVOC_RTTI *__nvoc_rtti;
+    struct __rtti_marker __nvoc_rtti;
     struct RmResource __nvoc_base_RmResource;
     struct Object *__nvoc_pbase_Object;
     struct RsResource *__nvoc_pbase_RsResource;
@@ -336,7 +336,7 @@ static inline NV_STATUS eventInit(struct Event *pEvent, struct CALL_CONTEXT *pCa
 #define PRIVATE_FIELD(x) NVOC_PRIVATE_FIELD(x)
 #endif
 struct INotifier {
-    const struct NVOC_RTTI *__nvoc_rtti;
+    struct __rtti_marker __nvoc_rtti;
     struct INotifier *__nvoc_pbase_INotifier;
     PEVENTNOTIFICATION *(*__inotifyGetNotificationListPtr__)(struct INotifier *);
     void (*__inotifySetNotificationShare__)(struct INotifier *, struct NotifShare *);
@@ -424,7 +424,7 @@ static inline PEVENTNOTIFICATION inotifyGetNotificationList(struct INotifier *pN
 #define PRIVATE_FIELD(x) NVOC_PRIVATE_FIELD(x)
 #endif
 struct Notifier {
-    const struct NVOC_RTTI *__nvoc_rtti;
+    struct __rtti_marker __nvoc_rtti;
     struct INotifier __nvoc_base_INotifier;
     struct INotifier *__nvoc_pbase_INotifier;
     struct Notifier *__nvoc_pbase_Notifier;

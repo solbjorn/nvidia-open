@@ -30,9 +30,12 @@ void __nvoc_init_dataField_MemoryFabric(MemoryFabric*);
 void __nvoc_dtor_MemoryFabric(MemoryFabric*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_MemoryFabric;
 
+#define __NVOC_CB_TYPE MemoryFabric
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_MemoryFabric, __nvoc_dtor_MemoryFabric);
+
 static const struct NVOC_RTTI __nvoc_rtti_MemoryFabric_MemoryFabric = {
     /*pClassDef=*/          &__nvoc_class_def_MemoryFabric,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_MemoryFabric,
+    /*dtor=*/               __nvoc_dtor_MemoryFabric_dtor,
     /*offset=*/             0,
 };
 
@@ -78,7 +81,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_MemoryFabric = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_MemoryFabric = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_MemoryFabric =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(MemoryFabric),
@@ -88,7 +91,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_MemoryFabric =
         /*name=*/               "MemoryFabric",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_MemoryFabric,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_MemoryFabric_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_MemoryFabric,
     /*pExportInfo=*/        &__nvoc_export_info_MemoryFabric
 };
@@ -177,17 +180,20 @@ static NvBool __nvoc_thunk_RmResource_memoryfabricAccessCallback(struct MemoryFa
     return rmresAccessCallback((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_MemoryFabric_RmResource.offset), pInvokingClient, pAllocParams, accessRight);
 }
 
+NVOC_BUILD_CALLBACK(memoryfabricCtrlGetInfo_IMPL);
+NVOC_BUILD_CALLBACK(memoryfabricCtrlCmdDescribe_IMPL);
+
 #if !defined(NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG)
 #define NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(x)      (0)
 #endif
 
-static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_MemoryFabric[] = 
+static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_MemoryFabric[] =
 {
     {               /*  [0] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x850u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) memoryfabricCtrlGetInfo_IMPL,
+        /*pFunc=*/      memoryfabricCtrlGetInfo_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x850u)
         /*flags=*/      0x850u,
         /*accessRight=*/0x0u,
@@ -200,9 +206,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_MemoryFa
     },
     {               /*  [1] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2840u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) memoryfabricCtrlCmdDescribe_IMPL,
+        /*pFunc=*/      memoryfabricCtrlCmdDescribe_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2840u)
         /*flags=*/      0x2840u,
         /*accessRight=*/0x0u,
@@ -216,7 +222,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_MemoryFa
 
 };
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_MemoryFabric = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_MemoryFabric =
 {
     /*numEntries=*/     2,
     /*pExportEntries=*/ __nvoc_exported_method_def_MemoryFabric
@@ -372,4 +378,3 @@ NV_STATUS __nvoc_objCreateDynamic_MemoryFabric(MemoryFabric **ppThis, Dynamic *p
 
     return status;
 }
-

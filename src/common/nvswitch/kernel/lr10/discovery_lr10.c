@@ -222,7 +222,7 @@ _nvswitch_device_discovery_lr10
 
                 if (engine != NULL)
                 {
-                    if ((engine->valid == NV_TRUE) && 
+                    if ((engine->valid == NV_TRUE) &&
                         (engine->disc_type != DISCOVERY_TYPE_DISCOVERY))
                     {
                         NVSWITCH_PRINT(device, WARN,
@@ -258,7 +258,7 @@ _nvswitch_device_discovery_lr10
                     "%s:Unknown (%d)\n",
                     __FUNCTION__, entry_type);
                 NVSWITCH_ASSERT(0);
-                // Deliberate fallthrough
+                fallthrough;
             case NVSWITCH_DISCOVERY_ENTRY_INVALID:
                 // Invalid entry.  Just ignore it
                 NVSWITCH_PRINT(device, SETUP,
@@ -918,41 +918,42 @@ nvswitch_nxbar_handle_data2_lr10
         chip_device->eng##_eng##_bcast              \
     }
 
-static
-NVSWITCH_DISCOVERY_HANDLERS_LR10 discovery_handlers_ptop_lr10 =
-{
-    &_nvswitch_ptop_parse_entry_lr10,
-    &_nvswitch_ptop_parse_enum_lr10,
-    &_nvswitch_ptop_handle_data1_lr10,
-    &_nvswitch_ptop_handle_data2_lr10
-};
+#define NVSWITCH_BUILD_HANDLERS(name, a, b, c, d)	\
+static NVSWITCH_DISCOVERY_HANDLERS_LR10			\
+discovery_handlers_##name##_lr10 = {			\
+	.parse_entry	= (a),				\
+	.parse_enum	= (b),				\
+	.handle_data1	= (c),				\
+	.handle_data2	= (d),				\
+}
 
-static
-NVSWITCH_DISCOVERY_HANDLERS_LR10 discovery_handlers_npg_lr10 =
-{
-    &_nvswitch_npg_parse_entry_lr10,
-    &_nvswitch_npg_parse_enum_lr10,
-    &_nvswitch_npg_handle_data1_lr10,
-    &_nvswitch_npg_handle_data2_lr10
-};
+NVSWITCH_BUILD_HANDLERS(ptop,
+    _nvswitch_ptop_parse_entry_lr10,
+    _nvswitch_ptop_parse_enum_lr10,
+    _nvswitch_ptop_handle_data1_lr10,
+    _nvswitch_ptop_handle_data2_lr10
+);
 
-static
-NVSWITCH_DISCOVERY_HANDLERS_LR10 discovery_handlers_nvlw_lr10 =
-{
-    &nvswitch_nvlw_parse_entry_lr10,
-    &nvswitch_nvlw_parse_enum_lr10,
-    &nvswitch_nvlw_handle_data1_lr10,
-    &nvswitch_nvlw_handle_data2_lr10
-};
+NVSWITCH_BUILD_HANDLERS(npg,
+    _nvswitch_npg_parse_entry_lr10,
+    _nvswitch_npg_parse_enum_lr10,
+    _nvswitch_npg_handle_data1_lr10,
+    _nvswitch_npg_handle_data2_lr10
+);
 
-static
-NVSWITCH_DISCOVERY_HANDLERS_LR10 discovery_handlers_nxbar_lr10 =
-{
-    &nvswitch_nxbar_parse_entry_lr10,
-    &nvswitch_nxbar_parse_enum_lr10,
-    &nvswitch_nxbar_handle_data1_lr10,
-    &nvswitch_nxbar_handle_data2_lr10
-};
+NVSWITCH_BUILD_HANDLERS(nvlw,
+    nvswitch_nvlw_parse_entry_lr10,
+    nvswitch_nvlw_parse_enum_lr10,
+    nvswitch_nvlw_handle_data1_lr10,
+    nvswitch_nvlw_handle_data2_lr10
+);
+
+NVSWITCH_BUILD_HANDLERS(nxbar,
+    nvswitch_nxbar_parse_entry_lr10,
+    nvswitch_nxbar_parse_enum_lr10,
+    nvswitch_nxbar_handle_data1_lr10,
+    nvswitch_nxbar_handle_data2_lr10
+);
 
 //
 // Parse top level PTOP engine discovery information to identify MMIO, interrupt, and
@@ -1000,7 +1001,7 @@ nvswitch_device_discovery_lr10
     NvlStatus   status;
 
     status = _nvswitch_device_discovery_lr10(
-        device, discovery_offset, discovery_table_lr10, discovery_table_lr10_size, 
+        device, discovery_offset, discovery_table_lr10, discovery_table_lr10_size,
         &discovery_handlers_ptop_lr10);
     if (status != NVL_SUCCESS)
     {
@@ -1042,7 +1043,7 @@ nvswitch_device_discovery_lr10
 
     for (i = 0; i < NUM_NVLW_ENGINE_LR10; i++)
     {
-        if (NVSWITCH_ENG_VALID_LR10(device, NVLW, i) && 
+        if (NVSWITCH_ENG_VALID_LR10(device, NVLW, i) &&
             (chip_device->engNVLW[i].info.top.discovery != 0))
         {
             DISCOVERY_TABLE_TYPE_LR10 discovery_table_nvlw[] =
@@ -1069,7 +1070,7 @@ nvswitch_device_discovery_lr10
             NvU32 discovery_table_nvlw_size = NV_ARRAY_ELEMENTS(discovery_table_nvlw);
 
             status = _nvswitch_device_discovery_lr10(
-                device, chip_device->engNVLW[i].info.top.discovery, discovery_table_nvlw, 
+                device, chip_device->engNVLW[i].info.top.discovery, discovery_table_nvlw,
                 discovery_table_nvlw_size, &discovery_handlers_nvlw_lr10);
             if (status != NVL_SUCCESS)
             {
@@ -1106,7 +1107,7 @@ nvswitch_device_discovery_lr10
 
     for (i = 0; i < NUM_NVLW_BCAST_ENGINE_LR10; i++)
     {
-        if (NVSWITCH_ENG_VALID_LR10(device, NVLW_BCAST, i) && 
+        if (NVSWITCH_ENG_VALID_LR10(device, NVLW_BCAST, i) &&
             (chip_device->engNVLW_BCAST[i].info.top.discovery != 0))
         {
             DISCOVERY_TABLE_TYPE_LR10 discovery_table_nvlw[] =
@@ -1133,7 +1134,7 @@ nvswitch_device_discovery_lr10
             NvU32 discovery_table_nvlw_size = NV_ARRAY_ELEMENTS(discovery_table_nvlw);
 
             status = _nvswitch_device_discovery_lr10(
-                device, chip_device->engNVLW_BCAST[i].info.top.discovery, discovery_table_nvlw, 
+                device, chip_device->engNVLW_BCAST[i].info.top.discovery, discovery_table_nvlw,
                 discovery_table_nvlw_size, &discovery_handlers_nvlw_lr10);
             if (status != NVL_SUCCESS)
             {
@@ -1170,7 +1171,7 @@ nvswitch_device_discovery_lr10
 
     for (i = 0; i < NUM_NPG_ENGINE_LR10; i++)
     {
-        if (NVSWITCH_ENG_VALID_LR10(device, NPG, i) && 
+        if (NVSWITCH_ENG_VALID_LR10(device, NPG, i) &&
             (chip_device->engNPG[i].info.top.discovery != 0))
         {
             DISCOVERY_TABLE_TYPE_LR10 discovery_table_npg[] =
@@ -1185,7 +1186,7 @@ nvswitch_device_discovery_lr10
             NvU32 discovery_table_npg_size = NV_ARRAY_ELEMENTS(discovery_table_npg);
 
             status = _nvswitch_device_discovery_lr10(
-                device, chip_device->engNPG[i].info.top.discovery, discovery_table_npg, 
+                device, chip_device->engNPG[i].info.top.discovery, discovery_table_npg,
                 discovery_table_npg_size, &discovery_handlers_npg_lr10);
             if (status != NVL_SUCCESS)
             {
@@ -1210,7 +1211,7 @@ nvswitch_device_discovery_lr10
 
     for (i = 0; i < NUM_NPG_BCAST_ENGINE_LR10; i++)
     {
-        if (NVSWITCH_ENG_VALID_LR10(device, NPG_BCAST, i) && 
+        if (NVSWITCH_ENG_VALID_LR10(device, NPG_BCAST, i) &&
             (chip_device->engNPG_BCAST[i].info.top.discovery != 0))
         {
             DISCOVERY_TABLE_TYPE_LR10 discovery_table_npg[] =
@@ -1225,7 +1226,7 @@ nvswitch_device_discovery_lr10
             NvU32 discovery_table_npg_size = NV_ARRAY_ELEMENTS(discovery_table_npg);
 
             status = _nvswitch_device_discovery_lr10(
-                device, chip_device->engNPG_BCAST[i].info.top.discovery, discovery_table_npg, 
+                device, chip_device->engNPG_BCAST[i].info.top.discovery, discovery_table_npg,
                 discovery_table_npg_size, &discovery_handlers_npg_lr10);
             if (status != NVL_SUCCESS)
             {
@@ -1250,7 +1251,7 @@ nvswitch_device_discovery_lr10
 
     for (i = 0; i < NUM_NXBAR_ENGINE_LR10; i++)
     {
-        if (NVSWITCH_ENG_VALID_LR10(device, NXBAR, i) && 
+        if (NVSWITCH_ENG_VALID_LR10(device, NXBAR, i) &&
             (chip_device->engNXBAR[i].info.top.discovery != 0))
         {
             DISCOVERY_TABLE_TYPE_LR10 discovery_table_nxbar[] =
@@ -1265,8 +1266,8 @@ nvswitch_device_discovery_lr10
             NvU32 discovery_table_nxbar_size = NV_ARRAY_ELEMENTS(discovery_table_nxbar);
 
             status = _nvswitch_device_discovery_lr10(
-                device, chip_device->engNXBAR[i].info.top.discovery, 
-                discovery_table_nxbar, discovery_table_nxbar_size, 
+                device, chip_device->engNXBAR[i].info.top.discovery,
+                discovery_table_nxbar, discovery_table_nxbar_size,
                 &discovery_handlers_nxbar_lr10);
             if (status != NVL_SUCCESS)
             {
@@ -1291,7 +1292,7 @@ nvswitch_device_discovery_lr10
 
     for (i = 0; i < NUM_NXBAR_BCAST_ENGINE_LR10; i++)
     {
-        if (NVSWITCH_ENG_VALID_LR10(device, NXBAR_BCAST, i) && 
+        if (NVSWITCH_ENG_VALID_LR10(device, NXBAR_BCAST, i) &&
             (chip_device->engNXBAR_BCAST[i].info.top.discovery != 0))
         {
             DISCOVERY_TABLE_TYPE_LR10 discovery_table_nxbar[] =
@@ -1306,8 +1307,8 @@ nvswitch_device_discovery_lr10
             NvU32 discovery_table_nxbar_size = NV_ARRAY_ELEMENTS(discovery_table_nxbar);
 
             status = _nvswitch_device_discovery_lr10(
-                device, chip_device->engNXBAR_BCAST[i].info.top.discovery, 
-                discovery_table_nxbar, discovery_table_nxbar_size, 
+                device, chip_device->engNXBAR_BCAST[i].info.top.discovery,
+                discovery_table_nxbar, discovery_table_nxbar_size,
                 &discovery_handlers_nxbar_lr10);
             if (status != NVL_SUCCESS)
             {
@@ -1409,7 +1410,7 @@ nvswitch_process_discovery_lr10
     //
     for (i = 0; i < NVSWITCH_NUM_LINKS_LR10; i++)
     {
-        device->link[i].valid = 
+        device->link[i].valid =
             NVSWITCH_ENG_VALID_LR10(device, NPORT, NVSWITCH_GET_LINK_ENG_INST(device, i, NPORT)) &&
             NVSWITCH_ENG_VALID_LR10(device, NVLTLC, NVSWITCH_GET_LINK_ENG_INST(device, i, NVLTLC)) &&
             NVSWITCH_ENG_VALID_LR10(device, NVLDL, NVSWITCH_GET_LINK_ENG_INST(device, i, NVLDL)) &&

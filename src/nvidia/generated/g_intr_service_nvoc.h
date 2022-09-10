@@ -82,7 +82,7 @@ typedef struct {
 #define PRIVATE_FIELD(x) NVOC_PRIVATE_FIELD(x)
 #endif
 struct IntrService {
-    const struct NVOC_RTTI *__nvoc_rtti;
+    struct __rtti_marker __nvoc_rtti;
     struct IntrService *__nvoc_pbase_IntrService;
     void (*__intrservRegisterIntrService__)(struct OBJGPU *, struct IntrService *, IntrServiceRecord *);
     NvBool (*__intrservClearInterrupt__)(struct OBJGPU *, struct IntrService *, IntrServiceClearInterruptArguments *);

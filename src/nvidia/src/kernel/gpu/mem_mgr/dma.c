@@ -290,7 +290,7 @@ deviceCtrlCmdDmaUpdatePde2_IMPL
     NV0080_CTRL_DMA_UPDATE_PDE_2_PARAMS *pParams
 )
 {
-    OBJGPU      *pGpu       = GPU_RES_GET_GPU(pDevice);;
+    OBJGPU      *pGpu       = GPU_RES_GET_GPU(pDevice);
     OBJVASPACE  *pVAS       = NULL;
     NV_STATUS    status     = NV_OK;
     NvBool       bBcState   = NV_TRUE;
@@ -364,6 +364,7 @@ deviceCtrlCmdDmaSetVASpaceSize_IMPL
 {
     OBJGPU          *pGpu    = GPU_RES_GET_GPU(pDevice);
     OBJVASPACE      *pVAS    = NULL;
+    OBJGVASPACE *pGVAS;
 
     LOCK_ASSERT_AND_RETURN(rmApiLockIsOwner() && rmGpuLockIsOwner());
 
@@ -397,7 +398,7 @@ deviceCtrlCmdDmaSetVASpaceSize_IMPL
         }
     }
 
-    OBJGVASPACE *pGVAS = dynamicCast(pVAS, OBJGVASPACE);
+    pGVAS = dynamicCast(pVAS, OBJGVASPACE);
     NV_ASSERT_OR_RETURN(pGVAS != NULL, NV_ERR_NOT_SUPPORTED);
     NV_ASSERT_OK_OR_RETURN(gvaspaceResize(pGVAS, pParams));
 
@@ -521,6 +522,7 @@ deviceCtrlCmdDmaUnsetPageDirectory_IMPL
     RmCtrlParams   *pRmCtrlParams = pCallContext->pControlParams->pLegacyParams;
     NvBool          bBcState      = NV_FALSE;
     NV_STATUS       status        = NV_OK;
+    OBJGVASPACE *pGVAS;
 
     LOCK_ASSERT_AND_RETURN(rmApiLockIsOwner() && rmGpuLockIsOwner());
 
@@ -541,7 +543,7 @@ deviceCtrlCmdDmaUnsetPageDirectory_IMPL
                           vaspaceGetByHandleOrDeviceDefault(RES_GET_CLIENT(pDevice), RES_GET_HANDLE(pDevice),
                                                             pParams->hVASpace, &pVAS));
 
-    OBJGVASPACE *pGVAS = dynamicCast(pVAS, OBJGVASPACE);
+    pGVAS = dynamicCast(pVAS, OBJGVASPACE);
     NV_ASSERT_OR_RETURN(pGVAS != NULL, NV_ERR_NOT_SUPPORTED);
 
     // Force to UC if client passed in sub-device handle.

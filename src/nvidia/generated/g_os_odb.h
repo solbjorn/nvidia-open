@@ -15,7 +15,7 @@
 
 
 #define __OS_OBJECT_BASE_DEFINITION \
-    const struct NVOC_RTTI *__nvoc_rtti; \
+    struct __rtti_marker __nvoc_rtti; \
     Object __nvoc_base_Object; \
     Object *__nvoc_pbase_Object; \
     PDB_PROP_OS pdb

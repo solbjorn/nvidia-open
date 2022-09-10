@@ -82,12 +82,12 @@ struct OS_RM_CAPS
     nv_cap_t **caps;
 };
 
-NvBool osIsRaisedIRQL()
+NvBool osIsRaisedIRQL(void)
 {
     return (!os_semaphore_may_sleep());
 }
 
-NvBool osIsISR()
+NvBool osIsISR(void)
 {
     return os_is_isr();
 }
@@ -1456,9 +1456,11 @@ NV_STATUS osUserHandleToKernelPtr(NvHandle hClient, NvP64 hEvent, NvP64 *pEvent)
     nv_state_t *nv = nv_get_ctl_state();
     NvU32 fd = (NvU64)hEvent;
     NV_STATUS result;
+    nv_event_t *e;
 
     portSyncSpinlockAcquire(nv->event_spinlock);
-    nv_event_t *e = nv->event_list;
+
+    e = nv->event_list;
     while (e != NULL)
     {
         if (e->fd == fd && e->hParent == hClient)
@@ -1760,7 +1762,7 @@ NV_STATUS osPackageRegistry(
     return RmPackageRegistry(nv, pRegTable, pSize);
 }
 
-NvU32 osGetCpuCount()
+NvU32 osGetCpuCount(void)
 {
     return os_get_cpu_count();   // Total number of logical CPUs.
 }
@@ -1802,7 +1804,7 @@ void osGetTimeoutParams(OBJGPU *pGpu, NvU32 *pTimeoutUs, NvU32 *pScale, NvU32 *p
     return;
 }
 
-void osFlushLog()
+void osFlushLog(void)
 {
     // Not implemented
 }
@@ -2099,6 +2101,8 @@ cliresCtrlCmdOsUnixExportObjectsToFd_IMPL
     NvHandle          *exportHandles = NULL;
     NvBool             bFdSetup = NV_FALSE;
 
+    ct_assert(sizeof(nvfp->metadata) == sizeof(pParams->metadata));
+
     nvfp = nv_get_file_private(pParams->fd, NV_TRUE, &priv);
     if (nvfp == NULL)
     {
@@ -2106,8 +2110,6 @@ cliresCtrlCmdOsUnixExportObjectsToFd_IMPL
         status = NV_ERR_INVALID_PARAMETER;
         goto done;
     }
-
-    ct_assert(sizeof(nvfp->metadata) == sizeof(pParams->metadata));
 
     /* Setup export FD if not done */
     if (nvfp->handles == NULL)
@@ -2525,7 +2527,7 @@ NV_STATUS osGpuLocksQueueRelease(OBJGPU *pGpu, NvU32 dpcGpuLocksRelease)
     return NV_SEMA_RELEASE_FAILED;
 }
 
-void osSyncWithRmDestroy()
+void osSyncWithRmDestroy(void)
 {
 }
 
@@ -2960,6 +2962,7 @@ osIovaMap
     NvBool bIsContig;
     NV_ADDRESS_SPACE addressSpace;
     NvU32 osPageCount;
+    void *pPriv;
 
     if (pIovaMapping == NULL)
     {
@@ -3066,7 +3069,7 @@ osIovaMap
     }
 #endif
 
-    void *pPriv = memdescGetMemData(pIovaMapping->pPhysMemDesc);
+    pPriv = memdescGetMemData(pIovaMapping->pPhysMemDesc);
     osPageCount = NV_RM_PAGES_TO_OS_PAGES(pIovaMapping->pPhysMemDesc->PageCount);
 
     if (!bIsBar0 && !bIsFbOffset)
@@ -3365,7 +3368,7 @@ osGetGpuRailVoltageInfo
  * @return pointer to the security token.
  */
 PSECURITY_TOKEN
-osGetSecurityToken()
+osGetSecurityToken(void)
 {
     NV_STATUS rmStatus;
     TOKEN_USER *pTokenUser;
@@ -4041,7 +4044,7 @@ osWaitForIbmnpuRsync
 }
 
 NvU32
-osGetPageSize()
+osGetPageSize(void)
 {
     return os_page_size;
 }

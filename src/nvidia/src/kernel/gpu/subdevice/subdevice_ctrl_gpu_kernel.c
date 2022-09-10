@@ -164,10 +164,12 @@ getGpuInfos(Subdevice *pSubdevice, NV2080_CTRL_GPU_GET_INFO_V2_PARAMS *pParams, 
             }
             case NV2080_CTRL_GPU_INFO_INDEX_NVSWITCH_PROXY_DETECTED:
             {
+                KernelNvlink *pKernelNvlink;
+
                 NV_CHECK_OR_ELSE(LEVEL_WARNING, bCanAccessHw,
                     { data = 0; status = NV_ERR_INVALID_ARGUMENT; break; });
 
-                KernelNvlink *pKernelNvlink = GPU_GET_KERNEL_NVLINK(pGpu);
+                pKernelNvlink = GPU_GET_KERNEL_NVLINK(pGpu);
 
                 data = NV2080_CTRL_GPU_INFO_NVSWITCH_PROXY_DETECTED_NO;
 
@@ -180,11 +182,13 @@ getGpuInfos(Subdevice *pSubdevice, NV2080_CTRL_GPU_GET_INFO_V2_PARAMS *pParams, 
             }
             case NV2080_CTRL_GPU_INFO_INDEX_GPU_SMC_MODE:
             {
+                NV2080_CTRL_INTERNAL_GPU_GET_SMC_MODE_PARAMS params;
+                RM_API *pRmApi;
+
                 NV_CHECK_OR_ELSE(LEVEL_WARNING, bCanAccessHw,
                     { data = 0; status = NV_ERR_INVALID_ARGUMENT; break; });
 
-                RM_API *pRmApi = GPU_GET_PHYSICAL_RMAPI(pGpu);
-                NV2080_CTRL_INTERNAL_GPU_GET_SMC_MODE_PARAMS params;
+                pRmApi = GPU_GET_PHYSICAL_RMAPI(pGpu);
                 
                 if (IS_VIRTUAL(pGpu))
                 {
@@ -1008,6 +1012,7 @@ subdeviceCtrlCmdGpuGetEnginePartnerList_IMPL
     NvU32            i;
     PCLASSDESCRIPTOR pClass;
     NV_STATUS        status = NV_OK;
+    KernelFifo *pKernelFifo;
 
     pPartnerListParams->numPartners = 0;
 
@@ -1054,7 +1059,7 @@ subdeviceCtrlCmdGpuGetEnginePartnerList_IMPL
     }
 
     // See if the hal wants to handle this
-    KernelFifo *pKernelFifo = GPU_GET_KERNEL_FIFO(pGpu);
+    pKernelFifo = GPU_GET_KERNEL_FIFO(pGpu);
     status = kfifoGetEnginePartnerList_HAL(pGpu, pKernelFifo, pPartnerListParams);
 
     // Restore the client's passed engineType
@@ -1617,6 +1622,9 @@ subdeviceCtrlCmdGpuGetPids_IMPL
     NvU32 internalClassId;
     NV_STATUS status;
     MIG_INSTANCE_REF *pRef = NULL;
+    KernelMIGManager *pKernelMIGManager;
+    MIG_INSTANCE_REF partitionRef;
+    NvHandle hClient;
 
     NV_ASSERT_OR_RETURN(RMCFG_FEATURE_KERNEL_RM, NV_ERR_NOT_SUPPORTED);
 
@@ -1654,9 +1662,9 @@ subdeviceCtrlCmdGpuGetPids_IMPL
     // Clients with MIG_MONITOR capability are allowed to get full device
     // info
     //
-    KernelMIGManager *pKernelMIGManager = GPU_GET_KERNEL_MIG_MANAGER(pGpu);
-    NvHandle hClient = RES_GET_CLIENT_HANDLE(pSubdevice);
-    MIG_INSTANCE_REF partitionRef = kmigmgrMakeNoMIGReference();
+    pKernelMIGManager = GPU_GET_KERNEL_MIG_MANAGER(pGpu);
+    hClient = RES_GET_CLIENT_HANDLE(pSubdevice);
+    partitionRef = kmigmgrMakeNoMIGReference();
     pRef = &partitionRef;
     if (IS_MIG_IN_USE(pGpu) &&
         !rmclientIsCapableByHandle(hClient, NV_RM_CAP_SYS_SMC_MONITOR))
@@ -1703,6 +1711,9 @@ subdeviceCtrlCmdGpuGetPidInfo_IMPL
     NvU32 i;
     MIG_INSTANCE_REF *pRef = NULL;
     NvBool bGlobalInfo = NV_TRUE;
+    KernelMIGManager *pKernelMIGManager;
+    MIG_INSTANCE_REF ref;
+    NvHandle hClient;
 
     NV_ASSERT_OR_RETURN(RMCFG_FEATURE_KERNEL_RM, NV_ERR_NOT_SUPPORTED);
 
@@ -1720,9 +1731,9 @@ subdeviceCtrlCmdGpuGetPidInfo_IMPL
     // Clients with MIG_MONITOR capability are allowed to get full device
     // info
     //
-    KernelMIGManager *pKernelMIGManager = GPU_GET_KERNEL_MIG_MANAGER(pGpu);
-    NvHandle hClient = RES_GET_CLIENT_HANDLE(pSubdevice);
-    MIG_INSTANCE_REF ref = kmigmgrMakeNoMIGReference();
+    pKernelMIGManager = GPU_GET_KERNEL_MIG_MANAGER(pGpu);
+    hClient = RES_GET_CLIENT_HANDLE(pSubdevice);
+    ref = kmigmgrMakeNoMIGReference();
     pRef = &ref;
     if (IS_MIG_IN_USE(pGpu) &&
         !rmclientIsCapableByHandle(hClient, NV_RM_CAP_SYS_SMC_MONITOR))
@@ -1944,13 +1955,14 @@ subdeviceCtrlCmdGpuGetMaxSupportedPageSize_IMPL
 {
     OBJGPU   *pGpu = GPU_RES_GET_GPU(pSubdevice);
     NV_STATUS status  = NV_OK;
+    KernelGmmu *pKernelGmmu;
 
     LOCK_ASSERT_AND_RETURN(rmApiLockIsOwner() && rmDeviceGpuLockIsOwner(pGpu->gpuInstance));
 
     // Default to minimal page size (4k)
     pParams->maxSupportedPageSize = RM_PAGE_SIZE;
 
-    KernelGmmu *pKernelGmmu = GPU_GET_KERNEL_GMMU(pGpu);
+    pKernelGmmu = GPU_GET_KERNEL_GMMU(pGpu);
     if (kgmmuIsPageSize512mbSupported(pKernelGmmu))
     {
         pParams->maxSupportedPageSize = RM_PAGE_SIZE_512M;
@@ -2231,9 +2243,13 @@ NV_STATUS subdeviceCtrlCmdValidateMemMapRequest_IMPL
     if (isAddressWithinLimits(start, length, pGpu->busInfo.gpuPhysAddr,
                         pGpu->deviceMappings[0].gpuNvLength))
     {
+        KernelFifo *pKernelFifo;
+        KernelMc *pKernelMc;
+        OBJTMR *pTmr;
+
         start -= pGpu->busInfo.gpuPhysAddr;
 
-        OBJTMR *pTmr = GPU_GET_TIMER(pGpu);
+        pTmr = GPU_GET_TIMER(pGpu);
         rmStatus = tmrGetTimerBar0MapInfo_HAL(pGpu, pTmr,
                                               &bar0MapOffset, &bar0MapSize);
         if ((rmStatus == NV_OK) &&
@@ -2243,7 +2259,7 @@ NV_STATUS subdeviceCtrlCmdValidateMemMapRequest_IMPL
             return NV_OK;
         }
 
-        KernelFifo *pKernelFifo = GPU_GET_KERNEL_FIFO(pGpu);
+        pKernelFifo = GPU_GET_KERNEL_FIFO(pGpu);
         rmStatus = kfifoGetUsermodeMapInfo_HAL(pGpu, pKernelFifo,
                                                &bar0MapOffset, &bar0MapSize);
         if ((rmStatus == NV_OK) &&
@@ -2252,7 +2268,7 @@ NV_STATUS subdeviceCtrlCmdValidateMemMapRequest_IMPL
             return NV_OK;
         }
 
-        KernelMc *pKernelMc = GPU_GET_KERNEL_MC(pGpu);
+        pKernelMc = GPU_GET_KERNEL_MC(pGpu);
         rmStatus = kmcGetMcBar0MapInfo_HAL(pGpu, pKernelMc,
                 &bar0MapOffset, &bar0MapSize);
         if ((rmStatus == NV_OK) &&
@@ -2349,6 +2365,7 @@ subdeviceCtrlCmdGpuSetFabricAddr_IMPL
     OBJGPU       *pGpu         = GPU_RES_GET_GPU(pSubdevice);
     NvHandle      hClient      = RES_GET_CLIENT_HANDLE(pSubdevice);
     CALL_CONTEXT *pCallContext = resservGetTlsCallContext();
+    KernelNvlink *pKernelNvlink;
 
     NV_ASSERT_OR_RETURN(RMCFG_FEATURE_KERNEL_RM, NV_ERR_NOT_SUPPORTED);
     NV_ASSERT_OR_RETURN(pCallContext != NULL, NV_ERR_INVALID_STATE);
@@ -2363,7 +2380,7 @@ subdeviceCtrlCmdGpuSetFabricAddr_IMPL
         return NV_ERR_INSUFFICIENT_PERMISSIONS;
     }
 
-    KernelNvlink *pKernelNvlink = GPU_GET_KERNEL_NVLINK(pGpu);
+    pKernelNvlink = GPU_GET_KERNEL_NVLINK(pGpu);
 
     if (pKernelNvlink == NULL)
         return NV_ERR_NOT_SUPPORTED;

@@ -645,6 +645,7 @@ static int libos_printf_a(
             {
                 bResolvePtrVal = NV_TRUE;
             }
+            fallthrough;
         case 'x':
         case 'X':
             a = fmt_x(arg.i, z, t & 32);
@@ -676,6 +677,7 @@ static int libos_printf_a(
                 }
                 else
                     pl = 0;
+                fallthrough;
             case 'u':
                 a = fmt_u(arg.i, z);
             }
@@ -1034,12 +1036,19 @@ static void libosExtractLogs_decode(LIBOS_LOG_DECODE *logDecode)
 
 static NvBool libosCopyLogToNvlog_nowrap(LIBOS_LOG_DECODE_LOG *pLog)
 {
+    LIBOS_LOG_NVLOG_BUFFER *pNoWrapBuf;
+    NvU64 putOffset;
+    NvU64 putCopy;
+    NvU8 *pSrc;
+    NvU8 *pDst;
+    NvU64 len;
+
     NVLOG_BUFFER *pNvLogBuffer = NvLogLogger.pBuffers[pLog->hNvLogNoWrap];
     NV_ASSERT_OR_RETURN((pLog->hNvLogNoWrap != 0) && (pNvLogBuffer != NULL), NV_FALSE);
 
-    LIBOS_LOG_NVLOG_BUFFER *pNoWrapBuf = (LIBOS_LOG_NVLOG_BUFFER *)pNvLogBuffer->data;
-    NvU64 putCopy                      = pLog->physicLogBuffer[0];
-    NvU64 putOffset                    = putCopy * sizeof(NvU64) + sizeof(NvU64);
+    pNoWrapBuf = (LIBOS_LOG_NVLOG_BUFFER *)pNvLogBuffer->data;
+    putCopy = pLog->physicLogBuffer[0];
+    putOffset = putCopy * sizeof(NvU64) + sizeof(NvU64);
 
     if (putOffset == pNvLogBuffer->pos)
     {
@@ -1053,9 +1062,9 @@ static NvBool libosCopyLogToNvlog_nowrap(LIBOS_LOG_DECODE_LOG *pLog)
         return NV_FALSE;
     }
 
-    NvU64 len  = putOffset - pNvLogBuffer->pos;
-    NvU8 *pSrc = ((NvU8 *)pLog->physicLogBuffer) + pNvLogBuffer->pos;
-    NvU8 *pDst = pNoWrapBuf->data + pNvLogBuffer->pos;
+    len = putOffset - pNvLogBuffer->pos;
+    pSrc = ((NvU8 *)pLog->physicLogBuffer) + pNvLogBuffer->pos;
+    pDst = pNoWrapBuf->data + pNvLogBuffer->pos;
     portMemCopy(pDst, len, pSrc, len);
     pNvLogBuffer->pos            = putOffset; // TODO: usage of NVLOG_BUFFER::pos is sus here, reconsider?
     *(NvU64 *)(pNoWrapBuf->data) = putCopy;
@@ -1065,11 +1074,15 @@ static NvBool libosCopyLogToNvlog_nowrap(LIBOS_LOG_DECODE_LOG *pLog)
 static NvBool libosCopyLogToNvlog_wrap(LIBOS_LOG_DECODE_LOG *pLog)
 {
     NVLOG_BUFFER *pNvLogBuffer = NvLogLogger.pBuffers[pLog->hNvLogWrap];
+    LIBOS_LOG_NVLOG_BUFFER *pWrapBuf;
+    NvU64 putOffset;
+    NvU64 putCopy;
+
     NV_ASSERT_OR_RETURN((pLog->hNvLogWrap != 0) && (pNvLogBuffer != NULL), NV_FALSE);
 
-    LIBOS_LOG_NVLOG_BUFFER *pWrapBuf = (LIBOS_LOG_NVLOG_BUFFER *)pNvLogBuffer->data;
-    NvU64 putCopy                    = pLog->physicLogBuffer[0];
-    NvU64 putOffset                  = putCopy * sizeof(NvU64) + sizeof(NvU64);
+    pWrapBuf = (LIBOS_LOG_NVLOG_BUFFER *)pNvLogBuffer->data;
+    putCopy = pLog->physicLogBuffer[0];
+    putOffset = putCopy * sizeof(NvU64) + sizeof(NvU64);
 
     portMemCopy(pWrapBuf->data, pLog->logBufferSize, (void *)pLog->physicLogBuffer, pLog->logBufferSize);
     pNvLogBuffer->pos = putOffset; // TODO: usage of NVLOG_BUFFER::pos is sus here, reconsider?
@@ -1167,6 +1180,24 @@ void libosLogCreateEx(LIBOS_LOG_DECODE *logDecode, const char *pSourceName)
 
 void libosLogAddLogEx(LIBOS_LOG_DECODE *logDecode, void *buffer, NvU64 bufferSize, NvU32 gpuInstance, NvU32 gpuArch, NvU32 gpuImpl, const char *name)
 {
+#if LIBOS_LOG_TO_NVLOG
+    const NvU32 libosNoWrapBufferFlags =
+        DRF_DEF(LOG, _BUFFER_FLAGS, _DISABLED, _NO)      | DRF_DEF(LOG, _BUFFER_FLAGS, _TYPE, _NOWRAP)  |
+        DRF_DEF(LOG, _BUFFER_FLAGS, _EXPANDABLE, _NO)    | DRF_DEF(LOG, _BUFFER_FLAGS, _NONPAGED, _YES) |
+        DRF_DEF(LOG, _BUFFER_FLAGS, _LOCKING, _NONE)     | DRF_DEF(LOG, _BUFFER_FLAGS, _OCA, _YES)      |
+        DRF_DEF(LOG, _BUFFER_FLAGS, _FORMAT, _LIBOS_LOG) |
+        DRF_NUM(LOG, _BUFFER_FLAGS, _GPU_INSTANCE, gpuInstance);
+
+    const NvU32 libosWrapBufferFlags =
+        DRF_DEF(LOG, _BUFFER_FLAGS, _DISABLED, _NO)      | DRF_DEF(LOG, _BUFFER_FLAGS, _TYPE, _RING)    |
+        DRF_DEF(LOG, _BUFFER_FLAGS, _EXPANDABLE, _NO)    | DRF_DEF(LOG, _BUFFER_FLAGS, _NONPAGED, _YES) |
+        DRF_DEF(LOG, _BUFFER_FLAGS, _LOCKING, _NONE)     | DRF_DEF(LOG, _BUFFER_FLAGS, _OCA, _YES)      |
+        DRF_DEF(LOG, _BUFFER_FLAGS, _FORMAT, _LIBOS_LOG) |
+        DRF_NUM(LOG, _BUFFER_FLAGS, _GPU_INSTANCE, gpuInstance);
+    LIBOS_LOG_NVLOG_BUFFER *pNoWrapBuf;
+    LIBOS_LOG_NVLOG_BUFFER *pWrapBuf;
+    NV_STATUS status;
+#endif
     NvU32 i;
     LIBOS_LOG_DECODE_LOG *pLog;
 
@@ -1189,29 +1220,10 @@ void libosLogAddLogEx(LIBOS_LOG_DECODE *logDecode, void *buffer, NvU64 bufferSiz
     if (name)
         portStringCopy(pLog->taskPrefix, sizeof(pLog->taskPrefix), name, sizeof(pLog->taskPrefix));
 
-
-#if LIBOS_LOG_TO_NVLOG
-    NV_STATUS status;
-
-    const NvU32 libosNoWrapBufferFlags =
-        DRF_DEF(LOG, _BUFFER_FLAGS, _DISABLED, _NO)      | DRF_DEF(LOG, _BUFFER_FLAGS, _TYPE, _NOWRAP)  |
-        DRF_DEF(LOG, _BUFFER_FLAGS, _EXPANDABLE, _NO)    | DRF_DEF(LOG, _BUFFER_FLAGS, _NONPAGED, _YES) |
-        DRF_DEF(LOG, _BUFFER_FLAGS, _LOCKING, _NONE)     | DRF_DEF(LOG, _BUFFER_FLAGS, _OCA, _YES)      |
-        DRF_DEF(LOG, _BUFFER_FLAGS, _FORMAT, _LIBOS_LOG) |
-        DRF_NUM(LOG, _BUFFER_FLAGS, _GPU_INSTANCE, gpuInstance);
-
-    const NvU32 libosWrapBufferFlags =
-        DRF_DEF(LOG, _BUFFER_FLAGS, _DISABLED, _NO)      | DRF_DEF(LOG, _BUFFER_FLAGS, _TYPE, _RING)    |
-        DRF_DEF(LOG, _BUFFER_FLAGS, _EXPANDABLE, _NO)    | DRF_DEF(LOG, _BUFFER_FLAGS, _NONPAGED, _YES) |
-        DRF_DEF(LOG, _BUFFER_FLAGS, _LOCKING, _NONE)     | DRF_DEF(LOG, _BUFFER_FLAGS, _OCA, _YES)      |
-        DRF_DEF(LOG, _BUFFER_FLAGS, _FORMAT, _LIBOS_LOG) |
-        DRF_NUM(LOG, _BUFFER_FLAGS, _GPU_INSTANCE, gpuInstance);
-
+#ifdef LIBOS_LOG_TO_NVLOG
     pLog->hNvLogNoWrap = 0;
     pLog->hNvLogWrap   = 0;
     pLog->bNvLogNoWrap = NV_FALSE;
-
-    LIBOS_LOG_NVLOG_BUFFER *pNoWrapBuf;
 
     status = nvlogAllocBuffer(
         bufferSize + NV_OFFSETOF(LIBOS_LOG_NVLOG_BUFFER, data), libosNoWrapBufferFlags,
@@ -1237,8 +1249,6 @@ void libosLogAddLogEx(LIBOS_LOG_DECODE *logDecode, void *buffer, NvU64 bufferSiz
     {
         printf("nvlogAllocBuffer nowrap failed\n");
     }
-
-    LIBOS_LOG_NVLOG_BUFFER *pWrapBuf;
 
     status = nvlogAllocBuffer(
         bufferSize + NV_OFFSETOF(LIBOS_LOG_NVLOG_BUFFER, data), libosWrapBufferFlags,

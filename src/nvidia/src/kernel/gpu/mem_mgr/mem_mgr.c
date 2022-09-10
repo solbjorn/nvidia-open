@@ -2157,6 +2157,8 @@ memmgrAllocMIGGPUInstanceMemory_PF
     //
     if (kmigmgrIsMemoryPartitioningNeeded_HAL(pGpu, pKernelMIGManager, swizzId))
     {
+        NV_MEMORY_ALLOCATION_PARAMS memAllocParams;
+
         //
         // Allocate memory using vidHeapControl
         //
@@ -2168,7 +2170,6 @@ memmgrAllocMIGGPUInstanceMemory_PF
         rmGpuLocksRelease(GPUS_LOCK_FLAGS_NONE, NULL);
 
         // Allocate gpfifo entries
-        NV_MEMORY_ALLOCATION_PARAMS memAllocParams;
         portMemSet(&memAllocParams, 0, sizeof(NV_MEMORY_ALLOCATION_PARAMS));
         memAllocParams.owner     = HEAP_OWNER_RM_CLIENT_GENERIC;
         memAllocParams.type      = NVOS32_TYPE_IMAGE;
@@ -2763,6 +2764,7 @@ _pmaInitFailed:
         NvU64 allocSize = NV_ALIGN_UP(((NvU64)pMemoryManager->fbOverrideStartKb << 10), PMA_GRANULARITY);
         NvU32 numPages  = (NvU32)(allocSize >> PMA_PAGE_SHIFT);
         PMA_ALLOCATION_OPTIONS allocOptions = {0};
+        NvU64 *pPages;
 
         allocOptions.flags     = PMA_ALLOCATE_CONTIGUOUS;
         allocOptions.flags    |= PMA_ALLOCATE_SPECIFY_ADDRESS_RANGE;
@@ -2770,7 +2772,6 @@ _pmaInitFailed:
         allocOptions.physEnd   = allocSize - 1;
 
         // This is intentionally thrown away
-        NvU64 *pPages = NULL;
         pPages = portMemAllocNonPaged(numPages * sizeof(NvU64));
         if (pPages != NULL)
         {

@@ -105,7 +105,7 @@ typedef struct DispChannel DispChannel;
 #define PRIVATE_FIELD(x) NVOC_PRIVATE_FIELD(x)
 #endif
 struct DisplayApi {
-    const struct NVOC_RTTI *__nvoc_rtti;
+    struct __rtti_marker __nvoc_rtti;
     struct RmResource __nvoc_base_RmResource;
     struct Notifier __nvoc_base_Notifier;
     struct Object *__nvoc_pbase_Object;
@@ -339,7 +339,7 @@ static inline NV_STATUS dispapiCtrlCmdEventSetNotification(struct DisplayApi *pD
 #define PRIVATE_FIELD(x) NVOC_PRIVATE_FIELD(x)
 #endif
 struct DispObject {
-    const struct NVOC_RTTI *__nvoc_rtti;
+    struct __rtti_marker __nvoc_rtti;
     struct DisplayApi __nvoc_base_DisplayApi;
     struct Object *__nvoc_pbase_Object;
     struct RsResource *__nvoc_pbase_RsResource;
@@ -812,7 +812,7 @@ static inline NvBool dispobjGetRmFreeFlags(struct DispObject *pDispObject) {
 #define PRIVATE_FIELD(x) NVOC_PRIVATE_FIELD(x)
 #endif
 struct NvDispApi {
-    const struct NVOC_RTTI *__nvoc_rtti;
+    struct __rtti_marker __nvoc_rtti;
     struct DispObject __nvoc_base_DispObject;
     struct Object *__nvoc_pbase_Object;
     struct RsResource *__nvoc_pbase_RsResource;
@@ -1068,7 +1068,7 @@ NV_STATUS nvdispapiConstruct_IMPL(struct NvDispApi *arg_pNvdispApi, struct CALL_
 #define PRIVATE_FIELD(x) NVOC_PRIVATE_FIELD(x)
 #endif
 struct DispSwObj {
-    const struct NVOC_RTTI *__nvoc_rtti;
+    struct __rtti_marker __nvoc_rtti;
     struct DisplayApi __nvoc_base_DisplayApi;
     struct Object *__nvoc_pbase_Object;
     struct RsResource *__nvoc_pbase_RsResource;
@@ -1295,7 +1295,7 @@ NV_STATUS dispswobjConstruct_IMPL(struct DispSwObj *arg_pDispSwObj, struct CALL_
 #define PRIVATE_FIELD(x) NVOC_PRIVATE_FIELD(x)
 #endif
 struct DispCommon {
-    const struct NVOC_RTTI *__nvoc_rtti;
+    struct __rtti_marker __nvoc_rtti;
     struct DisplayApi __nvoc_base_DisplayApi;
     struct Object *__nvoc_pbase_Object;
     struct RsResource *__nvoc_pbase_RsResource;

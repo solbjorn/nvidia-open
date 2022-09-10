@@ -66,13 +66,15 @@ serverInterMap_Prologue
     NvU64       offset = pParams->offset;
     NvU64       length = pParams->length;
 
+    RMRES_MEM_INTER_MAP_PARAMS memInterMapParams;
     MEMORY_DESCRIPTOR *pSrcMemDesc = NULL;
-    NvHandle    hBroadcastDevice;
     NvBool      bSubdeviceHandleProvided;
+    NvHandle    hBroadcastDevice;
 
     CALL_CONTEXT  *pCallContext = resservGetTlsCallContext();
     RsResourceRef *pDeviceRef = pCallContext->pContextRef;
     RS_INTER_MAP_PRIVATE *pPrivate = pParams->pPrivate;
+    MemoryManager *pMemoryManager;
 
     NV_ASSERT_OR_RETURN(pPrivate != NULL, NV_ERR_INVALID_ARGUMENT);
 
@@ -101,7 +103,7 @@ serverInterMap_Prologue
         pPrivate->gpuMask = gpumgrGetGpuMask(pGpu);
     }
 
-    MemoryManager *pMemoryManager = GPU_GET_MEMORY_MANAGER(pGpu);
+    pMemoryManager = GPU_GET_MEMORY_MANAGER(pGpu);
 
     // For non-memory/dma objects, below call simply returns
     if (memmgrIsPmaInitialized(pMemoryManager) &&
@@ -135,7 +137,6 @@ serverInterMap_Prologue
     API_GPU_FULL_POWER_SANITY_CHECK(pGpu, NV_TRUE, NV_FALSE);
 
     // Use virtual GetMemInterMapParams to get information needed for mapping from pMappableRef->pResource
-    RMRES_MEM_INTER_MAP_PARAMS memInterMapParams;
     portMemSet(&memInterMapParams, 0, sizeof(memInterMapParams));
 
     memInterMapParams.pGpu = pGpu;

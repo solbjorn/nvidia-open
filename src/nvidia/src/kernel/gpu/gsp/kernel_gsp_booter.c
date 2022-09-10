@@ -141,8 +141,9 @@ s_patchBooterUcodeSignature
     NvU32 numSigs
 )
 {
-    NvU32 sigIndex = 0;
     NvU32 sigSize = signaturesTotalSize / numSigs;
+    KernelSec2 *pKernelSec2;
+    NvU32 sigIndex = 0;
     NvU32 fuseVer;
 
     NV_ASSERT_OR_RETURN(pImage != NULL, NV_ERR_INVALID_STATE);
@@ -151,7 +152,7 @@ s_patchBooterUcodeSignature
     NV_ASSERT_OR_RETURN(pSignatures != NULL, NV_ERR_INVALID_STATE);
     NV_ASSERT_OR_RETURN(numSigs > 0, NV_ERR_INVALID_DATA);
 
-    KernelSec2 *pKernelSec2 = GPU_GET_KERNEL_SEC2(pGpu);
+    pKernelSec2 = GPU_GET_KERNEL_SEC2(pGpu);
     NV_ASSERT_OR_RETURN(pKernelSec2 != NULL, NV_ERR_INVALID_STATE);
     fuseVer = ksec2ReadUcodeFuseVersion_HAL(pGpu, pKernelSec2, ucodeId);
 

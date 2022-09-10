@@ -24,9 +24,12 @@ void __nvoc_init_dataField_KernelRc(KernelRc*, RmHalspecOwner* );
 void __nvoc_dtor_KernelRc(KernelRc*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_KernelRc;
 
+#define __NVOC_CB_TYPE KernelRc
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_KernelRc, __nvoc_dtor_KernelRc);
+
 static const struct NVOC_RTTI __nvoc_rtti_KernelRc_KernelRc = {
     /*pClassDef=*/          &__nvoc_class_def_KernelRc,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_KernelRc,
+    /*dtor=*/               __nvoc_dtor_KernelRc_dtor,
     /*offset=*/             0,
 };
 
@@ -51,7 +54,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_KernelRc = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_KernelRc = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_KernelRc =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(KernelRc),
@@ -61,7 +64,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_KernelRc =
         /*name=*/               "KernelRc",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_KernelRc,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_KernelRc_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_KernelRc,
     /*pExportInfo=*/        &__nvoc_export_info_KernelRc
 };
@@ -146,7 +149,7 @@ static NvBool __nvoc_thunk_OBJENGSTATE_krcIsPresent(POBJGPU pGpu, struct KernelR
     return engstateIsPresent(pGpu, (struct OBJENGSTATE *)(((unsigned char *)pEngstate) + __nvoc_rtti_KernelRc_OBJENGSTATE.offset));
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_KernelRc = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_KernelRc =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -300,4 +303,3 @@ NV_STATUS __nvoc_objCreateDynamic_KernelRc(KernelRc **ppThis, Dynamic *pParent, 
 
     return status;
 }
-

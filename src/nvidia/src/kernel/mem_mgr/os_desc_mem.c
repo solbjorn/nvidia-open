@@ -137,9 +137,10 @@ osdescConstruct_IMPL
     {
         RsResourceRef *pResourceRef = RES_GET_REF(pMemory);
         RsCpuMapping   *pCpuMapping = NULL;
-        NvU32 flags = 0;
-        flags = FLD_SET_DRF(OS33, _FLAGS, _OS_DESCRIPTOR, _ENABLE, flags);
         RS_CPU_MAP_PARAMS dummyParams;
+        NvU32 flags = 0;
+
+        flags = FLD_SET_DRF(OS33, _FLAGS, _OS_DESCRIPTOR, _ENABLE, flags);
         portMemSet(&dummyParams, 0, sizeof(dummyParams));
 
         NV_CHECK_OK_OR_RETURN(LEVEL_ERROR,

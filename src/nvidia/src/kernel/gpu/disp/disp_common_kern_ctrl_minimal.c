@@ -77,8 +77,9 @@ dispcmnCtrlCmdSystemGetHotplugUnplugState_IMPL
              ppClient;
              ppClient = serverutilGetNextClientUnderLock(ppClient))
         {
-            pRsClient = staticCast(*ppClient, RsClient);
             DispCommon *pDispCommonLoop;
+
+            pRsClient = staticCast(*ppClient, RsClient);
 
             dispcmnGetByDevice(pRsClient, hDevice, &pDispCommonLoop);
             if (pDispCommonLoop == NULL)
@@ -159,12 +160,14 @@ dispcmnCtrlCmdDpGenerateFakeInterrupt_IMPL
     // Send a DP IRQ (short pulse) to a registered client.
     if (interruptType == NV0073_CTRL_CMD_DP_GENERATE_FAKE_INTERRUPT_IRQ)
     {
+        NV0073_CTRL_DP_GET_EDP_DATA_PARAMS edpData;
         Nv2080DpIrqNotification params = {0};
+        RM_API *pRmApi;
+
         params.displayId = displayId;
 
         // Check eDP power state; if off, return an error.
-        RM_API *pRmApi = GPU_GET_PHYSICAL_RMAPI(pGpu);
-        NV0073_CTRL_DP_GET_EDP_DATA_PARAMS edpData;
+        pRmApi = GPU_GET_PHYSICAL_RMAPI(pGpu);
 
         portMemSet(&edpData, 0, sizeof(edpData));
 

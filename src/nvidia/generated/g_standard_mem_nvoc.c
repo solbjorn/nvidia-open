@@ -30,9 +30,12 @@ void __nvoc_init_dataField_StandardMemory(StandardMemory*);
 void __nvoc_dtor_StandardMemory(StandardMemory*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_StandardMemory;
 
+#define __NVOC_CB_TYPE StandardMemory
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_StandardMemory, __nvoc_dtor_StandardMemory);
+
 static const struct NVOC_RTTI __nvoc_rtti_StandardMemory_StandardMemory = {
     /*pClassDef=*/          &__nvoc_class_def_StandardMemory,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_StandardMemory,
+    /*dtor=*/               __nvoc_dtor_StandardMemory_dtor,
     /*offset=*/             0,
 };
 
@@ -78,7 +81,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_StandardMemory = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_StandardMemory = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_StandardMemory =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(StandardMemory),
@@ -88,7 +91,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_StandardMemory =
         /*name=*/               "StandardMemory",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_StandardMemory,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_StandardMemory_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_StandardMemory,
     /*pExportInfo=*/        &__nvoc_export_info_StandardMemory
 };
@@ -177,7 +180,7 @@ static NvBool __nvoc_thunk_RmResource_stdmemAccessCallback(struct StandardMemory
     return rmresAccessCallback((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_StandardMemory_RmResource.offset), pInvokingClient, pAllocParams, accessRight);
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_StandardMemory = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_StandardMemory =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -320,4 +323,3 @@ NV_STATUS __nvoc_objCreateDynamic_StandardMemory(StandardMemory **ppThis, Dynami
 
     return status;
 }
-

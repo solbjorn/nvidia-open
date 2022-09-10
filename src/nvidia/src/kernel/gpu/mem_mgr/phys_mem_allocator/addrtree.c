@@ -82,8 +82,8 @@ pmaAddrtreePrintLevel(ADDRTREE_LEVEL *pLevel)
                   pNode->seeChild[mapIndex], i, pNode->state[mapIndex]);
 
         // In case compiler complains when the above print is compiled out
-        pNode = pNode;
-        mapIndex = mapIndex;
+        (void)pNode;
+        (void)mapIndex;
     }
 }
 
@@ -136,6 +136,7 @@ pmaAddrtreeInit
     NvU32 i;
     PMA_ADDRTREE *newTree;
     NvU64 numFramesToAllocate;
+    NvU32 curIdx = 0;
 
     // PMA already ensures this
     NV_ASSERT(NV_IS_ALIGNED(addrBase, PMA_GRANULARITY));
@@ -215,25 +216,28 @@ pmaAddrtreeInit
     portMemSet(newTree->root, 0, (NvLength)(totalNodeCount * sizeof(ADDRTREE_NODE)));
     newTree->root->parent = NULL;
 
-    NvU32 curIdx = 0;
 
     // Skip the last level because we don't really need to allocate 64K level
     for (i = 0; i < levelCount - 1; i++)
     {
         NvU64 nextLevelStart = curIdx + newTree->levels[i].nodeCount;
+        NvU32 j;
         //
         // The maxChildren a node can have is a factor of
         // the difference in page sizes between levels
         //
         NvU32 maxChildren = 1U<<(levelSizes[i] - levelSizes[i + 1]);
+
         newTree->levels[i].maxFramesPerNode = maxChildren;
 
         //NV_PRINTF(LEVEL_INFO, "Level %d: maxChildren per node: %d\n", i, maxChildren);
 
-        NvU32 j;
         for (j = 0; j < newTree->levels[i].nodeCount; j++)
         {
             ADDRTREE_NODE *curNode = &newTree->root[curIdx];
+            NvU32 lastNodeNumValidChildren;
+            NvU32 numValidChildren = 0;
+            NvU64 childrenNodeIdx;
 
             // Register first node in the level structure
             if (j == 0)
@@ -246,13 +250,12 @@ pmaAddrtreeInit
             curNode->frame = maxChildren * j;
 
             // All nodes before this node must have maxChildren
-            NvU64 childrenNodeIdx = nextLevelStart + j * maxChildren;
+            childrenNodeIdx = nextLevelStart + j * maxChildren;
             curNode->children = &newTree->root[childrenNodeIdx];
 
             // The last node may not have maxChildren, calculate how many it does have
             // OK to just cast because we know numChildren must be at most 64
-            NvU32 lastNodeNumValidChildren = (NvU32)(newTree->levels[i+1].nodeCount - (j * maxChildren));
-            NvU32 numValidChildren = 0;
+            lastNodeNumValidChildren = (NvU32)(newTree->levels[i+1].nodeCount - (j * maxChildren));
 
             //
             // If this is not the last node in a level,
@@ -266,6 +269,8 @@ pmaAddrtreeInit
             }
             else
             {
+                NvU64 invalidChildrenMask;
+
                 curNode->numChildren = maxChildren;
                 numValidChildren = lastNodeNumValidChildren;
 
@@ -273,7 +278,7 @@ pmaAddrtreeInit
                 // Mark invalid children as allocated so that reads of partial nodes
                 // do not return that they are available
                 //
-                NvU64 invalidChildrenMask = _makeMaskUpToIndex(maxChildren) & ~_makeMaskUpToIndex(lastNodeNumValidChildren);
+                invalidChildrenMask = _makeMaskUpToIndex(maxChildren) & ~_makeMaskUpToIndex(lastNodeNumValidChildren);
                 curNode->state[MAP_IDX_ALLOC_PIN] = invalidChildrenMask;
                 _addrtreeUpdateAncestors(newTree, curNode, STATE_PIN);
             }
@@ -440,8 +445,9 @@ _addrtreeNodeValid
     ADDRTREE_NODE *n = pTree->root;
     NvU64 newFrame = 0;
     NvU32 newIndex = 0;
-    *pFoundState = STATE_FREE;
     PMA_PAGESTATUS stateMask = MAP_MASK; // check all states TODO
+
+    *pFoundState = STATE_FREE;
 
     //NV_PRINTF(LEVEL_INFO, "Source level=%d frame=0x%llx.\n",
     //          node->level, node->frame);
@@ -469,9 +475,11 @@ _addrtreeNodeValid
 static NvU64
 _addrtreeComputeMask(ADDRTREE_NODE *node, NvU64 frameStart, NvU64 numFrames)
 {
+    NvU64 mask;
+
     NV_ASSERT(node->numChildren <= 64);
 
-    NvU64 mask = _makeMaskUpToIndex(node->numChildren);
+    mask = _makeMaskUpToIndex(node->numChildren);
 
     // If node is contained within the range, return a full mask
     if (RANGE_CONTAINS(frameStart, numFrames, node->frame, node->numChildren))
@@ -1183,8 +1191,10 @@ pmaAddrtreeScanDiscontiguous
 static NvU64
 replaceBit(NvU64 old, NvU32 bit, NvBool bIsSet)
 {
+    NvU64 mask;
+
     NV_ASSERT(bit < 64);
-    NvU64 mask = NVBIT64(bit);
+    mask = NVBIT64(bit);
     return bIsSet ? (old | mask) : (old & ~mask);
 }
 
@@ -1495,11 +1505,11 @@ _addrtreeNodeIndexHasSeeChildSet
     ADDRTREE_NODE *n = pTree->root;
     NvU64 newFrame = 0;
     NvU32 newIndex = 0;
-    *pState = STATE_FREE;
-
     // TODO: try this for only STATE_MASK, because stats will only
     // get corrupted if the STATE_MASK values differ.
     PMA_PAGESTATUS stateMask = MAP_MASK; // check all states TODO
+
+    *pState = STATE_FREE;
 
     while(n->level != pNode->level)
     {

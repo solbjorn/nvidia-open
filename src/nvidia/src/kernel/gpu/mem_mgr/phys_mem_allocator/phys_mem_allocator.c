@@ -873,12 +873,14 @@ pmaAllocatePages_retry:
 
             if (contigFlag)
             {
+                NvU64 evictStart, evictEnd;
+
                 NV_ASSERT(numPagesLeftToAllocate == allocationCount);
                 NV_ASSERT(numPagesAllocatedThisTime == 0);
                 NV_ASSERT(numPagesAllocatedSoFar == 0);
 
-                NvU64 evictStart  = *curPages;
-                NvU64 evictEnd    = *curPages + (numFramesToAllocateTotal << PMA_PAGE_SHIFT) - 1;
+                evictStart  = *curPages;
+                evictEnd    = *curPages + (numFramesToAllocateTotal << PMA_PAGE_SHIFT) - 1;
 
                 NV_PRINTF(LEVEL_INFO, "Attempt %s eviction of 0x%llx pages of size 0x%x, "
                                       "(0x%x frames per page) in the frame range 0x%llx..0x%llx\n",

@@ -1270,7 +1270,7 @@ kgrctxAllocCtxBuffers_IMPL
     // Allocate Ctx Buffers that are local to this channel if required
     // and they have yet to be allocated.
     //
-    if ((pKernelGraphicsContextUnicast->bVprChannel 
+    if ((pKernelGraphicsContextUnicast->bVprChannel
         ) && !pKernelGraphicsContextUnicast->localCtxBuffer.bAllocated)
     {
         NV_CHECK_OK_OR_RETURN(LEVEL_ERROR,
@@ -1869,14 +1869,11 @@ kgrctxMarkCtxBufferInitialized_IMPL
                 pKCtxBuffers->bInitialized[internalId] = NV_TRUE;
                 break;
             }
-            // fall-through
+            fallthrough;
         }
         case NV2080_CTRL_GPU_PROMOTE_CTX_BUFFER_ID_FECS_EVENT:
-            // fall-through
         case NV2080_CTRL_GPU_PROMOTE_CTX_BUFFER_ID_PRIV_ACCESS_MAP:
-            // fall-through
         case NV2080_CTRL_GPU_PROMOTE_CTX_BUFFER_ID_UNRESTRICTED_PRIV_ACCESS_MAP:
-            // fall-through
         case NV2080_CTRL_GPU_PROMOTE_CTX_BUFFER_ID_GLOBAL_PRIV_ACCESS_MAP:
         {
             GR_GLOBALCTX_BUFFER internalId;
@@ -3438,4 +3435,3 @@ void shrkgrctxDetach_IMPL
         SLI_LOOP_END;
     }
 }
-

@@ -834,6 +834,12 @@ static NvBool GetDeviceResourcesInfo
 
     NvU32 i;
 
+    ct_assert(sizeof(info->numLayers) == sizeof(device->numLayers));
+    ct_assert(ARRAY_LEN(info->connectorHandles) >=
+              ARRAY_LEN(paramsDisp.reply.connectorHandles));
+    ct_assert(sizeof(info->supportedSurfaceMemoryFormats) ==
+              sizeof(device->supportedSurfaceMemoryFormats));
+
     nvkms_memset(info, 0, sizeof(*info));
 
     info->caps.hasVideoMemory = !device->isSOC;
@@ -861,11 +867,7 @@ static NvBool GetDeviceResourcesInfo
 
     info->numHeads = device->numHeads;
 
-    ct_assert(sizeof(info->numLayers) == sizeof(device->numLayers));
     nvkms_memcpy(info->numLayers, device->numLayers, sizeof(device->numLayers));
-
-    ct_assert(ARRAY_LEN(info->connectorHandles) >=
-              ARRAY_LEN(paramsDisp.reply.connectorHandles));
 
     info->numConnectors = paramsDisp.reply.numConnectors;
 
@@ -912,9 +914,6 @@ static NvBool GetDeviceResourcesInfo
 
     info->caps.supportedCursorSurfaceMemoryFormats =
         NVBIT(NvKmsSurfaceMemoryFormatA8R8G8B8);
-
-    ct_assert(sizeof(info->supportedSurfaceMemoryFormats) ==
-              sizeof(device->supportedSurfaceMemoryFormats));
 
     nvkms_memcpy(info->supportedSurfaceMemoryFormats,
                  device->supportedSurfaceMemoryFormats,
@@ -1035,6 +1034,9 @@ static NvBool GetStaticDisplayInfo
     struct NvKmsQueryDpyStaticDataParams   paramsDpyStatic = { };
     NvBool status = NV_FALSE;
 
+    ct_assert(sizeof(info->dpAddress) ==
+              sizeof(paramsDpyStatic.reply.dpAddress));
+
     if (device == NULL || info == NULL) {
         goto done;
     }
@@ -1062,9 +1064,6 @@ static NvBool GetStaticDisplayInfo
     info->handle = display;
 
     info->connectorHandle = paramsDpyStatic.reply.connectorHandle;
-
-    ct_assert(sizeof(info->dpAddress) ==
-              sizeof(paramsDpyStatic.reply.dpAddress));
 
     nvkms_memcpy(info->dpAddress,
                  paramsDpyStatic.reply.dpAddress,
@@ -2047,6 +2046,8 @@ static void NvKmsModeToKapi
 {
     const NvModeTimings *timings = &kmsMode->timings;
 
+    ct_assert(sizeof(mode->name) == sizeof(kmsMode->name));
+
     nvkms_memset(mode, 0, sizeof(*mode));
 
     mode->timings.refreshRate   = timings->RRx1k;
@@ -2070,8 +2071,6 @@ static void NvKmsModeToKapi
 
     mode->timings.widthMM  = timings->sizeMM.w;
     mode->timings.heightMM = timings->sizeMM.h;
-
-    ct_assert(sizeof(mode->name) == sizeof(kmsMode->name));
 
     nvkms_memcpy(mode->name, kmsMode->name, sizeof(mode->name));
 }

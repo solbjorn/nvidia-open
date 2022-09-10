@@ -247,8 +247,9 @@ kgmmuSetupWarForBug2720120_GA100
             sizeInDWord = (NvU32)NV_DIV_AND_CEIL(pPageDir0->entrySize, sizeOfDWord);
             for (entryIndex = 0; entryIndex <= entryIndexHi; entryIndex++)
             {
-                entryOffset = entryIndex * pPageDir0->entrySize;
                 NvU32 i;
+
+                entryOffset = entryIndex * pPageDir0->entrySize;
                 for (i = 0; i < sizeInDWord; i++)
                 {
                     GPU_REG_WR32(pGpu,

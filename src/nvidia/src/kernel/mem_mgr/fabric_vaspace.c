@@ -663,7 +663,9 @@ fabricvaspaceGetGpaMemdesc_IMPL
     MEMORY_DESCRIPTOR *pRootMemDesc = NULL;
     NODE              *pNode        = NULL;
     NV_STATUS          status       = NV_OK;
+    FABRIC_VA_TO_GPA_MAP_NODE *pFabricNode;
     NvU64              rootOffset   = 0;
+    RmPhysAddr *pteArray;
 
     NV_ASSERT_OR_RETURN(ppAdjustedMemdesc != NULL, NV_ERR_INVALID_ARGUMENT);
 
@@ -677,7 +679,7 @@ fabricvaspaceGetGpaMemdesc_IMPL
 
     pRootMemDesc = memdescGetRootMemDesc(pFabricMemdesc, &rootOffset);
 
-    RmPhysAddr *pteArray = memdescGetPteArray(pRootMemDesc, AT_GPU);
+    pteArray = memdescGetPteArray(pRootMemDesc, AT_GPU);
 
     // Check if pteArray[0] is within the VAS range for the mapping GPU.
     if ((pteArray[0] < vaspaceGetVaStart(staticCast(pFabricVAS, OBJVASPACE))) ||
@@ -696,7 +698,7 @@ fabricvaspaceGetGpaMemdesc_IMPL
     //
     NV_ASSERT_OK_OR_RETURN(btreeSearch(pteArray[0], &pNode, pFabricVAS->pFabricVaToGpaMap));
 
-    FABRIC_VA_TO_GPA_MAP_NODE *pFabricNode = (FABRIC_VA_TO_GPA_MAP_NODE *)pNode->Data;
+    pFabricNode = (FABRIC_VA_TO_GPA_MAP_NODE *)pNode->Data;
 
     //
     // Create a sub-memdesc for the offset into the vidMemDesc where the GVA would be

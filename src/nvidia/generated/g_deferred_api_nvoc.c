@@ -36,9 +36,12 @@ void __nvoc_init_dataField_DeferredApiObject(DeferredApiObject*);
 void __nvoc_dtor_DeferredApiObject(DeferredApiObject*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_DeferredApiObject;
 
+#define __NVOC_CB_TYPE DeferredApiObject
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_DeferredApiObject, __nvoc_dtor_DeferredApiObject);
+
 static const struct NVOC_RTTI __nvoc_rtti_DeferredApiObject_DeferredApiObject = {
     /*pClassDef=*/          &__nvoc_class_def_DeferredApiObject,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_DeferredApiObject,
+    /*dtor=*/               __nvoc_dtor_DeferredApiObject_dtor,
     /*offset=*/             0,
 };
 
@@ -105,7 +108,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_DeferredApiObject = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_DeferredApiObject = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_DeferredApiObject =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(DeferredApiObject),
@@ -115,7 +118,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_DeferredApiObject =
         /*name=*/               "DeferredApiObject",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_DeferredApiObject,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_DeferredApiObject_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_DeferredApiObject,
     /*pExportInfo=*/        &__nvoc_export_info_DeferredApiObject
 };
@@ -236,17 +239,21 @@ static NV_STATUS __nvoc_thunk_Notifier_defapiGetOrAllocNotifShare(struct Deferre
     return notifyGetOrAllocNotifShare((struct Notifier *)(((unsigned char *)pNotifier) + __nvoc_rtti_DeferredApiObject_Notifier.offset), hNotifierClient, hNotifierResource, ppNotifShare);
 }
 
+NVOC_BUILD_CALLBACK(defapiCtrlCmdDeferredApi_IMPL);
+NVOC_BUILD_CALLBACK(defapiCtrlCmdRemoveApi_IMPL);
+NVOC_BUILD_CALLBACK(defapiCtrlCmdDeferredApiV2_IMPL);
+
 #if !defined(NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG)
 #define NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(x)      (0)
 #endif
 
-static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DeferredApiObject[] = 
+static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DeferredApiObject[] =
 {
     {               /*  [0] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) defapiCtrlCmdDeferredApi_IMPL,
+        /*pFunc=*/      defapiCtrlCmdDeferredApi_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*flags=*/      0x10u,
         /*accessRight=*/0x0u,
@@ -259,9 +266,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_Deferred
     },
     {               /*  [1] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) defapiCtrlCmdRemoveApi_IMPL,
+        /*pFunc=*/      defapiCtrlCmdRemoveApi_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*flags=*/      0x10u,
         /*accessRight=*/0x0u,
@@ -274,9 +281,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_Deferred
     },
     {               /*  [2] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) defapiCtrlCmdDeferredApiV2_IMPL,
+        /*pFunc=*/      defapiCtrlCmdDeferredApiV2_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*flags=*/      0x10u,
         /*accessRight=*/0x0u,
@@ -290,7 +297,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_Deferred
 
 };
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_DeferredApiObject = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_DeferredApiObject =
 {
     /*numEntries=*/     3,
     /*pExportEntries=*/ __nvoc_exported_method_def_DeferredApiObject
@@ -472,4 +479,3 @@ NV_STATUS __nvoc_objCreateDynamic_DeferredApiObject(DeferredApiObject **ppThis, 
 
     return status;
 }
-

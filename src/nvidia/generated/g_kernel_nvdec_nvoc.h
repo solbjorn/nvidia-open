@@ -45,7 +45,7 @@ extern "C" {
 #define PRIVATE_FIELD(x) NVOC_PRIVATE_FIELD(x)
 #endif
 struct KernelNvdec {
-    const struct NVOC_RTTI *__nvoc_rtti;
+    struct __rtti_marker __nvoc_rtti;
     struct OBJENGSTATE __nvoc_base_OBJENGSTATE;
     struct KernelFalcon __nvoc_base_KernelFalcon;
     struct IntrService __nvoc_base_IntrService;

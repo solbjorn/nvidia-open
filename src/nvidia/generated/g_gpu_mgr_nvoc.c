@@ -22,9 +22,12 @@ void __nvoc_init_dataField_OBJGPUMGR(OBJGPUMGR*);
 void __nvoc_dtor_OBJGPUMGR(OBJGPUMGR*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJGPUMGR;
 
+#define __NVOC_CB_TYPE OBJGPUMGR
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_OBJGPUMGR, __nvoc_dtor_OBJGPUMGR);
+
 static const struct NVOC_RTTI __nvoc_rtti_OBJGPUMGR_OBJGPUMGR = {
     /*pClassDef=*/          &__nvoc_class_def_OBJGPUMGR,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_OBJGPUMGR,
+    /*dtor=*/               __nvoc_dtor_OBJGPUMGR_dtor,
     /*offset=*/             0,
 };
 
@@ -42,7 +45,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_OBJGPUMGR = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_OBJGPUMGR = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_OBJGPUMGR =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(OBJGPUMGR),
@@ -52,12 +55,12 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_OBJGPUMGR =
         /*name=*/               "OBJGPUMGR",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_OBJGPUMGR,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_OBJGPUMGR_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_OBJGPUMGR,
     /*pExportInfo=*/        &__nvoc_export_info_OBJGPUMGR
 };
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJGPUMGR = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJGPUMGR =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -151,4 +154,3 @@ NV_STATUS __nvoc_objCreateDynamic_OBJGPUMGR(OBJGPUMGR **ppThis, Dynamic *pParent
 
     return status;
 }
-

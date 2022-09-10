@@ -22,9 +22,12 @@ void __nvoc_init_dataField_GpuAccounting(GpuAccounting*);
 void __nvoc_dtor_GpuAccounting(GpuAccounting*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_GpuAccounting;
 
+#define __NVOC_CB_TYPE GpuAccounting
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_GpuAccounting, __nvoc_dtor_GpuAccounting);
+
 static const struct NVOC_RTTI __nvoc_rtti_GpuAccounting_GpuAccounting = {
     /*pClassDef=*/          &__nvoc_class_def_GpuAccounting,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_GpuAccounting,
+    /*dtor=*/               __nvoc_dtor_GpuAccounting_dtor,
     /*offset=*/             0,
 };
 
@@ -42,7 +45,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_GpuAccounting = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_GpuAccounting = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_GpuAccounting =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(GpuAccounting),
@@ -52,12 +55,12 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_GpuAccounting =
         /*name=*/               "GpuAccounting",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_GpuAccounting,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_GpuAccounting_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_GpuAccounting,
     /*pExportInfo=*/        &__nvoc_export_info_GpuAccounting
 };
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_GpuAccounting = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_GpuAccounting =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -151,4 +154,3 @@ NV_STATUS __nvoc_objCreateDynamic_GpuAccounting(GpuAccounting **ppThis, Dynamic 
 
     return status;
 }
-

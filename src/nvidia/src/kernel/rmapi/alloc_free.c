@@ -970,6 +970,7 @@ rmapiFreeResourcePrologue
     NV_STATUS          tmpStatus;
     OBJGPU            *pGpu         = NULL;
     NvBool             bBcResource;
+    TimerApi *pTimerApi;
 
     NV_ASSERT_OR_RETURN(pResourceRef, NV_ERR_INVALID_OBJECT_HANDLE);
 
@@ -989,7 +990,7 @@ rmapiFreeResourcePrologue
     // RS-TODO: provide notifications to objects referencing events or add
     // dependency
     //
-    TimerApi *pTimerApi = dynamicCast(pResourceRef->pResource, TimerApi);
+    pTimerApi = dynamicCast(pResourceRef->pResource, TimerApi);
     if (pTimerApi != NULL)
     {
         tmrapiDeregisterEvents(pTimerApi);

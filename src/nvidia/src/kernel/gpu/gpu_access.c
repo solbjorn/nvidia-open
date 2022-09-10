@@ -67,6 +67,9 @@ regAccessConstruct
     NV_STATUS    rmStatus = NV_OK;
     DEVICE_INDEX deviceIndex, minDeviceIndex, maxDeviceIndex;
 
+    // Check that GPU is the first device
+    ct_assert(DEVICE_INDEX_GPU == 0);
+
     pRegisterAccess->pGpu = pGpu;
 
     if (pGpu->getProperty(pGpu, PDB_PROP_GPU_TEGRA_SOC_NVDISPLAY))
@@ -76,9 +79,6 @@ regAccessConstruct
         // skip this function.
         return NV_OK;
     }
-
-    // Check that GPU is the first device
-    ct_assert(DEVICE_INDEX_GPU == 0);
 
     minDeviceIndex = DEVICE_INDEX_GPU;
     maxDeviceIndex = pGpu->bIsSOC ? (DEVICE_INDEX_MAX - 1) : (DEVICE_INDEX_GPU);
@@ -264,9 +264,6 @@ _gpuApertureWriteRegUnicast
     NvU32           size
 )
 {
-    NV_ASSERT_OR_RETURN_VOID(pAperture);
-    NV_ASSERT_OR_RETURN_VOID(pAperture->pDevice);
-
     GPU_IO_DEVICE     *pDevice     = (GPU_IO_DEVICE*) pAperture->pDevice;
     NvU32              deviceIndex = pDevice->deviceIndex;
     NvU32              instance    = pDevice->instance;
@@ -275,6 +272,9 @@ _gpuApertureWriteRegUnicast
     NV_STATUS          status;
     THREAD_STATE_NODE *pThreadState;
     DEVICE_MAPPING    *pMapping;
+
+    NV_ASSERT_OR_RETURN_VOID(pAperture);
+    NV_ASSERT_OR_RETURN_VOID(pAperture->pDevice);
 
     pMapping = gpuGetDeviceMapping(pGpu, deviceIndex, instance);
 
@@ -469,9 +469,6 @@ _gpuApertureReadReg
     NvU32           size
 )
 {
-    NV_ASSERT_OR_RETURN(pAperture,          NV_ERR_INVALID_ARGUMENT);
-    NV_ASSERT_OR_RETURN(pAperture->pDevice, NV_ERR_INVALID_ARGUMENT);
-
     NvU32              flags       = 0;
     NvU32              returnValue = 0;
     GPU_IO_DEVICE     *pDevice     = (GPU_IO_DEVICE*) pAperture->pDevice;
@@ -481,10 +478,14 @@ _gpuApertureReadReg
     NvU32              deviceIndex = pDevice->deviceIndex;
     NvU32              instance    = pDevice->instance;
     THREAD_STATE_NODE *pThreadState;
+    DEVICE_MAPPING *pMapping;
+
+    NV_ASSERT_OR_RETURN(pAperture,          NV_ERR_INVALID_ARGUMENT);
+    NV_ASSERT_OR_RETURN(pAperture->pDevice, NV_ERR_INVALID_ARGUMENT);
 
     pGpu->registerAccess.regReadCount++;
 
-    DEVICE_MAPPING *pMapping = gpuGetDeviceMapping(pGpu, deviceIndex, instance);
+    pMapping = gpuGetDeviceMapping(pGpu, deviceIndex, instance);
     if (!pMapping)
     {
         NV_PRINTF(LEVEL_ERROR,

@@ -57,6 +57,7 @@ kceGetEngineDescFromAllocParams(OBJGPU *pGpu, NvU32 externalClassId, void *pAllo
 {
     CALL_CONTEXT *pCallContext = resservGetTlsCallContext();
     NvU32 engineInstance = 0;
+    NV_STATUS status;
 
     NV_ASSERT(pAllocParams);
 
@@ -152,7 +153,7 @@ kceGetEngineDescFromAllocParams(OBJGPU *pGpu, NvU32 externalClassId, void *pAllo
         }
     }
 
-    NV_STATUS status = ceIndexFromType(pGpu, pCallContext->pClient->hClient,
+    status = ceIndexFromType(pGpu, pCallContext->pClient->hClient,
                                        NV2080_ENGINE_TYPE_COPY(engineInstance), &engineInstance);
     if (status == NV_OK)
     {

@@ -24,9 +24,12 @@ void __nvoc_init_dataField_NvDebugDump(NvDebugDump*);
 void __nvoc_dtor_NvDebugDump(NvDebugDump*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_NvDebugDump;
 
+#define __NVOC_CB_TYPE NvDebugDump
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_NvDebugDump, __nvoc_dtor_NvDebugDump);
+
 static const struct NVOC_RTTI __nvoc_rtti_NvDebugDump_NvDebugDump = {
     /*pClassDef=*/          &__nvoc_class_def_NvDebugDump,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_NvDebugDump,
+    /*dtor=*/               __nvoc_dtor_NvDebugDump_dtor,
     /*offset=*/             0,
 };
 
@@ -51,7 +54,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_NvDebugDump = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_NvDebugDump = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_NvDebugDump =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(NvDebugDump),
@@ -61,7 +64,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_NvDebugDump =
         /*name=*/               "NvDebugDump",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_NvDebugDump,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_NvDebugDump_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_NvDebugDump,
     /*pExportInfo=*/        &__nvoc_export_info_NvDebugDump
 };
@@ -146,7 +149,7 @@ static NvBool __nvoc_thunk_OBJENGSTATE_nvdIsPresent(POBJGPU pGpu, struct NvDebug
     return engstateIsPresent(pGpu, (struct OBJENGSTATE *)(((unsigned char *)pEngstate) + __nvoc_rtti_NvDebugDump_OBJENGSTATE.offset));
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_NvDebugDump = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_NvDebugDump =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -280,4 +283,3 @@ NV_STATUS __nvoc_objCreateDynamic_NvDebugDump(NvDebugDump **ppThis, Dynamic *pPa
 
     return status;
 }
-

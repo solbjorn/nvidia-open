@@ -180,7 +180,7 @@ typedef struct TMR_EVENT_GENERAL_PARAMS {
 #define PRIVATE_FIELD(x) NVOC_PRIVATE_FIELD(x)
 #endif
 struct OBJTMR {
-    const struct NVOC_RTTI *__nvoc_rtti;
+    struct __rtti_marker __nvoc_rtti;
     struct OBJENGSTATE __nvoc_base_OBJENGSTATE;
     struct OBJINTRABLE __nvoc_base_OBJINTRABLE;
     struct IntrService __nvoc_base_IntrService;

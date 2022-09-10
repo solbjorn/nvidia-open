@@ -20,9 +20,12 @@ void __nvoc_init_dataField_IntrService(IntrService*);
 void __nvoc_dtor_IntrService(IntrService*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_IntrService;
 
+#define __NVOC_CB_TYPE IntrService
+NVOC_BUILD_DTOR(__nvoc_dtor_IntrService);
+
 static const struct NVOC_RTTI __nvoc_rtti_IntrService_IntrService = {
     /*pClassDef=*/          &__nvoc_class_def_IntrService,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_IntrService,
+    /*dtor=*/               __nvoc_dtor_IntrService_dtor,
     /*offset=*/             0,
 };
 
@@ -33,7 +36,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_IntrService = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_IntrService = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_IntrService =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(IntrService),
@@ -43,12 +46,12 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_IntrService =
         /*name=*/               "IntrService",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) NULL,
+    /*objCreatefn=*/        NULL,
     /*pCastInfo=*/          &__nvoc_castinfo_IntrService,
     /*pExportInfo=*/        &__nvoc_export_info_IntrService
 };
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_IntrService = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_IntrService =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -92,4 +95,3 @@ void __nvoc_init_IntrService(IntrService *pThis) {
     pThis->__nvoc_pbase_IntrService = pThis;
     __nvoc_init_funcTable_IntrService(pThis);
 }
-

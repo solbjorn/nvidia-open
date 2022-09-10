@@ -47,7 +47,7 @@ extern "C" {
 
 /*!
  * KernelIoctrl is a logical abstraction of the GPU Ioctrl Engine. The
- * Public API of the Ioctrl Engine is exposed through this object, and 
+ * Public API of the Ioctrl Engine is exposed through this object, and
  * any interfaces which do not manage the underlying Ioctrl hardware
  * can be managed by this object.
  */
@@ -57,7 +57,7 @@ extern "C" {
 #define PRIVATE_FIELD(x) NVOC_PRIVATE_FIELD(x)
 #endif
 struct KernelIoctrl {
-    const struct NVOC_RTTI *__nvoc_rtti;
+    struct __rtti_marker __nvoc_rtti;
     struct OBJENGSTATE __nvoc_base_OBJENGSTATE;
     struct Object *__nvoc_pbase_Object;
     struct OBJENGSTATE *__nvoc_pbase_OBJENGSTATE;

@@ -426,6 +426,8 @@ knvlinkUpdateCurrentConfig_IMPL
 
     if (osAcquireRmSema(pSys->pSema) == NV_OK)
     {
+        NV2080_CTRL_NVLINK_UPDATE_CURRENT_CONFIG_PARAMS params;
+
         //
         // XXX Bug 1795328: Fix P2P path to acquire locks for the GPU
         //  Due to platform differences in the P2P path, the GPU lock is not
@@ -454,7 +456,6 @@ knvlinkUpdateCurrentConfig_IMPL
         //
         knvlinkFilterBridgeLinks_HAL(pGpu, pKernelNvlink);
 
-        NV2080_CTRL_NVLINK_UPDATE_CURRENT_CONFIG_PARAMS params;
         portMemSet(&params, 0, sizeof(params));
 
         // Reset timeout to clear any accumulated timeouts from link init
@@ -642,6 +643,7 @@ knvlinkSetLinkMaskToPeer_IMPL
     NvU32         peerLinkMask
 )
 {
+    NV2080_CTRL_NVLINK_UPDATE_PEER_LINK_MASK_PARAMS params;
     NV_STATUS status = NV_OK;
 
     // Return early if no update needed to the peer link mask
@@ -650,7 +652,6 @@ knvlinkSetLinkMaskToPeer_IMPL
 
     pKernelNvlink0->peerLinkMasks[gpuGetInstance(pGpu1)] = peerLinkMask;
 
-    NV2080_CTRL_NVLINK_UPDATE_PEER_LINK_MASK_PARAMS params;
 
     portMemSet(&params, 0, sizeof(params));
     params.gpuInst      = gpuGetInstance(pGpu1);
@@ -833,6 +834,8 @@ knvlinkPrepareForXVEReset_IMPL
     //
     if (pKernelNvlink->getProperty(pKernelNvlink, PDB_PROP_KNVLINK_LINKRESET_AFTER_SHUTDOWN))
     {
+        NV2080_CTRL_NVLINK_RESET_LINKS_PARAMS resetLinksparams;
+
         status = knvlinkCoreResetDeviceLinks(pGpu, pKernelNvlink);
         if (status != NV_OK)
         {
@@ -851,7 +854,6 @@ knvlinkPrepareForXVEReset_IMPL
         //
         // Hence, (re-)reset all the links to recover them after shutdown (pre-Ampere)
         //
-        NV2080_CTRL_NVLINK_RESET_LINKS_PARAMS resetLinksparams;
 
         portMemSet(&resetLinksparams, 0, sizeof(resetLinksparams));
         resetLinksparams.linkMask = pKernelNvlink->enabledLinks;
@@ -925,6 +927,8 @@ knvlinkDetectNvswitchProxy_IMPL
     KernelNvlink *pKernelNvlink
 )
 {
+    NV2080_CTRL_INTERNAL_NVLINK_GET_SET_NVSWITCH_FABRIC_ADDR_PARAMS params;
+    NV2080_CTRL_NVLINK_ARE_LINKS_TRAINED_PARAMS linkTrainedParams;
     OBJSYS    *pSys   = SYS_GET_INSTANCE();
     NV_STATUS  status = NV_OK;
     NvU32      i;
@@ -944,7 +948,6 @@ knvlinkDetectNvswitchProxy_IMPL
     }
 
     // Get the link train status for the enabled link masks
-    NV2080_CTRL_NVLINK_ARE_LINKS_TRAINED_PARAMS linkTrainedParams;
 
     portMemSet(&linkTrainedParams, 0, sizeof(linkTrainedParams));
     linkTrainedParams.linkMask    = pKernelNvlink->enabledLinks;
@@ -973,8 +976,6 @@ knvlinkDetectNvswitchProxy_IMPL
         }
     }
     FOR_EACH_INDEX_IN_MASK_END;
-
-    NV2080_CTRL_INTERNAL_NVLINK_GET_SET_NVSWITCH_FABRIC_ADDR_PARAMS params;
 
     portMemSet(&params, 0, sizeof(params));
     params.bGet = NV_TRUE;
@@ -1524,6 +1525,7 @@ knvlinkSetUniqueFabricBaseAddress_IMPL
     NvU64         fabricBaseAddr
 )
 {
+    NV2080_CTRL_INTERNAL_NVLINK_GET_SET_NVSWITCH_FABRIC_ADDR_PARAMS params;
     NV_STATUS status = NV_OK;
 
     if (!knvlinkIsForcedConfig(pGpu, pKernelNvlink))
@@ -1580,7 +1582,6 @@ knvlinkSetUniqueFabricBaseAddress_IMPL
     // call because RM doesn't allow any P2P operations until FM assigns fabric
     // addresses.
     //
-    NV2080_CTRL_INTERNAL_NVLINK_GET_SET_NVSWITCH_FABRIC_ADDR_PARAMS params;
 
     portMemSet(&params, 0, sizeof(params));
     params.bGet = NV_FALSE;
@@ -1664,6 +1665,7 @@ knvlinkExecGspRmRpc_IMPL
     NvU32     gpuMaskInitial = rmGpuLocksGetOwnedMask();
     NvU32     gpuMask        = gpuMaskInitial | NVBIT(pGpu->gpuInstance);
     NV_STATUS status         = NV_OK;
+    RM_API *pRmApi;
 
     if (IS_GSP_CLIENT(pGpu))
     {
@@ -1684,7 +1686,7 @@ knvlinkExecGspRmRpc_IMPL
         }
     }
 
-    RM_API *pRmApi = GPU_GET_PHYSICAL_RMAPI(pGpu);
+    pRmApi = GPU_GET_PHYSICAL_RMAPI(pGpu);
     status = pRmApi->Control(pRmApi,
                              pGpu->hInternalClient,
                              pGpu->hInternalSubdevice,

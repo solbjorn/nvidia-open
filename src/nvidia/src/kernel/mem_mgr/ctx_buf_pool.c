@@ -364,10 +364,13 @@ ctxBufPoolAllocate
 )
 {
     RM_POOL_ALLOC_MEM_RESERVE_INFO *pPool = NULL;
+    NV_ADDRESS_SPACE addrSpace;
+    NvU32 pageSize;
+
     NV_ASSERT_OR_RETURN(pCtxBufPool != NULL, NV_ERR_INVALID_ARGUMENT);
     NV_ASSERT_OR_RETURN(pMemDesc != NULL, NV_ERR_INVALID_ARGUMENT);
 
-    NV_ADDRESS_SPACE addrSpace = memdescGetAddressSpace(pMemDesc);
+    addrSpace = memdescGetAddressSpace(pMemDesc);
     if (addrSpace != ADDR_FBMEM)
     {
         NV_PRINTF(LEVEL_ERROR, "ctx buf pool is only used for buffers to be allocated in FB\n"
@@ -376,7 +379,7 @@ ctxBufPoolAllocate
     }
 
     // If page size is not set, then set it based on actual size of memdesc and its alignment
-    NvU32 pageSize = memdescGetPageSize(pMemDesc, AT_GPU);
+    pageSize = memdescGetPageSize(pMemDesc, AT_GPU);
     if ((pageSize == 0) || (memdescGetContiguity(pMemDesc, AT_GPU)))
     {
         NvU32 newPageSize;
@@ -440,10 +443,12 @@ ctxBufPoolFree
 )
 {
     RM_POOL_ALLOC_MEM_RESERVE_INFO *pPool = NULL;
+    NvU32 pageSize;
+
     NV_ASSERT_OR_RETURN(pCtxBufPool != NULL, NV_ERR_INVALID_ARGUMENT);
     NV_ASSERT_OR_RETURN(pMemDesc != NULL, NV_ERR_INVALID_ARGUMENT);
 
-    NvU32 pageSize = memdescGetPageSize(pMemDesc, AT_GPU);
+    pageSize = memdescGetPageSize(pMemDesc, AT_GPU);
 
     //
     // If buffer is contiguous, then it may or may not be allocated from the same pool

@@ -59,7 +59,7 @@ enum {
 // nvDbgBreakpointEnabled - Returns true if triggering a breakpoint is allowed
 //
 NvBool osDbgBreakpointEnabled(void);
-NvBool nvDbgBreakpointEnabled()
+NvBool nvDbgBreakpointEnabled(void)
 {
     OBJSYS *pSys = SYS_GET_INSTANCE();
     if (pSys != NULL)
@@ -132,14 +132,13 @@ nvDbg_PrintMsg
 )
 {
     NvU32       rc;
-    int debuglevel_min;
-
+    int debuglevel_min =
 #if   defined(DEVELOP) || defined(DEBUG) || defined(QA_BUILD)
-    debuglevel_min = LEVEL_NOTICE;
+    LEVEL_NOTICE
 #else
-    debuglevel_min = LEVEL_ERROR;
+    LEVEL_ERROR
 #endif
-
+    ;
     OBJSYS *pSys = SYS_GET_INSTANCE();
 
     if ((NULL == pSys) || (pSys->getProperty(pSys, PDB_PROP_SYS_DEBUGGER_DISABLED)))
@@ -489,6 +488,7 @@ int nvDbgVsnprintf(char *dest, NvU32 destSize, const char *fmt, va_list args)
             break;
         case 'x':   // Copy a formatted, lower-case hexadecimal number
             flags |= LOWERCASE_F;
+            fallthrough;
         case 'X':   // Copy a formatted, upper-case hexadecimal number
             if (fieldwidth > TMPBUF_SIZE)
             {
@@ -533,6 +533,7 @@ int nvDbgVsnprintf(char *dest, NvU32 destSize, const char *fmt, va_list args)
             break;
         case 0:     // Gracefully handle premature end-of-string
             f--;    // Back up, now f points to the null character again
+            fallthrough;
         default:    // Unexpected conversion operator, so just echo to the destination
             while (specptr < f)
             {
@@ -1747,4 +1748,3 @@ nvDbgDumpBufferBytes
         break;
     }
 }
-

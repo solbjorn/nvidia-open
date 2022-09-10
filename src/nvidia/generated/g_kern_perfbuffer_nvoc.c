@@ -30,9 +30,12 @@ void __nvoc_init_dataField_PerfBuffer(PerfBuffer*, RmHalspecOwner* );
 void __nvoc_dtor_PerfBuffer(PerfBuffer*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_PerfBuffer;
 
+#define __NVOC_CB_TYPE PerfBuffer
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_PerfBuffer, __nvoc_dtor_PerfBuffer);
+
 static const struct NVOC_RTTI __nvoc_rtti_PerfBuffer_PerfBuffer = {
     /*pClassDef=*/          &__nvoc_class_def_PerfBuffer,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_PerfBuffer,
+    /*dtor=*/               __nvoc_dtor_PerfBuffer_dtor,
     /*offset=*/             0,
 };
 
@@ -78,7 +81,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_PerfBuffer = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_PerfBuffer = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_PerfBuffer =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(PerfBuffer),
@@ -88,7 +91,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_PerfBuffer =
         /*name=*/               "PerfBuffer",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_PerfBuffer,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_PerfBuffer_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_PerfBuffer,
     /*pExportInfo=*/        &__nvoc_export_info_PerfBuffer
 };
@@ -181,7 +184,7 @@ static NvBool __nvoc_thunk_RmResource_perfbufferAccessCallback(struct PerfBuffer
     return rmresAccessCallback((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_PerfBuffer_RmResource.offset), pInvokingClient, pAllocParams, accessRight);
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_PerfBuffer = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_PerfBuffer =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -340,4 +343,3 @@ NV_STATUS __nvoc_objCreateDynamic_PerfBuffer(PerfBuffer **ppThis, Dynamic *pPare
 
     return status;
 }
-

@@ -649,7 +649,8 @@ rcdbGetRcDiagRecBoundaries_IMPL
                     start = pRecord->idx;
                     foundStart = NV_TRUE;
                 }
-                // fall thru to check if the start of the report is also the end of the report.
+                // check if the start of the report is also the end of the report.
+                fallthrough;
 
             case NV_TRUE:
                 // check if this is an end record.
@@ -3065,7 +3066,7 @@ _rcdbNocatCollectContext(OBJGPU *pGpu, Journal* pRcdb, NV2080_NOCAT_JOURNAL_GPU_
 
         if (!osIsRaisedIRQL())
         {
-           
+
             pContextCache->bValid = NV_TRUE;
         }
     }
@@ -3477,7 +3478,7 @@ rcdbReportNextNocatJournalEntry
 }
 
 /*
-** rcdbGetNocatOutstandingCount returns the number of NOCAT events that have 
+** rcdbGetNocatOutstandingCount returns the number of NOCAT events that have
 ** been recorded since the last reported record.
 **
 **  parameters:
@@ -3571,7 +3572,7 @@ void rcdbInitNocatGpuCache_IMPL(OBJGPU *pGpu)
     Journal                *pRcdb = SYS_GET_RCDB(pSys);
 #if NOCAT_PROBE_FB_MEMORY
     NvU8                   *pCpuPtr;
-#endif 
+#endif
     if (pGpu == NULL)
     {
         return;

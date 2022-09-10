@@ -260,10 +260,11 @@ kctxshareapiCopyConstruct_IMPL
     RsResourceRef *pVaspaceRef  = NULL;
     VaSpaceApi    *pVaspaceApi  = NULL;
     RsResourceRef *pChanGrpRef  = pDstRef->pParentRef;
+    RsShared *pShared;
 
     pKernelCtxShareApi->pShareData = pKernelCtxShareSrc->pShareData;
 
-    RsShared *pShared = staticCast(pKernelCtxShareApi->pShareData, RsShared);
+    pShared = staticCast(pKernelCtxShareApi->pShareData, RsShared);
     serverRefShare(&g_resServ, pShared);
 
     iter =  serverutilRefIter(pDstClient->hClient, pDstRef->pParentRef->pParentRef->hResource, classId(VaSpaceApi), RS_ITERATE_DESCENDANTS, NV_TRUE);
@@ -536,12 +537,14 @@ kctxshareDestroyCommon_IMPL
 
     for (i = 0; i < numMax; i++)
     {
+        PEMEMBLOCK pBlock;
+
         if (i == pKernelCtxShare->subctxId)
         {
             continue;
         }
 
-        PEMEMBLOCK pBlock = pKernelChannelGroup->pSubctxIdHeap->eheapGetBlock(
+        pBlock = pKernelChannelGroup->pSubctxIdHeap->eheapGetBlock(
             pKernelChannelGroup->pSubctxIdHeap,
             i,
             NV_FALSE);

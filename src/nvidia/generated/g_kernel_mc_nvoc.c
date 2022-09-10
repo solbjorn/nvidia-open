@@ -24,9 +24,12 @@ void __nvoc_init_dataField_KernelMc(KernelMc*, RmHalspecOwner* );
 void __nvoc_dtor_KernelMc(KernelMc*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_KernelMc;
 
+#define __NVOC_CB_TYPE KernelMc
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_KernelMc, __nvoc_dtor_KernelMc);
+
 static const struct NVOC_RTTI __nvoc_rtti_KernelMc_KernelMc = {
     /*pClassDef=*/          &__nvoc_class_def_KernelMc,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_KernelMc,
+    /*dtor=*/               __nvoc_dtor_KernelMc_dtor,
     /*offset=*/             0,
 };
 
@@ -51,7 +54,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_KernelMc = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_KernelMc = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_KernelMc =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(KernelMc),
@@ -61,7 +64,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_KernelMc =
         /*name=*/               "KernelMc",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_KernelMc,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_KernelMc_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_KernelMc,
     /*pExportInfo=*/        &__nvoc_export_info_KernelMc
 };
@@ -146,7 +149,7 @@ static NvBool __nvoc_thunk_OBJENGSTATE_kmcIsPresent(POBJGPU pGpu, struct KernelM
     return engstateIsPresent(pGpu, (struct OBJENGSTATE *)(((unsigned char *)pEngstate) + __nvoc_rtti_KernelMc_OBJENGSTATE.offset));
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_KernelMc = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_KernelMc =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -192,11 +195,11 @@ static void __nvoc_init_funcTable_KernelMc_1(KernelMc *pThis, RmHalspecOwner *pR
     pThis->__kmcStateInitLocked__ = &kmcStateInitLocked_IMPL;
 
     // Hal function -- kmcWritePmcEnableReg
-    if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x000003e0UL) )) /* ChipHal: TU102 | TU104 | TU106 | TU116 | TU117 */ 
+    if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x000003e0UL) )) /* ChipHal: TU102 | TU104 | TU106 | TU116 | TU117 */
     {
         pThis->__kmcWritePmcEnableReg__ = &kmcWritePmcEnableReg_GK104;
     }
-    else if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x0000fc00UL) )) /* ChipHal: GA100 | GA102 | GA103 | GA104 | GA106 | GA107 */ 
+    else if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x0000fc00UL) )) /* ChipHal: GA100 | GA102 | GA103 | GA104 | GA106 | GA107 */
     {
         pThis->__kmcWritePmcEnableReg__ = &kmcWritePmcEnableReg_GA100;
     }
@@ -205,11 +208,11 @@ static void __nvoc_init_funcTable_KernelMc_1(KernelMc *pThis, RmHalspecOwner *pR
     }
 
     // Hal function -- kmcReadPmcEnableReg
-    if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x000003e0UL) )) /* ChipHal: TU102 | TU104 | TU106 | TU116 | TU117 */ 
+    if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x000003e0UL) )) /* ChipHal: TU102 | TU104 | TU106 | TU116 | TU117 */
     {
         pThis->__kmcReadPmcEnableReg__ = &kmcReadPmcEnableReg_GK104;
     }
-    else if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x0000fc00UL) )) /* ChipHal: GA100 | GA102 | GA103 | GA104 | GA106 | GA107 */ 
+    else if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x0000fc00UL) )) /* ChipHal: GA100 | GA102 | GA103 | GA104 | GA106 | GA107 */
     {
         pThis->__kmcReadPmcEnableReg__ = &kmcReadPmcEnableReg_GA100;
     }
@@ -318,4 +321,3 @@ NV_STATUS __nvoc_objCreateDynamic_KernelMc(KernelMc **ppThis, Dynamic *pParent, 
 
     return status;
 }
-

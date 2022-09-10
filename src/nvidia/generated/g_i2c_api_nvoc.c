@@ -30,9 +30,12 @@ void __nvoc_init_dataField_I2cApi(I2cApi*);
 void __nvoc_dtor_I2cApi(I2cApi*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_I2cApi;
 
+#define __NVOC_CB_TYPE I2cApi
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_I2cApi, __nvoc_dtor_I2cApi);
+
 static const struct NVOC_RTTI __nvoc_rtti_I2cApi_I2cApi = {
     /*pClassDef=*/          &__nvoc_class_def_I2cApi,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_I2cApi,
+    /*dtor=*/               __nvoc_dtor_I2cApi_dtor,
     /*offset=*/             0,
 };
 
@@ -78,7 +81,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_I2cApi = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_I2cApi = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_I2cApi =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(I2cApi),
@@ -88,7 +91,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_I2cApi =
         /*name=*/               "I2cApi",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_I2cApi,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_I2cApi_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_I2cApi,
     /*pExportInfo=*/        &__nvoc_export_info_I2cApi
 };
@@ -181,17 +184,23 @@ static NvBool __nvoc_thunk_RmResource_i2capiAccessCallback(struct I2cApi *pResou
     return rmresAccessCallback((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_I2cApi_RmResource.offset), pInvokingClient, pAllocParams, accessRight);
 }
 
+NVOC_BUILD_CALLBACK(i2capiCtrlCmdI2cGetPortInfo_IMPL);
+NVOC_BUILD_CALLBACK(i2capiCtrlCmdI2cIndexed_IMPL);
+NVOC_BUILD_CALLBACK(i2capiCtrlCmdI2cGetPortSpeed_IMPL);
+NVOC_BUILD_CALLBACK(i2capiCtrlCmdI2cTableGetDevInfo_IMPL);
+NVOC_BUILD_CALLBACK(i2capiCtrlCmdI2cTransaction_IMPL);
+
 #if !defined(NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG)
 #define NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(x)      (0)
 #endif
 
-static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_I2cApi[] = 
+static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_I2cApi[] =
 {
     {               /*  [0] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x210u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) i2capiCtrlCmdI2cGetPortInfo_IMPL,
+        /*pFunc=*/      i2capiCtrlCmdI2cGetPortInfo_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x210u)
         /*flags=*/      0x210u,
         /*accessRight=*/0x0u,
@@ -204,9 +213,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_I2cApi[]
     },
     {               /*  [1] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x210u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) i2capiCtrlCmdI2cIndexed_IMPL,
+        /*pFunc=*/      i2capiCtrlCmdI2cIndexed_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x210u)
         /*flags=*/      0x210u,
         /*accessRight=*/0x0u,
@@ -219,9 +228,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_I2cApi[]
     },
     {               /*  [2] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x210u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) i2capiCtrlCmdI2cGetPortSpeed_IMPL,
+        /*pFunc=*/      i2capiCtrlCmdI2cGetPortSpeed_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x210u)
         /*flags=*/      0x210u,
         /*accessRight=*/0x0u,
@@ -234,9 +243,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_I2cApi[]
     },
     {               /*  [3] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x210u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) i2capiCtrlCmdI2cTableGetDevInfo_IMPL,
+        /*pFunc=*/      i2capiCtrlCmdI2cTableGetDevInfo_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x210u)
         /*flags=*/      0x210u,
         /*accessRight=*/0x0u,
@@ -249,9 +258,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_I2cApi[]
     },
     {               /*  [4] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x210u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) i2capiCtrlCmdI2cTransaction_IMPL,
+        /*pFunc=*/      i2capiCtrlCmdI2cTransaction_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x210u)
         /*flags=*/      0x210u,
         /*accessRight=*/0x0u,
@@ -265,7 +274,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_I2cApi[]
 
 };
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_I2cApi = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_I2cApi =
 {
     /*numEntries=*/     5,
     /*pExportEntries=*/ __nvoc_exported_method_def_I2cApi
@@ -429,4 +438,3 @@ NV_STATUS __nvoc_objCreateDynamic_I2cApi(I2cApi **ppThis, Dynamic *pParent, NvU3
 
     return status;
 }
-

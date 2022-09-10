@@ -67,6 +67,7 @@ binapiControl_IMPL
     NV_STATUS status;
     OBJGPU *pGpu = GPU_RES_GET_GPU(pResource);
     GPU_MASK gpuMaskRelease = 0;
+    RM_API *pRmApi;
 
     // check if CMD is NULL, return early
     if (RMCTRL_IS_NULL_CMD(pParams->cmd))
@@ -81,7 +82,7 @@ binapiControl_IMPL
                            RM_LOCK_MODULES_RPC,
                            &gpuMaskRelease));
 
-    RM_API *pRmApi = GPU_GET_PHYSICAL_RMAPI(pGpu);
+    pRmApi = GPU_GET_PHYSICAL_RMAPI(pGpu);
     status = pRmApi->Control(pRmApi,
                              pParams->hClient,
                              pParams->hObject,

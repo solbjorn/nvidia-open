@@ -63,7 +63,7 @@ extern "C" {
 #define PRIVATE_FIELD(x) NVOC_PRIVATE_FIELD(x)
 #endif
 struct RmClientResource {
-    const struct NVOC_RTTI *__nvoc_rtti;
+    struct __rtti_marker __nvoc_rtti;
     struct RsClientResource __nvoc_base_RsClientResource;
     struct RmResourceCommon __nvoc_base_RmResourceCommon;
     struct Notifier __nvoc_base_Notifier;

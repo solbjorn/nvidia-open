@@ -36,9 +36,12 @@ void __nvoc_init_dataField_KernelCeContext(KernelCeContext*);
 void __nvoc_dtor_KernelCeContext(KernelCeContext*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_KernelCeContext;
 
+#define __NVOC_CB_TYPE KernelCeContext
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_KernelCeContext, __nvoc_dtor_KernelCeContext);
+
 static const struct NVOC_RTTI __nvoc_rtti_KernelCeContext_KernelCeContext = {
     /*pClassDef=*/          &__nvoc_class_def_KernelCeContext,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_KernelCeContext,
+    /*dtor=*/               __nvoc_dtor_KernelCeContext_dtor,
     /*offset=*/             0,
 };
 
@@ -105,7 +108,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_KernelCeContext = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_KernelCeContext = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_KernelCeContext =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(KernelCeContext),
@@ -115,7 +118,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_KernelCeContext =
         /*name=*/               "KernelCeContext",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_KernelCeContext,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_KernelCeContext_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_KernelCeContext,
     /*pExportInfo=*/        &__nvoc_export_info_KernelCeContext
 };
@@ -236,7 +239,7 @@ static NV_STATUS __nvoc_thunk_Notifier_kcectxGetOrAllocNotifShare(struct KernelC
     return notifyGetOrAllocNotifShare((struct Notifier *)(((unsigned char *)pNotifier) + __nvoc_rtti_KernelCeContext_Notifier.offset), hNotifierClient, hNotifierResource, ppNotifShare);
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_KernelCeContext = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_KernelCeContext =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -402,4 +405,3 @@ NV_STATUS __nvoc_objCreateDynamic_KernelCeContext(KernelCeContext **ppThis, Dyna
 
     return status;
 }
-

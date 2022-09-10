@@ -834,9 +834,10 @@ serverMap_Prologue
     pMapParams->pLockInfo->flags |= RM_LOCK_FLAGS_NO_GPUS_LOCK;
     if (!bClientAlloc)
     {
+        RsResourceRef *pContextRef;
+
         NV_ASSERT_OR_RETURN(hParent != hClient, NV_ERR_INVALID_OBJECT_PARENT);
 
-        RsResourceRef *pContextRef;
         rmStatus = clientGetResourceRef(pRsClient, pMapParams->hDevice, &pContextRef);
         if (rmStatus != NV_OK)
             return rmStatus;
@@ -930,9 +931,10 @@ serverUnmap_Prologue
     pUnmapParams->pLockInfo->flags |= RM_LOCK_FLAGS_NO_GPUS_LOCK;
     if (!bClientAlloc)
     {
+        RsResourceRef *pContextRef;
+
         NV_ASSERT_OR_RETURN(hParent != hClient, NV_ERR_INVALID_OBJECT_PARENT);
 
-        RsResourceRef *pContextRef;
         rmStatus = clientGetResourceRef(pRsClient, pUnmapParams->hDevice, &pContextRef);
         if (rmStatus != NV_OK)
             return rmStatus;

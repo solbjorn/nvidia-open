@@ -1168,6 +1168,11 @@ static NvBool AllocDevice(struct NvKmsPerOpen *pOpen,
     NvU32 disp, head;
     NvU8 layer;
 
+    ct_assert(ARRAY_LEN(pParams->reply.dispHandles) ==
+              ARRAY_LEN(pOpenDev->disp));
+    ct_assert(ARRAY_LEN(pParams->reply.layerCaps) ==
+              ARRAY_LEN(pDevEvo->caps.layerCaps));
+
     nvkms_memset(&pParams->reply, 0, sizeof(pParams->reply));
 
     if (nvkms_strcmp(pParams->request.versionString, NV_VERSION_STRING) != 0) {
@@ -1226,17 +1231,11 @@ static NvBool AllocDevice(struct NvKmsPerOpen *pOpen,
     pParams->reply.numHeads = pDevEvo->numHeads;
     pParams->reply.numDisps = pDevEvo->nDispEvo;
 
-    ct_assert(ARRAY_LEN(pParams->reply.dispHandles) ==
-              ARRAY_LEN(pOpenDev->disp));
-
     for (disp = 0; disp < ARRAY_LEN(pParams->reply.dispHandles); disp++) {
         pParams->reply.dispHandles[disp] = pOpenDev->disp[disp].nvKmsApiHandle;
     }
 
     pParams->reply.inputLutAppliesToBase = pDevEvo->caps.inputLutAppliesToBase;
-
-    ct_assert(ARRAY_LEN(pParams->reply.layerCaps) ==
-              ARRAY_LEN(pDevEvo->caps.layerCaps));
 
     for (head = 0; head < pDevEvo->numHeads; head++) {
         pParams->reply.numLayers[head] = pDevEvo->head[head].numLayers;
@@ -1425,6 +1424,9 @@ static NvBool QueryDisp(struct NvKmsPerOpen *pOpen,
     NVDispEvoPtr pDispEvo;
     NvU32 connector;
 
+    ct_assert(ARRAY_LEN(pParams->reply.connectorHandles) ==
+              ARRAY_LEN(pOpenDisp->connector));
+
     pOpenDisp = GetPerOpenDisp(pOpen,
                                pParams->request.deviceHandle,
                                pParams->request.dispHandle);
@@ -1447,9 +1449,6 @@ static NvBool QueryDisp(struct NvKmsPerOpen *pOpen,
     pParams->reply.muxDpys         = pDispEvo->muxDisplays;
     pParams->reply.frameLockHandle = pOpenDisp->frameLockHandle;
     pParams->reply.numConnectors   = nvListCount(&pDispEvo->connectorList);
-
-    ct_assert(ARRAY_LEN(pParams->reply.connectorHandles) ==
-              ARRAY_LEN(pOpenDisp->connector));
 
     for (connector = 0; connector < ARRAY_LEN(pParams->reply.connectorHandles);
          connector++) {
@@ -2642,6 +2641,9 @@ static NvBool QueryFrameLock(struct NvKmsPerOpen *pOpen,
     const NVFrameLockEvoRec *pFrameLockEvo;
     NvU32 gpu;
 
+    ct_assert(ARRAY_LEN(pFrameLockEvo->gpuIds) <=
+              ARRAY_LEN(pParams->reply.gpuIds));
+
     nvkms_memset(&pParams->reply, 0, sizeof(pParams->reply));
 
     pOpenFrameLock =
@@ -2652,9 +2654,6 @@ static NvBool QueryFrameLock(struct NvKmsPerOpen *pOpen,
     }
 
     pFrameLockEvo = pOpenFrameLock->pFrameLockEvo;
-
-    ct_assert(ARRAY_LEN(pFrameLockEvo->gpuIds) <=
-              ARRAY_LEN(pParams->reply.gpuIds));
 
     for (gpu = 0; gpu < pFrameLockEvo->nGpuIds; gpu++) {
         pParams->reply.gpuIds[gpu] = pFrameLockEvo->gpuIds[gpu];

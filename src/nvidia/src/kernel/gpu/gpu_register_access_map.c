@@ -105,11 +105,13 @@ NV_STATUS
 gpuSetUserRegisterAccessPermissionsInBulk_IMPL(OBJGPU *pGpu, const NvU32 *pOffsetsSizesArr,
                                                NvU32 arrSizeBytes, NvBool bAllow)
 {
-    NV_ASSERT_OR_RETURN((arrSizeBytes & (2 * sizeof(NvU32) - 1)) == 0, NV_ERR_INVALID_ARGUMENT);
-    NvU32 numElements = arrSizeBytes / sizeof(NvU32);
-
-    NvU32 i;
+    NvU32 numElements;
     NV_STATUS status;
+    NvU32 i;
+
+    NV_ASSERT_OR_RETURN((arrSizeBytes & (2 * sizeof(NvU32) - 1)) == 0, NV_ERR_INVALID_ARGUMENT);
+    numElements = arrSizeBytes / sizeof(NvU32);
+
     for (i = 0; i < numElements; i += 2)
     {
         status = gpuSetUserRegisterAccessPermissions(pGpu,

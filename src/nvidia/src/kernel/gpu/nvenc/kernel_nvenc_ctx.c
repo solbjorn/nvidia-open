@@ -71,8 +71,12 @@ deviceCtrlCmdMsencGetCaps_IMPL
     NV0080_CTRL_MSENC_GET_CAPS_PARAMS *pMsencCapsParams
 )
 {
-    OBJGPU *pGpu = GPU_RES_GET_GPU(pDevice);
     NV2080_CTRL_INTERNAL_MSENC_GET_CAPS_PARAMS params;
+    OBJGPU *pGpu = GPU_RES_GET_GPU(pDevice);
+    RM_API *pRmApi;
+
+    ct_assert(NV0080_CTRL_MSENC_CAPS_TBL_SIZE ==
+        sizeof(params.caps[0].capsTbl) / sizeof(*params.caps[0].capsTbl));
 
     // sanity check array size
     if (pMsencCapsParams->capsTblSize != NV0080_CTRL_MSENC_CAPS_TBL_SIZE)
@@ -83,10 +87,7 @@ deviceCtrlCmdMsencGetCaps_IMPL
         return NV_ERR_INVALID_ARGUMENT;
     }
 
-    ct_assert(NV0080_CTRL_MSENC_CAPS_TBL_SIZE ==
-        sizeof(params.caps[0].capsTbl) / sizeof(*params.caps[0].capsTbl));
-
-    RM_API *pRmApi = GPU_GET_PHYSICAL_RMAPI(pGpu);
+    pRmApi = GPU_GET_PHYSICAL_RMAPI(pGpu);
     NV_ASSERT_OK_OR_RETURN(pRmApi->Control(pRmApi,
                             pGpu->hInternalClient,
                             pGpu->hInternalSubdevice,

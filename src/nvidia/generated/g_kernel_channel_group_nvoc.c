@@ -24,9 +24,12 @@ void __nvoc_init_dataField_KernelChannelGroup(KernelChannelGroup*, RmHalspecOwne
 void __nvoc_dtor_KernelChannelGroup(KernelChannelGroup*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_KernelChannelGroup;
 
+#define __NVOC_CB_TYPE KernelChannelGroup
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_KernelChannelGroup, __nvoc_dtor_KernelChannelGroup);
+
 static const struct NVOC_RTTI __nvoc_rtti_KernelChannelGroup_KernelChannelGroup = {
     /*pClassDef=*/          &__nvoc_class_def_KernelChannelGroup,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_KernelChannelGroup,
+    /*dtor=*/               __nvoc_dtor_KernelChannelGroup_dtor,
     /*offset=*/             0,
 };
 
@@ -51,7 +54,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_KernelChannelGroup = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_KernelChannelGroup = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_KernelChannelGroup =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(KernelChannelGroup),
@@ -61,12 +64,12 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_KernelChannelGroup =
         /*name=*/               "KernelChannelGroup",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_KernelChannelGroup,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_KernelChannelGroup_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_KernelChannelGroup,
     /*pExportInfo=*/        &__nvoc_export_info_KernelChannelGroup
 };
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_KernelChannelGroup = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_KernelChannelGroup =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -184,4 +187,3 @@ NV_STATUS __nvoc_objCreateDynamic_KernelChannelGroup(KernelChannelGroup **ppThis
 
     return status;
 }
-

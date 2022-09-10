@@ -189,7 +189,7 @@ typedef struct _def_knvlink_link
 #define PRIVATE_FIELD(x) NVOC_PRIVATE_FIELD(x)
 #endif
 struct KernelNvlink {
-    const struct NVOC_RTTI *__nvoc_rtti;
+    struct __rtti_marker __nvoc_rtti;
     struct OBJENGSTATE __nvoc_base_OBJENGSTATE;
     struct Object *__nvoc_pbase_Object;
     struct OBJENGSTATE *__nvoc_pbase_OBJENGSTATE;
@@ -1391,14 +1391,14 @@ NV_STATUS knvlinkRetrainLinkFromSafe(OBJGPU *pGpu, struct KernelNvlink *pKernelN
 // NVLINK Callback functions from core library
 //
 #if defined(INCLUDE_NVLINK_LIB)
-     
+
 // Device callback functions
-     
+
 NvlStatus knvlinkCoreAddDeviceCallback   (nvlink_device *dev);
 NvlStatus knvlinkCoreRemoveDeviceCallback(nvlink_device *dev);
-     
+
 // Link callback functions
-     
+
 NvlStatus knvlinkCoreAddLinkCallback                 (nvlink_link *link);
 NvlStatus knvlinkCoreRemoveLinkCallback              (nvlink_link *link);
 NvlStatus knvlinkCoreLockLinkCallback                (nvlink_link *link);
@@ -1418,7 +1418,7 @@ NvlStatus knvlinkCoreSetRxSublinkDetectCallback      (nvlink_link *link, NvU32  
 NvlStatus knvlinkCoreGetRxSublinkDetectCallback      (nvlink_link *link);
 void      knvlinkCoreTrainingCompleteCallback        (nvlink_link *link);
 void      knvlinkCoreGetUphyLoadCallback             (nvlink_link *link, NvBool *bUnlocked);
-     
+
 #endif
 
 // NVLINK Utility Functions

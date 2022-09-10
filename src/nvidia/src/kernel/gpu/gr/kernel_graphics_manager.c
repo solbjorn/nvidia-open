@@ -62,8 +62,9 @@ _kgrmgrGPUInstanceHasComputeInstances
     KERNEL_MIG_GPU_INSTANCE *pKernelMIGGpuInstance
 )
 {
-    NV_ASSERT_OR_RETURN(pKernelMIGGpuInstance != NULL, NV_FALSE);
     NvU32 computeInstanceIdx;
+
+    NV_ASSERT_OR_RETURN(pKernelMIGGpuInstance != NULL, NV_FALSE);
 
     for (computeInstanceIdx = 0;
          computeInstanceIdx < NV_ARRAY_ELEMENTS(pKernelMIGGpuInstance->MIGComputeInstance);
@@ -317,9 +318,11 @@ kgrmgrSetLegacyKgraphicsStaticInfo_IMPL
     KernelGraphics *pKernelGraphics
 )
 {
+    const KGRAPHICS_STATIC_INFO *pKernelGraphicsStaticInfo;
+
     NV_CHECK_OR_RETURN_VOID(LEVEL_INFO, !pKernelGraphicsManager->legacyKgraphicsStaticInfo.bInitialized);
     NV_ASSERT_OR_RETURN_VOID((pKernelGraphics != NULL) && (kgraphicsGetInstance(pGpu, pKernelGraphics) == 0));
-    const KGRAPHICS_STATIC_INFO *pKernelGraphicsStaticInfo = kgraphicsGetStaticInfo(pGpu, pKernelGraphics);
+    pKernelGraphicsStaticInfo = kgraphicsGetStaticInfo(pGpu, pKernelGraphics);
     NV_ASSERT_OR_RETURN_VOID(pKernelGraphicsStaticInfo != NULL);
 
     portMemCopy(&pKernelGraphicsManager->legacyKgraphicsStaticInfo.floorsweepingMasks, sizeof(pKernelGraphicsStaticInfo->floorsweepingMasks),

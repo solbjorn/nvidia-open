@@ -36,9 +36,12 @@ void __nvoc_init_dataField_DispSwObject(DispSwObject*, RmHalspecOwner* );
 void __nvoc_dtor_DispSwObject(DispSwObject*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_DispSwObject;
 
+#define __NVOC_CB_TYPE DispSwObject
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_DispSwObject, __nvoc_dtor_DispSwObject);
+
 static const struct NVOC_RTTI __nvoc_rtti_DispSwObject_DispSwObject = {
     /*pClassDef=*/          &__nvoc_class_def_DispSwObject,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_DispSwObject,
+    /*dtor=*/               __nvoc_dtor_DispSwObject_dtor,
     /*offset=*/             0,
 };
 
@@ -105,7 +108,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_DispSwObject = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_DispSwObject = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_DispSwObject =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(DispSwObject),
@@ -115,7 +118,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_DispSwObject =
         /*name=*/               "DispSwObject",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_DispSwObject,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_DispSwObject_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_DispSwObject,
     /*pExportInfo=*/        &__nvoc_export_info_DispSwObject
 };
@@ -236,17 +239,19 @@ static NV_STATUS __nvoc_thunk_Notifier_dispswGetOrAllocNotifShare(struct DispSwO
     return notifyGetOrAllocNotifShare((struct Notifier *)(((unsigned char *)pNotifier) + __nvoc_rtti_DispSwObject_Notifier.offset), hNotifierClient, hNotifierResource, ppNotifShare);
 }
 
+NVOC_BUILD_CALLBACK(dispswCtrlCmdNotifyOnVblank_IMPL);
+
 #if !defined(NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG)
 #define NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(x)      (0)
 #endif
 
-static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispSwObject[] = 
+static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispSwObject[] =
 {
     {               /*  [0] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x210u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) dispswCtrlCmdNotifyOnVblank_IMPL,
+        /*pFunc=*/      dispswCtrlCmdNotifyOnVblank_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x210u)
         /*flags=*/      0x210u,
         /*accessRight=*/0x0u,
@@ -260,7 +265,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispSwOb
 
 };
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_DispSwObject = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_DispSwObject =
 {
     /*numEntries=*/     1,
     /*pExportEntries=*/ __nvoc_exported_method_def_DispSwObject
@@ -313,7 +318,7 @@ static void __nvoc_init_funcTable_DispSwObject_1(DispSwObject *pThis, RmHalspecO
     if (0)
     {
     }
-    else if (( ((rmVariantHal_HalVarIdx >> 5) == 0UL) && ((1UL << (rmVariantHal_HalVarIdx & 0x1f)) & 0x00000002UL) )) /* RmVariantHal: PF_KERNEL_ONLY */ 
+    else if (( ((rmVariantHal_HalVarIdx >> 5) == 0UL) && ((1UL << (rmVariantHal_HalVarIdx & 0x1f)) & 0x00000002UL) )) /* RmVariantHal: PF_KERNEL_ONLY */
     {
         pThis->__dispswGetSwMethods__ = &dispswGetSwMethods_46f6a7;
     }
@@ -449,4 +454,3 @@ NV_STATUS __nvoc_objCreateDynamic_DispSwObject(DispSwObject **ppThis, Dynamic *p
 
     return status;
 }
-

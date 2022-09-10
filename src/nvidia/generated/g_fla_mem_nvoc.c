@@ -30,9 +30,12 @@ void __nvoc_init_dataField_FlaMemory(FlaMemory*);
 void __nvoc_dtor_FlaMemory(FlaMemory*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_FlaMemory;
 
+#define __NVOC_CB_TYPE FlaMemory
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_FlaMemory, __nvoc_dtor_FlaMemory);
+
 static const struct NVOC_RTTI __nvoc_rtti_FlaMemory_FlaMemory = {
     /*pClassDef=*/          &__nvoc_class_def_FlaMemory,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_FlaMemory,
+    /*dtor=*/               __nvoc_dtor_FlaMemory_dtor,
     /*offset=*/             0,
 };
 
@@ -78,7 +81,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_FlaMemory = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_FlaMemory = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_FlaMemory =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(FlaMemory),
@@ -88,7 +91,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_FlaMemory =
         /*name=*/               "FlaMemory",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_FlaMemory,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_FlaMemory_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_FlaMemory,
     /*pExportInfo=*/        &__nvoc_export_info_FlaMemory
 };
@@ -177,7 +180,7 @@ static NvBool __nvoc_thunk_RmResource_flamemAccessCallback(struct FlaMemory *pRe
     return rmresAccessCallback((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_FlaMemory_RmResource.offset), pInvokingClient, pAllocParams, accessRight);
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_FlaMemory = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_FlaMemory =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -323,4 +326,3 @@ NV_STATUS __nvoc_objCreateDynamic_FlaMemory(FlaMemory **ppThis, Dynamic *pParent
 
     return status;
 }
-

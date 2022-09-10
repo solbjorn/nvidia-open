@@ -627,14 +627,16 @@ scrubCheckAndWaitForSize
     PSCRUB_NODE pList        = NULL;
     NV_STATUS   status       = NV_OK;
     NvLength    totalItems  = 0;
+    NvLength startIdx;
+    NvU64 totalScrubbedPages = 0;
+    NvLength requiredItemsToSave = 0;
+
     portSyncMutexAcquire(pScrubber->pScrubberMutex);
     totalItems = (NvLength)pScrubber->scrubListSize;
     *pSize  = 0;
     *ppList = pList;
 
-    NvLength startIdx = pScrubber->lastSeenIdByClient;
-    NvU64 totalScrubbedPages = 0;
-    NvLength requiredItemsToSave = 0;
+    startIdx = pScrubber->lastSeenIdByClient;
 
     for (; requiredItemsToSave < totalItems && totalScrubbedPages <= numPages; requiredItemsToSave++) {
         totalScrubbedPages += (pScrubber->pScrubList[(startIdx + requiredItemsToSave) % MAX_SCRUB_ITEMS].size / pageSize);
@@ -1009,8 +1011,10 @@ _scrubSetupChannelBufferSizes
     NvU32       numCopyBlocks
 )
 {
+    NvU32 gpFifoSize;
+
     NV_ASSERT(numCopyBlocks != 0);
-    NvU32 gpFifoSize = NV906F_GP_ENTRY__SIZE * numCopyBlocks;
+    gpFifoSize = NV906F_GP_ENTRY__SIZE * numCopyBlocks;
 
     // set channel specific sizes
     pChannel->methodSizePerBlock       = _getOptimalMethodSizePerBlock(pChannel);

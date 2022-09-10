@@ -1290,8 +1290,8 @@ _memdescFreeInternal
                     SLI_LOOP_START(SLI_LOOP_FLAGS_BC_ONLY)
                     {
                         KernelMemorySystem *pKernelMemorySystem = GPU_GET_KERNEL_MEMORY_SYSTEM(pGpu);
-                        NV_ASSERT_OK(kmemsysCacheOp_HAL(pGpu, pKernelMemorySystem, pMemDesc, 
-                                                                  FB_CACHE_SYSTEM_MEMORY, 
+                        NV_ASSERT_OK(kmemsysCacheOp_HAL(pGpu, pKernelMemorySystem, pMemDesc,
+                                                                  FB_CACHE_SYSTEM_MEMORY,
                                                                   FB_CACHE_INVALIDATE));
                     }
                     SLI_LOOP_END
@@ -1323,13 +1323,15 @@ _memdescFreeInternal
                 (pMemDesc->_flags & MEMDESC_FLAGS_OWNED_BY_CTX_BUF_POOL))
             {
                 CTX_BUF_POOL_INFO *pCtxBufPool = memdescGetCtxBufPool(pMemDesc);
+                NV_STATUS status;
+
                 if (pCtxBufPool == NULL)
                 {
                     DBG_BREAKPOINT();
                     NV_PRINTF(LEVEL_ERROR, "ctx buf pool not found\n");
                     return;
                 }
-                NV_STATUS status = ctxBufPoolFree(pCtxBufPool, pMemDesc);
+                status = ctxBufPoolFree(pCtxBufPool, pMemDesc);
                 if (status != NV_OK)
                 {
                     DBG_BREAKPOINT();
@@ -1399,7 +1401,7 @@ memdescFree
             // The memdesc is being freed so destroy all of its IOMMU mappings.
             _memdescFreeIommuMappings(pMemDesc);
         }
-        
+
         if (pMemDesc->_addressSpace != ADDR_FBMEM &&
             pMemDesc->_addressSpace != ADDR_SYSMEM)
         {
@@ -1644,6 +1646,8 @@ memdescMap
             FB_MAPPING_INFO *pMapping;
             RmPhysAddr       bar1PhysAddr;
             NvBool           bCoherentCpuMapping;
+            CALL_CONTEXT *pCallContext;
+            NvHandle hClient;
 
             NV_ASSERT_OR_RETURN(pGpu != NULL, NV_ERR_INVALID_ARGUMENT);
 
@@ -1706,8 +1710,8 @@ memdescMap
 
             // Mapping via PCIe BAR
 
-            NvHandle hClient = NV01_NULL_OBJECT;
-            CALL_CONTEXT *pCallContext = resservGetTlsCallContext();
+            hClient = NV01_NULL_OBJECT;
+            pCallContext = resservGetTlsCallContext();
             if ((pCallContext != NULL) && (pCallContext->pClient != NULL))
             {
                 hClient = pCallContext->pClient->hClient;
@@ -1947,10 +1951,12 @@ memdescFlushCpuCaches
     MEMORY_DESCRIPTOR *pMemDesc
 )
 {
+    KernelBif *pKernelBif;
+
     // Flush WC to get the data written to this mapping out to memory
     osFlushCpuWriteCombineBuffer();
 
-    KernelBif *pKernelBif = GPU_GET_KERNEL_BIF(pGpu);
+    pKernelBif = GPU_GET_KERNEL_BIF(pGpu);
 
     // Special care is needed on SOC, where the GPU cannot snoop the CPU L2
     if ((pKernelBif != NULL)                     &&
@@ -2744,8 +2750,6 @@ memdescGetPteArrayForGpu
         //
 
         case AT_VALUE(AT_PA):
-        {
-        }
         case AT_VALUE(AT_GPU):
         {
             // Imported ADDR_FABRIC_V2 memdescs are device-less.
@@ -2762,6 +2766,7 @@ memdescGetPteArrayForGpu
             // If no IOMMU mapping exists in the default IOVASPACE, fall
             // through and use the physical memory descriptor instead.
             //
+            fallthrough;
         }
         default:
         {
@@ -4079,10 +4084,10 @@ NV_STATUS memdescGetNvLinkGpa
 )
 {
     KernelMemorySystem *pKernelMemorySystem = GPU_GET_KERNEL_MEMORY_SYSTEM(pGpu);
+    NvU32  pageIndex;
 
     NV_ASSERT_OR_RETURN(pGpa, NV_ERR_INVALID_ARGUMENT);
 
-    NvU32  pageIndex;
     // For each page, do the GPU PA to GPA conversion
     for (pageIndex = 0; pageIndex < pageCount; pageIndex++)
     {
@@ -4220,6 +4225,7 @@ memdescRegisterToGSP
     Memory            *pMemory    = NULL;
     RsResourceRef     *pMemoryRef = NULL;
     MEMORY_DESCRIPTOR *pMemDesc   = NULL;
+    NvU32 os02Flags = 0;
 
     // Nothing to do without GSP
     if (!IS_GSP_CLIENT(pGpu))
@@ -4250,7 +4256,6 @@ memdescRegisterToGSP
                        memdescGetAddressSpace(pMemDesc) == ADDR_SYSMEM,
                        NV_ERR_INVALID_STATE);
 
-    NvU32 os02Flags = 0;
 
     NV_CHECK_OK_OR_RETURN(LEVEL_ERROR,
                           RmDeprecatedConvertOs32ToOs02Flags(pMemory->Attr,

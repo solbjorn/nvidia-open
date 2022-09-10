@@ -20,9 +20,12 @@ void __nvoc_init_dataField_OBJINTRABLE(OBJINTRABLE*, RmHalspecOwner* );
 void __nvoc_dtor_OBJINTRABLE(OBJINTRABLE*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJINTRABLE;
 
+#define __NVOC_CB_TYPE OBJINTRABLE
+NVOC_BUILD_DTOR(__nvoc_dtor_OBJINTRABLE);
+
 static const struct NVOC_RTTI __nvoc_rtti_OBJINTRABLE_OBJINTRABLE = {
     /*pClassDef=*/          &__nvoc_class_def_OBJINTRABLE,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_OBJINTRABLE,
+    /*dtor=*/               __nvoc_dtor_OBJINTRABLE_dtor,
     /*offset=*/             0,
 };
 
@@ -33,7 +36,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_OBJINTRABLE = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_OBJINTRABLE = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_OBJINTRABLE =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(OBJINTRABLE),
@@ -43,12 +46,12 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_OBJINTRABLE =
         /*name=*/               "OBJINTRABLE",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) NULL,
+    /*objCreatefn=*/        NULL,
     /*pCastInfo=*/          &__nvoc_castinfo_OBJINTRABLE,
     /*pExportInfo=*/        &__nvoc_export_info_OBJINTRABLE
 };
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJINTRABLE = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJINTRABLE =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -114,4 +117,3 @@ void __nvoc_init_OBJINTRABLE(OBJINTRABLE *pThis, RmHalspecOwner *pRmhalspecowner
     pThis->__nvoc_pbase_OBJINTRABLE = pThis;
     __nvoc_init_funcTable_OBJINTRABLE(pThis, pRmhalspecowner);
 }
-

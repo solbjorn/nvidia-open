@@ -34,9 +34,12 @@ void __nvoc_init_dataField_ChannelDescendant(ChannelDescendant*, RmHalspecOwner*
 void __nvoc_dtor_ChannelDescendant(ChannelDescendant*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_ChannelDescendant;
 
+#define __NVOC_CB_TYPE ChannelDescendant
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_ChannelDescendant, __nvoc_dtor_ChannelDescendant);
+
 static const struct NVOC_RTTI __nvoc_rtti_ChannelDescendant_ChannelDescendant = {
     /*pClassDef=*/          &__nvoc_class_def_ChannelDescendant,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_ChannelDescendant,
+    /*dtor=*/               __nvoc_dtor_ChannelDescendant_dtor,
     /*offset=*/             0,
 };
 
@@ -96,7 +99,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_ChannelDescendant = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_ChannelDescendant = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_ChannelDescendant =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(ChannelDescendant),
@@ -106,7 +109,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_ChannelDescendant =
         /*name=*/               "ChannelDescendant",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_ChannelDescendant,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_ChannelDescendant_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_ChannelDescendant,
     /*pExportInfo=*/        &__nvoc_export_info_ChannelDescendant
 };
@@ -219,7 +222,7 @@ static NvBool __nvoc_thunk_RmResource_chandesAccessCallback(struct ChannelDescen
     return rmresAccessCallback((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_ChannelDescendant_RmResource.offset), pInvokingClient, pAllocParams, accessRight);
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_ChannelDescendant = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_ChannelDescendant =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -406,4 +409,3 @@ NV_STATUS __nvoc_objCreateDynamic_ChannelDescendant(ChannelDescendant **ppThis, 
 
     return status;
 }
-

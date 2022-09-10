@@ -24,9 +24,12 @@ void __nvoc_init_dataField_NotifShare(NotifShare*);
 void __nvoc_dtor_NotifShare(NotifShare*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_NotifShare;
 
+#define __NVOC_CB_TYPE NotifShare
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_NotifShare, __nvoc_dtor_NotifShare);
+
 static const struct NVOC_RTTI __nvoc_rtti_NotifShare_NotifShare = {
     /*pClassDef=*/          &__nvoc_class_def_NotifShare,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_NotifShare,
+    /*dtor=*/               __nvoc_dtor_NotifShare_dtor,
     /*offset=*/             0,
 };
 
@@ -51,7 +54,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_NotifShare = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_NotifShare = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_NotifShare =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(NotifShare),
@@ -61,12 +64,12 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_NotifShare =
         /*name=*/               "NotifShare",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_NotifShare,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_NotifShare_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_NotifShare,
     /*pExportInfo=*/        &__nvoc_export_info_NotifShare
 };
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_NotifShare = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_NotifShare =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -183,9 +186,13 @@ void __nvoc_init_dataField_Event(Event*);
 void __nvoc_dtor_Event(Event*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_Event;
 
+#undef __NVOC_CB_TYPE
+#define __NVOC_CB_TYPE Event
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_Event, __nvoc_dtor_Event);
+
 static const struct NVOC_RTTI __nvoc_rtti_Event_Event = {
     /*pClassDef=*/          &__nvoc_class_def_Event,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_Event,
+    /*dtor=*/               __nvoc_dtor_Event_dtor,
     /*offset=*/             0,
 };
 
@@ -224,7 +231,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_Event = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_Event = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_Event =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(Event),
@@ -234,7 +241,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_Event =
         /*name=*/               "Event",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_Event,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_Event_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_Event,
     /*pExportInfo=*/        &__nvoc_export_info_Event
 };
@@ -311,7 +318,7 @@ static NvBool __nvoc_thunk_RmResource_eventAccessCallback(struct Event *pResourc
     return rmresAccessCallback((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_Event_RmResource.offset), pInvokingClient, pAllocParams, accessRight);
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_Event = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_Event =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -460,9 +467,13 @@ void __nvoc_init_dataField_INotifier(INotifier*);
 void __nvoc_dtor_INotifier(INotifier*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_INotifier;
 
+#undef __NVOC_CB_TYPE
+#define __NVOC_CB_TYPE INotifier
+NVOC_BUILD_DTOR(__nvoc_dtor_INotifier);
+
 static const struct NVOC_RTTI __nvoc_rtti_INotifier_INotifier = {
     /*pClassDef=*/          &__nvoc_class_def_INotifier,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_INotifier,
+    /*dtor=*/               __nvoc_dtor_INotifier_dtor,
     /*offset=*/             0,
 };
 
@@ -473,7 +484,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_INotifier = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_INotifier = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_INotifier =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(INotifier),
@@ -483,12 +494,12 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_INotifier =
         /*name=*/               "INotifier",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) NULL,
+    /*objCreatefn=*/        NULL,
     /*pCastInfo=*/          &__nvoc_castinfo_INotifier,
     /*pExportInfo=*/        &__nvoc_export_info_INotifier
 };
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_INotifier = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_INotifier =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -555,9 +566,13 @@ void __nvoc_init_dataField_Notifier(Notifier*);
 void __nvoc_dtor_Notifier(Notifier*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_Notifier;
 
+#undef __NVOC_CB_TYPE
+#define __NVOC_CB_TYPE Notifier
+NVOC_BUILD_DTOR(__nvoc_dtor_Notifier);
+
 static const struct NVOC_RTTI __nvoc_rtti_Notifier_Notifier = {
     /*pClassDef=*/          &__nvoc_class_def_Notifier,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_Notifier,
+    /*dtor=*/               __nvoc_dtor_Notifier_dtor,
     /*offset=*/             0,
 };
 
@@ -575,7 +590,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_Notifier = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_Notifier = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_Notifier =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(Notifier),
@@ -585,7 +600,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_Notifier =
         /*name=*/               "Notifier",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) NULL,
+    /*objCreatefn=*/        NULL,
     /*pCastInfo=*/          &__nvoc_castinfo_Notifier,
     /*pExportInfo=*/        &__nvoc_export_info_Notifier
 };
@@ -610,7 +625,7 @@ static NV_STATUS __nvoc_thunk_Notifier_inotifyGetOrAllocNotifShare(struct INotif
     return notifyGetOrAllocNotifShare((struct Notifier *)(((unsigned char *)pNotifier) - __nvoc_rtti_Notifier_INotifier.offset), hNotifierClient, hNotifierResource, ppNotifShare);
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_Notifier = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_Notifier =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -681,4 +696,3 @@ void __nvoc_init_Notifier(Notifier *pThis) {
     __nvoc_init_INotifier(&pThis->__nvoc_base_INotifier);
     __nvoc_init_funcTable_Notifier(pThis);
 }
-

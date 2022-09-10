@@ -49,6 +49,8 @@ chandesConstruct_IMPL
     PCLASSDESCRIPTOR  pClassDescriptor;
     KernelFifo       *pKernelFifo = GPU_GET_KERNEL_FIFO(pGpu);
     NvBool            bMIGInUse = IS_MIG_IN_USE(pGpu);
+    ENGDESCRIPTOR engDesc;
+    void *pEngObject;
 
     pParent = pParentRef->pResource;
     if (pParent == NULL)
@@ -200,7 +202,7 @@ chandesConstruct_IMPL
         return NV_ERR_INVALID_CLASS;
     }
 
-    ENGDESCRIPTOR engDesc = pClassDescriptor->engDesc;
+    engDesc = pClassDescriptor->engDesc;
 
     //
     // Verify the engine exists
@@ -219,7 +221,7 @@ chandesConstruct_IMPL
         engDesc = MKENGDESC(classId(KernelCE), GET_CE_IDX(engDesc));
     }
 
-    void *pEngObject = gpuGetEngstate(pGpu, engDesc);
+    pEngObject = gpuGetEngstate(pGpu, engDesc);
     //
     // In a kernel-only config, falcons are represented by KernelFalcons and do not have an
     // engstate.

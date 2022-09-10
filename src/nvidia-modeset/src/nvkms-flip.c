@@ -111,6 +111,16 @@ static NvBool AssignNIsoEvoHwState(
     NVSurfaceEvoPtr pSurfaceEvo;
     NvU32 elementSizeInBytes = 0, offsetInBytes, maxBytes;
 
+    /*
+     * offsetInWords is an NvU16 and offsetInBytes is an NvU32, so
+     * neither of the expressions:
+     *   offsetInWords * 4
+     *   offsetInBytes + elementSizeInBytes
+     * should ever overflow.
+     */
+
+    ct_assert(sizeof(pParamsNIso->offsetInWords) == 2);
+
     nvAssert(pParamsNIso->surfaceHandle != 0);
 
     pSurfaceEvo =
@@ -173,15 +183,6 @@ static NvBool AssignNIsoEvoHwState(
         nvAssert(nvKmsSizeOfSemaphore(pParamsNIso->format) == elementSizeInBytes);
     }
 #endif
-    /*
-     * offsetInWords is an NvU16 and offsetInBytes is an NvU32, so
-     * neither of the expressions:
-     *   offsetInWords * 4
-     *   offsetInBytes + elementSizeInBytes
-     * should ever overflow.
-     */
-
-    ct_assert(sizeof(pParamsNIso->offsetInWords) == 2);
 
     offsetInBytes = ((NvU32)pParamsNIso->offsetInWords) * 4;
 
@@ -597,6 +598,8 @@ void nvInitFlipEvoHwState(
     const NVEvoSubDevHeadStateRec *pSdHeadState;
     NvU32 i;
 
+    ct_assert(ARRAY_LEN(pFlipState->layer) == ARRAY_LEN(pSdHeadState->layer));
+
     nvClearFlipEvoHwState(pFlipState);
 
     if (!nvHeadIsActive(pDispEvo, head)) {
@@ -607,8 +610,6 @@ void nvInitFlipEvoHwState(
 
     pFlipState->viewPortPointIn = pSdHeadState->viewPortPointIn;
     pFlipState->cursor = pSdHeadState->cursor;
-
-    ct_assert(ARRAY_LEN(pFlipState->layer) == ARRAY_LEN(pSdHeadState->layer));
 
     for (i = 0; i < ARRAY_LEN(pFlipState->layer); i++) {
         pFlipState->layer[i] = pSdHeadState->layer[i];

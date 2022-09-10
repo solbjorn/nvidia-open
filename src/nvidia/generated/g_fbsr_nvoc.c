@@ -22,9 +22,12 @@ void __nvoc_init_dataField_OBJFBSR(OBJFBSR*, RmHalspecOwner* );
 void __nvoc_dtor_OBJFBSR(OBJFBSR*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJFBSR;
 
+#define __NVOC_CB_TYPE OBJFBSR
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_OBJFBSR, __nvoc_dtor_OBJFBSR);
+
 static const struct NVOC_RTTI __nvoc_rtti_OBJFBSR_OBJFBSR = {
     /*pClassDef=*/          &__nvoc_class_def_OBJFBSR,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_OBJFBSR,
+    /*dtor=*/               __nvoc_dtor_OBJFBSR_dtor,
     /*offset=*/             0,
 };
 
@@ -42,7 +45,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_OBJFBSR = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_OBJFBSR = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_OBJFBSR =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(OBJFBSR),
@@ -52,12 +55,12 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_OBJFBSR =
         /*name=*/               "OBJFBSR",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_OBJFBSR,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_OBJFBSR_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_OBJFBSR,
     /*pExportInfo=*/        &__nvoc_export_info_OBJFBSR
 };
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJFBSR = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJFBSR =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -101,11 +104,11 @@ static void __nvoc_init_funcTable_OBJFBSR_1(OBJFBSR *pThis, RmHalspecOwner *pRmh
     PORT_UNREFERENCED_VARIABLE(chipHal_HalVarIdx);
 
     // Hal function -- fbsrBegin
-    if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x0000fc00UL) )) /* ChipHal: GA100 | GA102 | GA103 | GA104 | GA106 | GA107 */ 
+    if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x0000fc00UL) )) /* ChipHal: GA100 | GA102 | GA103 | GA104 | GA106 | GA107 */
     {
         pThis->__fbsrBegin__ = &fbsrBegin_GA100;
     }
-    else if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x000003e0UL) )) /* ChipHal: TU102 | TU104 | TU106 | TU116 | TU117 */ 
+    else if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x000003e0UL) )) /* ChipHal: TU102 | TU104 | TU106 | TU116 | TU117 */
     {
         pThis->__fbsrBegin__ = &fbsrBegin_GM107;
     }
@@ -114,11 +117,11 @@ static void __nvoc_init_funcTable_OBJFBSR_1(OBJFBSR *pThis, RmHalspecOwner *pRmh
     }
 
     // Hal function -- fbsrEnd
-    if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x0000fc00UL) )) /* ChipHal: GA100 | GA102 | GA103 | GA104 | GA106 | GA107 */ 
+    if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x0000fc00UL) )) /* ChipHal: GA100 | GA102 | GA103 | GA104 | GA106 | GA107 */
     {
         pThis->__fbsrEnd__ = &fbsrEnd_GA100;
     }
-    else if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x000003e0UL) )) /* ChipHal: TU102 | TU104 | TU106 | TU116 | TU117 */ 
+    else if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x000003e0UL) )) /* ChipHal: TU102 | TU104 | TU106 | TU116 | TU117 */
     {
         pThis->__fbsrEnd__ = &fbsrEnd_GM107;
     }
@@ -186,4 +189,3 @@ NV_STATUS __nvoc_objCreateDynamic_OBJFBSR(OBJFBSR **ppThis, Dynamic *pParent, Nv
 
     return status;
 }
-

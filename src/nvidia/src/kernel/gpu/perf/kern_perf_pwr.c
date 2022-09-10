@@ -61,6 +61,7 @@ subdeviceCtrlCmdPerfRatedTdpSetControl_KERNEL
 
     NvBool bSmcEnabled = IS_MIG_ENABLED(pGpu);
     CALL_CONTEXT *pCallContext = resservGetTlsCallContext();
+    RmCtrlParams *pRmCtrlParams;
 
     NV_ASSERT_OR_RETURN(pCallContext != NULL, NV_ERR_INVALID_STATE);
 
@@ -80,7 +81,7 @@ subdeviceCtrlCmdPerfRatedTdpSetControl_KERNEL
     // Redirect to Physical RM in case of the GSP CLIENT or
     // host RM in case of the vGPU
     //
-    RmCtrlParams *pRmCtrlParams = pCallContext->pControlParams;
+    pRmCtrlParams = pCallContext->pControlParams;
 
     NV_RM_RPC_CONTROL(pGpu,
                       pRmCtrlParams->hClient,

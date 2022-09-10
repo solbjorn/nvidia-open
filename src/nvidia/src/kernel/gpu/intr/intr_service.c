@@ -53,9 +53,11 @@ intrservRegisterIntrService_IMPL(OBJGPU *pGpu, IntrService *pIntrService, IntrSe
 NvBool
 intrservClearInterrupt_IMPL(OBJGPU *pGpu, IntrService *pIntrService, IntrServiceClearInterruptArguments *pParams)
 {
+    Intr *pIntr;
+
     NV_ASSERT_OR_RETURN(pParams != NULL, NV_FALSE);
 
-    Intr *pIntr = GPU_GET_INTR(pGpu);
+    pIntr = GPU_GET_INTR(pGpu);
     intrClearLeafVector_HAL(pGpu, pIntr,
                                intrGetVectorFromEngineId(pGpu, pIntr, pParams->engineIdx, NV_FALSE),
                                NULL);

@@ -26,9 +26,12 @@ void __nvoc_init_dataField_OBJUVM(OBJUVM*, RmHalspecOwner* );
 void __nvoc_dtor_OBJUVM(OBJUVM*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJUVM;
 
+#define __NVOC_CB_TYPE OBJUVM
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_OBJUVM, __nvoc_dtor_OBJUVM);
+
 static const struct NVOC_RTTI __nvoc_rtti_OBJUVM_OBJUVM = {
     /*pClassDef=*/          &__nvoc_class_def_OBJUVM,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_OBJUVM,
+    /*dtor=*/               __nvoc_dtor_OBJUVM_dtor,
     /*offset=*/             0,
 };
 
@@ -60,7 +63,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_OBJUVM = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_OBJUVM = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_OBJUVM =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(OBJUVM),
@@ -70,7 +73,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_OBJUVM =
         /*name=*/               "OBJUVM",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_OBJUVM,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_OBJUVM_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_OBJUVM,
     /*pExportInfo=*/        &__nvoc_export_info_OBJUVM
 };
@@ -171,7 +174,7 @@ static NvBool __nvoc_thunk_OBJENGSTATE_uvmIsPresent(POBJGPU pGpu, struct OBJUVM 
     return engstateIsPresent(pGpu, (struct OBJENGSTATE *)(((unsigned char *)pEngstate) + __nvoc_rtti_OBJUVM_OBJENGSTATE.offset));
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJUVM = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJUVM =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -349,4 +352,3 @@ NV_STATUS __nvoc_objCreateDynamic_OBJUVM(OBJUVM **ppThis, Dynamic *pParent, NvU3
 
     return status;
 }
-

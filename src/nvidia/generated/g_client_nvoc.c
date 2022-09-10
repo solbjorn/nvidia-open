@@ -24,9 +24,12 @@ void __nvoc_init_dataField_UserInfo(UserInfo*);
 void __nvoc_dtor_UserInfo(UserInfo*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_UserInfo;
 
+#define __NVOC_CB_TYPE UserInfo
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_UserInfo, __nvoc_dtor_UserInfo);
+
 static const struct NVOC_RTTI __nvoc_rtti_UserInfo_UserInfo = {
     /*pClassDef=*/          &__nvoc_class_def_UserInfo,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_UserInfo,
+    /*dtor=*/               __nvoc_dtor_UserInfo_dtor,
     /*offset=*/             0,
 };
 
@@ -51,7 +54,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_UserInfo = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_UserInfo = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_UserInfo =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(UserInfo),
@@ -61,12 +64,12 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_UserInfo =
         /*name=*/               "UserInfo",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_UserInfo,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_UserInfo_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_UserInfo,
     /*pExportInfo=*/        &__nvoc_export_info_UserInfo
 };
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_UserInfo = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_UserInfo =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -179,9 +182,13 @@ void __nvoc_init_dataField_RmClient(RmClient*);
 void __nvoc_dtor_RmClient(RmClient*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_RmClient;
 
+#undef __NVOC_CB_TYPE
+#define __NVOC_CB_TYPE RmClient
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_RmClient, __nvoc_dtor_RmClient);
+
 static const struct NVOC_RTTI __nvoc_rtti_RmClient_RmClient = {
     /*pClassDef=*/          &__nvoc_class_def_RmClient,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_RmClient,
+    /*dtor=*/               __nvoc_dtor_RmClient_dtor,
     /*offset=*/             0,
 };
 
@@ -206,7 +213,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_RmClient = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_RmClient = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_RmClient =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(RmClient),
@@ -216,7 +223,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_RmClient =
         /*name=*/               "RmClient",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_RmClient,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_RmClient_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_RmClient,
     /*pExportInfo=*/        &__nvoc_export_info_RmClient
 };
@@ -257,7 +264,7 @@ static NV_STATUS __nvoc_thunk_RsClient_rmclientUnmapMemory(struct RmClient *pCli
     return clientUnmapMemory((struct RsClient *)(((unsigned char *)pClient) + __nvoc_rtti_RmClient_RsClient.offset), pResourceRef, pLockInfo, ppCpuMapping, pSecInfo);
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_RmClient = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_RmClient =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -382,4 +389,3 @@ NV_STATUS __nvoc_objCreateDynamic_RmClient(RmClient **ppThis, Dynamic *pParent, 
 
     return status;
 }
-

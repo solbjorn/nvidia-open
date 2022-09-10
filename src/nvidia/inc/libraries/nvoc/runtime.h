@@ -70,7 +70,7 @@ extern const NVOC_RTTI_PROVIDER __nvoc_rtti_provider;
 //! Contains data needed to call the exported method from kernel
 struct NVOC_EXPORTED_METHOD_DEF
 {
-    void (*pFunc) (void);                         // Pointer to the method itself
+    NV_STATUS (*pFunc)(Dynamic *, void *);        // Pointer to the method itself
     NvU32 flags;                                  // Export flags used for permission, method attribute verification (eg. NO_LOCK, PRIVILEGED...)
     NvU32 accessRight;                            // Access rights required for this method
     NvU32 methodId;                               // Id of the method in the class. Used for method identification.
@@ -86,6 +86,24 @@ struct NVOC_EXPORT_INFO {
     NvU32 numEntries;                             // Number of entries
     const struct NVOC_EXPORTED_METHOD_DEF *pExportEntries; //An array of exported methods
 };
+
+#define NVOC_BUILD_CALLBACK(name)					\
+static NV_STATUS  __attribute__((__unused__))				\
+name##_cb(Dynamic *ptr, void *param)					\
+{									\
+	__NVOC_CB_TYPE *this = nvoc_from_dynamic(ptr, __NVOC_CB_TYPE);	\
+									\
+	return name(this, param);					\
+}
+
+#define NVOC_BUILD_CALLBACK_1(name)					\
+static NV_STATUS  __attribute__((__unused__))				\
+name##_cb(Dynamic *ptr, void *param)					\
+{									\
+	__NVOC_CB_TYPE *this = nvoc_from_dynamic(ptr, __NVOC_CB_TYPE);	\
+									\
+	return name(this);						\
+}
 
 /*!
  * @brief Finds the closest ancestor of this object with the given class ID.

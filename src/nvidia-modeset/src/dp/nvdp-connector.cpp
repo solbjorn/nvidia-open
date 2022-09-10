@@ -734,7 +734,7 @@ void nvDPPause(NVDPLibConnectorPtr pNVDpLibConnector)
         nvAssert(nvPopCount32(pNVDpLibConnector->headMask) == 1);
         nvAssert(connector->isDp11ProtocolForced());
 
-        NV0073_CTRL_CMD_DP_CONFIG_RAD_SCRATCH_REG_PARAMS params = {0};
+        NV0073_CTRL_CMD_DP_CONFIG_RAD_SCRATCH_REG_PARAMS params = { };
 
         params.subDeviceInstance = pDispEvo->displayOwner;
         params.displayId = nvDpyIdToNvU32(pConnectorEvo->displayId);

@@ -133,6 +133,7 @@ static NV_STATUS _osVerifyInterrupts(
     MC_ENGINE_BITVECTOR engines;
     NvU32  Bailout;
     NvU32  gpuAttachCnt, gpuAttachMask, gpuInstance, i;
+    KernelBif *pKernelBif;
 
     //
     // We're adding the PDB_PROP_GPU_TEGRA_SOC_NVDISPLAY check since none of the
@@ -253,7 +254,7 @@ static NV_STATUS _osVerifyInterrupts(
     // Message Signalled Interrupt (MSI) support
     // This call checks if MSI is enabled and if it is, we need re-arm it.
     //
-    KernelBif *pKernelBif = GPU_GET_KERNEL_BIF(pGpu);
+    pKernelBif = GPU_GET_KERNEL_BIF(pGpu);
     kbifCheckAndRearmMSI(pGpu, pKernelBif);
 
     pGpu->testIntr = NV_FALSE;

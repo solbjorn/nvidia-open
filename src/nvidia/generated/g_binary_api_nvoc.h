@@ -46,7 +46,7 @@ extern "C" {
 #define PRIVATE_FIELD(x) NVOC_PRIVATE_FIELD(x)
 #endif
 struct BinaryApi {
-    const struct NVOC_RTTI *__nvoc_rtti;
+    struct __rtti_marker __nvoc_rtti;
     struct GpuResource __nvoc_base_GpuResource;
     struct Object *__nvoc_pbase_Object;
     struct RsResource *__nvoc_pbase_RsResource;
@@ -229,7 +229,7 @@ NV_STATUS binapiConstruct_IMPL(struct BinaryApi *arg_pResource, struct CALL_CONT
 #define PRIVATE_FIELD(x) NVOC_PRIVATE_FIELD(x)
 #endif
 struct BinaryApiPrivileged {
-    const struct NVOC_RTTI *__nvoc_rtti;
+    struct __rtti_marker __nvoc_rtti;
     struct BinaryApi __nvoc_base_BinaryApi;
     struct Object *__nvoc_pbase_Object;
     struct RsResource *__nvoc_pbase_RsResource;

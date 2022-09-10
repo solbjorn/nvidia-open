@@ -36,9 +36,12 @@ void __nvoc_init_dataField_MsencContext(MsencContext*, RmHalspecOwner* );
 void __nvoc_dtor_MsencContext(MsencContext*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_MsencContext;
 
+#define __NVOC_CB_TYPE MsencContext
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_MsencContext, __nvoc_dtor_MsencContext);
+
 static const struct NVOC_RTTI __nvoc_rtti_MsencContext_MsencContext = {
     /*pClassDef=*/          &__nvoc_class_def_MsencContext,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_MsencContext,
+    /*dtor=*/               __nvoc_dtor_MsencContext_dtor,
     /*offset=*/             0,
 };
 
@@ -105,7 +108,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_MsencContext = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_MsencContext = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_MsencContext =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(MsencContext),
@@ -115,7 +118,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_MsencContext =
         /*name=*/               "MsencContext",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_MsencContext,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_MsencContext_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_MsencContext,
     /*pExportInfo=*/        &__nvoc_export_info_MsencContext
 };
@@ -236,7 +239,7 @@ static NV_STATUS __nvoc_thunk_Notifier_msencctxGetOrAllocNotifShare(struct Msenc
     return notifyGetOrAllocNotifShare((struct Notifier *)(((unsigned char *)pNotifier) + __nvoc_rtti_MsencContext_Notifier.offset), hNotifierClient, hNotifierResource, ppNotifShare);
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_MsencContext = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_MsencContext =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -412,4 +415,3 @@ NV_STATUS __nvoc_objCreateDynamic_MsencContext(MsencContext **ppThis, Dynamic *p
 
     return status;
 }
-

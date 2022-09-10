@@ -20,9 +20,12 @@ void __nvoc_init_dataField_RmResourceCommon(RmResourceCommon*);
 void __nvoc_dtor_RmResourceCommon(RmResourceCommon*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_RmResourceCommon;
 
+#define __NVOC_CB_TYPE RmResourceCommon
+NVOC_BUILD_DTOR(__nvoc_dtor_RmResourceCommon);
+
 static const struct NVOC_RTTI __nvoc_rtti_RmResourceCommon_RmResourceCommon = {
     /*pClassDef=*/          &__nvoc_class_def_RmResourceCommon,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_RmResourceCommon,
+    /*dtor=*/               __nvoc_dtor_RmResourceCommon_dtor,
     /*offset=*/             0,
 };
 
@@ -33,7 +36,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_RmResourceCommon = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_RmResourceCommon = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_RmResourceCommon =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(RmResourceCommon),
@@ -43,12 +46,12 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_RmResourceCommon =
         /*name=*/               "RmResourceCommon",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) NULL,
+    /*objCreatefn=*/        NULL,
     /*pCastInfo=*/          &__nvoc_castinfo_RmResourceCommon,
     /*pExportInfo=*/        &__nvoc_export_info_RmResourceCommon
 };
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_RmResourceCommon = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_RmResourceCommon =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -108,9 +111,13 @@ void __nvoc_init_dataField_RmResource(RmResource*);
 void __nvoc_dtor_RmResource(RmResource*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_RmResource;
 
+#undef __NVOC_CB_TYPE
+#define __NVOC_CB_TYPE RmResource
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_RmResource, __nvoc_dtor_RmResource);
+
 static const struct NVOC_RTTI __nvoc_rtti_RmResource_RmResource = {
     /*pClassDef=*/          &__nvoc_class_def_RmResource,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_RmResource,
+    /*dtor=*/               __nvoc_dtor_RmResource_dtor,
     /*offset=*/             0,
 };
 
@@ -142,7 +149,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_RmResource = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_RmResource = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_RmResource =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(RmResource),
@@ -152,7 +159,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_RmResource =
         /*name=*/               "RmResource",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_RmResource,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_RmResource_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_RmResource,
     /*pExportInfo=*/        &__nvoc_export_info_RmResource
 };
@@ -217,7 +224,7 @@ static NV_STATUS __nvoc_thunk_RsResource_rmresMap(struct RmResource *pResource, 
     return resMap((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_RmResource_RsResource.offset), pCallContext, pParams, pCpuMapping);
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_RmResource = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_RmResource =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -367,4 +374,3 @@ NV_STATUS __nvoc_objCreateDynamic_RmResource(RmResource **ppThis, Dynamic *pPare
 
     return status;
 }
-

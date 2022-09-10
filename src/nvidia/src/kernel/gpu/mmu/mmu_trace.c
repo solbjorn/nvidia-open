@@ -742,6 +742,8 @@ _mmuTraceDumpMappingCallback
 )
 {
     PMMU_TRACE_ARG  pMmuTraceArg = (PMMU_TRACE_ARG)pArg;
+    NvBool bCoalesce;
+
     *pDone = NV_FALSE;
 
     // If the mapping is an invalid range, just continue.
@@ -750,7 +752,7 @@ _mmuTraceDumpMappingCallback
         return NV_OK;
     }
 
-    NvBool bCoalesce = (pMmuTraceArg->pMapParams->count > 0) &&
+    bCoalesce = (pMmuTraceArg->pMapParams->count > 0) &&
         ((pMmuTraceArg->pMapParams->opsBuffer[pMmuTraceArg->pMapParams->count - 1].gpuVA +
           pMmuTraceArg->pMapParams->opsBuffer[pMmuTraceArg->pMapParams->count - 1].size) == va);
 

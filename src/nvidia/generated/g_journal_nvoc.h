@@ -155,7 +155,7 @@ typedef struct _nocatQueueDescriptor
     RM_NOCAT_ASSERT_DIAG_BUFFER   lastAssertData;
     NvU8    tag[NV2080_NOCAT_JOURNAL_MAX_STR_LEN];
     NvU64   cacheFreshnessPeriodticks;
-    NV2080_NOCAT_JOURNAL_GPU_STATE  nocatGpuState;      // cache contains the state of the 
+    NV2080_NOCAT_JOURNAL_GPU_STATE  nocatGpuState;      // cache contains the state of the
                                                         // associated GPU if there is one.
 
     NvU32   nocatEventCounters[NV2080_NOCAT_JOURNAL_REPORT_ACTIVITY_COUNTER_COUNT];
@@ -167,7 +167,7 @@ typedef struct _nocatQueueDescriptor
 #define PRIVATE_FIELD(x) NVOC_PRIVATE_FIELD(x)
 #endif
 struct OBJRCDB {
-    const struct NVOC_RTTI *__nvoc_rtti;
+    struct __rtti_marker __nvoc_rtti;
     struct Object __nvoc_base_Object;
     struct OBJTRACEABLE __nvoc_base_OBJTRACEABLE;
     struct Object *__nvoc_pbase_Object;

@@ -22,9 +22,12 @@ void __nvoc_init_dataField_Heap(Heap*);
 void __nvoc_dtor_Heap(Heap*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_Heap;
 
+#define __NVOC_CB_TYPE Heap
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_Heap, __nvoc_dtor_Heap);
+
 static const struct NVOC_RTTI __nvoc_rtti_Heap_Heap = {
     /*pClassDef=*/          &__nvoc_class_def_Heap,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_Heap,
+    /*dtor=*/               __nvoc_dtor_Heap_dtor,
     /*offset=*/             0,
 };
 
@@ -42,7 +45,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_Heap = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_Heap = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_Heap =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(Heap),
@@ -52,12 +55,12 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_Heap =
         /*name=*/               "Heap",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_Heap,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_Heap_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_Heap,
     /*pExportInfo=*/        &__nvoc_export_info_Heap
 };
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_Heap = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_Heap =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -146,4 +149,3 @@ NV_STATUS __nvoc_objCreateDynamic_Heap(Heap **ppThis, Dynamic *pParent, NvU32 cr
 
     return status;
 }
-

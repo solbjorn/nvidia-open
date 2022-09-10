@@ -936,10 +936,10 @@ NvS64 nvRMLaneCountToNvKms(NvU32 rmLaneCount)
 {
     switch (rmLaneCount) {
     case NV0073_CTRL_CMD_DP_GET_LINK_CONFIG_LANE_COUNT_0:
-        // fallthrough
+        fallthrough;
     default:
         nvAssert(!"Unexpected DisplayPort lane configuration!");
-        // fallthrough
+        fallthrough;
     case NV0073_CTRL_CMD_DP_GET_LINK_CONFIG_LANE_COUNT_1:
         return NV_KMS_DPY_ATTRIBUTE_DIGITAL_LINK_TYPE_SINGLE;
     case NV0073_CTRL_CMD_DP_GET_LINK_CONFIG_LANE_COUNT_2:

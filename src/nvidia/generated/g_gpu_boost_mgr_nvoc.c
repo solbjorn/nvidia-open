@@ -22,9 +22,12 @@ void __nvoc_init_dataField_OBJGPUBOOSTMGR(OBJGPUBOOSTMGR*);
 void __nvoc_dtor_OBJGPUBOOSTMGR(OBJGPUBOOSTMGR*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJGPUBOOSTMGR;
 
+#define __NVOC_CB_TYPE OBJGPUBOOSTMGR
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_OBJGPUBOOSTMGR, __nvoc_dtor_OBJGPUBOOSTMGR);
+
 static const struct NVOC_RTTI __nvoc_rtti_OBJGPUBOOSTMGR_OBJGPUBOOSTMGR = {
     /*pClassDef=*/          &__nvoc_class_def_OBJGPUBOOSTMGR,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_OBJGPUBOOSTMGR,
+    /*dtor=*/               __nvoc_dtor_OBJGPUBOOSTMGR_dtor,
     /*offset=*/             0,
 };
 
@@ -42,7 +45,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_OBJGPUBOOSTMGR = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_OBJGPUBOOSTMGR = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_OBJGPUBOOSTMGR =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(OBJGPUBOOSTMGR),
@@ -52,12 +55,12 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_OBJGPUBOOSTMGR =
         /*name=*/               "OBJGPUBOOSTMGR",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_OBJGPUBOOSTMGR,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_OBJGPUBOOSTMGR_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_OBJGPUBOOSTMGR,
     /*pExportInfo=*/        &__nvoc_export_info_OBJGPUBOOSTMGR
 };
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJGPUBOOSTMGR = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJGPUBOOSTMGR =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -151,4 +154,3 @@ NV_STATUS __nvoc_objCreateDynamic_OBJGPUBOOSTMGR(OBJGPUBOOSTMGR **ppThis, Dynami
 
     return status;
 }
-

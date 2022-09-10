@@ -83,6 +83,8 @@ kPerfPerfmonClientDeviceSet
     //
     if (bReservation)
     {
+        NvHandle failedReservationHandle = 0;
+
         //
         // The Perfmon HW must be *available* on all GPUs for this
         // to work so check that first.
@@ -90,11 +92,12 @@ kPerfPerfmonClientDeviceSet
         it = clientRefIter(pRsClient, pDeviceRef, classId(Subdevice), RS_ITERATE_CHILDREN, NV_TRUE);
         while (clientRefIterNext(pRsClient, &it))
         {
+            NV2080_CTRL_INTERNAL_PERF_PERFMON_CLIENT_RESERVATION_CHECK_PARAMS params = {0};
+
             pSubdevice = dynamicCast(it.pResourceRef->pResource, Subdevice);
             pGpu       = gpumgrGetGpuFromSubDeviceInst(pSubdevice->deviceInst, pSubdevice->subDeviceInst);
             pRmApi     = GPU_GET_PHYSICAL_RMAPI(pGpu);
 
-            NV2080_CTRL_INTERNAL_PERF_PERFMON_CLIENT_RESERVATION_CHECK_PARAMS params = {0};
             params.bReservation  = bReservation;
 
             status = pRmApi->Control(pRmApi, 
@@ -112,15 +115,15 @@ kPerfPerfmonClientDeviceSet
         //
         // All available...now claim it using the subdevice interface.
         //
-        NvHandle failedReservationHandle = 0;
         it = clientRefIter(pRsClient, pDeviceRef, classId(Subdevice), RS_ITERATE_CHILDREN, NV_TRUE);
         while (clientRefIterNext(pRsClient, &it))
         {
+            NV2080_CTRL_INTERNAL_PERF_PERFMON_CLIENT_RESERVATION_SET_PARAMS params = {0};
+
             pSubdevice = dynamicCast(it.pResourceRef->pResource, Subdevice);
             pGpu       = gpumgrGetGpuFromSubDeviceInst(pSubdevice->deviceInst, pSubdevice->subDeviceInst);
             pRmApi     = GPU_GET_PHYSICAL_RMAPI(pGpu);
 
-            NV2080_CTRL_INTERNAL_PERF_PERFMON_CLIENT_RESERVATION_SET_PARAMS params = {0};
             params.bReservation           = bReservation;
             params.bClientHandlesGrGating = bClientHandlesGrGating;
             params.bRmHandlesIdleSlow     = bRmHandlesIdleSlow;
@@ -147,6 +150,8 @@ kPerfPerfmonClientDeviceSet
             it = clientRefIter(pRsClient, pDeviceRef, classId(Subdevice), RS_ITERATE_CHILDREN, NV_TRUE);
             while (clientRefIterNext(pRsClient, &it))
             {
+                NV2080_CTRL_INTERNAL_PERF_PERFMON_CLIENT_RESERVATION_SET_PARAMS params = {0};
+
                 if (failedReservationHandle == it.pResourceRef->hResource)
                 {
                     goto kClientPerfPerfmonDeviceSet_exit;
@@ -156,7 +161,6 @@ kPerfPerfmonClientDeviceSet
                 pGpu       = gpumgrGetGpuFromSubDeviceInst(pSubdevice->deviceInst, pSubdevice->subDeviceInst);
                 pRmApi     = GPU_GET_PHYSICAL_RMAPI(pGpu);
 
-                NV2080_CTRL_INTERNAL_PERF_PERFMON_CLIENT_RESERVATION_SET_PARAMS params = {0};
                 params.bReservation           = NV_FALSE;
                 params.bClientHandlesGrGating = bClientHandlesGrGating;
                 params.bRmHandlesIdleSlow     = bRmHandlesIdleSlow;
@@ -184,11 +188,12 @@ kPerfPerfmonClientDeviceSet
         it = clientRefIter(pRsClient, pDeviceRef, classId(Subdevice), RS_ITERATE_CHILDREN, NV_TRUE);
         while (clientRefIterNext(pRsClient, &it))
         {
+            NV2080_CTRL_INTERNAL_PERF_PERFMON_CLIENT_RESERVATION_CHECK_PARAMS params = {0};
+
             pSubdevice = dynamicCast(it.pResourceRef->pResource, Subdevice);
             pGpu       = gpumgrGetGpuFromSubDeviceInst(pSubdevice->deviceInst, pSubdevice->subDeviceInst);
             pRmApi     = GPU_GET_PHYSICAL_RMAPI(pGpu);
 
-            NV2080_CTRL_INTERNAL_PERF_PERFMON_CLIENT_RESERVATION_CHECK_PARAMS params = {0};
             params.bReservation  = bReservation;
 
             status = pRmApi->Control(pRmApi,
@@ -209,11 +214,12 @@ kPerfPerfmonClientDeviceSet
         it = clientRefIter(pRsClient, pDeviceRef, classId(Subdevice), RS_ITERATE_CHILDREN, NV_TRUE);
         while (clientRefIterNext(pRsClient, &it))
         {
+            NV2080_CTRL_INTERNAL_PERF_PERFMON_CLIENT_RESERVATION_SET_PARAMS params = {0};
+
             pSubdevice = dynamicCast(it.pResourceRef->pResource, Subdevice);
             pGpu       = gpumgrGetGpuFromSubDeviceInst(pSubdevice->deviceInst, pSubdevice->subDeviceInst);
             pRmApi     = GPU_GET_PHYSICAL_RMAPI(pGpu);
 
-            NV2080_CTRL_INTERNAL_PERF_PERFMON_CLIENT_RESERVATION_SET_PARAMS params = {0};
             params.bReservation           = bReservation;
             params.bClientHandlesGrGating = bClientHandlesGrGating;
             params.bRmHandlesIdleSlow     = bRmHandlesIdleSlow;

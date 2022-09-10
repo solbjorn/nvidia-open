@@ -30,9 +30,12 @@ void __nvoc_init_dataField_RegisterMemory(RegisterMemory*);
 void __nvoc_dtor_RegisterMemory(RegisterMemory*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_RegisterMemory;
 
+#define __NVOC_CB_TYPE RegisterMemory
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_RegisterMemory, __nvoc_dtor_RegisterMemory);
+
 static const struct NVOC_RTTI __nvoc_rtti_RegisterMemory_RegisterMemory = {
     /*pClassDef=*/          &__nvoc_class_def_RegisterMemory,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_RegisterMemory,
+    /*dtor=*/               __nvoc_dtor_RegisterMemory_dtor,
     /*offset=*/             0,
 };
 
@@ -78,7 +81,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_RegisterMemory = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_RegisterMemory = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_RegisterMemory =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(RegisterMemory),
@@ -88,7 +91,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_RegisterMemory =
         /*name=*/               "RegisterMemory",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_RegisterMemory,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_RegisterMemory_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_RegisterMemory,
     /*pExportInfo=*/        &__nvoc_export_info_RegisterMemory
 };
@@ -177,7 +180,7 @@ static NvBool __nvoc_thunk_RmResource_regmemAccessCallback(struct RegisterMemory
     return rmresAccessCallback((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_RegisterMemory_RmResource.offset), pInvokingClient, pAllocParams, accessRight);
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_RegisterMemory = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_RegisterMemory =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -320,4 +323,3 @@ NV_STATUS __nvoc_objCreateDynamic_RegisterMemory(RegisterMemory **ppThis, Dynami
 
     return status;
 }
-

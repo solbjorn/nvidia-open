@@ -592,15 +592,16 @@ gisubscriptionCtrlCmdExecPartitionsGet_IMPL
     NvU32 ciIdx;
     NvHandle hClient = RES_GET_CLIENT_HANDLE(pGPUInstanceSubscription);
     CALL_CONTEXT *pCallContext = resservGetTlsCallContext();
+    MIG_COMPUTE_INSTANCE *pTargetComputeInstanceInfo = NULL;
+    NvBool bEnumerateAll;
 
     NV_ASSERT_OR_RETURN(pCallContext != NULL, NV_ERR_INVALID_STATE);
     NV_ASSERT_OR_RETURN(RMCFG_FEATURE_KERNEL_RM, NV_ERR_NOT_SUPPORTED);
 
-    NvBool bEnumerateAll = rmclientIsCapableOrAdminByHandle(hClient, 
+    bEnumerateAll = rmclientIsCapableOrAdminByHandle(hClient, 
                                                             NV_RM_CAP_SYS_SMC_CONFIG,
                                                             pCallContext->secInfo.privLevel);
 
-    MIG_COMPUTE_INSTANCE *pTargetComputeInstanceInfo = NULL;
 
     LOCK_ASSERT_AND_RETURN(rmApiLockIsOwner() && rmGpuLockIsOwner());
 
@@ -676,6 +677,9 @@ gisubscriptionCtrlCmdExecPartitionsGetActiveIds_IMPL
     KERNEL_MIG_GPU_INSTANCE *pKernelMIGGpuInstance = pGPUInstanceSubscription->pKernelMIGGpuInstance;
     NvU32 ciIdx;
 
+    ct_assert(NV_UUID_LEN == NVC637_UUID_LEN);
+    ct_assert(NV_UUID_STR_LEN == NVC637_UUID_STR_LEN);
+
     LOCK_ASSERT_AND_RETURN(rmApiLockIsOwner() && rmGpuLockIsOwner());
 
     NV_ASSERT_OR_RETURN(pGpu->getProperty(pGpu, PDB_PROP_GPU_MIG_SUPPORTED),
@@ -695,9 +699,6 @@ gisubscriptionCtrlCmdExecPartitionsGetActiveIds_IMPL
             continue;
 
         pParams->execPartId[pParams->execPartCount] = ciIdx;
-
-        ct_assert(NV_UUID_LEN == NVC637_UUID_LEN);
-        ct_assert(NV_UUID_STR_LEN == NVC637_UUID_STR_LEN);
 
         nvGetSmcUuidString(&pMIGComputeInstance->uuid,
                            pParams->execPartUuid[pParams->execPartCount].str);

@@ -267,9 +267,11 @@ typedef struct {
 } NVEvoSorCaps;
 #define NV_EVO_NUM_SOR_CAPS 8
 
+#if 0
 typedef struct {
 } NVEvoPiorCaps;
 #define NV_EVO_NUM_PIOR_CAPS 4
+#endif
 
 typedef struct {
     NvBool usable;
@@ -525,7 +527,7 @@ typedef struct _NVEvoCapabilities {
     NVEvoMiscCaps               misc;
     NVEvoHeadCaps               head[NV_EVO_NUM_HEAD_CAPS];
     NVEvoSorCaps                sor[NV_EVO_NUM_SOR_CAPS];
-    NVEvoPiorCaps               pior[NV_EVO_NUM_PIOR_CAPS];
+//    NVEvoPiorCaps               pior[NV_EVO_NUM_PIOR_CAPS];
     NVEvoWindowCaps             window[NV_EVO_NUM_WINDOW_CAPS];
 } NVEvoCapabilities;
 
@@ -676,6 +678,25 @@ typedef struct {
     NvU32 surfaceCount;
 } NVHsStateOneHeadAllDisps;
 
+typedef enum NVEvoLockAction {
+    NV_EVO_LOCK_HEADS,
+    NV_EVO_UNLOCK_HEADS,
+    NV_EVO_ADD_FRAME_LOCK_SERVER,
+    NV_EVO_REM_FRAME_LOCK_SERVER,
+    NV_EVO_ADD_FRAME_LOCK_HOUSE_SYNC,
+    NV_EVO_REM_FRAME_LOCK_HOUSE_SYNC,
+    NV_EVO_ADD_FRAME_LOCK_CLIENT,
+    NV_EVO_REM_FRAME_LOCK_CLIENT,
+    NV_EVO_ENABLE_VRR,
+    NV_EVO_DISABLE_VRR,
+    NV_EVO_ADD_FRAME_LOCK_REF,
+    NV_EVO_REM_FRAME_LOCK_REF,
+    NV_EVO_ADD_SLI_SECONDARY,
+    NV_EVO_ADD_SLI_LAST_SECONDARY,
+    NV_EVO_ADD_SLI_PRIMARY,
+    NV_EVO_REM_SLI,
+} NVEvoLockAction;
+
 /* Subdevice-specific, channel-independent state */
 typedef struct _NVEvoSubDevRec {
     NvU32                       subDeviceInstance;
@@ -692,7 +713,7 @@ typedef struct _NVEvoSubDevRec {
     void                       *cursorPio[NVKMS_MAX_HEADS_PER_DISP];
     NvBool                      (*scanLockState)(NVDispEvoPtr pDispEvo,
                                                  NVEvoSubDevPtr pEvoSubDev,
-                                                 NvU32 action,
+                                                 NVEvoLockAction action,
                                                  /* NV_INVALID_HEAD-terminated
                                                   * array of head indices */
                                                  const NvU32 *pHeads);
@@ -1295,7 +1316,7 @@ static inline struct NvKmsRect nvEvoViewPortOutHwView(
     const NVHwModeViewPortEvo *pViewPort = &pTimings->viewPort;
     const NvU16 hVisible = nvEvoVisibleWidth(pTimings);
     const NvU16 vVisible = nvEvoVisibleHeight(pTimings);
-    struct NvKmsRect viewPortOut = { 0 };
+    struct NvKmsRect viewPortOut = { };
 
     viewPortOut.width = pViewPort->out.width;
     viewPortOut.height = pViewPort->out.height;

@@ -1384,7 +1384,7 @@ nvswitch_lib_post_init_device
     {
         return retval;
     }
-    
+
     if (nvswitch_is_spi_supported(device))
     {
         retval = nvswitch_bios_get_image(device);
@@ -2058,7 +2058,7 @@ _nvswitch_perform_i2c_transfer
     {
         case NVSWITCH_I2C_CMD_READ:
             bIsRead = NV_TRUE;
-            // Fall through
+            fallthrough;
         case NVSWITCH_I2C_CMD_WRITE:
         {
             flags = FLD_SET_DRF(SWITCH_CTRL, _I2C_FLAGS, _INDEX_LENGTH, _ZERO, flags);
@@ -2068,7 +2068,7 @@ _nvswitch_perform_i2c_transfer
         {
             bIsRead = NV_TRUE;
             flags = FLD_SET_DRF(SWITCH_CTRL, _I2C_FLAGS, _RESTART, _SEND, flags);
-            // Fall through
+            fallthrough;
         }
         case NVSWITCH_I2C_CMD_SMBUS_WRITE:
         {
@@ -2077,7 +2077,7 @@ _nvswitch_perform_i2c_transfer
         }
         case NVSWITCH_I2C_CMD_SMBUS_QUICK_READ:
             bIsRead = NV_TRUE;
-            // Fall through
+            fallthrough;
         case NVSWITCH_I2C_CMD_SMBUS_QUICK_WRITE:
         {
             flags = FLD_SET_DRF(SWITCH_CTRL, _I2C_FLAGS, _INDEX_LENGTH, _ZERO, flags);

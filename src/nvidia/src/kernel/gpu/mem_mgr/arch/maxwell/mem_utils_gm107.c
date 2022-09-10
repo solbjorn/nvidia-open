@@ -950,9 +950,10 @@ memmgrMemUtilsScrubInitRegisterCallback
                 pGpu,
                 &subDeviceHandle))
     {
+        NV2080_ALLOC_PARAMETERS nv2080AllocParams;
+
         NV_PRINTF(LEVEL_WARNING, "Unable to get subdevice handle.\n");
         //Allocate a sub device if we dont have it created before hand
-        NV2080_ALLOC_PARAMETERS nv2080AllocParams;
 
         portMemSet(&nv2080AllocParams, 0, sizeof(NV2080_ALLOC_PARAMETERS));
         nv2080AllocParams.subDeviceId = gpumgrGetSubDeviceInstanceFromGpu(pGpu);

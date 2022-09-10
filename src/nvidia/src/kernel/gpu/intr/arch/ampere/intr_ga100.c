@@ -60,6 +60,19 @@ intrGetUvmSharedLeafEnDisableMask_GA100
     NvU32 intrVectorTimerSwrl = NV_INTR_VECTOR_INVALID;
     NvU64 mask = 0;
 
+    //
+    // Compile-time ascertain that we only have 1 client subtree (we assume
+    // this since we cache only 64 bits).
+    //
+    ct_assert(NV_CPU_INTR_UVM_SHARED_SUBTREE_START == NV_CPU_INTR_UVM_SHARED_SUBTREE_LAST);
+
+    //
+    // Compile-time ascertain that we only have 2 subtrees as this is what we currently support
+    // by only caching 64 bits
+    //
+    ct_assert((NV_CTRL_INTR_SUBTREE_TO_LEAF_IDX_END(NV_CPU_INTR_UVM_SHARED_SUBTREE_LAST) - 1) ==
+               NV_CTRL_INTR_SUBTREE_TO_LEAF_IDX_START(NV_CPU_INTR_UVM_SHARED_SUBTREE_START));
+
     // GSP RM services both MMU non-replayable fault and FIFO interrupts
     if (IS_GSP_CLIENT(pGpu))
     {
@@ -85,19 +98,6 @@ intrGetUvmSharedLeafEnDisableMask_GA100
     // Ascertain that they're in the first leaf
     NV_ASSERT(NV_CTRL_INTR_GPU_VECTOR_TO_LEAF_REG(intrVectorNonReplayableFault) ==
               NV_CTRL_INTR_SUBTREE_TO_LEAF_IDX_START(NV_CPU_INTR_UVM_SHARED_SUBTREE_START));
-
-    //
-    // Compile-time ascertain that we only have 1 client subtree (we assume
-    // this since we cache only 64 bits).
-    //
-    ct_assert(NV_CPU_INTR_UVM_SHARED_SUBTREE_START == NV_CPU_INTR_UVM_SHARED_SUBTREE_LAST);
-
-    //
-    // Compile-time ascertain that we only have 2 subtrees as this is what we currently support
-    // by only caching 64 bits
-    //
-    ct_assert((NV_CTRL_INTR_SUBTREE_TO_LEAF_IDX_END(NV_CPU_INTR_UVM_SHARED_SUBTREE_LAST) - 1) ==
-               NV_CTRL_INTR_SUBTREE_TO_LEAF_IDX_START(NV_CPU_INTR_UVM_SHARED_SUBTREE_START));
 
     mask = NVBIT32(NV_CTRL_INTR_GPU_VECTOR_TO_LEAF_BIT(intrVectorNonReplayableFault));
 

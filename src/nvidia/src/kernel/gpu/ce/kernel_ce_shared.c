@@ -31,14 +31,13 @@ NvBool ceIsCeGrce(OBJGPU *pGpu, NvU32 ceEngineType)
 {
     NV2080_CTRL_GPU_GET_ENGINE_PARTNERLIST_PARAMS partnerParams = {0};
     KernelFifo *pKernelFifo = GPU_GET_KERNEL_FIFO(pGpu);
+    NV_STATUS status = NV_OK;
+    NvU32 i;
 
     if (IsAMODEL(pGpu) || IsT234D(pGpu))
         return NV_FALSE;
 
     NV_ASSERT_OR_RETURN(NV2080_ENGINE_TYPE_IS_COPY(ceEngineType), NV_FALSE);
-
-    NvU32   i;
-    NV_STATUS status = NV_OK;
 
     partnerParams.engineType = ceEngineType;
     partnerParams.numPartners = 0;

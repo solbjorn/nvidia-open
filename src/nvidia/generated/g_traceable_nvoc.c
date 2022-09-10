@@ -20,9 +20,12 @@ void __nvoc_init_dataField_OBJTRACEABLE(OBJTRACEABLE*);
 void __nvoc_dtor_OBJTRACEABLE(OBJTRACEABLE*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJTRACEABLE;
 
+#define __NVOC_CB_TYPE OBJTRACEABLE
+NVOC_BUILD_DTOR(__nvoc_dtor_OBJTRACEABLE);
+
 static const struct NVOC_RTTI __nvoc_rtti_OBJTRACEABLE_OBJTRACEABLE = {
     /*pClassDef=*/          &__nvoc_class_def_OBJTRACEABLE,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_OBJTRACEABLE,
+    /*dtor=*/               __nvoc_dtor_OBJTRACEABLE_dtor,
     /*offset=*/             0,
 };
 
@@ -33,7 +36,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_OBJTRACEABLE = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_OBJTRACEABLE = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_OBJTRACEABLE =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(OBJTRACEABLE),
@@ -43,12 +46,12 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_OBJTRACEABLE =
         /*name=*/               "OBJTRACEABLE",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) NULL,
+    /*objCreatefn=*/        NULL,
     /*pCastInfo=*/          &__nvoc_castinfo_OBJTRACEABLE,
     /*pExportInfo=*/        &__nvoc_export_info_OBJTRACEABLE
 };
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJTRACEABLE = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJTRACEABLE =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -84,4 +87,3 @@ void __nvoc_init_OBJTRACEABLE(OBJTRACEABLE *pThis) {
     pThis->__nvoc_pbase_OBJTRACEABLE = pThis;
     __nvoc_init_funcTable_OBJTRACEABLE(pThis);
 }
-

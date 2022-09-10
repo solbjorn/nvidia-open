@@ -148,14 +148,14 @@ nvlink_lib_unregister_device
     // Loop to unregister each link from the device
     FOR_EACH_LINK_REGISTERED_SAFE(curLink, nextLink, dev, node)
     {
+        // We will use at most 2 links in this function - the link and it's partner
+        nvlink_link *links[2] = {0};
+
         // Reset the variables specific to each link
         bConnected = NV_FALSE;
         intra_conn = NULL;
         inter_conn = NULL;
         numLinks   = 0;
-
-        // We will use at most 2 links in this function - the link and it's partner
-        nvlink_link *links[2] = {0};
 
         links[numLinks] = curLink;
         numLinks++;

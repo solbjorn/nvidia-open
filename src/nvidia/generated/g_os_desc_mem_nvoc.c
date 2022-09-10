@@ -30,9 +30,12 @@ void __nvoc_init_dataField_OsDescMemory(OsDescMemory*);
 void __nvoc_dtor_OsDescMemory(OsDescMemory*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_OsDescMemory;
 
+#define __NVOC_CB_TYPE OsDescMemory
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_OsDescMemory, __nvoc_dtor_OsDescMemory);
+
 static const struct NVOC_RTTI __nvoc_rtti_OsDescMemory_OsDescMemory = {
     /*pClassDef=*/          &__nvoc_class_def_OsDescMemory,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_OsDescMemory,
+    /*dtor=*/               __nvoc_dtor_OsDescMemory_dtor,
     /*offset=*/             0,
 };
 
@@ -78,7 +81,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_OsDescMemory = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_OsDescMemory = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_OsDescMemory =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(OsDescMemory),
@@ -88,7 +91,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_OsDescMemory =
         /*name=*/               "OsDescMemory",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_OsDescMemory,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_OsDescMemory_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_OsDescMemory,
     /*pExportInfo=*/        &__nvoc_export_info_OsDescMemory
 };
@@ -177,7 +180,7 @@ static NvBool __nvoc_thunk_RmResource_osdescAccessCallback(struct OsDescMemory *
     return rmresAccessCallback((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_OsDescMemory_RmResource.offset), pInvokingClient, pAllocParams, accessRight);
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_OsDescMemory = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_OsDescMemory =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -320,4 +323,3 @@ NV_STATUS __nvoc_objCreateDynamic_OsDescMemory(OsDescMemory **ppThis, Dynamic *p
 
     return status;
 }
-

@@ -22,9 +22,12 @@ void __nvoc_init_dataField_PrereqTracker(PrereqTracker*);
 void __nvoc_dtor_PrereqTracker(PrereqTracker*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_PrereqTracker;
 
+#define __NVOC_CB_TYPE PrereqTracker
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_PrereqTracker, __nvoc_dtor_PrereqTracker);
+
 static const struct NVOC_RTTI __nvoc_rtti_PrereqTracker_PrereqTracker = {
     /*pClassDef=*/          &__nvoc_class_def_PrereqTracker,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_PrereqTracker,
+    /*dtor=*/               __nvoc_dtor_PrereqTracker_dtor,
     /*offset=*/             0,
 };
 
@@ -42,7 +45,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_PrereqTracker = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_PrereqTracker = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_PrereqTracker =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(PrereqTracker),
@@ -52,12 +55,12 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_PrereqTracker =
         /*name=*/               "PrereqTracker",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_PrereqTracker,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_PrereqTracker_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_PrereqTracker,
     /*pExportInfo=*/        &__nvoc_export_info_PrereqTracker
 };
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_PrereqTracker = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_PrereqTracker =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -152,4 +155,3 @@ NV_STATUS __nvoc_objCreateDynamic_PrereqTracker(PrereqTracker **ppThis, Dynamic 
 
     return status;
 }
-

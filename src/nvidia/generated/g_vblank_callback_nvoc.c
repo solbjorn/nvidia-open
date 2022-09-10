@@ -30,9 +30,12 @@ void __nvoc_init_dataField_VblankCallback(VblankCallback*);
 void __nvoc_dtor_VblankCallback(VblankCallback*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_VblankCallback;
 
+#define __NVOC_CB_TYPE VblankCallback
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_VblankCallback, __nvoc_dtor_VblankCallback);
+
 static const struct NVOC_RTTI __nvoc_rtti_VblankCallback_VblankCallback = {
     /*pClassDef=*/          &__nvoc_class_def_VblankCallback,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_VblankCallback,
+    /*dtor=*/               __nvoc_dtor_VblankCallback_dtor,
     /*offset=*/             0,
 };
 
@@ -78,7 +81,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_VblankCallback = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_VblankCallback = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_VblankCallback =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(VblankCallback),
@@ -88,7 +91,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_VblankCallback =
         /*name=*/               "VblankCallback",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_VblankCallback,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_VblankCallback_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_VblankCallback,
     /*pExportInfo=*/        &__nvoc_export_info_VblankCallback
 };
@@ -181,17 +184,19 @@ static NvBool __nvoc_thunk_RmResource_vblcbAccessCallback(struct VblankCallback 
     return rmresAccessCallback((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_VblankCallback_RmResource.offset), pInvokingClient, pAllocParams, accessRight);
 }
 
+NVOC_BUILD_CALLBACK(vblcbCtrlSetVBlankNotification_IMPL);
+
 #if !defined(NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG)
 #define NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(x)      (0)
 #endif
 
-static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_VblankCallback[] = 
+static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_VblankCallback[] =
 {
     {               /*  [0] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x0u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) vblcbCtrlSetVBlankNotification_IMPL,
+        /*pFunc=*/      vblcbCtrlSetVBlankNotification_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x0u)
         /*flags=*/      0x0u,
         /*accessRight=*/0x0u,
@@ -205,7 +210,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_VblankCa
 
 };
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_VblankCallback = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_VblankCallback =
 {
     /*numEntries=*/     1,
     /*pExportEntries=*/ __nvoc_exported_method_def_VblankCallback
@@ -353,4 +358,3 @@ NV_STATUS __nvoc_objCreateDynamic_VblankCallback(VblankCallback **ppThis, Dynami
 
     return status;
 }
-

@@ -1166,7 +1166,6 @@ static NvBool ValidateEdid(const NVDpyEvoRec *pDpyEvo, NVEdidPtr pEdid,
                            const NvBool ignoreEdidChecksum)
 {
     NvU32 status, tmpStatus;
-    int errorCount = 0;
 
     status = NvTiming_EDIDValidationMask(pEdid->buffer, pEdid->length, TRUE);
     tmpStatus = status;
@@ -1189,7 +1188,6 @@ static NvBool ValidateEdid(const NVDpyEvoRec *pDpyEvo, NVEdidPtr pEdid,
         nvEvoLogInfoString(pInfoString,
                      "- The EDID has an unrecognized version.");
         tmpStatus &= ~NVT_EDID_VALIDATION_ERR_MASK(NVT_EDID_VALIDATION_ERR_VERSION);
-        errorCount++;
     }
 
     if (status &
@@ -1197,7 +1195,6 @@ static NvBool ValidateEdid(const NVDpyEvoRec *pDpyEvo, NVEdidPtr pEdid,
         nvEvoLogInfoString(pInfoString,
                      "- The EDID is too short.");
         tmpStatus &= ~NVT_EDID_VALIDATION_ERR_MASK(NVT_EDID_VALIDATION_ERR_SIZE);
-        errorCount++;
     }
 
     if (status &
@@ -1219,7 +1216,6 @@ static NvBool ValidateEdid(const NVDpyEvoRec *pDpyEvo, NVEdidPtr pEdid,
                      "timings beyond the capabilities of your display, and "
                      "could damage your hardware. Please use with care.");
         tmpStatus &= ~NVT_EDID_VALIDATION_ERR_MASK(NVT_EDID_VALIDATION_ERR_CHECKSUM);
-        errorCount++;
     }
 
     if (status &
@@ -1227,7 +1223,6 @@ static NvBool ValidateEdid(const NVDpyEvoRec *pDpyEvo, NVEdidPtr pEdid,
         nvEvoLogInfoString(pInfoString,
                      "- The EDID has a bad range limit.");
         tmpStatus &= ~NVT_EDID_VALIDATION_ERR_MASK(NVT_EDID_VALIDATION_ERR_RANGE_LIMIT);
-        errorCount++;
     }
 
     if (status &
@@ -1235,7 +1230,6 @@ static NvBool ValidateEdid(const NVDpyEvoRec *pDpyEvo, NVEdidPtr pEdid,
         nvEvoLogInfoString(pInfoString,
                      "- The EDID has a bad detailed timing descriptor.");
         tmpStatus &= ~NVT_EDID_VALIDATION_ERR_MASK(NVT_EDID_VALIDATION_ERR_DTD);
-        errorCount++;
     }
 
     if (status &
@@ -1244,7 +1238,6 @@ static NvBool ValidateEdid(const NVDpyEvoRec *pDpyEvo, NVEdidPtr pEdid,
                      "- The EDID has an extension block with a bad detailed "
                      "timing descriptor.");
         tmpStatus &= ~NVT_EDID_VALIDATION_ERR_MASK(NVT_EDID_VALIDATION_ERR_EXT_DTD);
-        errorCount++;
     }
 
     if (status &
@@ -1252,13 +1245,11 @@ static NvBool ValidateEdid(const NVDpyEvoRec *pDpyEvo, NVEdidPtr pEdid,
         nvEvoLogInfoString(pInfoString,
                      "- The EDID extension block is invalid.");
         tmpStatus &= ~NVT_EDID_VALIDATION_ERR_MASK(NVT_EDID_VALIDATION_ERR_EXT);
-        errorCount++;
     }
 
     if (tmpStatus) {
         nvEvoLogInfoString(pInfoString,
                      "- The EDID has an unrecognized error.");
-        errorCount++;
     }
 
     /*
@@ -2611,6 +2602,11 @@ NvBool nvDpyGetDynamicData(
     NVDpyIdList connectedList;
     NVDpyIdList oneDpyIdList = nvAddDpyIdToEmptyDpyIdList(pDpyEvo->id);
 
+    ct_assert(sizeof(pDpyEvo->name) == sizeof(pReply->name));
+    ct_assert(sizeof(pReply->dp.guid.buffer) ==
+              sizeof(pDpyEvo->dp.guid.buffer));
+    ct_assert(sizeof(pReply->dp.guid.str) == sizeof(pDpyEvo->dp.guid.str));
+
     nvkms_memset(pReply, 0, sizeof(*pReply));
 
     /*
@@ -2679,8 +2675,6 @@ NvBool nvDpyGetDynamicData(
         nvDPLibUpdateDpyLinkConfiguration(pDpyEvo);
     }
 
-    ct_assert(sizeof(pDpyEvo->name) == sizeof(pReply->name));
-
     nvkms_memcpy(pReply->name, pDpyEvo->name, sizeof(pDpyEvo->name));
 
     if (pDpyEvo->parsedEdid.valid) {
@@ -2712,12 +2706,9 @@ NvBool nvDpyGetDynamicData(
 
     pReply->dp.guid.valid = pDpyEvo->dp.guid.valid;
 
-    ct_assert(sizeof(pReply->dp.guid.buffer) ==
-              sizeof(pDpyEvo->dp.guid.buffer));
     nvkms_memcpy(pReply->dp.guid.buffer, pDpyEvo->dp.guid.buffer,
                  sizeof(pDpyEvo->dp.guid.buffer));
 
-    ct_assert(sizeof(pReply->dp.guid.str) == sizeof(pDpyEvo->dp.guid.str));
     nvkms_memcpy(pReply->dp.guid.str, pDpyEvo->dp.guid.str,
                  sizeof(pDpyEvo->dp.guid.str));
 

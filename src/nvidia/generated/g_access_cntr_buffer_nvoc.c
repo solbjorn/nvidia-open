@@ -34,9 +34,12 @@ void __nvoc_init_dataField_AccessCounterBuffer(AccessCounterBuffer*);
 void __nvoc_dtor_AccessCounterBuffer(AccessCounterBuffer*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_AccessCounterBuffer;
 
+#define __NVOC_CB_TYPE AccessCounterBuffer
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_AccessCounterBuffer, __nvoc_dtor_AccessCounterBuffer);
+
 static const struct NVOC_RTTI __nvoc_rtti_AccessCounterBuffer_AccessCounterBuffer = {
     /*pClassDef=*/          &__nvoc_class_def_AccessCounterBuffer,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_AccessCounterBuffer,
+    /*dtor=*/               __nvoc_dtor_AccessCounterBuffer_dtor,
     /*offset=*/             0,
 };
 
@@ -96,7 +99,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_AccessCounterBuffer = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_AccessCounterBuffer = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_AccessCounterBuffer =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(AccessCounterBuffer),
@@ -106,7 +109,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_AccessCounterBuffer =
         /*name=*/               "AccessCounterBuffer",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_AccessCounterBuffer,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_AccessCounterBuffer_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_AccessCounterBuffer,
     /*pExportInfo=*/        &__nvoc_export_info_AccessCounterBuffer
 };
@@ -219,17 +222,28 @@ static NvBool __nvoc_thunk_RmResource_accesscntrAccessCallback(struct AccessCoun
     return rmresAccessCallback((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_AccessCounterBuffer_RmResource.offset), pInvokingClient, pAllocParams, accessRight);
 }
 
+NVOC_BUILD_CALLBACK(accesscntrCtrlCmdAccessCntrBufferReadGet_IMPL);
+NVOC_BUILD_CALLBACK(accesscntrCtrlCmdAccessCntrBufferReadPut_IMPL);
+NVOC_BUILD_CALLBACK(accesscntrCtrlCmdAccessCntrBufferWriteGet_IMPL);
+NVOC_BUILD_CALLBACK(accesscntrCtrlCmdAccessCntrBufferEnable_IMPL);
+NVOC_BUILD_CALLBACK(accesscntrCtrlCmdAccessCntrBufferGetSize_IMPL);
+NVOC_BUILD_CALLBACK(accesscntrCtrlCmdAccessCntrBufferGetRegisterMappings_IMPL);
+NVOC_BUILD_CALLBACK(accesscntrCtrlCmdAccessCntrBufferGetFullInfo_IMPL);
+NVOC_BUILD_CALLBACK(accesscntrCtrlCmdAccessCntrBufferResetCounters_IMPL);
+NVOC_BUILD_CALLBACK(accesscntrCtrlCmdAccessCntrSetConfig_IMPL);
+NVOC_BUILD_CALLBACK(accesscntrCtrlCmdAccessCntrBufferEnableIntr_IMPL);
+
 #if !defined(NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG)
 #define NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(x)      (0)
 #endif
 
-static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_AccessCounterBuffer[] = 
+static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_AccessCounterBuffer[] =
 {
     {               /*  [0] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x0u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) accesscntrCtrlCmdAccessCntrBufferReadGet_IMPL,
+        /*pFunc=*/      accesscntrCtrlCmdAccessCntrBufferReadGet_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x0u)
         /*flags=*/      0x0u,
         /*accessRight=*/0x0u,
@@ -242,9 +256,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_AccessCo
     },
     {               /*  [1] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x0u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) accesscntrCtrlCmdAccessCntrBufferWriteGet_IMPL,
+        /*pFunc=*/      accesscntrCtrlCmdAccessCntrBufferWriteGet_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x0u)
         /*flags=*/      0x0u,
         /*accessRight=*/0x0u,
@@ -257,9 +271,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_AccessCo
     },
     {               /*  [2] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x0u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) accesscntrCtrlCmdAccessCntrBufferReadPut_IMPL,
+        /*pFunc=*/      accesscntrCtrlCmdAccessCntrBufferReadPut_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x0u)
         /*flags=*/      0x0u,
         /*accessRight=*/0x0u,
@@ -272,9 +286,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_AccessCo
     },
     {               /*  [3] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x0u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) accesscntrCtrlCmdAccessCntrBufferEnable_IMPL,
+        /*pFunc=*/      accesscntrCtrlCmdAccessCntrBufferEnable_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x0u)
         /*flags=*/      0x0u,
         /*accessRight=*/0x0u,
@@ -287,9 +301,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_AccessCo
     },
     {               /*  [4] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x0u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) accesscntrCtrlCmdAccessCntrBufferGetSize_IMPL,
+        /*pFunc=*/      accesscntrCtrlCmdAccessCntrBufferGetSize_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x0u)
         /*flags=*/      0x0u,
         /*accessRight=*/0x0u,
@@ -302,9 +316,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_AccessCo
     },
     {               /*  [5] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x0u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) accesscntrCtrlCmdAccessCntrBufferGetRegisterMappings_IMPL,
+        /*pFunc=*/      accesscntrCtrlCmdAccessCntrBufferGetRegisterMappings_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x0u)
         /*flags=*/      0x0u,
         /*accessRight=*/0x0u,
@@ -317,9 +331,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_AccessCo
     },
     {               /*  [6] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x0u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) accesscntrCtrlCmdAccessCntrBufferGetFullInfo_IMPL,
+        /*pFunc=*/      accesscntrCtrlCmdAccessCntrBufferGetFullInfo_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x0u)
         /*flags=*/      0x0u,
         /*accessRight=*/0x0u,
@@ -332,9 +346,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_AccessCo
     },
     {               /*  [7] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x0u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) accesscntrCtrlCmdAccessCntrBufferResetCounters_IMPL,
+        /*pFunc=*/      accesscntrCtrlCmdAccessCntrBufferResetCounters_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x0u)
         /*flags=*/      0x0u,
         /*accessRight=*/0x0u,
@@ -347,9 +361,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_AccessCo
     },
     {               /*  [8] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x0u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) accesscntrCtrlCmdAccessCntrSetConfig_IMPL,
+        /*pFunc=*/      accesscntrCtrlCmdAccessCntrSetConfig_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x0u)
         /*flags=*/      0x0u,
         /*accessRight=*/0x0u,
@@ -362,9 +376,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_AccessCo
     },
     {               /*  [9] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x0u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) accesscntrCtrlCmdAccessCntrBufferEnableIntr_IMPL,
+        /*pFunc=*/      accesscntrCtrlCmdAccessCntrBufferEnableIntr_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x0u)
         /*flags=*/      0x0u,
         /*accessRight=*/0x0u,
@@ -378,7 +392,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_AccessCo
 
 };
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_AccessCounterBuffer = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_AccessCounterBuffer =
 {
     /*numEntries=*/     10,
     /*pExportEntries=*/ __nvoc_exported_method_def_AccessCounterBuffer
@@ -589,4 +603,3 @@ NV_STATUS __nvoc_objCreateDynamic_AccessCounterBuffer(AccessCounterBuffer **ppTh
 
     return status;
 }
-

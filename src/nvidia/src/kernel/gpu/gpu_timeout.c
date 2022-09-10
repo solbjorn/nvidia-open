@@ -249,9 +249,11 @@ timeoutSet
              (pTimeout->flags & GPU_TIMEOUT_FLAGS_TMRDELAY))
     {
         OBJGPU *pGpu = pTD->pGpu;
+        OBJGPU *pParentGpu;
+
         NV_ASSERT_OR_RETURN_VOID(pGpu != NULL);
 
-        OBJGPU *pParentGpu = gpumgrGetParentGPU(pGpu);
+        pParentGpu = gpumgrGetParentGPU(pGpu);
 
         //
         // Set timer GPU to primary GPU for accurate timeout with SLI loop. But only

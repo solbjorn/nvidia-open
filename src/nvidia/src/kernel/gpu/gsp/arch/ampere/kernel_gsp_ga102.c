@@ -139,6 +139,7 @@ kgspBootstrapRiscvOSEarly_GA102
 {
     KernelFalcon           *pKernelFalcon   = staticCast(pKernelGsp, KernelFalcon);
     NV_STATUS               status          = NV_OK;
+    RM_RISCV_UCODE_DESC *pRiscvDesc;
 
     // Only for GSP client builds
     if (!IS_GSP_CLIENT(pGpu))
@@ -193,7 +194,7 @@ kgspBootstrapRiscvOSEarly_GA102
     // Fb configuration is done so setup libos arg list
     kgspProgramLibosBootArgsAddr_HAL(pGpu, pKernelGsp);
 
-    RM_RISCV_UCODE_DESC *pRiscvDesc = pKernelGsp->pGspRmBootUcodeDesc;
+    pRiscvDesc = pKernelGsp->pGspRmBootUcodeDesc;
 
     {
         status = kgspExecuteBooterLoad_HAL(pGpu, pKernelGsp,

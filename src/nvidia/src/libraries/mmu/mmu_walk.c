@@ -292,7 +292,6 @@ NV_STATUS mmuWalkProcessPdes
         //
         if (NV_ERR_MORE_PROCESSING_REQUIRED == status)
         {
-            status = NV_OK;
 
             NvU64 vaLevelBase  = mmuFmtLevelVirtAddrLo(pLevel->pFmt, vaLo);
             NvU32 entryIndexLo = mmuFmtVirtAddrToEntryIndex(pLevel->pFmt, vaLo);
@@ -308,6 +307,9 @@ NV_STATUS mmuWalkProcessPdes
             MMU_WALK_RELEASE_PDES_ENTRY *pReleasePdeEntry;
             PROCESS_PDES_STACK processPdesStack;
             RELEASE_PDES_STACK releasePdesStack;
+
+            status = NV_OK;
+
             listInit(&processPdesStack, portMemAllocatorGetGlobalNonPaged());
             listInit(&releasePdesStack, portMemAllocatorGetGlobalNonPaged());
 
@@ -344,6 +346,14 @@ NV_STATUS mmuWalkProcessPdes
 
             while ((pProcessPdeEntry = listHead(&processPdesStack)) != NULL)
             {
+                MMU_WALK_LEVEL_INST  *pSubLevelInsts[MMU_FMT_MAX_SUB_LEVELS] = {0};
+                MMU_ENTRY_STATE currEntryState;
+                NvU32 subLevel = 0;
+                NvU64 clippedVaLo;
+                NvU64 clippedVaHi;
+                NvU64 entryVaLo;
+                NvU64 entryVaHi;
+
                 pLevel       = pProcessPdeEntry->pLevel;
                 pLevelInst   = pProcessPdeEntry->pLevelInst;
                 vaLo         = pProcessPdeEntry->vaLo;
@@ -354,15 +364,14 @@ NV_STATUS mmuWalkProcessPdes
 
                 listRemove(&processPdesStack, pProcessPdeEntry);
 
-                const NvU64           entryVaLo   = mmuFmtEntryIndexVirtAddrLo(pLevel->pFmt,
+                entryVaLo = mmuFmtEntryIndexVirtAddrLo(pLevel->pFmt,
                                                                          vaLevelBase, entryIndex);
-                const NvU64           entryVaHi   = mmuFmtEntryIndexVirtAddrHi(pLevel->pFmt,
+                entryVaHi = mmuFmtEntryIndexVirtAddrHi(pLevel->pFmt,
                                                                          vaLevelBase, entryIndex);
-                const NvU64           clippedVaLo = NV_MAX(vaLo, entryVaLo);
-                const NvU64           clippedVaHi = NV_MIN(vaHi, entryVaHi);
-                const MMU_ENTRY_STATE currEntryState = mmuWalkGetEntryState(pLevelInst, entryIndex);
-                NvU32                 subLevel       = 0;
-                MMU_WALK_LEVEL_INST  *pSubLevelInsts[MMU_FMT_MAX_SUB_LEVELS] = {0};
+                clippedVaLo = NV_MAX(vaLo, entryVaLo);
+                clippedVaHi = NV_MIN(vaHi, entryVaHi);
+                currEntryState = mmuWalkGetEntryState(pLevelInst, entryIndex);
+
 
                 // Optimizations for release operations.
                 if (pOpParams->bRelease)

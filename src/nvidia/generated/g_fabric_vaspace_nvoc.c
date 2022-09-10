@@ -24,9 +24,12 @@ void __nvoc_init_dataField_FABRIC_VASPACE(FABRIC_VASPACE*);
 void __nvoc_dtor_FABRIC_VASPACE(FABRIC_VASPACE*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_FABRIC_VASPACE;
 
+#define __NVOC_CB_TYPE FABRIC_VASPACE
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_FABRIC_VASPACE, __nvoc_dtor_FABRIC_VASPACE);
+
 static const struct NVOC_RTTI __nvoc_rtti_FABRIC_VASPACE_FABRIC_VASPACE = {
     /*pClassDef=*/          &__nvoc_class_def_FABRIC_VASPACE,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_FABRIC_VASPACE,
+    /*dtor=*/               __nvoc_dtor_FABRIC_VASPACE_dtor,
     /*offset=*/             0,
 };
 
@@ -51,7 +54,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_FABRIC_VASPACE = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_FABRIC_VASPACE = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_FABRIC_VASPACE =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(FABRIC_VASPACE),
@@ -61,7 +64,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_FABRIC_VASPACE =
         /*name=*/               "FABRIC_VASPACE",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_FABRIC_VASPACE,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_FABRIC_VASPACE_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_FABRIC_VASPACE,
     /*pExportInfo=*/        &__nvoc_export_info_FABRIC_VASPACE
 };
@@ -182,7 +185,7 @@ static NV_STATUS __nvoc_thunk_OBJVASPACE_fabricvaspaceReserveMempool(struct FABR
     return vaspaceReserveMempool((struct OBJVASPACE *)(((unsigned char *)pVAS) + __nvoc_rtti_FABRIC_VASPACE_OBJVASPACE.offset), pGpu, hClient, size, pageSizeLockMask, flags);
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_FABRIC_VASPACE = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_FABRIC_VASPACE =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -350,4 +353,3 @@ NV_STATUS __nvoc_objCreateDynamic_FABRIC_VASPACE(FABRIC_VASPACE **ppThis, Dynami
 
     return status;
 }
-

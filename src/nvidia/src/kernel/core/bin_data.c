@@ -306,6 +306,9 @@ bindataArchiveGetStorage(
     const char *binName
 )
 {
+    NvLength len;
+    NvU32 i;
+
     // paged memory access check
     osPagedSegmentAccessCheck();
 
@@ -313,9 +316,8 @@ bindataArchiveGetStorage(
     {
         return NULL;
     }
-
-    NvU32 i;
-    NvLength len = portStringLength(binName) + 1;
+    
+    len = portStringLength(binName) + 1;
     for (i = 0 ; i < pBinArchive->entryNum; i++)
     {
         if (portStringCompare(binName, pBinArchive->entries[i].name, len) == 0)

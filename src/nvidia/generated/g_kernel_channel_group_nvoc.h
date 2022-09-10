@@ -115,7 +115,7 @@ typedef struct _HW_ENG_FAULT_METHOD_BUFFER
 #define PRIVATE_FIELD(x) NVOC_PRIVATE_FIELD(x)
 #endif
 struct KernelChannelGroup {
-    const struct NVOC_RTTI *__nvoc_rtti;
+    struct __rtti_marker __nvoc_rtti;
     struct RsShared __nvoc_base_RsShared;
     struct Object *__nvoc_pbase_Object;
     struct RsShared *__nvoc_pbase_RsShared;

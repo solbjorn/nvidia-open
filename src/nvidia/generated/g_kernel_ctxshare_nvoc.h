@@ -85,7 +85,7 @@ typedef struct KernelCtxShareApi KernelCtxShareApi;
 #define PRIVATE_FIELD(x) NVOC_PRIVATE_FIELD(x)
 #endif
 struct KernelCtxShare {
-    const struct NVOC_RTTI *__nvoc_rtti;
+    struct __rtti_marker __nvoc_rtti;
     struct RsShared __nvoc_base_RsShared;
     struct Object *__nvoc_pbase_Object;
     struct RsShared *__nvoc_pbase_RsShared;
@@ -187,7 +187,7 @@ void kctxshareDestruct_IMPL(struct KernelCtxShare *pKernelCtxShare);
 #define PRIVATE_FIELD(x) NVOC_PRIVATE_FIELD(x)
 #endif
 struct KernelCtxShareApi {
-    const struct NVOC_RTTI *__nvoc_rtti;
+    struct __rtti_marker __nvoc_rtti;
     struct GpuResource __nvoc_base_GpuResource;
     struct Object *__nvoc_pbase_Object;
     struct RsResource *__nvoc_pbase_RsResource;

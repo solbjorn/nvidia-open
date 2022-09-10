@@ -46,13 +46,13 @@ static NvBool osInterruptPending(
     Intr *pIntr = NULL;
     MC_ENGINE_BITVECTOR intr0Pending;
     MC_ENGINE_BITVECTOR intr1Pending;
+    OBJGPU *pDeviceLockGpu = pGpu;
+    NvU8 stackAllocator[TLS_ISR_ALLOCATOR_SIZE]; // ISR allocations come from this buffer
+    PORT_MEM_ALLOCATOR *pIsrAllocator;
 
     *serviced = NV_FALSE;
     pending = NV_FALSE;
     sema_release = NV_TRUE;
-    OBJGPU *pDeviceLockGpu = pGpu;
-    NvU8 stackAllocator[TLS_ISR_ALLOCATOR_SIZE]; // ISR allocations come from this buffer
-    PORT_MEM_ALLOCATOR *pIsrAllocator;
 
     //
     // GPU interrupt servicing ("top half")
@@ -118,6 +118,8 @@ static NvBool osInterruptPending(
 
             if (INTERRUPT_TYPE_HARDWARE == intrGetIntrEn(pIntr))
             {
+                POBJTMR pTmr;
+            
                 // If interrupt enable is garbage the GPU is probably in a bad state
                 if (intrGetIntrEnFromHw_HAL(pGpu, pIntr, &threadState) > INTERRUPT_TYPE_MAX)
                 {
@@ -125,7 +127,7 @@ static NvBool osInterruptPending(
                 }
 
                 intrGetPendingStall_HAL(pGpu, pIntr, &intr0Pending, &threadState);
-                POBJTMR pTmr = GPU_GET_TIMER(pGpu);
+                pTmr = GPU_GET_TIMER(pGpu);
                 *serviced = tmrServiceSwrlWrapper(pGpu, pTmr, &intr0Pending, &threadState);
             }
         }

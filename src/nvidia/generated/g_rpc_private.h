@@ -2723,27 +2723,26 @@ static void rpcHalIfacesSetup_TU102(RPC_HAL_IFACES *pRpcHal)
     // TU102's RPC hal interface function pointer block
     static const RPC_HAL_IFACES rpcHalIfacesInitStruct_TU102 =
     {
-        rpcVgpuPfRegRead32_STUB,                 // rpcVgpuPfRegRead32
-        rpcDumpProtobufComponent_STUB,           // rpcDumpProtobufComponent
-        rpcAllocMemory_STUB,                     // rpcAllocMemory
-        rpcGpuExecRegOps_STUB,                   // rpcGpuExecRegOps
-        rpcRmfsInit_STUB,                        // rpcRmfsInit
-        rpcUnsetPageDirectory_STUB,              // rpcUnsetPageDirectory
-        rpcGetGspStaticInfo_STUB,                // rpcGetGspStaticInfo
-        rpcGspSetSystemInfo_STUB,                // rpcGspSetSystemInfo
-        rpcRmfsCleanup_STUB,                     // rpcRmfsCleanup
-        rpcSetPageDirectory_STUB,                // rpcSetPageDirectory
-        rpcUnloadingGuestDriver_STUB,            // rpcUnloadingGuestDriver
-        rpcSetRegistry_STUB,                     // rpcSetRegistry
-        rpcRmfsCloseQueue_STUB,                  // rpcRmfsCloseQueue
-        rpcGetStaticInfo_STUB,                   // rpcGetStaticInfo
-        rpcIdleChannels_STUB,                    // rpcIdleChannels
-        rpcUpdateBarPde_STUB,                    // rpcUpdateBarPde
-        rpcMapMemoryDma_STUB,                    // rpcMapMemoryDma
-        rpcUnmapMemoryDma_STUB,                  // rpcUnmapMemoryDma
-        rpcRmfsTest_STUB,                        // rpcRmfsTest
-        rpc_iGrp_ipVersions_getInfo,             // rpc_iGrp_ipVersions_getInfo
-
+        .rpcVgpuPfRegRead32                 = rpcVgpuPfRegRead32_STUB,
+        .rpcDumpProtobufComponent           = rpcDumpProtobufComponent_STUB,
+        .rpcAllocMemory                     = rpcAllocMemory_STUB,
+        .rpcGpuExecRegOps                   = rpcGpuExecRegOps_STUB,
+        .rpcRmfsInit                        = rpcRmfsInit_STUB,
+        .rpcUnsetPageDirectory              = rpcUnsetPageDirectory_STUB,
+        .rpcGetGspStaticInfo                = rpcGetGspStaticInfo_STUB,
+        .rpcGspSetSystemInfo                = rpcGspSetSystemInfo_STUB,
+        .rpcRmfsCleanup                     = rpcRmfsCleanup_STUB,
+        .rpcSetPageDirectory                = rpcSetPageDirectory_STUB,
+        .rpcUnloadingGuestDriver            = rpcUnloadingGuestDriver_STUB,
+        .rpcSetRegistry                     = rpcSetRegistry_STUB,
+        .rpcRmfsCloseQueue                  = rpcRmfsCloseQueue_STUB,
+        .rpcGetStaticInfo                   = rpcGetStaticInfo_STUB,
+        .rpcIdleChannels                    = rpcIdleChannels_STUB,
+        .rpcUpdateBarPde                    = rpcUpdateBarPde_STUB,
+        .rpcMapMemoryDma                    = rpcMapMemoryDma_STUB,
+        .rpcUnmapMemoryDma                  = rpcUnmapMemoryDma_STUB,
+        .rpcRmfsTest                        = rpcRmfsTest_STUB,
+        .rpc_iGrp_ipVersions_getInfo        = rpc_iGrp_ipVersions_getInfo,
     };  // rpcHalIfacesInitStruct_TU102
 
     // init TU102's RPC function ptrs using the init struct above
@@ -2796,26 +2795,26 @@ static void rpcHalIfacesSetup_GA100(RPC_HAL_IFACES *pRpcHal)
     // GA100's RPC hal interface function pointer block
     static const RPC_HAL_IFACES rpcHalIfacesInitStruct_GA100 =
     {
-        rpcVgpuPfRegRead32_STUB,                 // rpcVgpuPfRegRead32
-        rpcDumpProtobufComponent_STUB,           // rpcDumpProtobufComponent
-        rpcAllocMemory_STUB,                     // rpcAllocMemory
-        rpcGpuExecRegOps_STUB,                   // rpcGpuExecRegOps
-        rpcRmfsInit_STUB,                        // rpcRmfsInit
-        rpcUnsetPageDirectory_STUB,              // rpcUnsetPageDirectory
-        rpcGetGspStaticInfo_STUB,                // rpcGetGspStaticInfo
-        rpcGspSetSystemInfo_STUB,                // rpcGspSetSystemInfo
-        rpcRmfsCleanup_STUB,                     // rpcRmfsCleanup
-        rpcSetPageDirectory_STUB,                // rpcSetPageDirectory
-        rpcUnloadingGuestDriver_STUB,            // rpcUnloadingGuestDriver
-        rpcSetRegistry_STUB,                     // rpcSetRegistry
-        rpcRmfsCloseQueue_STUB,                  // rpcRmfsCloseQueue
-        rpcGetStaticInfo_STUB,                   // rpcGetStaticInfo
-        rpcIdleChannels_STUB,                    // rpcIdleChannels
-        rpcUpdateBarPde_STUB,                    // rpcUpdateBarPde
-        rpcMapMemoryDma_STUB,                    // rpcMapMemoryDma
-        rpcUnmapMemoryDma_STUB,                  // rpcUnmapMemoryDma
-        rpcRmfsTest_STUB,                        // rpcRmfsTest
-        rpc_iGrp_ipVersions_getInfo,             // rpc_iGrp_ipVersions_getInfo
+        .rpcVgpuPfRegRead32                 = rpcVgpuPfRegRead32_STUB,
+        .rpcDumpProtobufComponent           = rpcDumpProtobufComponent_STUB,
+        .rpcAllocMemory                     = rpcAllocMemory_STUB,
+        .rpcGpuExecRegOps                   = rpcGpuExecRegOps_STUB,
+        .rpcRmfsInit                        = rpcRmfsInit_STUB,
+        .rpcUnsetPageDirectory              = rpcUnsetPageDirectory_STUB,
+        .rpcGetGspStaticInfo                = rpcGetGspStaticInfo_STUB,
+        .rpcGspSetSystemInfo                = rpcGspSetSystemInfo_STUB,
+        .rpcRmfsCleanup                     = rpcRmfsCleanup_STUB,
+        .rpcSetPageDirectory                = rpcSetPageDirectory_STUB,
+        .rpcUnloadingGuestDriver            = rpcUnloadingGuestDriver_STUB,
+        .rpcSetRegistry                     = rpcSetRegistry_STUB,
+        .rpcRmfsCloseQueue                  = rpcRmfsCloseQueue_STUB,
+        .rpcGetStaticInfo                   = rpcGetStaticInfo_STUB,
+        .rpcIdleChannels                    = rpcIdleChannels_STUB,
+        .rpcUpdateBarPde                    = rpcUpdateBarPde_STUB,
+        .rpcMapMemoryDma                    = rpcMapMemoryDma_STUB,
+        .rpcUnmapMemoryDma                  = rpcUnmapMemoryDma_STUB,
+        .rpcRmfsTest                        = rpcRmfsTest_STUB,
+        .rpc_iGrp_ipVersions_getInfo        = rpc_iGrp_ipVersions_getInfo,
 
     };  // rpcHalIfacesInitStruct_GA100
 

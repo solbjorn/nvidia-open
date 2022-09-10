@@ -118,7 +118,7 @@ kmigmgrMakeCIReference_IMPL
 
 /*! @brief create a Ref referencing no GI/CI */
 MIG_INSTANCE_REF
-kmigmgrMakeNoMIGReference_IMPL()
+kmigmgrMakeNoMIGReference_IMPL(void)
 {
     MIG_INSTANCE_REF ref = { NULL, NULL };
     return ref;
@@ -1556,6 +1556,8 @@ kmigmgrCreateGPUInstanceRunlists_FWCLIENT
     RM_API *pRmApi = GPU_GET_PHYSICAL_RMAPI(pGpu);
     NV2080_CTRL_INTERNAL_FIFO_PROMOTE_RUNLIST_BUFFERS_PARAMS *pParams;
 
+    ct_assert(sizeof(pParams->runlistIdMask) == sizeof(pKernelMIGGpuInstance->runlistIdMask));
+
     // TODO: Mem partitioning check should suffice here
     if (!kmigmgrIsMemoryPartitioningNeeded_HAL(pGpu, pKernelMIGManager, pKernelMIGGpuInstance->swizzId) ||
         !ctxBufPoolIsSupported(pGpu))
@@ -1640,7 +1642,6 @@ kmigmgrCreateGPUInstanceRunlists_FWCLIENT
     pParams = portMemAllocNonPaged(sizeof(*pParams));
     NV_ASSERT_OR_GOTO(pParams != NULL, failed);
 
-    ct_assert(sizeof(pParams->runlistIdMask) == sizeof(pKernelMIGGpuInstance->runlistIdMask));
     pParams->runlistIdMask = pKernelMIGGpuInstance->runlistIdMask;
     pParams->swizzId = pKernelMIGGpuInstance->swizzId;
 
@@ -3367,6 +3368,12 @@ kmigmgrCreateComputeInstances_VF
                  (params.type == KMIGMGR_CREATE_COMPUTE_INSTANCE_PARAMS_TYPE_REQUEST_WITH_IDS))
                 ? params.inst.request.pReqComputeInstanceInfo[CIIdx].gpcCount
                 : nvPopCount32(params.inst.restore.pComputeInstanceSave->ciInfo.gpcMask);
+        NvU32 grCount;
+        NvU32 ceCount;
+        NvU32 decCount;
+        NvU32 encCount;
+        NvU32 jpgCount;
+        NvU32 ofaCount;
 
         pMIGComputeInstance->bValid = NV_TRUE;
         pMIGComputeInstance->sharedEngFlag =
@@ -3374,12 +3381,6 @@ kmigmgrCreateComputeInstances_VF
                  (params.type == KMIGMGR_CREATE_COMPUTE_INSTANCE_PARAMS_TYPE_REQUEST_WITH_IDS))
                 ? params.inst.request.pReqComputeInstanceInfo[CIIdx].sharedEngFlag
                 : params.inst.restore.pComputeInstanceSave->ciInfo.sharedEngFlags;
-        NvU32 grCount;
-        NvU32 ceCount;
-        NvU32 decCount;
-        NvU32 encCount;
-        NvU32 jpgCount;
-        NvU32 ofaCount;
 
         // Check to see if we have enough GPCs left to satisfy this request
         if (remainingGpcCount < gpcCount)
@@ -5472,9 +5473,9 @@ subdeviceCtrlCmdGpuGetActivePartitionIds_IMPL
     KernelMIGManager *pKernelMIGManager = GPU_GET_KERNEL_MIG_MANAGER(pGpu);
     NvU64             validSwizzIdMask;
 
-    pParams->partitionCount = 0;
-
     ct_assert(NV2080_CTRL_GPU_MAX_PARTITIONS == KMIGMGR_MAX_GPU_INSTANCES);
+
+    pParams->partitionCount = 0;
 
     LOCK_ASSERT_AND_RETURN(rmApiLockIsOwner() && rmGpuLockIsOwner());
 

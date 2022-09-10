@@ -30,9 +30,12 @@ void __nvoc_init_dataField_ThirdPartyP2P(ThirdPartyP2P*);
 void __nvoc_dtor_ThirdPartyP2P(ThirdPartyP2P*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_ThirdPartyP2P;
 
+#define __NVOC_CB_TYPE ThirdPartyP2P
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_ThirdPartyP2P, __nvoc_dtor_ThirdPartyP2P);
+
 static const struct NVOC_RTTI __nvoc_rtti_ThirdPartyP2P_ThirdPartyP2P = {
     /*pClassDef=*/          &__nvoc_class_def_ThirdPartyP2P,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_ThirdPartyP2P,
+    /*dtor=*/               __nvoc_dtor_ThirdPartyP2P_dtor,
     /*offset=*/             0,
 };
 
@@ -78,7 +81,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_ThirdPartyP2P = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_ThirdPartyP2P = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_ThirdPartyP2P =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(ThirdPartyP2P),
@@ -88,7 +91,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_ThirdPartyP2P =
         /*name=*/               "ThirdPartyP2P",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_ThirdPartyP2P,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_ThirdPartyP2P_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_ThirdPartyP2P,
     /*pExportInfo=*/        &__nvoc_export_info_ThirdPartyP2P
 };
@@ -181,17 +184,23 @@ static NvBool __nvoc_thunk_RmResource_thirdpartyp2pAccessCallback(struct ThirdPa
     return rmresAccessCallback((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_ThirdPartyP2P_RmResource.offset), pInvokingClient, pAllocParams, accessRight);
 }
 
+NVOC_BUILD_CALLBACK(thirdpartyp2pCtrlCmdRegisterVaSpace_IMPL);
+NVOC_BUILD_CALLBACK(thirdpartyp2pCtrlCmdUnregisterVaSpace_IMPL);
+NVOC_BUILD_CALLBACK(thirdpartyp2pCtrlCmdRegisterVidmem_IMPL);
+NVOC_BUILD_CALLBACK(thirdpartyp2pCtrlCmdUnregisterVidmem_IMPL);
+NVOC_BUILD_CALLBACK(thirdpartyp2pCtrlCmdRegisterPid_IMPL);
+
 #if !defined(NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG)
 #define NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(x)      (0)
 #endif
 
-static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_ThirdPartyP2P[] = 
+static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_ThirdPartyP2P[] =
 {
     {               /*  [0] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) thirdpartyp2pCtrlCmdRegisterVaSpace_IMPL,
+        /*pFunc=*/      thirdpartyp2pCtrlCmdRegisterVaSpace_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*flags=*/      0x10u,
         /*accessRight=*/0x0u,
@@ -204,9 +213,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_ThirdPar
     },
     {               /*  [1] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) thirdpartyp2pCtrlCmdUnregisterVaSpace_IMPL,
+        /*pFunc=*/      thirdpartyp2pCtrlCmdUnregisterVaSpace_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*flags=*/      0x10u,
         /*accessRight=*/0x0u,
@@ -219,9 +228,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_ThirdPar
     },
     {               /*  [2] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) thirdpartyp2pCtrlCmdRegisterVidmem_IMPL,
+        /*pFunc=*/      thirdpartyp2pCtrlCmdRegisterVidmem_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*flags=*/      0x10u,
         /*accessRight=*/0x0u,
@@ -234,9 +243,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_ThirdPar
     },
     {               /*  [3] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) thirdpartyp2pCtrlCmdUnregisterVidmem_IMPL,
+        /*pFunc=*/      thirdpartyp2pCtrlCmdUnregisterVidmem_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*flags=*/      0x10u,
         /*accessRight=*/0x0u,
@@ -249,9 +258,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_ThirdPar
     },
     {               /*  [4] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) thirdpartyp2pCtrlCmdRegisterPid_IMPL,
+        /*pFunc=*/      thirdpartyp2pCtrlCmdRegisterPid_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*flags=*/      0x10u,
         /*accessRight=*/0x0u,
@@ -265,7 +274,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_ThirdPar
 
 };
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_ThirdPartyP2P = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_ThirdPartyP2P =
 {
     /*numEntries=*/     5,
     /*pExportEntries=*/ __nvoc_exported_method_def_ThirdPartyP2P
@@ -429,4 +438,3 @@ NV_STATUS __nvoc_objCreateDynamic_ThirdPartyP2P(ThirdPartyP2P **ppThis, Dynamic 
 
     return status;
 }
-

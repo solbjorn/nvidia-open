@@ -196,6 +196,8 @@ knvlinkCoreLockLinkCallback
 {
     KNVLINK_RM_LINK *pNvlinkLink = (KNVLINK_RM_LINK *)link->link_info;
     OBJSYS          *pSys        = SYS_GET_INSTANCE();
+    KernelNvlink *pKernelNvlink;
+    OBJGPU *pGpu;
 
     // Return if NVLink fabric is managed by FM
     if (pSys->getProperty(pSys, PDB_PROP_SYS_FABRIC_IS_EXTERNALLY_MANAGED))
@@ -208,8 +210,8 @@ knvlinkCoreLockLinkCallback
     // subdevice, since the locking APIs currently available to us operate at
     // the device level.
     //
-    OBJGPU       *pGpu          = gpumgrGetParentGPU(pNvlinkLink->pGpu);
-    KernelNvlink *pKernelNvlink = GPU_GET_KERNEL_NVLINK(pGpu);
+    pGpu          = gpumgrGetParentGPU(pNvlinkLink->pGpu);
+    pKernelNvlink = GPU_GET_KERNEL_NVLINK(pGpu);
 
     NV_ASSERT_OR_RETURN(pKernelNvlink != NULL, NVL_ERR_INVALID_STATE);
 
@@ -267,6 +269,8 @@ knvlinkCoreUnlockLinkCallback
 {
     KNVLINK_RM_LINK *pNvlinkLink = (KNVLINK_RM_LINK *)link->link_info;
     OBJSYS          *pSys        = SYS_GET_INSTANCE();
+    KernelNvlink *pKernelNvlink;
+    OBJGPU *pGpu;
 
     // Return if NVLink fabric is managed by FM
     if (pSys->getProperty(pSys, PDB_PROP_SYS_FABRIC_IS_EXTERNALLY_MANAGED))
@@ -279,8 +283,8 @@ knvlinkCoreUnlockLinkCallback
     // subdevice, since the locking APIs currently available to us operate at
     // the device level.
     //
-    OBJGPU       *pGpu          = gpumgrGetParentGPU(pNvlinkLink->pGpu);
-    KernelNvlink *pKernelNvlink = GPU_GET_KERNEL_NVLINK(pGpu);
+    pGpu          = gpumgrGetParentGPU(pNvlinkLink->pGpu);
+    pKernelNvlink = GPU_GET_KERNEL_NVLINK(pGpu);
 
     NV_ASSERT_OR_RETURN_VOID(rmDeviceGpuLockIsOwner(gpuGetInstance(pGpu)));
 

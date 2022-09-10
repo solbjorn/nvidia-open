@@ -117,7 +117,8 @@ RmCopyUserForDeprecatedApi
                                         dataSize,
                                         bUserModeArgs);
 
-            // intentionally fall through to release memory...
+            // release memory...
+            fallthrough;
         case RMAPI_DEPRECATED_COPYRELEASE:
             if (bufPolicy == RMAPI_DEPRECATED_BUFFER_ALLOCATE)
             {

@@ -30,9 +30,12 @@ void __nvoc_init_dataField_DispCapabilities(DispCapabilities*);
 void __nvoc_dtor_DispCapabilities(DispCapabilities*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_DispCapabilities;
 
+#define __NVOC_CB_TYPE DispCapabilities
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_DispCapabilities, __nvoc_dtor_DispCapabilities);
+
 static const struct NVOC_RTTI __nvoc_rtti_DispCapabilities_DispCapabilities = {
     /*pClassDef=*/          &__nvoc_class_def_DispCapabilities,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_DispCapabilities,
+    /*dtor=*/               __nvoc_dtor_DispCapabilities_dtor,
     /*offset=*/             0,
 };
 
@@ -78,7 +81,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_DispCapabilities = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_DispCapabilities = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_DispCapabilities =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(DispCapabilities),
@@ -88,7 +91,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_DispCapabilities =
         /*name=*/               "DispCapabilities",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_DispCapabilities,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_DispCapabilities_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_DispCapabilities,
     /*pExportInfo=*/        &__nvoc_export_info_DispCapabilities
 };
@@ -181,7 +184,7 @@ static NvBool __nvoc_thunk_RmResource_dispcapAccessCallback(struct DispCapabilit
     return rmresAccessCallback((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispCapabilities_RmResource.offset), pInvokingClient, pAllocParams, accessRight);
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_DispCapabilities = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_DispCapabilities =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -326,4 +329,3 @@ NV_STATUS __nvoc_objCreateDynamic_DispCapabilities(DispCapabilities **ppThis, Dy
 
     return status;
 }
-

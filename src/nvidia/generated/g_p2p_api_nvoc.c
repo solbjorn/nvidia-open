@@ -28,9 +28,12 @@ void __nvoc_init_dataField_P2PApi(P2PApi*);
 void __nvoc_dtor_P2PApi(P2PApi*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_P2PApi;
 
+#define __NVOC_CB_TYPE P2PApi
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_P2PApi, __nvoc_dtor_P2PApi);
+
 static const struct NVOC_RTTI __nvoc_rtti_P2PApi_P2PApi = {
     /*pClassDef=*/          &__nvoc_class_def_P2PApi,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_P2PApi,
+    /*dtor=*/               __nvoc_dtor_P2PApi_dtor,
     /*offset=*/             0,
 };
 
@@ -69,7 +72,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_P2PApi = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_P2PApi = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_P2PApi =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(P2PApi),
@@ -79,7 +82,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_P2PApi =
         /*name=*/               "P2PApi",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_P2PApi,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_P2PApi_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_P2PApi,
     /*pExportInfo=*/        &__nvoc_export_info_P2PApi
 };
@@ -156,7 +159,7 @@ static NvBool __nvoc_thunk_RmResource_p2papiAccessCallback(struct P2PApi *pResou
     return rmresAccessCallback((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_P2PApi_RmResource.offset), pInvokingClient, pAllocParams, accessRight);
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_P2PApi = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_P2PApi =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -291,4 +294,3 @@ NV_STATUS __nvoc_objCreateDynamic_P2PApi(P2PApi **ppThis, Dynamic *pParent, NvU3
 
     return status;
 }
-

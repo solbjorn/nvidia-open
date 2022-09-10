@@ -30,9 +30,12 @@ void __nvoc_init_dataField_GenericEngineApi(GenericEngineApi*);
 void __nvoc_dtor_GenericEngineApi(GenericEngineApi*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_GenericEngineApi;
 
+#define __NVOC_CB_TYPE GenericEngineApi
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_GenericEngineApi, __nvoc_dtor_GenericEngineApi);
+
 static const struct NVOC_RTTI __nvoc_rtti_GenericEngineApi_GenericEngineApi = {
     /*pClassDef=*/          &__nvoc_class_def_GenericEngineApi,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_GenericEngineApi,
+    /*dtor=*/               __nvoc_dtor_GenericEngineApi_dtor,
     /*offset=*/             0,
 };
 
@@ -78,7 +81,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_GenericEngineApi = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_GenericEngineApi = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_GenericEngineApi =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(GenericEngineApi),
@@ -88,7 +91,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_GenericEngineApi =
         /*name=*/               "GenericEngineApi",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_GenericEngineApi,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_GenericEngineApi_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_GenericEngineApi,
     /*pExportInfo=*/        &__nvoc_export_info_GenericEngineApi
 };
@@ -181,17 +184,20 @@ static NvBool __nvoc_thunk_RmResource_genapiAccessCallback(struct GenericEngineA
     return rmresAccessCallback((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_GenericEngineApi_RmResource.offset), pInvokingClient, pAllocParams, accessRight);
 }
 
+NVOC_BUILD_CALLBACK(genapiCtrlCmdMasterGetErrorIntrOffsetMask_IMPL);
+NVOC_BUILD_CALLBACK(genapiCtrlCmdMasterGetVirtualFunctionErrorContIntrMask_IMPL);
+
 #if !defined(NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG)
 #define NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(x)      (0)
 #endif
 
-static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_GenericEngineApi[] = 
+static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_GenericEngineApi[] =
 {
     {               /*  [0] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x210u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) genapiCtrlCmdMasterGetErrorIntrOffsetMask_IMPL,
+        /*pFunc=*/      genapiCtrlCmdMasterGetErrorIntrOffsetMask_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x210u)
         /*flags=*/      0x210u,
         /*accessRight=*/0x0u,
@@ -204,9 +210,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_GenericE
     },
     {               /*  [1] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x210u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) genapiCtrlCmdMasterGetVirtualFunctionErrorContIntrMask_IMPL,
+        /*pFunc=*/      genapiCtrlCmdMasterGetVirtualFunctionErrorContIntrMask_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x210u)
         /*flags=*/      0x210u,
         /*accessRight=*/0x0u,
@@ -220,7 +226,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_GenericE
 
 };
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_GenericEngineApi = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_GenericEngineApi =
 {
     /*numEntries=*/     2,
     /*pExportEntries=*/ __nvoc_exported_method_def_GenericEngineApi
@@ -378,4 +384,3 @@ NV_STATUS __nvoc_objCreateDynamic_GenericEngineApi(GenericEngineApi **ppThis, Dy
 
     return status;
 }
-

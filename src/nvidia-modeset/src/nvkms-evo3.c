@@ -1020,11 +1020,6 @@ static void EvoSetProcAmpC3(NVDispEvoPtr pDispEvo, const NvU32 head,
     const NVDispHeadStateEvoRec *pHeadState = &pDispEvo->headState[head];
     NvU32 dynRange;
 
-    /* These methods should only apply to a single pDpyEvo */
-    nvAssert(pDevEvo->subDevMaskStackDepth > 0);
-
-    nvUpdateUpdateState(pDevEvo, updateState, pChannel);
-
     // These NVT defines match the HEAD_SET_PROCAMP ones.
     ct_assert(NVT_COLORIMETRY_RGB == NVC37D_HEAD_SET_PROCAMP_COLOR_SPACE_RGB);
     ct_assert(NVT_COLORIMETRY_YUV_601 == NVC37D_HEAD_SET_PROCAMP_COLOR_SPACE_YUV_601);
@@ -1032,6 +1027,11 @@ static void EvoSetProcAmpC3(NVDispEvoPtr pDispEvo, const NvU32 head,
     /* XXXnvdisplay add REC2020 */
     ct_assert(NVT_COLOR_RANGE_FULL == NVC37D_HEAD_SET_PROCAMP_RANGE_COMPRESSION_DISABLE);
     ct_assert(NVT_COLOR_RANGE_LIMITED == NVC37D_HEAD_SET_PROCAMP_RANGE_COMPRESSION_ENABLE);
+
+    /* These methods should only apply to a single pDpyEvo */
+    nvAssert(pDevEvo->subDevMaskStackDepth > 0);
+
+    nvUpdateUpdateState(pDevEvo, updateState, pChannel);
 
     if (pHeadState->procAmp.colorRange == NVT_COLOR_RANGE_FULL) {
         dynRange = DRF_DEF(C37D, _HEAD_SET_PROCAMP, _DYNAMIC_RANGE, _VESA);
@@ -1147,9 +1147,9 @@ EvoGetOCsc1ClampRange(const NVDispHeadStateEvoRec *pHeadState)
         switch (pHeadState->procAmp.colorimetry) {
             default:
                 nvAssert(!"Unexpected colorimetry");
-                // fall through
+                fallthrough;
             case NVT_COLORIMETRY_BT2020RGB:
-                // fall through
+                fallthrough;
             case NVT_COLORIMETRY_RGB:
                 return (struct EvoClampRangeC5) {
                     .green    = DRF_NUM(C57D, _HEAD_SET_CLAMP_RANGE_GREEN, _LOW,  0x100) |
@@ -1307,9 +1307,10 @@ static void EvoSetOCsc0C5(NVDispEvoPtr pDispEvo, const NvU32 head)
     switch (pHeadState->procAmp.colorimetry) {
     default:
         nvAssert(!"Unexpected colorimetry");
-        /* fallthrough */
+        fallthrough;
     case NVT_COLORIMETRY_RGB:
-        /* fallthrough; for RGB output, perform saturation adjustment in YUV709 */
+        /* for RGB output, perform saturation adjustment in YUV709 */
+        fallthrough;
     case NVT_COLORIMETRY_YUV_709:
         CrYCbtoRGBMatrix = NvKmsMatrixToNvKmsMatrixF32(CrYCb709toRGBMatrix);
         RGBtoCrYCbMatrix = NvKmsMatrixToNvKmsMatrixF32(RGBtoCrYCb709Matrix);
@@ -1358,9 +1359,9 @@ static void EvoSetProcAmpC5(NVDispEvoPtr pDispEvo, const NvU32 head,
     switch (pHeadState->procAmp.colorimetry) {
         default:
             nvAssert(!"Unrecognized colorimetry");
-            // fall through
+            fallthrough;
         case NVT_COLORIMETRY_BT2020RGB:
-            // fall through
+            fallthrough;
         case NVT_COLORIMETRY_RGB:
             colorimetry = DRF_DEF(C57D, _HEAD_SET_PROCAMP, _COLOR_SPACE, _RGB);
             break;
@@ -1652,7 +1653,7 @@ static void EvoSORSetControlC3(const NVConnectorEvoRec *pConnectorEvo,
         switch (protocol) {
         default:
             nvAssert(!"Unknown SOR protocol");
-            /* Fall through */
+            fallthrough;
         case NVKMS_PROTOCOL_SOR_SINGLE_TMDS_A:
             hwProtocol = NVC37D_SOR_SET_CONTROL_PROTOCOL_SINGLE_TMDS_A;
             break;
@@ -3558,6 +3559,7 @@ NVLutSurfaceEvoPtr EvoGetLutSurface3(NVDevEvoPtr pDevEvo,
     NvU32 head = pDevEvo->headForWindow[win];
     NvBool found = FALSE;
     NvU32 dispIndex = 0;
+    NvU32 lutIndex;
     NvU32 sd;
 
     if ((pHwState->pSurfaceEvo[NVKMS_LEFT] == NULL) ||
@@ -3605,7 +3607,7 @@ NVLutSurfaceEvoPtr EvoGetLutSurface3(NVDevEvoPtr pDevEvo,
      * in the surface format and curLUTIndex does not change until next
      * EvoSetLUTContextDma3() call which also makes sure to disable tearing.
      */
-    const NvU32 lutIndex =
+    lutIndex =
         pDevEvo->lut.head[head].disp[dispIndex].curLUTIndex;
 
     return pDevEvo->lut.head[head].LUT[lutIndex];
@@ -3833,7 +3835,7 @@ EvoFlipC6(NVDevEvoPtr pDevEvo,
         case NVKMS_ROTATION_90:
         case NVKMS_ROTATION_270:
             nvAssert(!"Invalid rotation requested.");
-            /* Fall-through */
+            fallthrough;
         case NVKMS_ROTATION_0:
             break;
         case NVKMS_ROTATION_180:
@@ -4464,6 +4466,10 @@ static void EvoParseCapabilityNotifier3(NVDevEvoPtr pDevEvo,
     NvU32 i, stereoPin;
     NvU32 layer;
 
+    ct_assert(ARRAY_LEN(pEvoCaps->head) >= NVC373_HEAD_CAPA__SIZE_1);
+    ct_assert(ARRAY_LEN(pEvoCaps->sor) >= NVC373_SOR_CAP__SIZE_1);
+    ct_assert(ARRAY_LEN(pEvoCaps->window) >= NVC373_SYS_CAPB_WINDOW_EXISTS__SIZE_1);
+
     pDevEvo->caps.cursorCompositionCaps =
         (struct NvKmsCompositionCapabilities) {
             .supportedColorKeySelects =
@@ -4546,7 +4552,6 @@ static void EvoParseCapabilityNotifier3(NVDevEvoPtr pDevEvo,
     pEvoCaps->misc.supportsInterlaced = FALSE;
 
     // Heads
-    ct_assert(ARRAY_LEN(pEvoCaps->head) >= NVC373_HEAD_CAPA__SIZE_1);
     for (i = 0; i < NVC373_HEAD_CAPA__SIZE_1; i++) {
         NVEvoHeadCaps *pHeadCaps = &pEvoCaps->head[i];
 
@@ -4555,7 +4560,6 @@ static void EvoParseCapabilityNotifier3(NVDevEvoPtr pDevEvo,
     }
 
     // SORs
-    ct_assert(ARRAY_LEN(pEvoCaps->sor) >= NVC373_SOR_CAP__SIZE_1);
     for (i = 0; i < NVC373_SOR_CAP__SIZE_1; i++) {
         NVEvoSorCaps *pSorCaps = &pEvoCaps->sor[i];
 
@@ -4590,7 +4594,6 @@ static void EvoParseCapabilityNotifier3(NVDevEvoPtr pDevEvo,
     // Don't need any PIOR caps currently.
 
     // Windows
-    ct_assert(ARRAY_LEN(pEvoCaps->window) >= NVC373_SYS_CAPB_WINDOW_EXISTS__SIZE_1);
     for (i = 0; i < NVC373_SYS_CAPB_WINDOW_EXISTS__SIZE_1; i++) {
         NVEvoWindowCaps *pWinCaps = &pEvoCaps->window[i];
 
@@ -4606,13 +4609,14 @@ static void EvoParseCapabilityNotifierC3(NVDevEvoPtr pDevEvo,
     NVEvoCapabilitiesPtr pEvoCaps = &pEvoSubDev->capabilities;
     NvU32 i;
 
+    // Heads
+    ct_assert(ARRAY_LEN(pEvoCaps->head) >= NVC373_HEAD_CAPA__SIZE_1);
+
     // Miscellaneous capabilities
     pEvoCaps->misc.supportsSemiPlanar = FALSE;
     pEvoCaps->misc.supportsPlanar = FALSE;
     pEvoCaps->misc.supportsDSI = FALSE;
 
-    // Heads
-    ct_assert(ARRAY_LEN(pEvoCaps->head) >= NVC373_HEAD_CAPA__SIZE_1);
     for (i = 0; i < NVC373_HEAD_CAPA__SIZE_1; i++) {
         NVEvoHeadCaps *pHeadCaps = &pEvoCaps->head[i];
 
@@ -4846,6 +4850,8 @@ static void EvoParseCapabilityNotifierC6(NVDevEvoPtr pDevEvo,
     NvU32 capC = ReadCapReg(pCaps, NVC673_IHUB_COMMON_CAPC);
     NvU32 i;
 
+    ct_assert(ARRAY_LEN(pEvoCaps->head) >= NVC673_SYS_CAP_HEAD_EXISTS__SIZE_1);
+
     // Miscellaneous capabilities
 
     pEvoCaps->misc.supportsPlanar =
@@ -4858,11 +4864,9 @@ static void EvoParseCapabilityNotifierC6(NVDevEvoPtr pDevEvo,
     pEvoCaps->misc.supportsHVFlip =
         FLD_TEST_DRF(C673, _IHUB_COMMON_CAPC, _SUPPORT_HOR_VER_FLIP, _TRUE, capC);
 
-    ct_assert(ARRAY_LEN(pEvoCaps->head) >= NVC673_SYS_CAP_HEAD_EXISTS__SIZE_1);
-
     // DSI is currently supported on just Orin, which has only 1 DSI engine (DSI0).
-    pEvoCaps->misc.supportsDSI = 
-        FLD_TEST_DRF(C673, _SYS_CAP, _DSI0_EXISTS, _YES, 
+    pEvoCaps->misc.supportsDSI =
+        FLD_TEST_DRF(C673, _SYS_CAP, _DSI0_EXISTS, _YES,
                      ReadCapReg(pCaps, NVC673_SYS_CAP));
 
     for (i = 0; i < NVC673_SYS_CAP_HEAD_EXISTS__SIZE_1; i++) {
@@ -5157,16 +5161,18 @@ static void EvoSetOutputScalerC3(const NVDispEvoRec *pDispEvo, const NvU32 head,
     NVDevEvoPtr pDevEvo = pDispEvo->pDevEvo;
     NVEvoChannelPtr pChannel = pDevEvo->core;
     const NVDispHeadStateEvoRec *pHeadState = &pDispEvo->headState[head];
+    NvU32 vTaps;
+    NvU32 hTaps;
 
     /* These methods should only apply to a single pDpyEvo */
     nvAssert(pDevEvo->subDevMaskStackDepth > 0);
 
     nvUpdateUpdateState(pDevEvo, updateState, pChannel);
 
-    NvU32 vTaps = pHeadState->vTaps > NV_EVO_SCALER_2TAPS ?
+    vTaps = pHeadState->vTaps > NV_EVO_SCALER_2TAPS ?
                     NVC37D_HEAD_SET_CONTROL_OUTPUT_SCALER_VERTICAL_TAPS_TAPS_5 :
                     NVC37D_HEAD_SET_CONTROL_OUTPUT_SCALER_VERTICAL_TAPS_TAPS_2;
-    NvU32 hTaps = pHeadState->hTaps > NV_EVO_SCALER_2TAPS ?
+    hTaps = pHeadState->hTaps > NV_EVO_SCALER_2TAPS ?
                     NVC37D_HEAD_SET_CONTROL_OUTPUT_SCALER_HORIZONTAL_TAPS_TAPS_5 :
                     NVC37D_HEAD_SET_CONTROL_OUTPUT_SCALER_HORIZONTAL_TAPS_TAPS_2;
 
@@ -5671,7 +5677,7 @@ static void EvoSetDitherC3(NVDispEvoPtr pDispEvo, const int head,
         /* XXXnvdisplay: Support DITHER_TO_{10,12}_BITS (see also bug 1729668). */
         default:
             nvAssert(!"Unknown ditherType");
-            // Fall through
+            fallthrough;
         case NV0073_CTRL_SPECIFIC_OR_DITHER_TYPE_OFF:
             ditherControl = NVC37D_HEAD_SET_DITHER_CONTROL_ENABLE_DISABLE;
             break;
@@ -5700,7 +5706,7 @@ static void EvoSetDitherC3(NVDispEvoPtr pDispEvo, const int head,
         break;
     default:
         nvAssert(!"Unknown DitherAlgo");
-        // Fall through
+        fallthrough;
     case NV0073_CTRL_SPECIFIC_OR_DITHER_ALGO_UNKNOWN:
     case NV0073_CTRL_SPECIFIC_OR_DITHER_ALGO_DYNAMIC_ERR_ACC:
         ditherControl |=
@@ -6486,6 +6492,11 @@ static void EvoSetHdmiFrlDscParams(const NVDispEvoRec *pDispEvo,
     NvU32 bpc, flatnessDetThresh;
     NvU32 i;
 
+    /* The loop below assumes the methods are tightly packed. */
+    ct_assert(ARRAY_LEN(pFrl->dscInfo.pps) == 32);
+    ct_assert((NVC67D_HEAD_SET_DSC_PPS_DATA1(0) - NVC67D_HEAD_SET_DSC_PPS_DATA0(0)) == 4);
+    ct_assert((NVC67D_HEAD_SET_DSC_PPS_DATA31(0) - NVC67D_HEAD_SET_DSC_PPS_DATA0(0)) == (31 * 4));
+
     nvAssert(pDispEvo->pDevEvo->hal->caps.supportsHDMIFRL &&
              pFrl->frlRate != HDMI_FRL_DATA_RATE_NONE &&
              pFrl->dscInfo.bEnableDSC);
@@ -6514,10 +6525,6 @@ static void EvoSetHdmiFrlDscParams(const NVDispEvoRec *pDispEvo,
         /* MFS says "For FRL DSC CVTEM, it should be 0x21 (136bytes)." */
         DRF_NUM(C67D, _HEAD_SET_DSC_PPS_CONTROL, _SIZE, 0x21));
 
-    /* The loop below assumes the methods are tightly packed. */
-    ct_assert(ARRAY_LEN(pFrl->dscInfo.pps) == 32);
-    ct_assert((NVC67D_HEAD_SET_DSC_PPS_DATA1(0) - NVC67D_HEAD_SET_DSC_PPS_DATA0(0)) == 4);
-    ct_assert((NVC67D_HEAD_SET_DSC_PPS_DATA31(0) - NVC67D_HEAD_SET_DSC_PPS_DATA0(0)) == (31 * 4));
     for (i = 0; i < ARRAY_LEN(pFrl->dscInfo.pps); i++) {
         nvDmaSetStartEvoMethod(pChannel, NVC67D_HEAD_SET_DSC_PPS_DATA0(head) + (i * 4), 1);
         nvDmaSetEvoMethodData(pChannel, pFrl->dscInfo.pps[i]);
@@ -6545,6 +6552,11 @@ static void EvoSetDpDscParams(const NVDispEvoRec *pDispEvo,
     NvU32 flatnessDetThresh;
     NvU32 i;
 
+#define NV_EVO5_NUM_HEAD_SET_DSC_PPS_DATA_DWORDS \
+    (((NVC57D_HEAD_SET_DSC_PPS_DATA31(0) - NVC57D_HEAD_SET_DSC_PPS_DATA0(0)) / 4) + 1)
+
+    ct_assert(NV_EVO5_NUM_HEAD_SET_DSC_PPS_DATA_DWORDS <= ARRAY_LEN(pTimings->dpDsc.pps));
+
     nvAssert(pTimings->dpDsc.enable);
 
     // XXX: I'm pretty sure that this is wrong.
@@ -6567,12 +6579,6 @@ static void EvoSetDpDscParams(const NVDispEvoRec *pDispEvo,
         DRF_DEF(C57D, _HEAD_SET_DSC_PPS_CONTROL, _LOCATION, _VSYNC) |
         DRF_DEF(C57D, _HEAD_SET_DSC_PPS_CONTROL, _FREQUENCY, _EVERY_FRAME) |
         DRF_NUM(C57D, _HEAD_SET_DSC_PPS_CONTROL, _SIZE, 0x1F /* 32 PPS Dwords - 1 = 31 */));
-
-
-#define NV_EVO5_NUM_HEAD_SET_DSC_PPS_DATA_DWORDS \
-    (((NVC57D_HEAD_SET_DSC_PPS_DATA31(0) - NVC57D_HEAD_SET_DSC_PPS_DATA0(0)) / 4) + 1)
-
-    ct_assert(NV_EVO5_NUM_HEAD_SET_DSC_PPS_DATA_DWORDS <= ARRAY_LEN(pTimings->dpDsc.pps));
 
     for (i = 0; i < NV_EVO5_NUM_HEAD_SET_DSC_PPS_DATA_DWORDS; i++) {
         nvDmaSetStartEvoMethod(pChannel,(NVC57D_HEAD_SET_DSC_PPS_DATA0(head) + (i * 4)), 1);

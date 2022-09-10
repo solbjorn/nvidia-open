@@ -24,9 +24,12 @@ void __nvoc_init_dataField_OBJRCDB(OBJRCDB*);
 void __nvoc_dtor_OBJRCDB(OBJRCDB*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJRCDB;
 
+#define __NVOC_CB_TYPE OBJRCDB
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_OBJRCDB, __nvoc_dtor_OBJRCDB);
+
 static const struct NVOC_RTTI __nvoc_rtti_OBJRCDB_OBJRCDB = {
     /*pClassDef=*/          &__nvoc_class_def_OBJRCDB,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_OBJRCDB,
+    /*dtor=*/               __nvoc_dtor_OBJRCDB_dtor,
     /*offset=*/             0,
 };
 
@@ -51,7 +54,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_OBJRCDB = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_OBJRCDB = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_OBJRCDB =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(OBJRCDB),
@@ -61,12 +64,12 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_OBJRCDB =
         /*name=*/               "OBJRCDB",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_OBJRCDB,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_OBJRCDB_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_OBJRCDB,
     /*pExportInfo=*/        &__nvoc_export_info_OBJRCDB
 };
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJRCDB = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJRCDB =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -171,4 +174,3 @@ NV_STATUS __nvoc_objCreateDynamic_OBJRCDB(OBJRCDB **ppThis, Dynamic *pParent, Nv
 
     return status;
 }
-

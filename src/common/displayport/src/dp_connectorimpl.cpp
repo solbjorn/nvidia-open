@@ -1936,7 +1936,7 @@ void ConnectorImpl::fireEventsInternal()
                 // Notify RM about the new Bcaps..
                 if (dev->isActive())
                 {
-                    RmDfpCache dfpCache = {0};
+                    RmDfpCache dfpCache = { };
                     dfpCache.updMask = 0;
                     dfpCache.bcaps = *dev->BCAPS;
                     for (unsigned i=0; i<HDCP_KSV_SIZE; i++)
@@ -2710,7 +2710,7 @@ void ConnectorImpl::notifyAttachEnd(bool modesetCancelled)
     currentModesetDeviceGroup->dscModeRequest = DSC_MODE_NONE;
 
     currentModesetDeviceGroup->setHeadAttached(true);
-    RmDfpCache dfpCache = {0};
+    RmDfpCache dfpCache = { };
     dfpCache.updMask = 0;
     if (currentModesetDeviceGroup->isHeadAttached())
     {
@@ -2753,7 +2753,7 @@ void ConnectorImpl::notifyAttachEnd(bool modesetCancelled)
     // For DP1.2, we should turn the modeset back if it was on.
     // The authentication will be called off during the modeset.
     //
-    HDCPState hdcpState = {0};
+    HDCPState hdcpState = { };
     main->configureHDCPGetHDCPState(hdcpState);
     if ((!hdcpState.HDCP_State_Authenticated) && (isHDCPAuthOn == true)
         && (currentModesetDeviceGroup->hdcpEnabled))
@@ -2864,7 +2864,7 @@ void ConnectorImpl::notifyDetachEnd(bool bKeepOdAlive)
     // Update the last modeset HDCP status here. Hdcp got disabled after modeset
     // thus hdcpPreviousStatus would be false to SST after device inserted.
     //
-    HDCPState hdcpState = {0};
+    HDCPState hdcpState = { };
     main->configureHDCPGetHDCPState(hdcpState);
     if (!(isHDCPAuthOn = hdcpState.HDCP_State_Authenticated))
     {
@@ -3522,7 +3522,7 @@ done:
 bool ConnectorImpl::handleCPIRQ()
 {
     NvU8        bStatus;
-    HDCPState   hdcpState = {0};
+    HDCPState   hdcpState = { };
 
     if (!isLinkActive())
     {

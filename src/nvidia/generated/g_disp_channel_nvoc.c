@@ -34,9 +34,12 @@ void __nvoc_init_dataField_DispChannel(DispChannel*);
 void __nvoc_dtor_DispChannel(DispChannel*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_DispChannel;
 
+#define __NVOC_CB_TYPE DispChannel
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_DispChannel, __nvoc_dtor_DispChannel);
+
 static const struct NVOC_RTTI __nvoc_rtti_DispChannel_DispChannel = {
     /*pClassDef=*/          &__nvoc_class_def_DispChannel,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_DispChannel,
+    /*dtor=*/               __nvoc_dtor_DispChannel_dtor,
     /*offset=*/             0,
 };
 
@@ -96,7 +99,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_DispChannel = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_DispChannel = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_DispChannel =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(DispChannel),
@@ -106,7 +109,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_DispChannel =
         /*name=*/               "DispChannel",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_DispChannel,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_DispChannel_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_DispChannel,
     /*pExportInfo=*/        &__nvoc_export_info_DispChannel
 };
@@ -219,7 +222,7 @@ static NvBool __nvoc_thunk_RmResource_dispchnAccessCallback(struct DispChannel *
     return rmresAccessCallback((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispChannel_RmResource.offset), pInvokingClient, pAllocParams, accessRight);
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_DispChannel = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_DispChannel =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -417,9 +420,13 @@ void __nvoc_init_dataField_DispChannelPio(DispChannelPio*);
 void __nvoc_dtor_DispChannelPio(DispChannelPio*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_DispChannelPio;
 
+#undef __NVOC_CB_TYPE
+#define __NVOC_CB_TYPE DispChannelPio
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_DispChannelPio, __nvoc_dtor_DispChannelPio);
+
 static const struct NVOC_RTTI __nvoc_rtti_DispChannelPio_DispChannelPio = {
     /*pClassDef=*/          &__nvoc_class_def_DispChannelPio,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_DispChannelPio,
+    /*dtor=*/               __nvoc_dtor_DispChannelPio_dtor,
     /*offset=*/             0,
 };
 
@@ -486,7 +493,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_DispChannelPio = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_DispChannelPio = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_DispChannelPio =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(DispChannelPio),
@@ -496,7 +503,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_DispChannelPio =
         /*name=*/               "DispChannelPio",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_DispChannelPio,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_DispChannelPio_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_DispChannelPio,
     /*pExportInfo=*/        &__nvoc_export_info_DispChannelPio
 };
@@ -609,7 +616,7 @@ static NvBool __nvoc_thunk_RmResource_dispchnpioAccessCallback(struct DispChanne
     return rmresAccessCallback((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispChannelPio_RmResource.offset), pInvokingClient, pAllocParams, accessRight);
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_DispChannelPio = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_DispChannelPio =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -795,9 +802,13 @@ void __nvoc_init_dataField_DispChannelDma(DispChannelDma*);
 void __nvoc_dtor_DispChannelDma(DispChannelDma*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_DispChannelDma;
 
+#undef __NVOC_CB_TYPE
+#define __NVOC_CB_TYPE DispChannelDma
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_DispChannelDma, __nvoc_dtor_DispChannelDma);
+
 static const struct NVOC_RTTI __nvoc_rtti_DispChannelDma_DispChannelDma = {
     /*pClassDef=*/          &__nvoc_class_def_DispChannelDma,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_DispChannelDma,
+    /*dtor=*/               __nvoc_dtor_DispChannelDma_dtor,
     /*offset=*/             0,
 };
 
@@ -864,7 +875,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_DispChannelDma = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_DispChannelDma = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_DispChannelDma =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(DispChannelDma),
@@ -874,7 +885,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_DispChannelDma =
         /*name=*/               "DispChannelDma",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_DispChannelDma,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_DispChannelDma_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_DispChannelDma,
     /*pExportInfo=*/        &__nvoc_export_info_DispChannelDma
 };
@@ -987,7 +998,7 @@ static NvBool __nvoc_thunk_RmResource_dispchndmaAccessCallback(struct DispChanne
     return rmresAccessCallback((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispChannelDma_RmResource.offset), pInvokingClient, pAllocParams, accessRight);
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_DispChannelDma = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_DispChannelDma =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -1143,4 +1154,3 @@ NV_STATUS __nvoc_objCreateDynamic_DispChannelDma(DispChannelDma **ppThis, Dynami
 
     return status;
 }
-

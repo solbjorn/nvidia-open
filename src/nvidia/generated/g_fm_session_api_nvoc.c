@@ -32,9 +32,12 @@ void __nvoc_init_dataField_FmSessionApi(FmSessionApi*);
 void __nvoc_dtor_FmSessionApi(FmSessionApi*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_FmSessionApi;
 
+#define __NVOC_CB_TYPE FmSessionApi
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_FmSessionApi, __nvoc_dtor_FmSessionApi);
+
 static const struct NVOC_RTTI __nvoc_rtti_FmSessionApi_FmSessionApi = {
     /*pClassDef=*/          &__nvoc_class_def_FmSessionApi,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_FmSessionApi,
+    /*dtor=*/               __nvoc_dtor_FmSessionApi_dtor,
     /*offset=*/             0,
 };
 
@@ -87,7 +90,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_FmSessionApi = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_FmSessionApi = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_FmSessionApi =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(FmSessionApi),
@@ -97,7 +100,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_FmSessionApi =
         /*name=*/               "FmSessionApi",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_FmSessionApi,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_FmSessionApi_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_FmSessionApi,
     /*pExportInfo=*/        &__nvoc_export_info_FmSessionApi
 };
@@ -194,17 +197,20 @@ static NV_STATUS __nvoc_thunk_Notifier_fmsessionapiGetOrAllocNotifShare(struct F
     return notifyGetOrAllocNotifShare((struct Notifier *)(((unsigned char *)pNotifier) + __nvoc_rtti_FmSessionApi_Notifier.offset), hNotifierClient, hNotifierResource, ppNotifShare);
 }
 
+NVOC_BUILD_CALLBACK_1(fmsessionapiCtrlCmdSetFmState_IMPL);
+NVOC_BUILD_CALLBACK_1(fmsessionapiCtrlCmdClearFmState_IMPL);
+
 #if !defined(NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG)
 #define NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(x)      (0)
 #endif
 
-static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_FmSessionApi[] = 
+static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_FmSessionApi[] =
 {
     {               /*  [0] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) fmsessionapiCtrlCmdSetFmState_IMPL,
+        /*pFunc=*/      fmsessionapiCtrlCmdSetFmState_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*flags=*/      0x10u,
         /*accessRight=*/0x0u,
@@ -217,9 +223,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_FmSessio
     },
     {               /*  [1] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) fmsessionapiCtrlCmdClearFmState_IMPL,
+        /*pFunc=*/      fmsessionapiCtrlCmdClearFmState_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*flags=*/      0x10u,
         /*accessRight=*/0x0u,
@@ -233,7 +239,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_FmSessio
 
 };
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_FmSessionApi = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_FmSessionApi =
 {
     /*numEntries=*/     2,
     /*pExportEntries=*/ __nvoc_exported_method_def_FmSessionApi
@@ -397,4 +403,3 @@ NV_STATUS __nvoc_objCreateDynamic_FmSessionApi(FmSessionApi **ppThis, Dynamic *p
 
     return status;
 }
-

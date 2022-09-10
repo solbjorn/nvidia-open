@@ -703,7 +703,6 @@ void parse861bShortPreferredTiming(NVT_EDID_CEA861_INFO *pExt861,
     NvU8                     kth           = 0;
     NvU8                     extKth        = 0;
     NvU8                     DTDCount      = 0;
-    NvU8                     extDTDCount   = 0;
 
     if (flag == FROM_CTA861_EXTENSION || flag == FROM_DISPLAYID_13_DATA_BLOCK)
     {
@@ -729,7 +728,6 @@ void parse861bShortPreferredTiming(NVT_EDID_CEA861_INFO *pExt861,
             }
             else if (NVT_IS_EXT_DTD(pInfo->timing[j].etc.status))
             {
-                extDTDCount++;
             }
         }
     }

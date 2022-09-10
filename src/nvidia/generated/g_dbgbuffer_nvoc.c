@@ -30,9 +30,12 @@ void __nvoc_init_dataField_DebugBufferApi(DebugBufferApi*);
 void __nvoc_dtor_DebugBufferApi(DebugBufferApi*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_DebugBufferApi;
 
+#define __NVOC_CB_TYPE DebugBufferApi
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_DebugBufferApi, __nvoc_dtor_DebugBufferApi);
+
 static const struct NVOC_RTTI __nvoc_rtti_DebugBufferApi_DebugBufferApi = {
     /*pClassDef=*/          &__nvoc_class_def_DebugBufferApi,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_DebugBufferApi,
+    /*dtor=*/               __nvoc_dtor_DebugBufferApi_dtor,
     /*offset=*/             0,
 };
 
@@ -78,7 +81,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_DebugBufferApi = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_DebugBufferApi = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_DebugBufferApi =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(DebugBufferApi),
@@ -88,7 +91,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_DebugBufferApi =
         /*name=*/               "DebugBufferApi",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_DebugBufferApi,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_DebugBufferApi_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_DebugBufferApi,
     /*pExportInfo=*/        &__nvoc_export_info_DebugBufferApi
 };
@@ -181,7 +184,7 @@ static NvBool __nvoc_thunk_RmResource_dbgbufAccessCallback(struct DebugBufferApi
     return rmresAccessCallback((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_DebugBufferApi_RmResource.offset), pInvokingClient, pAllocParams, accessRight);
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_DebugBufferApi = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_DebugBufferApi =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -333,4 +336,3 @@ NV_STATUS __nvoc_objCreateDynamic_DebugBufferApi(DebugBufferApi **ppThis, Dynami
 
     return status;
 }
-

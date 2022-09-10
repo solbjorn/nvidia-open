@@ -55,7 +55,7 @@ typedef struct _def_client_system_event_info CLI_SYSTEM_EVENT_INFO, *PCLI_SYSTEM
 #define PRIVATE_FIELD(x) NVOC_PRIVATE_FIELD(x)
 #endif
 struct UserInfo {
-    const struct NVOC_RTTI *__nvoc_rtti;
+    struct __rtti_marker __nvoc_rtti;
     struct RsShared __nvoc_base_RsShared;
     struct Object *__nvoc_pbase_Object;
     struct RsShared *__nvoc_pbase_RsShared;
@@ -113,7 +113,7 @@ void userinfoDestruct_IMPL(struct UserInfo *pUserInfo);
 #define PRIVATE_FIELD(x) NVOC_PRIVATE_FIELD(x)
 #endif
 struct RmClient {
-    const struct NVOC_RTTI *__nvoc_rtti;
+    struct __rtti_marker __nvoc_rtti;
     struct RsClient __nvoc_base_RsClient;
     struct Object *__nvoc_pbase_Object;
     struct RsClient *__nvoc_pbase_RsClient;

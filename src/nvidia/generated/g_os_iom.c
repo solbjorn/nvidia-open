@@ -56,18 +56,22 @@ extern const struct NVOC_CLASS_DEF __nvoc_class_def_Object;
 
 void      __iom_dtor_OBJOS(POBJOS);
 NV_STATUS __iom_objCreate_OBJOS(POBJOS *ppThis, Dynamic *pParent, NvU32 createFlags);
+static NV_STATUS __iom_objCreateDynamic_OBJOS(POBJOS *ppThis, Dynamic *pParent, NvU32 createFlags, va_list args);
+
+#define __NVOC_CB_TYPE struct OBJOS
+NVOC_BUILD_CTOR_DTOR(__iom_objCreateDynamic_OBJOS, __iom_dtor_OBJOS);
 
 const struct NVOC_RTTI __iom_rtti_OBJOS_OBJOS =
 {
     &__iom_class_def_OBJOS,
-    (NVOC_DYNAMIC_DTOR)&__iom_dtor_OBJOS,
+    __iom_dtor_OBJOS_dtor,
     0,
 };
 
 const struct NVOC_RTTI __iom_rtti_OBJOS_Object =
 {
     &__nvoc_class_def_Object,
-    (NVOC_DYNAMIC_DTOR)&__nvoc_destructFromBase,
+    &__nvoc_destructFromBase,
     NV_OFFSETOF(OBJOS, __nvoc_base_Object),
 };
 
@@ -91,7 +95,7 @@ const struct NVOC_CLASS_DEF __iom_class_def_OBJOS =
         "OBJOS",
 #endif
     },
-    (NVOC_DYNAMIC_OBJ_CREATE)&__iom_objCreate_OBJOS,
+    __iom_objCreateDynamic_OBJOS_ctor,
     &__iom_castinfo_OBJOS,
 };
 
@@ -197,3 +201,6 @@ __iom_objCreate_OBJOS_cleanup:
     return status;
 }
 
+static NV_STATUS __iom_objCreateDynamic_OBJOS(POBJOS *ppThis, Dynamic *pParent, NvU32 createFlags, va_list args) {
+    return __iom_objCreate_OBJOS(ppThis, pParent, createFlags);
+}

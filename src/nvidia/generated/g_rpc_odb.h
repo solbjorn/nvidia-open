@@ -15,7 +15,7 @@
 
 
 #define __RPC_OBJECT_BASE_DEFINITION \
-    const struct NVOC_RTTI *__nvoc_rtti; \
+    struct __rtti_marker __nvoc_rtti; \
     RPC_OBJ_IFACES obj; \
     RPC_HAL_IFACES _hal
 

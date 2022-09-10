@@ -540,6 +540,7 @@ _class5080DeferredApiV2
             const struct NVOC_EXPORTED_METHOD_DEF *pEntry;
             LOCK_ACCESS_TYPE access;
             NvU32 releaseFlags = 0;
+            Dynamic *sub;
 
             portMemSet(&rmCtrlParams, 0, sizeof(RmCtrlParams));
             rmCtrlParams.hClient    = pCliDeferredApi->Client;
@@ -606,17 +607,15 @@ _class5080DeferredApiV2
                 callContext.pLockInfo      = rmCtrlParams.pLockInfo;
                 resservSwapTlsCallContext(&pOldContext, &callContext);
 
+                sub = nvoc_to_dynamic(pSubdevice, Subdevice);
+
                 if (pEntry->paramSize == 0)
                 {
-                    typedef NV_STATUS (*CONTROL_EXPORT_FNPTR_NO_PARAMS)(void*);
-                    CONTROL_EXPORT_FNPTR_NO_PARAMS pFunc = ((CONTROL_EXPORT_FNPTR_NO_PARAMS) pEntry->pFunc);
-                    rmStatus = pFunc((void*)pSubdevice);
+                    rmStatus = pEntry->pFunc(sub, NULL);
                 }
                 else
                 {
-                    typedef NV_STATUS (*CONTROL_EXPORT_FNPTR)(void*, void*);
-                    CONTROL_EXPORT_FNPTR pFunc = ((CONTROL_EXPORT_FNPTR) pEntry->pFunc);
-                    rmStatus = pFunc((void*)pSubdevice, rmCtrlParams.pParams);
+                    rmStatus = pEntry->pFunc(sub, rmCtrlParams.pParams);
                 }
 
                 resservRestoreTlsCallContext(pOldContext);
@@ -690,4 +689,3 @@ NvBool defapiIsSwMethodStalling_IMPL
 
     return NV_TRUE;
 }
-

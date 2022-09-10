@@ -36,9 +36,12 @@ void __nvoc_init_dataField_KernelGraphicsObject(KernelGraphicsObject*, RmHalspec
 void __nvoc_dtor_KernelGraphicsObject(KernelGraphicsObject*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_KernelGraphicsObject;
 
+#define __NVOC_CB_TYPE KernelGraphicsObject
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_KernelGraphicsObject, __nvoc_dtor_KernelGraphicsObject);
+
 static const struct NVOC_RTTI __nvoc_rtti_KernelGraphicsObject_KernelGraphicsObject = {
     /*pClassDef=*/          &__nvoc_class_def_KernelGraphicsObject,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_KernelGraphicsObject,
+    /*dtor=*/               __nvoc_dtor_KernelGraphicsObject_dtor,
     /*offset=*/             0,
 };
 
@@ -105,7 +108,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_KernelGraphicsObject = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_KernelGraphicsObject = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_KernelGraphicsObject =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(KernelGraphicsObject),
@@ -115,7 +118,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_KernelGraphicsObject =
         /*name=*/               "KernelGraphicsObject",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_KernelGraphicsObject,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_KernelGraphicsObject_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_KernelGraphicsObject,
     /*pExportInfo=*/        &__nvoc_export_info_KernelGraphicsObject
 };
@@ -236,7 +239,7 @@ static NV_STATUS __nvoc_thunk_Notifier_kgrobjGetOrAllocNotifShare(struct KernelG
     return notifyGetOrAllocNotifShare((struct Notifier *)(((unsigned char *)pNotifier) + __nvoc_rtti_KernelGraphicsObject_Notifier.offset), hNotifierClient, hNotifierResource, ppNotifShare);
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_KernelGraphicsObject = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_KernelGraphicsObject =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -422,4 +425,3 @@ NV_STATUS __nvoc_objCreateDynamic_KernelGraphicsObject(KernelGraphicsObject **pp
 
     return status;
 }
-

@@ -45,12 +45,12 @@ static NvBool _compare(void *, void *);
 NvlStatus
 nvlink_lib_top_lock_alloc(void)
 {
+    void *top_lock = NULL;
+
     if (LOCKING_DISABLED)
     {
         return NVL_SUCCESS;
     }
-
-    void *top_lock = NULL;
 
     // Check if top level lock is already allocated
     if (nvlinkLibCtx.topLevelLock != NULL)
@@ -119,12 +119,12 @@ nvlink_lib_link_lock_alloc
     nvlink_link *link
 )
 {
+    void *link_lock = NULL;
+
     if (LOCKING_DISABLED)
     {
         return NVL_SUCCESS;
     }
-
-    void *link_lock = NULL;
 
     // Check if already allocated
     if (link->linkLock != NULL)
@@ -269,14 +269,13 @@ nvlink_lib_link_locks_acquire
     int           numLinks
 )
 {
+    nvlink_link *link_prev  = NULL;
+    int i;
+
     if (LOCKING_DISABLED)
     {
         return NVL_SUCCESS;
     }
-
-    int i;
-
-    nvlink_link *link_prev  = NULL;
 
     // Check if array of links is already empty before attempting to release. 
     if ((NULL == links) || (numLinks == 0))
@@ -332,14 +331,13 @@ nvlink_lib_link_locks_release
     int           numLinks
 )
 {
+    nvlink_link *link_prev  = NULL;
     int i;
 
     if (LOCKING_DISABLED)
     {
         return NVL_SUCCESS;
     }
-
-    nvlink_link *link_prev  = NULL;
 
     // Check if array of links is already empty before attempting to release. 
     if ((NULL == links) || (numLinks == 0))

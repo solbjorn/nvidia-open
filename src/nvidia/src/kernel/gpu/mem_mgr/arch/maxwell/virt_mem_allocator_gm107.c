@@ -726,9 +726,11 @@ dmaAllocMapping_GM107
 
     if (pLocals->p2p == NVOS46_FLAGS_P2P_ENABLE_NOSLI)
     {
+        FlaMemory *pFlaMemory;
+
         NV_ASSERT_OR_GOTO(pLocals->pMemory != NULL, fail_post_register);
 
-        FlaMemory *pFlaMemory = dynamicCast(pLocals->pMemory, FlaMemory);
+        pFlaMemory = dynamicCast(pLocals->pMemory, FlaMemory);
         if (pFlaMemory != NULL)
         {
             pLocals->pSrcGpu        = gpumgrGetGpu(pFlaMemory->peerGpuInst);
@@ -1566,6 +1568,13 @@ dmaUpdateVASpace_GF100
                          (SF_VAL(_MMU, _PTE_VALID, valid) == NV_MMU_PTE_VALID_FALSE);
     NvBool      bIsIndirectPeer;
     VAS_PTE_UPDATE_TYPE update_type;
+    MMU_MAP_TARGET   mapTarget = {0};
+    MMU_MAP_ITERATOR mapIter   = {0};
+    OBJGVASPACE     *pGVAS;
+    GVAS_GPU_STATE  *pGpuState;
+    const GMMU_FMT  *pFmt;
+    NvU64 vaLo;
+    NvU64 vaHi;
 
     priv = (flags & DMA_UPDATE_VASPACE_FLAGS_PRIV) ? NV_MMU_PTE_PRIVILEGE_TRUE : NV_MMU_PTE_PRIVILEGE_FALSE;
     tlbLock = (flags & DMA_UPDATE_VASPACE_FLAGS_TLB_LOCK) ? NV_MMU_PTE_LOCK_TRUE : NV_MMU_PTE_LOCK_FALSE;
@@ -1709,13 +1718,11 @@ dmaUpdateVASpace_GF100
         peer = 0;
     }
 
-    MMU_MAP_TARGET   mapTarget = {0};
-    MMU_MAP_ITERATOR mapIter   = {0};
-    OBJGVASPACE     *pGVAS     = dynamicCast(pVAS, OBJGVASPACE);
-    const NvU64      vaLo      = NV_ALIGN_DOWN64(vAddr,                 pageSize);
-    const NvU64      vaHi      = NV_ALIGN_DOWN64(vAddrLimit + pageSize, pageSize) - 1;
-    GVAS_GPU_STATE  *pGpuState = gvaspaceGetGpuState(pGVAS, pGpu);
-    const GMMU_FMT  *pFmt      = pGpuState->pFmt;
+    pGVAS     = dynamicCast(pVAS, OBJGVASPACE);
+    vaLo      = NV_ALIGN_DOWN64(vAddr,                 pageSize);
+    vaHi      = NV_ALIGN_DOWN64(vAddrLimit + pageSize, pageSize) - 1;
+    pGpuState = gvaspaceGetGpuState(pGVAS, pGpu);
+    pFmt      = pGpuState->pFmt;
 
     // Enforce unicast.
     NV_ASSERT_OR_RETURN(!gpumgrGetBcEnabledStatus(pGpu), NV_ERR_INVALID_STATE);
@@ -2259,13 +2266,13 @@ dmaXlateVAtoPAforChannel_GM107
     NvU32            *memType
 )
 {
-    NV_ASSERT_OR_RETURN(pKernelChannel != NULL, NV_ERR_INVALID_ARGUMENT);
-    NV_ASSERT_OR_RETURN(pAddr != NULL, NV_ERR_INVALID_ARGUMENT);
-    NV_ASSERT_OR_RETURN(memType != NULL, NV_ERR_INVALID_ARGUMENT);
-
     MMU_TRACE_ARG arg      = {0};
     MMU_TRACE_PARAM params = {0};
     NV_STATUS status;
+
+    NV_ASSERT_OR_RETURN(pKernelChannel != NULL, NV_ERR_INVALID_ARGUMENT);
+    NV_ASSERT_OR_RETURN(pAddr != NULL, NV_ERR_INVALID_ARGUMENT);
+    NV_ASSERT_OR_RETURN(memType != NULL, NV_ERR_INVALID_ARGUMENT);
 
     params.mode    = MMU_TRACE_MODE_TRANSLATE;
     params.va      = vAddr;

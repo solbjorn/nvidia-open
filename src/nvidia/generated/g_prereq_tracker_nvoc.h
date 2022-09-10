@@ -161,7 +161,7 @@ MAKE_LIST(PrereqList, PREREQ_ENTRY);
 #define PRIVATE_FIELD(x) NVOC_PRIVATE_FIELD(x)
 #endif
 struct PrereqTracker {
-    const struct NVOC_RTTI *__nvoc_rtti;
+    struct __rtti_marker __nvoc_rtti;
     struct Object __nvoc_base_Object;
     struct Object *__nvoc_pbase_Object;
     struct PrereqTracker *__nvoc_pbase_PrereqTracker;

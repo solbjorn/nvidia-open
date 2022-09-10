@@ -315,10 +315,13 @@ NV_STATUS embeddedParamCopyIn(RMAPI_PARAM_COPY *paramCopies, RmCtrlParams *pRmCt
         }
         case NV0073_CTRL_CMD_DP_SET_MSA_PROPERTIES:
         {
+            NV0073_CTRL_CMD_DP_SET_MSA_PROPERTIES_PARAMS *pUserParams;
+            NvU32  featureDebugValuesSize;
+
             CHECK_PARAMS_OR_RETURN(pRmCtrlParams, NV0073_CTRL_CMD_DP_SET_MSA_PROPERTIES_PARAMS);
 
-            NV0073_CTRL_CMD_DP_SET_MSA_PROPERTIES_PARAMS *pUserParams = (NV0073_CTRL_CMD_DP_SET_MSA_PROPERTIES_PARAMS*)pParams;
-            NvU32  featureDebugValuesSize = (pUserParams->pFeatureDebugValues != NULL) ? sizeof(NV0073_CTRL_DP_MSA_PROPERTIES_VALUES)
+            pUserParams = (NV0073_CTRL_CMD_DP_SET_MSA_PROPERTIES_PARAMS*)pParams;
+            featureDebugValuesSize = (pUserParams->pFeatureDebugValues != NULL) ? sizeof(NV0073_CTRL_DP_MSA_PROPERTIES_VALUES)
                                                                                        : 0;
 
             RMAPI_PARAM_COPY_INIT(paramCopies[0],

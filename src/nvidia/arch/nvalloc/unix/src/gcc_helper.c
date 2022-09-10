@@ -21,6 +21,7 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
+#if 0
 #include <nvtypes.h>
 #include <os-interface.h>
 
@@ -33,3 +34,4 @@ void* memcpy(void* dest, const void* src, NvUPtr n)
 {
     return os_mem_copy(dest, src, (NvU32)n);
 }
+#endif

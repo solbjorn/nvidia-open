@@ -30,9 +30,12 @@ void __nvoc_init_dataField_PhysicalMemory(PhysicalMemory*);
 void __nvoc_dtor_PhysicalMemory(PhysicalMemory*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_PhysicalMemory;
 
+#define __NVOC_CB_TYPE PhysicalMemory
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_PhysicalMemory, __nvoc_dtor_PhysicalMemory);
+
 static const struct NVOC_RTTI __nvoc_rtti_PhysicalMemory_PhysicalMemory = {
     /*pClassDef=*/          &__nvoc_class_def_PhysicalMemory,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_PhysicalMemory,
+    /*dtor=*/               __nvoc_dtor_PhysicalMemory_dtor,
     /*offset=*/             0,
 };
 
@@ -78,7 +81,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_PhysicalMemory = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_PhysicalMemory = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_PhysicalMemory =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(PhysicalMemory),
@@ -88,7 +91,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_PhysicalMemory =
         /*name=*/               "PhysicalMemory",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_PhysicalMemory,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_PhysicalMemory_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_PhysicalMemory,
     /*pExportInfo=*/        &__nvoc_export_info_PhysicalMemory
 };
@@ -177,7 +180,7 @@ static NvBool __nvoc_thunk_RmResource_physmemAccessCallback(struct PhysicalMemor
     return rmresAccessCallback((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_PhysicalMemory_RmResource.offset), pInvokingClient, pAllocParams, accessRight);
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_PhysicalMemory = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_PhysicalMemory =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -320,4 +323,3 @@ NV_STATUS __nvoc_objCreateDynamic_PhysicalMemory(PhysicalMemory **ppThis, Dynami
 
     return status;
 }
-

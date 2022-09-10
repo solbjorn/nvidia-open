@@ -30,9 +30,12 @@ void __nvoc_init_dataField_Hdacodec(Hdacodec*);
 void __nvoc_dtor_Hdacodec(Hdacodec*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_Hdacodec;
 
+#define __NVOC_CB_TYPE Hdacodec
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_Hdacodec, __nvoc_dtor_Hdacodec);
+
 static const struct NVOC_RTTI __nvoc_rtti_Hdacodec_Hdacodec = {
     /*pClassDef=*/          &__nvoc_class_def_Hdacodec,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_Hdacodec,
+    /*dtor=*/               __nvoc_dtor_Hdacodec_dtor,
     /*offset=*/             0,
 };
 
@@ -78,7 +81,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_Hdacodec = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_Hdacodec = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_Hdacodec =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(Hdacodec),
@@ -88,7 +91,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_Hdacodec =
         /*name=*/               "Hdacodec",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_Hdacodec,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_Hdacodec_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_Hdacodec,
     /*pExportInfo=*/        &__nvoc_export_info_Hdacodec
 };
@@ -181,7 +184,7 @@ static NvBool __nvoc_thunk_RmResource_hdacodecAccessCallback(struct Hdacodec *pR
     return rmresAccessCallback((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_Hdacodec_RmResource.offset), pInvokingClient, pAllocParams, accessRight);
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_Hdacodec = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_Hdacodec =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -324,4 +327,3 @@ NV_STATUS __nvoc_objCreateDynamic_Hdacodec(Hdacodec **ppThis, Dynamic *pParent, 
 
     return status;
 }
-

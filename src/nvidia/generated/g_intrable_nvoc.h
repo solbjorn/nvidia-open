@@ -53,7 +53,7 @@ typedef struct OBJINTRABLE *POBJINTRABLE;
 #define PRIVATE_FIELD(x) NVOC_PRIVATE_FIELD(x)
 #endif
 struct OBJINTRABLE {
-    const struct NVOC_RTTI *__nvoc_rtti;
+    struct __rtti_marker __nvoc_rtti;
     struct OBJINTRABLE *__nvoc_pbase_OBJINTRABLE;
     NV_STATUS (*__intrableGetNotificationIntrVector__)(OBJGPU *, struct OBJINTRABLE *, NvU32 *);
     NV_STATUS (*__intrableGetPhysicalIntrVectors__)(OBJGPU *, struct OBJINTRABLE *, NvU32, NvU32 *, NvU32 *, NvU32 *);

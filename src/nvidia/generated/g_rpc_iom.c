@@ -62,10 +62,13 @@ extern const struct NVOC_CLASS_DEF __iom_class_def_OBJRPC;
 
 void      __iom_dtor_OBJRPC(POBJRPC);
 
+#define __NVOC_CB_TYPE struct OBJRPC
+NVOC_BUILD_DTOR(__iom_dtor_OBJRPC);
+
 const struct NVOC_RTTI __iom_rtti_OBJRPC_OBJRPC =
 {
     &__iom_class_def_OBJRPC,
-    (NVOC_DYNAMIC_DTOR)&__iom_dtor_OBJRPC,
+    __iom_dtor_OBJRPC_dtor,
     0,
 };
 
@@ -137,4 +140,3 @@ void __iom_init_OBJRPC(POBJRPC pRpc)
 //
 // RPC's object creation routine
 //
-

@@ -179,7 +179,7 @@ initAPIOSFunctionPointers(OBJOS *pOS)
 //
 // Function to find the maximum number of cores in the system
 //
-NvU32 osGetMaximumCoreCount()
+NvU32 osGetMaximumCoreCount(void)
 {
     //
     // Windows provides an API to query this that supports CPU hotadd that our
@@ -579,7 +579,7 @@ osMemGetFilter(NvUPtr address)
  *                               full call stack that is much helpful for debugging.
  */
 
-void osPagedSegmentAccessCheck()
+void osPagedSegmentAccessCheck(void)
 {
     OBJSYS    *pSys = SYS_GET_INSTANCE();
     OBJOS     *pOS  = SYS_GET_OS(pSys);
@@ -652,21 +652,26 @@ NV_STATUS osReadRegistryString
 
 void nvErrorLog(void *pVoid, NvU32 num, const char *pFormat, va_list arglist)
 {
+#if RMCFG_MODULE_SMBPBI || \
+    (RMCFG_MODULE_KERNEL_RC && !RMCFG_FEATURE_PLATFORM_GSP)
+    va_list arglistCpy;
+    char *errorString;
+    unsigned msglen;
+#endif
+    OBJGPU *pGpu;
+
     if ((pFormat == NULL) || (*pFormat == '\0'))
     {
         return;
     }
 
-    OBJGPU    *pGpu    = reinterpretCast(pVoid, OBJGPU *);
+    pGpu = reinterpretCast(pVoid, OBJGPU *);
 
 #if RMCFG_MODULE_SMBPBI || \
     (RMCFG_MODULE_KERNEL_RC && !RMCFG_FEATURE_PLATFORM_GSP)
-    char *errorString = portMemAllocNonPaged(MAX_ERROR_STRING);
+    errorString = portMemAllocNonPaged(MAX_ERROR_STRING);
     if (errorString == NULL)
         goto done;
-
-    unsigned msglen;
-    va_list arglistCpy;
 
     va_copy(arglistCpy, arglist);
     msglen = nvDbgVsnprintf(errorString, MAX_ERROR_STRING, pFormat, arglistCpy);

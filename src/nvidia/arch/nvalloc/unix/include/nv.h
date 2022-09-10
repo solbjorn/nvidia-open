@@ -167,7 +167,7 @@ typedef enum _TEGRASOC_WHICH_CLK
 
 #ifdef NVRM
 
-extern const char *pNVRM_ID;
+extern const char * const pNVRM_ID;
 
 /*
  * ptr arithmetic convenience
@@ -175,9 +175,9 @@ extern const char *pNVRM_ID;
 
 typedef union
 {
-    volatile NvV8 Reg008[1];
-    volatile NvV16 Reg016[1];
-    volatile NvV32 Reg032[1];
+    DECLARE_FLEX_ARRAY(volatile NvV8, Reg008);
+    DECLARE_FLEX_ARRAY(volatile NvV16, Reg016);
+    DECLARE_FLEX_ARRAY(volatile NvV32, Reg032);
 } nv_hwreg_t, * nv_phwreg_t;
 
 

@@ -919,6 +919,7 @@ _knvlinkProcessSysmemLinks
     NvBool        bFlush
 )
 {
+    NV2080_CTRL_NVLINK_PROGRAM_BUFFERREADY_PARAMS programBufferRdyParams;
     NV_STATUS status = NV_OK;
 
 #if defined(NVCPU_PPC64LE) || defined(NVCPU_AARCH64)
@@ -961,7 +962,6 @@ _knvlinkProcessSysmemLinks
     }
 #endif
     // Set Buffer ready for the sysmem links
-    NV2080_CTRL_NVLINK_PROGRAM_BUFFERREADY_PARAMS programBufferRdyParams;
 
     portMemSet(&programBufferRdyParams, 0, sizeof(programBufferRdyParams));
     programBufferRdyParams.flags        = NV2080_CTRL_NVLINK_PROGRAM_BUFFERREADY_FLAGS_SET;

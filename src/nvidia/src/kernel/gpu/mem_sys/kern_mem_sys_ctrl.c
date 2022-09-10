@@ -157,7 +157,8 @@ _fbGetFbInfos(OBJGPU *pGpu, NvHandle hClient, NvHandle hObject, NV2080_CTRL_FB_I
                     }
                 }
 
-                // Fall through to the default case to get the memory partition heap
+                // get the memory partition heap
+                fallthrough;
             }
             default:
             {
@@ -465,13 +466,14 @@ _fbGetFbInfos(OBJGPU *pGpu, NvHandle hClient, NvHandle hObject, NV2080_CTRL_FB_I
                 //
                 if (bIsPmaEnabled)
                 {
+                    NvU64 uvmReserveMem = 0;
+
                     if (pMemoryPartitionHeap != NULL)
                     {
                         data = 0;
                         break;
                     }
 
-                    NvU64 uvmReserveMem = 0;
                     memmgrCalcReservedFbSpaceForUVM_HAL(pGpu, pMemoryManager, &uvmReserveMem);
                     // Ceil bytes and return the # of KB
                     data = NvU64_LO32(NV_CEIL(uvmReserveMem, 1024));

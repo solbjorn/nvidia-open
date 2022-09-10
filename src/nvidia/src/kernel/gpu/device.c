@@ -402,12 +402,14 @@ _deviceTeardown
 )
 {
     OBJGPU    *pGpu     = GPU_RES_GET_GPU(pDevice);
+    NV_STATUS status;
+
     PORT_UNREFERENCED_VARIABLE(pGpu);
 
     deviceRemoveFromClientShare(pDevice);
 
     // DM-TODO: Force the client to move to Unicast...
-    NV_STATUS status = deviceKPerfCudaLimitCliDisable(pDevice, pGpu);
+    status = deviceKPerfCudaLimitCliDisable(pDevice, pGpu);
 
     // Adding status check here, but not returning it as we do not want to
     // introduce any change in functionality.

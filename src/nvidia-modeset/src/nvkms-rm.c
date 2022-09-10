@@ -160,7 +160,7 @@ static NvBool QueryGpuCapabilities(NVDevEvoPtr pDevEvo)
             struct {
                 NV2080_CTRL_BUS_INFO coherentFlags;
                 NV2080_CTRL_BUS_INFO nonCoherentFlags;
-            } busInfoList = { { 0 } };
+            } busInfoList = { };
 
             NvBool ctxDmaCoherentAllowed;
             NvBool ctxDmaNonCoherentAllowed;
@@ -421,7 +421,7 @@ GetSignalFormat(const NVConnectorEvoRec *pConnectorEvo)
         switch (pConnectorEvo->or.protocol) {
         default:
             nvAssert(!"Unexpected OR protocol for DAC");
-            // fall through
+            fallthrough;
         case NV0073_CTRL_SPECIFIC_OR_PROTOCOL_DAC_RGB_CRT:
             return NVKMS_CONNECTOR_SIGNAL_FORMAT_VGA;
         }
@@ -433,7 +433,7 @@ GetSignalFormat(const NVConnectorEvoRec *pConnectorEvo)
 
         default:
             nvAssert(!"Unexpected OR protocol for SOR");
-            // fall through
+            fallthrough;
         case NV0073_CTRL_SPECIFIC_OR_PROTOCOL_SOR_SINGLE_TMDS_A:
         case NV0073_CTRL_SPECIFIC_OR_PROTOCOL_SOR_SINGLE_TMDS_B:
         case NV0073_CTRL_SPECIFIC_OR_PROTOCOL_SOR_DUAL_TMDS:
@@ -448,7 +448,7 @@ GetSignalFormat(const NVConnectorEvoRec *pConnectorEvo)
         switch (pConnectorEvo->or.protocol) {
         default:
             nvAssert(!"Unexpected OR protocol for PIOR");
-            // fall through
+            fallthrough;
         case NV0073_CTRL_SPECIFIC_OR_PROTOCOL_PIOR_EXT_TMDS_ENC:
             return NVKMS_CONNECTOR_SIGNAL_FORMAT_TMDS;
         }
@@ -457,7 +457,7 @@ GetSignalFormat(const NVConnectorEvoRec *pConnectorEvo)
         switch (pConnectorEvo->or.protocol) {
         default:
             nvAssert(!"Unexpected OR protocol for DSI");
-            // fall through
+            fallthrough;
         case NV0073_CTRL_SPECIFIC_OR_PROTOCOL_DSI:
             return NVKMS_CONNECTOR_SIGNAL_FORMAT_DSI;
         }
@@ -2078,7 +2078,7 @@ NvBool nvRmSetDpmsEvo(NVDpyEvoPtr pDpyEvo, NvS64 value)
         return (ret == NVOS_STATUS_SUCCESS);
     } else {
         NVConnectorEvoPtr pConnectorEvo = pDpyEvo->pConnectorEvo;
-        NV5070_CTRL_CMD_SET_DAC_PWR_PARAMS powerParams = { { 0 }, 0 };
+        NV5070_CTRL_CMD_SET_DAC_PWR_PARAMS powerParams = { };
 
         powerParams.base.subdeviceIndex = pDispEvo->displayOwner;
         if (pConnectorEvo->or.mask == 0x0) {
@@ -3616,12 +3616,13 @@ void nvRmEvoFreeSyncpt(
     NVDevEvoRec *pDevEvo,
     NVEvoSyncpt *pEvoSyncpt)
 {
+    NvKmsSyncPtOpParams params = { };
+
     if ((pEvoSyncpt == NULL) || !pDevEvo->supportsSyncpts) {
         return;
     }
 
     /*! Put reference of syncptid from nvhost */
-    NvKmsSyncPtOpParams params = { };
     params.put.id = pEvoSyncpt->id;
     nvkms_syncpt_op(NVKMS_SYNCPT_OP_PUT, &params);
 
@@ -4176,6 +4177,8 @@ static NvBool OpenDevice(NVDevEvoPtr pDevEvo)
     NV0000_CTRL_GPU_GET_ATTACHED_IDS_PARAMS idParams = { };
     NvU32 ret, i, gpuIdIndex = 0;
 
+    ct_assert(ARRAY_LEN(pDevEvo->openedGpuIds) >= ARRAY_LEN(idParams.gpuIds));
+
     ret = nvRmApiControl(nvEvoGlobal.clientHandle,
                          nvEvoGlobal.clientHandle,
                          NV0000_CTRL_CMD_GPU_GET_ATTACHED_IDS,
@@ -4185,8 +4188,6 @@ static NvBool OpenDevice(NVDevEvoPtr pDevEvo)
         nvEvoLogDev(pDevEvo, EVO_LOG_ERROR, "Failed to query attached GPUs");
         goto fail;
     }
-
-    ct_assert(ARRAY_LEN(pDevEvo->openedGpuIds) >= ARRAY_LEN(idParams.gpuIds));
 
     for (i = 0; i < ARRAY_LEN(idParams.gpuIds); i++) {
         NV0000_CTRL_GPU_GET_ID_INFO_PARAMS params = { 0 };
@@ -4335,6 +4336,8 @@ NvBool nvRmAllocDeviceEvo(NVDevEvoPtr pDevEvo,
     NV0080_CTRL_GPU_GET_NUM_SUBDEVICES_PARAMS getNumSubDevicesParams = { 0 };
     NvU32 ret, sd;
 
+    ct_assert(NVKMS_MAX_SUBDEVICES == NV_MAX_SUBDEVICES);
+
     if (nvEvoGlobal.clientHandle == 0) {
         nvEvoLogDev(pDevEvo, EVO_LOG_ERROR, "Client handle not initialized");
         goto failure;
@@ -4411,7 +4414,6 @@ NvBool nvRmAllocDeviceEvo(NVDevEvoPtr pDevEvo,
         goto failure;
     }
 
-    ct_assert(NVKMS_MAX_SUBDEVICES == NV_MAX_SUBDEVICES);
     if ((getNumSubDevicesParams.numSubDevices == 0) ||
         (getNumSubDevicesParams.numSubDevices >
          ARRAY_LEN(pDevEvo->pSubDevices))) {

@@ -353,6 +353,7 @@ kbusRemoveNvlinkPeerMapping_GP100
     if (pKernelBus0->p2p.busNvlinkMappingRefcountPerPeerId[peerId] == 0)
     {
         KernelNvlink *pKernelNvlink0 = GPU_GET_KERNEL_NVLINK(pGpu0);
+        NV2080_CTRL_NVLINK_ENABLE_NVLINK_PEER_PARAMS  params;
 
         NV_ASSERT_OR_RETURN(pKernelNvlink0 != NULL, NV_ERR_NOT_SUPPORTED);
         NV_ASSERT(pKernelBus0->p2p.busNvlinkMappingRefcountPerPeerId[peerId] == 0);
@@ -365,7 +366,6 @@ kbusRemoveNvlinkPeerMapping_GP100
         kbusFlush_HAL(pGpu0, pKernelBus0, BUS_FLUSH_VIDEO_MEMORY);
         kbusFlush_HAL(pGpu1, GPU_GET_KERNEL_BUS(pGpu1), BUS_FLUSH_VIDEO_MEMORY);
 
-        NV2080_CTRL_NVLINK_ENABLE_NVLINK_PEER_PARAMS  params;
         portMemSet(&params, 0, sizeof(params));
         params.peerMask = NVBIT(peerId);
         params.bEnable  = NV_FALSE;

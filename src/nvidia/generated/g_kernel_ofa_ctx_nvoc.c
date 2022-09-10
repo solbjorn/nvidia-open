@@ -36,9 +36,12 @@ void __nvoc_init_dataField_OfaContext(OfaContext*, RmHalspecOwner* );
 void __nvoc_dtor_OfaContext(OfaContext*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_OfaContext;
 
+#define __NVOC_CB_TYPE OfaContext
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_OfaContext, __nvoc_dtor_OfaContext);
+
 static const struct NVOC_RTTI __nvoc_rtti_OfaContext_OfaContext = {
     /*pClassDef=*/          &__nvoc_class_def_OfaContext,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_OfaContext,
+    /*dtor=*/               __nvoc_dtor_OfaContext_dtor,
     /*offset=*/             0,
 };
 
@@ -105,7 +108,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_OfaContext = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_OfaContext = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_OfaContext =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(OfaContext),
@@ -115,7 +118,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_OfaContext =
         /*name=*/               "OfaContext",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_OfaContext,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_OfaContext_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_OfaContext,
     /*pExportInfo=*/        &__nvoc_export_info_OfaContext
 };
@@ -236,7 +239,7 @@ static NV_STATUS __nvoc_thunk_Notifier_ofactxGetOrAllocNotifShare(struct OfaCont
     return notifyGetOrAllocNotifShare((struct Notifier *)(((unsigned char *)pNotifier) + __nvoc_rtti_OfaContext_Notifier.offset), hNotifierClient, hNotifierResource, ppNotifShare);
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_OfaContext = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_OfaContext =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -412,4 +415,3 @@ NV_STATUS __nvoc_objCreateDynamic_OfaContext(OfaContext **ppThis, Dynamic *pPare
 
     return status;
 }
-

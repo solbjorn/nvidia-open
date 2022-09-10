@@ -223,7 +223,7 @@ static NvBool libosDwarfReadRaw(DwarfStream *stream, void *buffer, NvU64 size)
     NvU64 newOffset = stream->offset + size;
     if (newOffset > stream->size)
         return NV_FALSE;
-    portMemCopy(buffer, (size_t)size, stream->buffer + stream->offset, size);
+    portMemCopy(buffer, size, stream->buffer + stream->offset, size);
     stream->offset = newOffset;
     return NV_TRUE;
 }
@@ -877,7 +877,7 @@ static void dwarfSetARangeTableLineUnit(libosDebugResolver *pThis, DwarfStream u
     }
 
     // Walk forwards setting the line unit info for all entries with the same arange unit.
-    for (; (foundUnit == pThis->arangeTable[i].arangeUnit); i++)
+    for (; foundUnit == pThis->arangeTable[i].arangeUnit; i++)
     {
         pThis->arangeTable[i].lineUnitBuffer = unit.buffer;
         pThis->arangeTable[i].lineUnitSize   = (NvU32)unit.size;

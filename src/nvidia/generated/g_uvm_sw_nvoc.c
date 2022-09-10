@@ -36,9 +36,12 @@ void __nvoc_init_dataField_UvmSwObject(UvmSwObject*, RmHalspecOwner* );
 void __nvoc_dtor_UvmSwObject(UvmSwObject*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_UvmSwObject;
 
+#define __NVOC_CB_TYPE UvmSwObject
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_UvmSwObject, __nvoc_dtor_UvmSwObject);
+
 static const struct NVOC_RTTI __nvoc_rtti_UvmSwObject_UvmSwObject = {
     /*pClassDef=*/          &__nvoc_class_def_UvmSwObject,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_UvmSwObject,
+    /*dtor=*/               __nvoc_dtor_UvmSwObject_dtor,
     /*offset=*/             0,
 };
 
@@ -105,7 +108,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_UvmSwObject = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_UvmSwObject = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_UvmSwObject =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(UvmSwObject),
@@ -115,7 +118,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_UvmSwObject =
         /*name=*/               "UvmSwObject",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_UvmSwObject,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_UvmSwObject_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_UvmSwObject,
     /*pExportInfo=*/        &__nvoc_export_info_UvmSwObject
 };
@@ -236,7 +239,7 @@ static NV_STATUS __nvoc_thunk_Notifier_uvmswGetOrAllocNotifShare(struct UvmSwObj
     return notifyGetOrAllocNotifShare((struct Notifier *)(((unsigned char *)pNotifier) + __nvoc_rtti_UvmSwObject_Notifier.offset), hNotifierClient, hNotifierResource, ppNotifShare);
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_UvmSwObject = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_UvmSwObject =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -286,7 +289,7 @@ static void __nvoc_init_funcTable_UvmSwObject_1(UvmSwObject *pThis, RmHalspecOwn
     PORT_UNREFERENCED_VARIABLE(rmVariantHal_HalVarIdx);
 
     // Hal function -- uvmswGetSwMethods
-    if (( ((rmVariantHal_HalVarIdx >> 5) == 0UL) && ((1UL << (rmVariantHal_HalVarIdx & 0x1f)) & 0x00000002UL) )) /* RmVariantHal: PF_KERNEL_ONLY */ 
+    if (( ((rmVariantHal_HalVarIdx >> 5) == 0UL) && ((1UL << (rmVariantHal_HalVarIdx & 0x1f)) & 0x00000002UL) )) /* RmVariantHal: PF_KERNEL_ONLY */
     {
         pThis->__uvmswGetSwMethods__ = &uvmswGetSwMethods_56cd7a;
     }
@@ -421,4 +424,3 @@ NV_STATUS __nvoc_objCreateDynamic_UvmSwObject(UvmSwObject **ppThis, Dynamic *pPa
 
     return status;
 }
-

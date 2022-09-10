@@ -307,10 +307,11 @@ subdeviceCtrlCmdBusGetNvlinkStatus_IMPL
 
     FOR_EACH_INDEX_IN_MASK(32, i, pParams->enabledLinkMask)
     {
+        NV2080_CTRL_NVLINK_GET_LINK_AND_CLOCK_VALUES *pLinkAndClockValues;
+
         bPeerLink   = NV_FALSE;
         bSysmemLink = NV_FALSE;
         bSwitchLink = NV_FALSE;
-        NV2080_CTRL_NVLINK_GET_LINK_AND_CLOCK_VALUES *pLinkAndClockValues;
 
         pLinkAndClockValues = &nvlinkLinkAndClockInfoParams.linkInfo[i];
 

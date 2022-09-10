@@ -24,9 +24,12 @@ void __nvoc_init_dataField_OBJSYS(OBJSYS*);
 void __nvoc_dtor_OBJSYS(OBJSYS*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJSYS;
 
+#define __NVOC_CB_TYPE OBJSYS
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_OBJSYS, __nvoc_dtor_OBJSYS);
+
 static const struct NVOC_RTTI __nvoc_rtti_OBJSYS_OBJSYS = {
     /*pClassDef=*/          &__nvoc_class_def_OBJSYS,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_OBJSYS,
+    /*dtor=*/               __nvoc_dtor_OBJSYS_dtor,
     /*offset=*/             0,
 };
 
@@ -51,7 +54,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_OBJSYS = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_OBJSYS = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_OBJSYS =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(OBJSYS),
@@ -61,12 +64,12 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_OBJSYS =
         /*name=*/               "OBJSYS",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_OBJSYS,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_OBJSYS_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_OBJSYS,
     /*pExportInfo=*/        &__nvoc_export_info_OBJSYS
 };
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJSYS = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJSYS =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -179,4 +182,3 @@ NV_STATUS __nvoc_objCreateDynamic_OBJSYS(OBJSYS **ppThis, Dynamic *pParent, NvU3
 
     return status;
 }
-

@@ -30,9 +30,12 @@ void __nvoc_init_dataField_NoDeviceMemory(NoDeviceMemory*);
 void __nvoc_dtor_NoDeviceMemory(NoDeviceMemory*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_NoDeviceMemory;
 
+#define __NVOC_CB_TYPE NoDeviceMemory
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_NoDeviceMemory, __nvoc_dtor_NoDeviceMemory);
+
 static const struct NVOC_RTTI __nvoc_rtti_NoDeviceMemory_NoDeviceMemory = {
     /*pClassDef=*/          &__nvoc_class_def_NoDeviceMemory,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_NoDeviceMemory,
+    /*dtor=*/               __nvoc_dtor_NoDeviceMemory_dtor,
     /*offset=*/             0,
 };
 
@@ -78,7 +81,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_NoDeviceMemory = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_NoDeviceMemory = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_NoDeviceMemory =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(NoDeviceMemory),
@@ -88,7 +91,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_NoDeviceMemory =
         /*name=*/               "NoDeviceMemory",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_NoDeviceMemory,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_NoDeviceMemory_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_NoDeviceMemory,
     /*pExportInfo=*/        &__nvoc_export_info_NoDeviceMemory
 };
@@ -177,7 +180,7 @@ static NvBool __nvoc_thunk_RmResource_nodevicememAccessCallback(struct NoDeviceM
     return rmresAccessCallback((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_NoDeviceMemory_RmResource.offset), pInvokingClient, pAllocParams, accessRight);
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_NoDeviceMemory = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_NoDeviceMemory =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -321,4 +324,3 @@ NV_STATUS __nvoc_objCreateDynamic_NoDeviceMemory(NoDeviceMemory **ppThis, Dynami
 
     return status;
 }
-

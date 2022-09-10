@@ -427,7 +427,7 @@ memConstructCommon_IMPL
             break;
         default:
             NV_ASSERT(0);
-            /*FALLSTHRU*/
+            fallthrough;
         case NVOS32_ATTR2_P2P_GPU_CACHEABLE_NO:
         case NVOS32_ATTR2_P2P_GPU_CACHEABLE_DEFAULT:
             pGpu = pMemDesc->pGpu;
@@ -1025,4 +1025,3 @@ memGetMemoryMappingDescriptor_IMPL
     }
     return NV_OK;
 }
-

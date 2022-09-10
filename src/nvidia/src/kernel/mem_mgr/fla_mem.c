@@ -264,8 +264,9 @@ flamemConstruct_IMPL
         // into the constructor
         //
         RsClient *pImportClient;
-        NV_ASSERT_OK_OR_RETURN(serverGetClientUnderLock(&g_resServ, pParams->hClient, &pImportClient));
         Device *pImportDevice;
+
+        NV_ASSERT_OK_OR_RETURN(serverGetClientUnderLock(&g_resServ, pParams->hClient, &pImportClient));
         NV_ASSERT_OK_OR_RETURN(deviceGetByGpu(pImportClient, pExportGpu, NV_TRUE, &pImportDevice));
 
         status = pRmApi->DupObject(pRmApi,

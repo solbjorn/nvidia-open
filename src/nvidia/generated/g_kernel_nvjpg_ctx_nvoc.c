@@ -36,9 +36,12 @@ void __nvoc_init_dataField_NvjpgContext(NvjpgContext*, RmHalspecOwner* );
 void __nvoc_dtor_NvjpgContext(NvjpgContext*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_NvjpgContext;
 
+#define __NVOC_CB_TYPE NvjpgContext
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_NvjpgContext, __nvoc_dtor_NvjpgContext);
+
 static const struct NVOC_RTTI __nvoc_rtti_NvjpgContext_NvjpgContext = {
     /*pClassDef=*/          &__nvoc_class_def_NvjpgContext,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_NvjpgContext,
+    /*dtor=*/               __nvoc_dtor_NvjpgContext_dtor,
     /*offset=*/             0,
 };
 
@@ -105,7 +108,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_NvjpgContext = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_NvjpgContext = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_NvjpgContext =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(NvjpgContext),
@@ -115,7 +118,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_NvjpgContext =
         /*name=*/               "NvjpgContext",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_NvjpgContext,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_NvjpgContext_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_NvjpgContext,
     /*pExportInfo=*/        &__nvoc_export_info_NvjpgContext
 };
@@ -236,7 +239,7 @@ static NV_STATUS __nvoc_thunk_Notifier_nvjpgctxGetOrAllocNotifShare(struct Nvjpg
     return notifyGetOrAllocNotifShare((struct Notifier *)(((unsigned char *)pNotifier) + __nvoc_rtti_NvjpgContext_Notifier.offset), hNotifierClient, hNotifierResource, ppNotifShare);
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_NvjpgContext = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_NvjpgContext =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -412,4 +415,3 @@ NV_STATUS __nvoc_objCreateDynamic_NvjpgContext(NvjpgContext **ppThis, Dynamic *p
 
     return status;
 }
-

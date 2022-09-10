@@ -30,9 +30,12 @@ void __nvoc_init_dataField_BinaryApi(BinaryApi*);
 void __nvoc_dtor_BinaryApi(BinaryApi*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_BinaryApi;
 
+#define __NVOC_CB_TYPE BinaryApi
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_BinaryApi, __nvoc_dtor_BinaryApi);
+
 static const struct NVOC_RTTI __nvoc_rtti_BinaryApi_BinaryApi = {
     /*pClassDef=*/          &__nvoc_class_def_BinaryApi,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_BinaryApi,
+    /*dtor=*/               __nvoc_dtor_BinaryApi_dtor,
     /*offset=*/             0,
 };
 
@@ -78,7 +81,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_BinaryApi = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_BinaryApi = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_BinaryApi =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(BinaryApi),
@@ -88,7 +91,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_BinaryApi =
         /*name=*/               "BinaryApi",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_BinaryApi,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_BinaryApi_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_BinaryApi,
     /*pExportInfo=*/        &__nvoc_export_info_BinaryApi
 };
@@ -181,7 +184,7 @@ static NvBool __nvoc_thunk_RmResource_binapiAccessCallback(struct BinaryApi *pRe
     return rmresAccessCallback((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_BinaryApi_RmResource.offset), pInvokingClient, pAllocParams, accessRight);
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_BinaryApi = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_BinaryApi =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -352,9 +355,13 @@ void __nvoc_init_dataField_BinaryApiPrivileged(BinaryApiPrivileged*);
 void __nvoc_dtor_BinaryApiPrivileged(BinaryApiPrivileged*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_BinaryApiPrivileged;
 
+#undef __NVOC_CB_TYPE
+#define __NVOC_CB_TYPE BinaryApiPrivileged
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_BinaryApiPrivileged, __nvoc_dtor_BinaryApiPrivileged);
+
 static const struct NVOC_RTTI __nvoc_rtti_BinaryApiPrivileged_BinaryApiPrivileged = {
     /*pClassDef=*/          &__nvoc_class_def_BinaryApiPrivileged,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_BinaryApiPrivileged,
+    /*dtor=*/               __nvoc_dtor_BinaryApiPrivileged_dtor,
     /*offset=*/             0,
 };
 
@@ -407,7 +414,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_BinaryApiPrivileged = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_BinaryApiPrivileged = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_BinaryApiPrivileged =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(BinaryApiPrivileged),
@@ -417,7 +424,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_BinaryApiPrivileged =
         /*name=*/               "BinaryApiPrivileged",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_BinaryApiPrivileged,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_BinaryApiPrivileged_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_BinaryApiPrivileged,
     /*pExportInfo=*/        &__nvoc_export_info_BinaryApiPrivileged
 };
@@ -510,7 +517,7 @@ static NvBool __nvoc_thunk_RmResource_binapiprivAccessCallback(struct BinaryApiP
     return rmresAccessCallback((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_BinaryApiPrivileged_RmResource.offset), pInvokingClient, pAllocParams, accessRight);
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_BinaryApiPrivileged = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_BinaryApiPrivileged =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -656,4 +663,3 @@ NV_STATUS __nvoc_objCreateDynamic_BinaryApiPrivileged(BinaryApiPrivileged **ppTh
 
     return status;
 }
-

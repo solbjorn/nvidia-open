@@ -355,12 +355,13 @@ NV_STATUS RmExportObject(NvHandle hSrcClient, NvHandle hSrcObject,
     do
     {
         RsResourceRef *pResourceRef;
+	Device *pDevice;
 
         status = serverutilGetResourceRef(hSrcClient, hTmpObject, &pResourceRef);
         if (status != NV_OK)
             return status;
 
-        Device *pDevice = dynamicCast(pResourceRef->pResource, Device);
+        pDevice = dynamicCast(pResourceRef->pResource, Device);
         if (pDevice != NULL)
         {
             deviceInstance = pDevice->deviceInst;

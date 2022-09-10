@@ -48,10 +48,10 @@ kgraphicsInitFecsRegistryOverrides_GP100
         {
             case NV_REG_STR_RM_CTXSW_LOG_ENABLE_INTR_APC:
                 bIntrFallback = NV_TRUE;
-                // Intentional fall-through
+                fallthrough;
             case NV_REG_STR_RM_CTXSW_LOG_ENABLE_INTR:
                 bIntr = NV_TRUE;
-                // Intentional fall-through
+                fallthrough;
             case NV_REG_STR_RM_CTXSW_LOG_ENABLE:
                 bLog = NV_TRUE;
                 break;
@@ -287,4 +287,3 @@ kgraphicsClearInterrupt_GP100
 
     return NV_TRUE;
 }
-

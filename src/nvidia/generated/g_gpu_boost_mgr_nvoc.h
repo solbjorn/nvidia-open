@@ -102,7 +102,7 @@ typedef struct OBJGPUBOOSTMGR *POBJGPUBOOSTMGR;
 #define PRIVATE_FIELD(x) NVOC_PRIVATE_FIELD(x)
 #endif
 struct OBJGPUBOOSTMGR {
-    const struct NVOC_RTTI *__nvoc_rtti;
+    struct __rtti_marker __nvoc_rtti;
     struct Object __nvoc_base_Object;
     struct Object *__nvoc_pbase_Object;
     struct OBJGPUBOOSTMGR *__nvoc_pbase_OBJGPUBOOSTMGR;

@@ -24,9 +24,12 @@ void __nvoc_init_dataField_OBJSWENG(OBJSWENG*);
 void __nvoc_dtor_OBJSWENG(OBJSWENG*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJSWENG;
 
+#define __NVOC_CB_TYPE OBJSWENG
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_OBJSWENG, __nvoc_dtor_OBJSWENG);
+
 static const struct NVOC_RTTI __nvoc_rtti_OBJSWENG_OBJSWENG = {
     /*pClassDef=*/          &__nvoc_class_def_OBJSWENG,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_OBJSWENG,
+    /*dtor=*/               __nvoc_dtor_OBJSWENG_dtor,
     /*offset=*/             0,
 };
 
@@ -51,7 +54,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_OBJSWENG = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_OBJSWENG = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_OBJSWENG =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(OBJSWENG),
@@ -61,7 +64,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_OBJSWENG =
         /*name=*/               "OBJSWENG",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_OBJSWENG,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_OBJSWENG_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_OBJSWENG,
     /*pExportInfo=*/        &__nvoc_export_info_OBJSWENG
 };
@@ -146,7 +149,7 @@ static NvBool __nvoc_thunk_OBJENGSTATE_swengIsPresent(POBJGPU pGpu, struct OBJSW
     return engstateIsPresent(pGpu, (struct OBJENGSTATE *)(((unsigned char *)pEngstate) + __nvoc_rtti_OBJSWENG_OBJENGSTATE.offset));
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJSWENG = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJSWENG =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -277,4 +280,3 @@ NV_STATUS __nvoc_objCreateDynamic_OBJSWENG(OBJSWENG **ppThis, Dynamic *pParent, 
 
     return status;
 }
-

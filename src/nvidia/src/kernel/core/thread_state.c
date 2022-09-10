@@ -1114,6 +1114,9 @@ void threadStateLogTimeout(OBJGPU *pGpu, NvU64 funcAddr, NvU32 lineNum)
 {
         // Log the Timeout in the RM Journal
         RmRC2GpuTimeout3_RECORD* pRec = NULL;
+#ifndef DEBUG
+        OBJSYS *pSys;
+#endif
 
         rcdbAddAssertJournalRecWithLine(pGpu, lineNum, (void**)&pRec, 
                                 RmGroup, RmRC2GpuTimeout_V3,
@@ -1123,7 +1126,7 @@ void threadStateLogTimeout(OBJGPU *pGpu, NvU64 funcAddr, NvU32 lineNum)
 
         // If this is release and we have RmBreakOnRC on -- Stop
 #ifndef DEBUG
-        OBJSYS    *pSys = SYS_GET_INSTANCE();
+        pSys = SYS_GET_INSTANCE();
         if (DRF_VAL(_DEBUG, _BREAK_FLAGS, _GPU_TIMEOUT, pSys->debugFlags) ==
             NV_DEBUG_BREAK_FLAGS_GPU_TIMEOUT_ENABLE)
         {

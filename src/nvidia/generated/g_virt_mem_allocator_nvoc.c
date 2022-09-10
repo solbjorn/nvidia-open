@@ -24,9 +24,12 @@ void __nvoc_init_dataField_VirtMemAllocator(VirtMemAllocator*, RmHalspecOwner* )
 void __nvoc_dtor_VirtMemAllocator(VirtMemAllocator*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_VirtMemAllocator;
 
+#define __NVOC_CB_TYPE VirtMemAllocator
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_VirtMemAllocator, __nvoc_dtor_VirtMemAllocator);
+
 static const struct NVOC_RTTI __nvoc_rtti_VirtMemAllocator_VirtMemAllocator = {
     /*pClassDef=*/          &__nvoc_class_def_VirtMemAllocator,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_VirtMemAllocator,
+    /*dtor=*/               __nvoc_dtor_VirtMemAllocator_dtor,
     /*offset=*/             0,
 };
 
@@ -51,7 +54,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_VirtMemAllocator = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_VirtMemAllocator = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_VirtMemAllocator =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(VirtMemAllocator),
@@ -61,7 +64,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_VirtMemAllocator =
         /*name=*/               "VirtMemAllocator",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_VirtMemAllocator,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_VirtMemAllocator_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_VirtMemAllocator,
     /*pExportInfo=*/        &__nvoc_export_info_VirtMemAllocator
 };
@@ -146,7 +149,7 @@ static NvBool __nvoc_thunk_OBJENGSTATE_dmaIsPresent(POBJGPU pGpu, struct VirtMem
     return engstateIsPresent(pGpu, (struct OBJENGSTATE *)(((unsigned char *)pEngstate) + __nvoc_rtti_VirtMemAllocator_OBJENGSTATE.offset));
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_VirtMemAllocator = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_VirtMemAllocator =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -172,7 +175,7 @@ void __nvoc_init_dataField_VirtMemAllocator(VirtMemAllocator *pThis, RmHalspecOw
     PORT_UNREFERENCED_VARIABLE(rmVariantHal_HalVarIdx);
 
     // NVOC Property Hal field -- PDB_PROP_DMA_ENFORCE_32BIT_POINTER
-    if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x0000ffe0UL) )) /* ChipHal: TU102 | TU104 | TU106 | TU116 | TU117 | GA100 | GA102 | GA103 | GA104 | GA106 | GA107 */ 
+    if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x0000ffe0UL) )) /* ChipHal: TU102 | TU104 | TU106 | TU116 | TU117 | GA100 | GA102 | GA103 | GA104 | GA106 | GA107 */
     {
         pThis->setProperty(pThis, PDB_PROP_DMA_ENFORCE_32BIT_POINTER, ((NvBool)(0 == 0)));
     }
@@ -193,7 +196,7 @@ void __nvoc_init_dataField_VirtMemAllocator(VirtMemAllocator *pThis, RmHalspecOw
     }
 
     // NVOC Property Hal field -- PDB_PROP_DMA_IS_SUPPORTED_SPARSE_VIRTUAL
-    if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x0000ffe0UL) )) /* ChipHal: TU102 | TU104 | TU106 | TU116 | TU117 | GA100 | GA102 | GA103 | GA104 | GA106 | GA107 */ 
+    if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x0000ffe0UL) )) /* ChipHal: TU102 | TU104 | TU106 | TU116 | TU117 | GA100 | GA102 | GA103 | GA104 | GA106 | GA107 */
     {
         pThis->setProperty(pThis, PDB_PROP_DMA_IS_SUPPORTED_SPARSE_VIRTUAL, ((NvBool)(0 == 0)));
     }
@@ -255,7 +258,7 @@ static void __nvoc_init_funcTable_VirtMemAllocator_1(VirtMemAllocator *pThis, Rm
     pThis->__dmaStateInitLocked__ = &dmaStateInitLocked_IMPL;
 
     // Hal function -- dmaStatePostLoad
-    if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x0000ffe0UL) )) /* ChipHal: TU102 | TU104 | TU106 | TU116 | TU117 | GA100 | GA102 | GA103 | GA104 | GA106 | GA107 */ 
+    if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x0000ffe0UL) )) /* ChipHal: TU102 | TU104 | TU106 | TU116 | TU117 | GA100 | GA102 | GA103 | GA104 | GA106 | GA107 */
     {
         pThis->__dmaStatePostLoad__ = &dmaStatePostLoad_GM107;
     }
@@ -364,4 +367,3 @@ NV_STATUS __nvoc_objCreateDynamic_VirtMemAllocator(VirtMemAllocator **ppThis, Dy
 
     return status;
 }
-

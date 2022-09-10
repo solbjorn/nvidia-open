@@ -65,7 +65,7 @@ namespace DisplayPort
 
     private:
         RawTimer * raw;
-        NvU64      nextTimestamp;
+//        NvU64      nextTimestamp;
         List       pending;
         struct PendingCallback : ListElement
         {

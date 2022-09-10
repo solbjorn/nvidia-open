@@ -46,6 +46,7 @@ knvlinkOverrideConfig_GA100
     NvU32         phase
 )
 {
+    NV2080_CTRL_NVLINK_PROCESS_FORCED_CONFIGS_PARAMS forcedConfigParams;
     NV_STATUS status = NV_OK;
     NvU32     i;
 
@@ -77,7 +78,6 @@ knvlinkOverrideConfig_GA100
         return NV_OK;
     }
 
-    NV2080_CTRL_NVLINK_PROCESS_FORCED_CONFIGS_PARAMS forcedConfigParams;
     portMemSet(&forcedConfigParams, 0, sizeof(forcedConfigParams));
 
     forcedConfigParams.bLegacyForcedConfig = NV_FALSE;

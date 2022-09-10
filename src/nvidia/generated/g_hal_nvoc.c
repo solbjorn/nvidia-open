@@ -22,9 +22,12 @@ void __nvoc_init_dataField_OBJHAL(OBJHAL*);
 void __nvoc_dtor_OBJHAL(OBJHAL*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJHAL;
 
+#define __NVOC_CB_TYPE OBJHAL
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_OBJHAL, __nvoc_dtor_OBJHAL);
+
 static const struct NVOC_RTTI __nvoc_rtti_OBJHAL_OBJHAL = {
     /*pClassDef=*/          &__nvoc_class_def_OBJHAL,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_OBJHAL,
+    /*dtor=*/               __nvoc_dtor_OBJHAL_dtor,
     /*offset=*/             0,
 };
 
@@ -42,7 +45,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_OBJHAL = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_OBJHAL = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_OBJHAL =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(OBJHAL),
@@ -52,12 +55,12 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_OBJHAL =
         /*name=*/               "OBJHAL",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_OBJHAL,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_OBJHAL_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_OBJHAL,
     /*pExportInfo=*/        &__nvoc_export_info_OBJHAL
 };
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJHAL = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJHAL =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -145,4 +148,3 @@ NV_STATUS __nvoc_objCreateDynamic_OBJHAL(OBJHAL **ppThis, Dynamic *pParent, NvU3
 
     return status;
 }
-

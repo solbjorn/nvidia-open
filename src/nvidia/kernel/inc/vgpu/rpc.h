@@ -261,8 +261,9 @@ static inline void NV_RM_RPC_SIM_UPDATE_DISP_CHANNEL_INFO(OBJGPU *pGpu, ...) { r
         NV_ASSERT(pRpc != NULL);                                                    \
         if ((status == NV_OK) && (pRpc != NULL))                                    \
         {                                                                           \
+            RM_API *pRmApi;                                                         \
             NV_ASSERT(IS_GSP_CLIENT(pGpu));                                         \
-            RM_API *pRmApi = GPU_GET_PHYSICAL_RMAPI(pGpu);                          \
+            pRmApi = GPU_GET_PHYSICAL_RMAPI(pGpu);                                  \
             status = pRmApi->Control(pRmApi, hClient, hObject, cmd,                 \
                                      pParams, paramSize);                           \
         } else if (pRpc == NULL)                                                    \
@@ -278,8 +279,9 @@ static inline void NV_RM_RPC_SIM_UPDATE_DISP_CHANNEL_INFO(OBJGPU *pGpu, ...) { r
         NV_ASSERT(pRpc != NULL);                                                        \
         if ((status == NV_OK) && (pRpc != NULL))                                        \
         {                                                                               \
+            RM_API *pRmApi;                                                     \
             NV_ASSERT(IS_GSP_CLIENT(pGpu));                                             \
-            RM_API *pRmApi = GPU_GET_PHYSICAL_RMAPI(pGpu);                              \
+            pRmApi = GPU_GET_PHYSICAL_RMAPI(pGpu);                              \
             status = pRmApi->AllocWithHandle(pRmApi, hclient, hparent, hchannel,        \
                                              hclass, pGpfifoAllocParams);               \
         } else if (pRpc == NULL)                                                        \
@@ -294,8 +296,9 @@ static inline void NV_RM_RPC_SIM_UPDATE_DISP_CHANNEL_INFO(OBJGPU *pGpu, ...) { r
         NV_ASSERT(pRpc != NULL);                                                        \
         if ((status == NV_OK) && (pRpc != NULL))                                        \
         {                                                                               \
+        RM_API *pRmApi;                                                     \
             NV_ASSERT(IS_GSP_CLIENT(pGpu));                                             \
-            RM_API *pRmApi = GPU_GET_PHYSICAL_RMAPI(pGpu);                              \
+            pRmApi = GPU_GET_PHYSICAL_RMAPI(pGpu);                              \
             status = pRmApi->AllocWithHandle(pRmApi, hclient, hchannel, hobject,        \
                                              hclass, params);                           \
         }                                                                               \
@@ -304,13 +307,14 @@ static inline void NV_RM_RPC_SIM_UPDATE_DISP_CHANNEL_INFO(OBJGPU *pGpu, ...) { r
 #define NV_RM_RPC_FREE(pGpu, hclient, hparent, hobject, status)         \
     do                                                                  \
     {                                                                   \
-        (void) hparent;                                                 \
         OBJRPC *pRpc = GPU_GET_RPC(pGpu);                               \
+        (void) hparent;                                                 \
         NV_ASSERT(pRpc != NULL);                                        \
         if ((status == NV_OK) && (pRpc != NULL))                        \
         {                                                               \
+            RM_API *pRmApi;                                             \
             NV_ASSERT(IS_GSP_CLIENT(pGpu));                             \
-            RM_API *pRmApi = GPU_GET_PHYSICAL_RMAPI(pGpu);              \
+            pRmApi = GPU_GET_PHYSICAL_RMAPI(pGpu);                      \
             status = pRmApi->Free(pRmApi, hclient, hobject);            \
         }  else if (pRpc == NULL)                                       \
             status = NV_ERR_INSUFFICIENT_RESOURCES;                     \
@@ -319,14 +323,15 @@ static inline void NV_RM_RPC_SIM_UPDATE_DISP_CHANNEL_INFO(OBJGPU *pGpu, ...) { r
 #define NV_RM_RPC_FREE_ON_ERROR(pGpu, hclient, hparent, hobject)        \
     do                                                                  \
     {                                                                   \
-        (void) hparent;                                                 \
         OBJRPC *pRpc = GPU_GET_RPC(pGpu);                               \
+        (void) hparent;                                                 \
         NV_ASSERT(pRpc != NULL);                                        \
         /* used in failure cases, macro doesn't overwrite rmStatus */   \
         if (pRpc != NULL)                                               \
         {                                                               \
+            RM_API *pRmApi;                                             \
             NV_ASSERT(IS_GSP_CLIENT(pGpu));                             \
-            RM_API *pRmApi = GPU_GET_PHYSICAL_RMAPI(pGpu);              \
+            pRmApi = GPU_GET_PHYSICAL_RMAPI(pGpu);                      \
             pRmApi->Free(pRmApi, hclient, hobject);                     \
         }                                                               \
     }                                                                   \
@@ -336,14 +341,15 @@ static inline void NV_RM_RPC_SIM_UPDATE_DISP_CHANNEL_INFO(OBJGPU *pGpu, ...) { r
                               hevent, hclass, idx, status)                         \
     do                                                                             \
     {                                                                              \
-        (void) hchannel;                                                           \
         OBJRPC *pRpc = GPU_GET_RPC(pGpu);                                          \
+        (void) hchannel;                                                           \
         NV_ASSERT(pRpc != NULL);                                                   \
         if ((status == NV_OK) && (pRpc != NULL))                                   \
         {                                                                          \
-            NV_ASSERT(IS_GSP_CLIENT(pGpu));                                        \
-            RM_API *pRmApi = GPU_GET_PHYSICAL_RMAPI(pGpu);                         \
             NV0005_ALLOC_PARAMETERS allocParams = {0};                             \
+            RM_API *pRmApi;                                                        \
+            NV_ASSERT(IS_GSP_CLIENT(pGpu));                                        \
+            pRmApi = GPU_GET_PHYSICAL_RMAPI(pGpu);                                 \
             allocParams.hParentClient = hparentclient;                             \
             allocParams.hClass = hclass;                                           \
             allocParams.notifyIndex = idx | NV01_EVENT_CLIENT_RM;                  \
@@ -363,9 +369,10 @@ static inline void NV_RM_RPC_SIM_UPDATE_DISP_CHANNEL_INFO(OBJGPU *pGpu, ...) { r
         NV_ASSERT(pRpc != NULL);                                                        \
         if ((status == NV_OK) && (pRpc != NULL))                                        \
         {                                                                               \
-            NV_ASSERT(IS_GSP_CLIENT(pGpu));                                             \
-            RM_API *pRmApi = GPU_GET_PHYSICAL_RMAPI(pGpu);                              \
             NV2080_ALLOC_PARAMETERS alloc_params = {0};                                 \
+            RM_API *pRmApi;                                                   \
+            NV_ASSERT(IS_GSP_CLIENT(pGpu));                                             \
+            pRmApi = GPU_GET_PHYSICAL_RMAPI(pGpu);                              \
                                                                                         \
             alloc_params.subDeviceId = subDeviceInst;                                   \
                                                                                         \
@@ -383,8 +390,9 @@ static inline void NV_RM_RPC_SIM_UPDATE_DISP_CHANNEL_INFO(OBJGPU *pGpu, ...) { r
         NV_ASSERT(pRpc != NULL);                                                \
         if ((status == NV_OK) && (pRpc != NULL))                                \
         {                                                                       \
+            RM_API *pRmApi;                                                     \
             NV_ASSERT(IS_GSP_CLIENT(pGpu));                                     \
-            RM_API *pRmApi = GPU_GET_PHYSICAL_RMAPI(pGpu);                      \
+            pRmApi = GPU_GET_PHYSICAL_RMAPI(pGpu);                              \
             status = pRmApi->DupObject(pRmApi, hclient, hparent,                \
                                         &hobject, hclient_src,                  \
                                         hobject_src, flags);                    \

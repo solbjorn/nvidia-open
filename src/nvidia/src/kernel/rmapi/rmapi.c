@@ -271,11 +271,12 @@ rmapiInitLockInfo
 static NV_STATUS
 _rmapiLockAlloc(void)
 {
+    NvU32 val = 0;
+
     // Turn on by default for Linux to get some soak time
     // bug 2539044, bug 2536036: Enable by default.
     g_resServ.bUnlockedParamCopy = NV_TRUE;
 
-    NvU32 val = 0;
     if ((osReadRegistryDword(NULL,
                             NV_REG_STR_RM_PARAM_COPY_NO_LOCK,
                             &val) == NV_OK))
@@ -305,7 +306,7 @@ rmapiLockAcquire(NvU32 flags, NvU32 module)
 {
     NV_STATUS rmStatus = NV_OK;
     NvU64 threadId = portThreadGetCurrentThreadId();
-
+    NvP64 *pAcquireAddress;
     NvU64 myPriority = 0;
 
     LOCK_ASSERT_AND_RETURN(!rmapiLockIsOwner());
@@ -398,7 +399,7 @@ rmapiLockAcquire(NvU32 flags, NvU32 module)
         }
     }
 
-    NvP64 *pAcquireAddress = tlsEntryAcquire(g_RmApiLock.tlsEntryId);
+    pAcquireAddress = tlsEntryAcquire(g_RmApiLock.tlsEntryId);
     if (pAcquireAddress != NULL)
     {
         *pAcquireAddress = (NvP64)(NvUPtr)NV_RETURN_ADDRESS();

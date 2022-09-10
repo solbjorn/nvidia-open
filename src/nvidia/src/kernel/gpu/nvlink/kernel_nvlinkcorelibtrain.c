@@ -400,6 +400,7 @@ knvlinkTrainP2pLinksToActive_IMPL
 
 #if defined(INCLUDE_NVLINK_LIB)
 
+    NV2080_CTRL_NVLINK_ARE_LINKS_TRAINED_PARAMS linkTrainedParams;
     OBJSYS *pSys        = SYS_GET_INSTANCE();
     NvU32   version     = pKernelNvlink0->ipVerNvlink;
     NvBool  bTrainLinks = NV_FALSE;
@@ -476,7 +477,6 @@ knvlinkTrainP2pLinksToActive_IMPL
     }
 
     // Get the link train status for the enabled link masks
-    NV2080_CTRL_NVLINK_ARE_LINKS_TRAINED_PARAMS linkTrainedParams;
 
     portMemSet(&linkTrainedParams, 0, sizeof(linkTrainedParams));
     linkTrainedParams.linkMask    = pKernelNvlink0->enabledLinks;
@@ -1022,11 +1022,12 @@ knvlinkRetrainLink_IMPL
 )
 {
     NV_STATUS status = NV_OK;
+    OBJSYS *pSys;
 
     // If NVLINK_LIB isn't enabled, we just execute prologue and return.
     _knvlinkRetrainLinkPrologue(pGpu, pKernelNvlink, linkId);
 
-    OBJSYS *pSys    = SYS_GET_INSTANCE();
+    pSys = SYS_GET_INSTANCE();
 
     // If fabric is managed by FM
     if (pSys->getProperty(pSys, PDB_PROP_SYS_FABRIC_IS_EXTERNALLY_MANAGED))
@@ -2043,6 +2044,7 @@ _knvlinkPrintTopologySummary
 {
 #if NV_PRINTF_ENABLED
 
+    NV2080_CTRL_NVLINK_HSHUB_GET_SYSMEM_NVLINK_MASK_PARAMS params;
     NvU32     i;
     NV_STATUS status;
 
@@ -2053,7 +2055,6 @@ _knvlinkPrintTopologySummary
 
     NV_PRINTF(LEVEL_INFO, "GPU%02u cached topology:\n", gpuGetInstance(pGpu));
  
-    NV2080_CTRL_NVLINK_HSHUB_GET_SYSMEM_NVLINK_MASK_PARAMS params;
     portMemSet(&params, 0, sizeof(params));
 
     status = knvlinkExecGspRmRpc(pGpu, pKernelNvlink,

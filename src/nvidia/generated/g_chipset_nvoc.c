@@ -22,9 +22,12 @@ void __nvoc_init_dataField_OBJCL(OBJCL*);
 void __nvoc_dtor_OBJCL(OBJCL*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJCL;
 
+#define __NVOC_CB_TYPE OBJCL
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_OBJCL, __nvoc_dtor_OBJCL);
+
 static const struct NVOC_RTTI __nvoc_rtti_OBJCL_OBJCL = {
     /*pClassDef=*/          &__nvoc_class_def_OBJCL,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_OBJCL,
+    /*dtor=*/               __nvoc_dtor_OBJCL_dtor,
     /*offset=*/             0,
 };
 
@@ -42,7 +45,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_OBJCL = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_OBJCL = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_OBJCL =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(OBJCL),
@@ -52,12 +55,12 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_OBJCL =
         /*name=*/               "OBJCL",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_OBJCL,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_OBJCL_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_OBJCL,
     /*pExportInfo=*/        &__nvoc_export_info_OBJCL
 };
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJCL = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJCL =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -152,4 +155,3 @@ NV_STATUS __nvoc_objCreateDynamic_OBJCL(OBJCL **ppThis, Dynamic *pParent, NvU32 
 
     return status;
 }
-

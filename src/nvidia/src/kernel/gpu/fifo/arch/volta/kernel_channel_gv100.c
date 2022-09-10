@@ -77,14 +77,16 @@ kchannelCreateUserdMemDescBc_GV100
 
     if (phUserdMemory[0] != 0)
     {
+        NvHandle hUserdMemory;
+        NvU64    userdOffset;
         NvU32 iter = 0;
 
         SLI_LOOP_START(SLI_LOOP_FLAGS_BC_ONLY | SLI_LOOP_FLAGS_IGNORE_REENTRANCY)
 
         iter      = IsSLIEnabled(pGpu) ? gpumgrGetSubDeviceInstanceFromGpu(pGpu) : 0;
 
-        NvHandle hUserdMemory = phUserdMemory[iter];
-        NvU64    userdOffset  = pUserdOffset[iter];
+        hUserdMemory = phUserdMemory[iter];
+        userdOffset = pUserdOffset[iter];
 
         if (!hUserdMemory)
         {

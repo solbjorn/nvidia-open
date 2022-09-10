@@ -24,9 +24,12 @@ void __nvoc_init_dataField_KernelPerf(KernelPerf*, RmHalspecOwner* );
 void __nvoc_dtor_KernelPerf(KernelPerf*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_KernelPerf;
 
+#define __NVOC_CB_TYPE KernelPerf
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_KernelPerf, __nvoc_dtor_KernelPerf);
+
 static const struct NVOC_RTTI __nvoc_rtti_KernelPerf_KernelPerf = {
     /*pClassDef=*/          &__nvoc_class_def_KernelPerf,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_KernelPerf,
+    /*dtor=*/               __nvoc_dtor_KernelPerf_dtor,
     /*offset=*/             0,
 };
 
@@ -51,7 +54,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_KernelPerf = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_KernelPerf = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_KernelPerf =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(KernelPerf),
@@ -61,7 +64,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_KernelPerf =
         /*name=*/               "KernelPerf",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_KernelPerf,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_KernelPerf_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_KernelPerf,
     /*pExportInfo=*/        &__nvoc_export_info_KernelPerf
 };
@@ -146,7 +149,7 @@ static NvBool __nvoc_thunk_OBJENGSTATE_kperfIsPresent(POBJGPU pGpu, struct Kerne
     return engstateIsPresent(pGpu, (struct OBJENGSTATE *)(((unsigned char *)pEngstate) + __nvoc_rtti_KernelPerf_OBJENGSTATE.offset));
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_KernelPerf = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_KernelPerf =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -298,4 +301,3 @@ NV_STATUS __nvoc_objCreateDynamic_KernelPerf(KernelPerf **ppThis, Dynamic *pPare
 
     return status;
 }
-

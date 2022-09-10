@@ -252,6 +252,8 @@ NvHdmi_AssessLinkCapabilities(NvHdmiPkt_Handle             libHandle,
                               HDMI_SRC_CAPS               *pSrcCaps,
                               HDMI_SINK_CAPS              *pSinkCaps)
 {
+    NVHDMIPKT_CLASS* pClass;
+
     if (libHandle == NVHDMIPKT_INVALID_HANDLE)
     {
         return NVHDMIPKT_LIBRARY_INIT_FAIL;
@@ -264,7 +266,7 @@ NvHdmi_AssessLinkCapabilities(NvHdmiPkt_Handle             libHandle,
         return NVHDMIPKT_INVALID_ARG;
     }
 
-    NVHDMIPKT_CLASS* pClass = fromHdmiPktHandle(libHandle);
+    pClass = fromHdmiPktHandle(libHandle);
     return pClass->hdmiAssessLinkCapabilities(pClass,
                                               subDevice,
                                               displayId,
@@ -283,6 +285,8 @@ NvHdmi_QueryFRLConfig(NvHdmiPkt_Handle                      libHandle,
                       HDMI_SINK_CAPS                const * const pSinkCaps,
                       HDMI_FRL_CONFIG                     *pFRLConfig)
 {
+    NVHDMIPKT_CLASS* pClass;
+
     if (libHandle == NVHDMIPKT_INVALID_HANDLE)
     {
         return NVHDMIPKT_LIBRARY_INIT_FAIL;
@@ -303,7 +307,7 @@ NvHdmi_QueryFRLConfig(NvHdmiPkt_Handle                      libHandle,
         return NVHDMIPKT_FAIL;
     }
     
-    NVHDMIPKT_CLASS* pClass = fromHdmiPktHandle(libHandle);
+    pClass = fromHdmiPktHandle(libHandle);
     return pClass->hdmiQueryFRLConfig(pClass,
                                       pVidTransInfo,
                                       pClientCtrl,
@@ -322,6 +326,8 @@ NvHdmi_SetFRLConfig(NvHdmiPkt_Handle                   libHandle,
                     NvBool                             bFakeLt,
                     HDMI_FRL_CONFIG                   *pFRLConfig)
 {
+    NVHDMIPKT_CLASS* pClass;
+
     if (libHandle == NVHDMIPKT_INVALID_HANDLE)
     {
         return NVHDMIPKT_LIBRARY_INIT_FAIL;
@@ -332,7 +338,7 @@ NvHdmi_SetFRLConfig(NvHdmiPkt_Handle                   libHandle,
         return NVHDMIPKT_INVALID_ARG;
     }
 
-    NVHDMIPKT_CLASS* pClass = fromHdmiPktHandle(libHandle);
+    pClass = fromHdmiPktHandle(libHandle);
     return pClass->hdmiSetFRLConfig(pClass,
                                     subDevice,
                                     displayId,
@@ -349,12 +355,14 @@ NvHdmi_ClearFRLConfig(NvHdmiPkt_Handle     libHandle,
                       NvU32                subDevice,
                       NvU32                displayId)
 {
+    NVHDMIPKT_CLASS* pClass;
+
     if (libHandle == NVHDMIPKT_INVALID_HANDLE)
     {
         return NVHDMIPKT_LIBRARY_INIT_FAIL;
     }
 
-    NVHDMIPKT_CLASS* pClass = fromHdmiPktHandle(libHandle);
+    pClass = fromHdmiPktHandle(libHandle);
     return pClass->hdmiClearFRLConfig(pClass,
                                       subDevice,
                                       displayId);
@@ -467,6 +475,9 @@ NvHdmiPkt_InitializeLibrary(NvU32                              const hwClass,
     NvU32 i = 0;
     NvBool result = NV_FALSE;
     NVHDMIPKT_CLASS_ID thisClassId = NVHDMIPKT_INVALID_CLASS;
+#if defined(DSC_CALLBACK_MODIFIED)
+    DSC_CALLBACK callbacks;
+#endif
 
     // Argument validations
     if (pCallbacks == 0 || numSubDevices == 0)
@@ -564,7 +575,6 @@ NvHdmiPkt_InitializeLibrary(NvU32                              const hwClass,
     result = NvHdmiPkt_CallConstructors(thisClassId, pClass);
 
 #if defined(DSC_CALLBACK_MODIFIED)
-    DSC_CALLBACK callbacks;
     NVMISC_MEMSET(&callbacks, 0, sizeof(DSC_CALLBACK));
     callbacks.clientHandle = pClass;
     callbacks.dscMalloc    = hdmipktMallocCb;
@@ -603,10 +613,10 @@ NvHdmiPkt_DestroyLibrary(NvHdmiPkt_Handle libHandle)
 
     if (pClass != 0)
     {
-        NvHdmiPkt_Print(pClass, "Destroy.");
         NvHdmiPkt_CBHandle cbHandle = pClass->cbHandle;
         void  (*freeCb)   (NvHdmiPkt_CBHandle handle,
                            void              *pMem) = pClass->callback.free;
+        NvHdmiPkt_Print(pClass, "Destroy.");
 
         currClassId = pClass->thisId;
         NvHdmiPkt_CallDestructors(currClassId, pClass);

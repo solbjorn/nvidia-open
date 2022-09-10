@@ -819,7 +819,7 @@ typedef struct NV2080_CTRL_INTERNAL_DEVICE_INFO DEVICE_INFO2_TABLE;
 #define PRIVATE_FIELD(x) NVOC_PRIVATE_FIELD(x)
 #endif
 struct OBJGPU {
-    const struct NVOC_RTTI *__nvoc_rtti;
+    struct __rtti_marker __nvoc_rtti;
     struct Object __nvoc_base_Object;
     struct RmHalspecOwner __nvoc_base_RmHalspecOwner;
     struct OBJTRACEABLE __nvoc_base_OBJTRACEABLE;

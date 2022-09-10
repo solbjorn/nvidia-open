@@ -26,9 +26,12 @@ void __nvoc_init_dataField_RmDebuggerSession(RmDebuggerSession*);
 void __nvoc_dtor_RmDebuggerSession(RmDebuggerSession*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_RmDebuggerSession;
 
+#define __NVOC_CB_TYPE RmDebuggerSession
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_RmDebuggerSession, __nvoc_dtor_RmDebuggerSession);
+
 static const struct NVOC_RTTI __nvoc_rtti_RmDebuggerSession_RmDebuggerSession = {
     /*pClassDef=*/          &__nvoc_class_def_RmDebuggerSession,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_RmDebuggerSession,
+    /*dtor=*/               __nvoc_dtor_RmDebuggerSession_dtor,
     /*offset=*/             0,
 };
 
@@ -60,7 +63,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_RmDebuggerSession = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_RmDebuggerSession = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_RmDebuggerSession =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(RmDebuggerSession),
@@ -70,7 +73,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_RmDebuggerSession =
         /*name=*/               "RmDebuggerSession",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_RmDebuggerSession,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_RmDebuggerSession_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_RmDebuggerSession,
     /*pExportInfo=*/        &__nvoc_export_info_RmDebuggerSession
 };
@@ -83,7 +86,7 @@ static void __nvoc_thunk_RmDebuggerSession_sessionRemoveDependency(struct RsSess
     dbgSessionRemoveDependency((struct RmDebuggerSession *)(((unsigned char *)pDbgSession) - __nvoc_rtti_RmDebuggerSession_RsSession.offset), pResourceRef);
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_RmDebuggerSession = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_RmDebuggerSession =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -209,9 +212,13 @@ void __nvoc_init_dataField_KernelSMDebuggerSession(KernelSMDebuggerSession*);
 void __nvoc_dtor_KernelSMDebuggerSession(KernelSMDebuggerSession*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_KernelSMDebuggerSession;
 
+#undef __NVOC_CB_TYPE
+#define __NVOC_CB_TYPE KernelSMDebuggerSession
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_KernelSMDebuggerSession, __nvoc_dtor_KernelSMDebuggerSession);
+
 static const struct NVOC_RTTI __nvoc_rtti_KernelSMDebuggerSession_KernelSMDebuggerSession = {
     /*pClassDef=*/          &__nvoc_class_def_KernelSMDebuggerSession,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_KernelSMDebuggerSession,
+    /*dtor=*/               __nvoc_dtor_KernelSMDebuggerSession_dtor,
     /*offset=*/             0,
 };
 
@@ -271,7 +278,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_KernelSMDebuggerSession = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_KernelSMDebuggerSession = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_KernelSMDebuggerSession =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(KernelSMDebuggerSession),
@@ -281,7 +288,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_KernelSMDebuggerSession =
         /*name=*/               "KernelSMDebuggerSession",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_KernelSMDebuggerSession,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_KernelSMDebuggerSession_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_KernelSMDebuggerSession,
     /*pExportInfo=*/        &__nvoc_export_info_KernelSMDebuggerSession
 };
@@ -394,17 +401,44 @@ static NvBool __nvoc_thunk_RmResource_ksmdbgssnAccessCallback(struct KernelSMDeb
     return rmresAccessCallback((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_KernelSMDebuggerSession_RmResource.offset), pInvokingClient, pAllocParams, accessRight);
 }
 
+NVOC_BUILD_CALLBACK(ksmdbgssnCtrlCmdDebugSetModeMMUDebug_fcf1ac);
+NVOC_BUILD_CALLBACK(ksmdbgssnCtrlCmdDebugGetModeMMUDebug_fcf1ac);
+NVOC_BUILD_CALLBACK(ksmdbgssnCtrlCmdDebugSetExceptionMask_fcf1ac);
+NVOC_BUILD_CALLBACK(ksmdbgssnCtrlCmdDebugReadSingleSmErrorState_fcf1ac);
+NVOC_BUILD_CALLBACK(ksmdbgssnCtrlCmdDebugReadAllSmErrorStates_IMPL);
+NVOC_BUILD_CALLBACK(ksmdbgssnCtrlCmdDebugClearSingleSmErrorState_fcf1ac);
+NVOC_BUILD_CALLBACK(ksmdbgssnCtrlCmdDebugClearAllSmErrorStates_IMPL);
+NVOC_BUILD_CALLBACK(ksmdbgssnCtrlCmdDebugSetNextStopTriggerType_fcf1ac);
+NVOC_BUILD_CALLBACK(ksmdbgssnCtrlCmdDebugSetSingleStepInterruptHandling_fcf1ac);
+NVOC_BUILD_CALLBACK(ksmdbgssnCtrlCmdDebugReadMemory_IMPL);
+NVOC_BUILD_CALLBACK(ksmdbgssnCtrlCmdDebugWriteMemory_IMPL);
+NVOC_BUILD_CALLBACK(ksmdbgssnCtrlCmdDebugSuspendContext_fcf1ac);
+NVOC_BUILD_CALLBACK_1(ksmdbgssnCtrlCmdDebugResumeContext_fcf1ac);
+NVOC_BUILD_CALLBACK(ksmdbgssnCtrlCmdReadSurface_IMPL);
+NVOC_BUILD_CALLBACK(ksmdbgssnCtrlCmdWriteSurface_IMPL);
+NVOC_BUILD_CALLBACK(ksmdbgssnCtrlCmdGetMappings_IMPL);
+NVOC_BUILD_CALLBACK(ksmdbgssnCtrlCmdDebugExecRegOps_IMPL);
+NVOC_BUILD_CALLBACK(ksmdbgssnCtrlCmdDebugSetModeErrbarDebug_fcf1ac);
+NVOC_BUILD_CALLBACK(ksmdbgssnCtrlCmdDebugGetModeErrbarDebug_fcf1ac);
+NVOC_BUILD_CALLBACK(ksmdbgssnCtrlCmdDebugSetSingleSmSingleStep_fcf1ac);
+NVOC_BUILD_CALLBACK(ksmdbgssnCtrlCmdDebugSetSingleSmStopTrigger_fcf1ac);
+NVOC_BUILD_CALLBACK(ksmdbgssnCtrlCmdDebugSetSingleSmRunTrigger_fcf1ac);
+NVOC_BUILD_CALLBACK(ksmdbgssnCtrlCmdDebugSetSingleSmSkipIdleWarpDetect_fcf1ac);
+NVOC_BUILD_CALLBACK(ksmdbgssnCtrlCmdDebugGetSingleSmDebuggerStatus_fcf1ac);
+NVOC_BUILD_CALLBACK(ksmdbgssnCtrlCmdDebugReadBatchMemory_IMPL);
+NVOC_BUILD_CALLBACK(ksmdbgssnCtrlCmdDebugWriteBatchMemory_IMPL);
+
 #if !defined(NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG)
 #define NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(x)      (0)
 #endif
 
-static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_KernelSMDebuggerSession[] = 
+static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_KernelSMDebuggerSession[] =
 {
     {               /*  [0] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2210u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) ksmdbgssnCtrlCmdDebugSetModeMMUDebug_fcf1ac,
+        /*pFunc=*/      ksmdbgssnCtrlCmdDebugSetModeMMUDebug_fcf1ac_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2210u)
         /*flags=*/      0x2210u,
         /*accessRight=*/0x0u,
@@ -417,9 +451,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_KernelSM
     },
     {               /*  [1] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2210u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) ksmdbgssnCtrlCmdDebugGetModeMMUDebug_fcf1ac,
+        /*pFunc=*/      ksmdbgssnCtrlCmdDebugGetModeMMUDebug_fcf1ac_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2210u)
         /*flags=*/      0x2210u,
         /*accessRight=*/0x0u,
@@ -432,9 +466,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_KernelSM
     },
     {               /*  [2] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2210u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) ksmdbgssnCtrlCmdDebugSetExceptionMask_fcf1ac,
+        /*pFunc=*/      ksmdbgssnCtrlCmdDebugSetExceptionMask_fcf1ac_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2210u)
         /*flags=*/      0x2210u,
         /*accessRight=*/0x0u,
@@ -447,9 +481,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_KernelSM
     },
     {               /*  [3] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2210u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) ksmdbgssnCtrlCmdDebugReadSingleSmErrorState_fcf1ac,
+        /*pFunc=*/      ksmdbgssnCtrlCmdDebugReadSingleSmErrorState_fcf1ac_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2210u)
         /*flags=*/      0x2210u,
         /*accessRight=*/0x0u,
@@ -462,9 +496,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_KernelSM
     },
     {               /*  [4] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x210u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) ksmdbgssnCtrlCmdDebugReadAllSmErrorStates_IMPL,
+        /*pFunc=*/      ksmdbgssnCtrlCmdDebugReadAllSmErrorStates_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x210u)
         /*flags=*/      0x210u,
         /*accessRight=*/0x0u,
@@ -477,9 +511,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_KernelSM
     },
     {               /*  [5] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2210u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) ksmdbgssnCtrlCmdDebugClearSingleSmErrorState_fcf1ac,
+        /*pFunc=*/      ksmdbgssnCtrlCmdDebugClearSingleSmErrorState_fcf1ac_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2210u)
         /*flags=*/      0x2210u,
         /*accessRight=*/0x0u,
@@ -492,9 +526,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_KernelSM
     },
     {               /*  [6] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x210u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) ksmdbgssnCtrlCmdDebugClearAllSmErrorStates_IMPL,
+        /*pFunc=*/      ksmdbgssnCtrlCmdDebugClearAllSmErrorStates_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x210u)
         /*flags=*/      0x210u,
         /*accessRight=*/0x0u,
@@ -507,9 +541,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_KernelSM
     },
     {               /*  [7] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2210u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) ksmdbgssnCtrlCmdDebugSetNextStopTriggerType_fcf1ac,
+        /*pFunc=*/      ksmdbgssnCtrlCmdDebugSetNextStopTriggerType_fcf1ac_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2210u)
         /*flags=*/      0x2210u,
         /*accessRight=*/0x0u,
@@ -522,9 +556,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_KernelSM
     },
     {               /*  [8] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2210u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) ksmdbgssnCtrlCmdDebugSetSingleStepInterruptHandling_fcf1ac,
+        /*pFunc=*/      ksmdbgssnCtrlCmdDebugSetSingleStepInterruptHandling_fcf1ac_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2210u)
         /*flags=*/      0x2210u,
         /*accessRight=*/0x0u,
@@ -537,9 +571,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_KernelSM
     },
     {               /*  [9] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) ksmdbgssnCtrlCmdDebugReadMemory_IMPL,
+        /*pFunc=*/      ksmdbgssnCtrlCmdDebugReadMemory_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*flags=*/      0x10u,
         /*accessRight=*/0x0u,
@@ -552,9 +586,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_KernelSM
     },
     {               /*  [10] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) ksmdbgssnCtrlCmdDebugWriteMemory_IMPL,
+        /*pFunc=*/      ksmdbgssnCtrlCmdDebugWriteMemory_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*flags=*/      0x10u,
         /*accessRight=*/0x0u,
@@ -567,9 +601,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_KernelSM
     },
     {               /*  [11] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2210u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) ksmdbgssnCtrlCmdDebugSuspendContext_fcf1ac,
+        /*pFunc=*/      ksmdbgssnCtrlCmdDebugSuspendContext_fcf1ac_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2210u)
         /*flags=*/      0x2210u,
         /*accessRight=*/0x0u,
@@ -582,9 +616,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_KernelSM
     },
     {               /*  [12] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2210u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) ksmdbgssnCtrlCmdDebugResumeContext_fcf1ac,
+        /*pFunc=*/      ksmdbgssnCtrlCmdDebugResumeContext_fcf1ac_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2210u)
         /*flags=*/      0x2210u,
         /*accessRight=*/0x0u,
@@ -597,9 +631,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_KernelSM
     },
     {               /*  [13] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) ksmdbgssnCtrlCmdReadSurface_IMPL,
+        /*pFunc=*/      ksmdbgssnCtrlCmdReadSurface_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*flags=*/      0x10u,
         /*accessRight=*/0x0u,
@@ -612,9 +646,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_KernelSM
     },
     {               /*  [14] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) ksmdbgssnCtrlCmdWriteSurface_IMPL,
+        /*pFunc=*/      ksmdbgssnCtrlCmdWriteSurface_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*flags=*/      0x10u,
         /*accessRight=*/0x0u,
@@ -627,9 +661,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_KernelSM
     },
     {               /*  [15] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) ksmdbgssnCtrlCmdGetMappings_IMPL,
+        /*pFunc=*/      ksmdbgssnCtrlCmdGetMappings_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*flags=*/      0x10u,
         /*accessRight=*/0x0u,
@@ -642,9 +676,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_KernelSM
     },
     {               /*  [16] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2010u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) ksmdbgssnCtrlCmdDebugExecRegOps_IMPL,
+        /*pFunc=*/      ksmdbgssnCtrlCmdDebugExecRegOps_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2010u)
         /*flags=*/      0x2010u,
         /*accessRight=*/0x0u,
@@ -657,9 +691,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_KernelSM
     },
     {               /*  [17] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2210u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) ksmdbgssnCtrlCmdDebugSetModeErrbarDebug_fcf1ac,
+        /*pFunc=*/      ksmdbgssnCtrlCmdDebugSetModeErrbarDebug_fcf1ac_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2210u)
         /*flags=*/      0x2210u,
         /*accessRight=*/0x0u,
@@ -672,9 +706,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_KernelSM
     },
     {               /*  [18] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2210u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) ksmdbgssnCtrlCmdDebugGetModeErrbarDebug_fcf1ac,
+        /*pFunc=*/      ksmdbgssnCtrlCmdDebugGetModeErrbarDebug_fcf1ac_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2210u)
         /*flags=*/      0x2210u,
         /*accessRight=*/0x0u,
@@ -687,9 +721,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_KernelSM
     },
     {               /*  [19] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2210u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) ksmdbgssnCtrlCmdDebugSetSingleSmSingleStep_fcf1ac,
+        /*pFunc=*/      ksmdbgssnCtrlCmdDebugSetSingleSmSingleStep_fcf1ac_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2210u)
         /*flags=*/      0x2210u,
         /*accessRight=*/0x0u,
@@ -702,9 +736,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_KernelSM
     },
     {               /*  [20] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2210u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) ksmdbgssnCtrlCmdDebugSetSingleSmStopTrigger_fcf1ac,
+        /*pFunc=*/      ksmdbgssnCtrlCmdDebugSetSingleSmStopTrigger_fcf1ac_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2210u)
         /*flags=*/      0x2210u,
         /*accessRight=*/0x0u,
@@ -717,9 +751,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_KernelSM
     },
     {               /*  [21] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2210u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) ksmdbgssnCtrlCmdDebugSetSingleSmRunTrigger_fcf1ac,
+        /*pFunc=*/      ksmdbgssnCtrlCmdDebugSetSingleSmRunTrigger_fcf1ac_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2210u)
         /*flags=*/      0x2210u,
         /*accessRight=*/0x0u,
@@ -732,9 +766,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_KernelSM
     },
     {               /*  [22] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2210u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) ksmdbgssnCtrlCmdDebugSetSingleSmSkipIdleWarpDetect_fcf1ac,
+        /*pFunc=*/      ksmdbgssnCtrlCmdDebugSetSingleSmSkipIdleWarpDetect_fcf1ac_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2210u)
         /*flags=*/      0x2210u,
         /*accessRight=*/0x0u,
@@ -747,9 +781,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_KernelSM
     },
     {               /*  [23] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2210u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) ksmdbgssnCtrlCmdDebugGetSingleSmDebuggerStatus_fcf1ac,
+        /*pFunc=*/      ksmdbgssnCtrlCmdDebugGetSingleSmDebuggerStatus_fcf1ac_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2210u)
         /*flags=*/      0x2210u,
         /*accessRight=*/0x0u,
@@ -762,9 +796,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_KernelSM
     },
     {               /*  [24] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) ksmdbgssnCtrlCmdDebugReadBatchMemory_IMPL,
+        /*pFunc=*/      ksmdbgssnCtrlCmdDebugReadBatchMemory_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*flags=*/      0x10u,
         /*accessRight=*/0x0u,
@@ -777,9 +811,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_KernelSM
     },
     {               /*  [25] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) ksmdbgssnCtrlCmdDebugWriteBatchMemory_IMPL,
+        /*pFunc=*/      ksmdbgssnCtrlCmdDebugWriteBatchMemory_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*flags=*/      0x10u,
         /*accessRight=*/0x0u,
@@ -793,7 +827,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_KernelSM
 
 };
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_KernelSMDebuggerSession = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_KernelSMDebuggerSession =
 {
     /*numEntries=*/     26,
     /*pExportEntries=*/ __nvoc_exported_method_def_KernelSMDebuggerSession
@@ -1066,4 +1100,3 @@ NV_STATUS __nvoc_objCreateDynamic_KernelSMDebuggerSession(KernelSMDebuggerSessio
 
     return status;
 }
-

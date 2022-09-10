@@ -382,17 +382,17 @@ static void EvoSetProcAmp90(NVDispEvoPtr pDispEvo, const NvU32 head,
     const NVDispHeadStateEvoRec *pHeadState = &pDispEvo->headState[head];
     NvU32 dynRange;
 
-    /* These methods should only apply to a single pDpyEvo */
-    nvAssert(pDevEvo->subDevMaskStackDepth > 0);
-
-    nvUpdateUpdateState(pDevEvo, updateState, pChannel);
-
     // These NVT defines match the HEAD_SET_PROCAMP ones.
     ct_assert(NVT_COLORIMETRY_RGB == NV917D_HEAD_SET_PROCAMP_COLOR_SPACE_RGB);
     ct_assert(NVT_COLORIMETRY_YUV_601 == NV917D_HEAD_SET_PROCAMP_COLOR_SPACE_YUV_601);
     ct_assert(NVT_COLORIMETRY_YUV_709 == NV917D_HEAD_SET_PROCAMP_COLOR_SPACE_YUV_709);
     ct_assert(NVT_COLOR_RANGE_FULL == NV917D_HEAD_SET_PROCAMP_RANGE_COMPRESSION_DISABLE);
     ct_assert(NVT_COLOR_RANGE_LIMITED == NV917D_HEAD_SET_PROCAMP_RANGE_COMPRESSION_ENABLE);
+
+    /* These methods should only apply to a single pDpyEvo */
+    nvAssert(pDevEvo->subDevMaskStackDepth > 0);
+
+    nvUpdateUpdateState(pDevEvo, updateState, pChannel);
 
     if (pHeadState->procAmp.colorRange == NVT_COLOR_RANGE_FULL) {
         dynRange = DRF_DEF(917D, _HEAD_SET_PROCAMP, _DYNAMIC_RANGE, _VESA);
@@ -645,7 +645,7 @@ static void EvoSORSetControl90(const NVConnectorEvoRec *pConnectorEvo,
         switch (protocol) {
         default:
             nvAssert(!"unexpected protocol");
-            /* fallthrough */
+            fallthrough;
         case NVKMS_PROTOCOL_SOR_LVDS_CUSTOM:
             hwProtocol = NV917D_SOR_SET_CONTROL_PROTOCOL_LVDS_CUSTOM;
             break;
@@ -1421,6 +1421,7 @@ FlipBase90(NVDevEvoPtr pDevEvo,
            const NVFlipChannelEvoHwState *pHwState,
            NVEvoUpdateState *updateState)
 {
+    NvU32 presentControl;
     int eye;
 
     /* program notifier */
@@ -1525,7 +1526,7 @@ FlipBase90(NVDevEvoPtr pDevEvo,
         return;
     }
 
-    NvU32 presentControl =
+    presentControl =
         DRF_NUM(917C, _SET_PRESENT_CONTROL, _MIN_PRESENT_INTERVAL,
                 pHwState->minPresentInterval);
 
@@ -2788,7 +2789,7 @@ static void EvoSetOutputScaler90(const NVDispEvoRec *pDispEvo, const NvU32 head,
         break;
     case NV_EVO_SCALER_8TAPS:
         nvAssert(!"Unknown pHeadState->vTaps");
-        // fall through
+        fallthrough;
     case NV_EVO_SCALER_1TAP:
         vTapsHw = NV917D_HEAD_SET_CONTROL_OUTPUT_SCALER_VERTICAL_TAPS_TAPS_1;
         break;
@@ -2803,7 +2804,7 @@ static void EvoSetOutputScaler90(const NVDispEvoRec *pDispEvo, const NvU32 head,
     case NV_EVO_SCALER_5TAPS:
     case NV_EVO_SCALER_3TAPS:
         nvAssert(!"Unknown pHeadState->hTaps");
-        // fall through
+        fallthrough;
     case NV_EVO_SCALER_1TAP:
         hTapsHw = NV917D_HEAD_SET_CONTROL_OUTPUT_SCALER_HORIZONTAL_TAPS_TAPS_1;
         break;
@@ -3134,7 +3135,7 @@ static void EvoSetDither91(NVDispEvoPtr pDispEvo, const int head,
             break;
         default:
             nvAssert(!"Unknown ditherType");
-            // Fall through
+            fallthrough;
         case NV0073_CTRL_SPECIFIC_OR_DITHER_TYPE_OFF:
             ditherControl = NV917D_HEAD_SET_DITHER_CONTROL_ENABLE_DISABLE;
             break;
@@ -3163,7 +3164,7 @@ static void EvoSetDither91(NVDispEvoPtr pDispEvo, const int head,
         break;
     default:
         nvAssert(!"Unknown DitherAlgo");
-        // Fall through
+        fallthrough;
     case NV0073_CTRL_SPECIFIC_OR_DITHER_ALGO_UNKNOWN:
     case NV0073_CTRL_SPECIFIC_OR_DITHER_ALGO_DYNAMIC_ERR_ACC:
         ditherControl |=

@@ -482,13 +482,17 @@ subdeviceRestoreGrTickFreq_IMPL
     CALL_CONTEXT *pCallContext
 )
 {
+    RsResourceRef *pSubdeviceRef;
+    RsClient *pRsClient;
+    OBJGPU  *pGpu;
+    OBJTMR  *pTmr;
+
     if (!pSubdevice->bMaxGrTickFreqRequested)
         return;
 
-    OBJGPU  *pGpu = GPU_RES_GET_GPU(pSubdevice);
-    OBJTMR  *pTmr;
-    RsClient *pRsClient = pCallContext->pClient;
-    RsResourceRef *pSubdeviceRef = pCallContext->pResourceRef;
+    pGpu = GPU_RES_GET_GPU(pSubdevice);
+    pRsClient = pCallContext->pClient;
+    pSubdeviceRef = pCallContext->pResourceRef;
 
     GPU_RES_SET_THREAD_BC_STATE(pSubdevice);
 

@@ -1413,6 +1413,7 @@ CliGetChannelClassInfo
         case PHYSICAL_CHANNEL_GPFIFO:
             NV_PRINTF(LEVEL_ERROR,
                       "Invalid class for CliGetChannelClassInfo\n");
+            fallthrough;
 
         default:
         {

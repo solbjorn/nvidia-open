@@ -666,6 +666,7 @@ gvaspaceConstruct__IMPL
         const NvU64         pdeAlignedVasSize  = pdeAlignedVasLimit - pdeAlignedVasStart + 1;
         const NvU64         maxRangeSize       = NV_ALIGN_DOWN64(pdeAlignedVasSize / 4, fullPdeCoverage);
         NvU32               i;
+        VirtMemAllocator *pDma;
 
         NV_ASSERT_OR_RETURN(!(flags & VASPACE_FLAGS_RESTRICTED_RM_INTERNAL_VALIMITS), NV_ERR_ILLEGAL_ACTION);
 
@@ -752,7 +753,7 @@ gvaspaceConstruct__IMPL
             _gvaspaceAddPartialPtRange(pGVAS, NVBIT64(30));
         }
 
-        VirtMemAllocator *pDma = GPU_GET_DMA(pGpu);
+        pDma = GPU_GET_DMA(pGpu);
         // Handle 32-bit restricted pointer ranges.
         if (((pdeAlignedVasLimit + 1) > NVBIT64(32)) &&
             (pDma->getProperty(pDma, PDB_PROP_DMA_ENFORCE_32BIT_POINTER)))
@@ -1296,6 +1297,7 @@ _gvaspaceAllocateFlaDummyPagesForFlaRange
     NV_MEMORY_ALLOCATION_PARAMS memAllocParams;
     RsClient                   *pClient;
     Memory                     *pMemory;
+    GMMU_APERTURE pgAperture;
 
     if (!kbusIsFlaDummyPageEnabled(pKernelBus))
         return NV_OK;
@@ -1360,7 +1362,7 @@ _gvaspaceAllocateFlaDummyPagesForFlaRange
                          cleanup);
 
     // prefill the big pte
-    const GMMU_APERTURE pgAperture = kgmmuGetMemAperture(pKernelGmmu, pMemory->pMemDesc);
+    pgAperture = kgmmuGetMemAperture(pKernelGmmu, pMemory->pMemDesc);
 
     nvFieldSetBool(&pFam->pte.fldValid, NV_TRUE, pGpuState->flaDummyPage.pte.v8);
     nvFieldSetBool(&pFam->pte.fldVolatile, memdescGetVolatility(pMemory->pMemDesc),
@@ -2092,9 +2094,11 @@ gvaspaceGetPageDirBase_IMPL(OBJGVASPACE *pGVAS, OBJGPU *pGpu)
 MEMORY_DESCRIPTOR*
 gvaspaceGetKernelPageDirBase_IMPL(OBJGVASPACE *pGVAS, OBJGPU *pGpu)
 {
+    GVAS_GPU_STATE *pGpuState;
+
     NV_ASSERT_OR_RETURN(!gpumgrGetBcEnabledStatus(pGpu), NULL);
 
-    GVAS_GPU_STATE *pGpuState = gvaspaceGetGpuState(pGVAS, pGpu);
+    pGpuState = gvaspaceGetGpuState(pGVAS, pGpu);
     return (MEMORY_DESCRIPTOR*)pGpuState->pMirroredRoot;
 }
 
@@ -2321,16 +2325,17 @@ gvaspaceInvalidateTlb_IMPL
 )
 {
     OBJVASPACE *pVAS = staticCast(pGVAS, OBJVASPACE);
-    NvU32      gfid  = GPU_GFID_PF;
-
-    NV_ASSERT_OR_RETURN_VOID(!gpumgrGetBcEnabledStatus(pGpu));
-    NV_ASSERT_OR_RETURN_VOID(0 != (NVBIT(pGpu->gpuInstance) & pVAS->gpuMask));
-
-    GVAS_GPU_STATE    *pGpuState = gvaspaceGetGpuState(pGVAS, pGpu);
     MEMORY_DESCRIPTOR *pRootMem  = NULL;
     NvU32              rootSize  = 0;
     NvU32              invalidation_scope = NV_GMMU_INVAL_SCOPE_ALL_TLBS;
     NvBool             bCallingContextPlugin;
+    NvU32      gfid  = GPU_GFID_PF;
+    GVAS_GPU_STATE    *pGpuState;
+
+    NV_ASSERT_OR_RETURN_VOID(!gpumgrGetBcEnabledStatus(pGpu));
+    NV_ASSERT_OR_RETURN_VOID(0 != (NVBIT(pGpu->gpuInstance) & pVAS->gpuMask));
+
+    pGpuState = gvaspaceGetGpuState(pGVAS, pGpu);
 
     NV_ASSERT_OR_RETURN_VOID(vgpuIsCallingContextPlugin(pGpu, &bCallingContextPlugin) == NV_OK);
     if (!bCallingContextPlugin)
@@ -4355,6 +4360,7 @@ vaspaceapiCtrlCmdVaspaceCopyServerReservedPdes_IMPL
     for (i = pCopyServerReservedPdesParams->numLevelsToCopy - 1; i >= 0; i--)
     {
         MEMORY_DESCRIPTOR *pMemDescNew;
+        const MMU_FMT_LEVEL *pLevelFmt;
         NV_ADDRESS_SPACE  aperture;
         NvU64 flags = 0;
 
@@ -4391,7 +4397,7 @@ vaspaceapiCtrlCmdVaspaceCopyServerReservedPdes_IMPL
         memdescSetPageSize(pMemDescNew, VAS_ADDRESS_TRANSLATION(pVAS), RM_PAGE_SIZE);
 
         // Modify the server's walker state with the new backing memory.
-        const MMU_FMT_LEVEL *pLevelFmt =
+        pLevelFmt =
               mmuFmtFindLevelWithPageShift(pGpuState->pFmt->pRoot,
                                     pCopyServerReservedPdesParams->levels[i].pageShift);
         status = mmuWalkModifyLevelInstance(pGpuState->pWalk,
@@ -5023,6 +5029,7 @@ gvaspaceReserveMempool_IMPL
         KernelGmmu     *pKernelGmmu    = GPU_GET_KERNEL_GMMU(pGpu);
         MemoryManager  *pMemoryManager = GPU_GET_MEMORY_MANAGER(pGpu);
         const GMMU_FMT *pFmt           = kgmmuFmtGet(pKernelGmmu, GMMU_FMT_VERSION_DEFAULT, 0);
+        NvU64 poolSize;
 
         //
         // Always assume worst case of 4K mapping even if client has
@@ -5056,7 +5063,7 @@ gvaspaceReserveMempool_IMPL
                                 NV_ERR_INVALID_ARGUMENT);
         }
 
-        NvU64 poolSize = kgmmuGetSizeOfPageDirs(pGpu, pKernelGmmu, pFmt, 0, size - 1,
+        poolSize = kgmmuGetSizeOfPageDirs(pGpu, pKernelGmmu, pFmt, 0, size - 1,
                                                 pageSizeLockMask) +
                          kgmmuGetSizeOfPageTables(pGpu, pKernelGmmu, pFmt, 0, size - 1,
                                                   pageSizeLockMask);

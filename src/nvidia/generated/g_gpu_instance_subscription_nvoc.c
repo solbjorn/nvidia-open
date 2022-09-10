@@ -30,9 +30,12 @@ void __nvoc_init_dataField_GPUInstanceSubscription(GPUInstanceSubscription*);
 void __nvoc_dtor_GPUInstanceSubscription(GPUInstanceSubscription*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_GPUInstanceSubscription;
 
+#define __NVOC_CB_TYPE GPUInstanceSubscription
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_GPUInstanceSubscription, __nvoc_dtor_GPUInstanceSubscription);
+
 static const struct NVOC_RTTI __nvoc_rtti_GPUInstanceSubscription_GPUInstanceSubscription = {
     /*pClassDef=*/          &__nvoc_class_def_GPUInstanceSubscription,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_GPUInstanceSubscription,
+    /*dtor=*/               __nvoc_dtor_GPUInstanceSubscription_dtor,
     /*offset=*/             0,
 };
 
@@ -78,7 +81,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_GPUInstanceSubscription = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_GPUInstanceSubscription = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_GPUInstanceSubscription =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(GPUInstanceSubscription),
@@ -88,7 +91,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_GPUInstanceSubscription =
         /*name=*/               "GPUInstanceSubscription",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_GPUInstanceSubscription,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_GPUInstanceSubscription_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_GPUInstanceSubscription,
     /*pExportInfo=*/        &__nvoc_export_info_GPUInstanceSubscription
 };
@@ -181,17 +184,24 @@ static NvBool __nvoc_thunk_RmResource_gisubscriptionAccessCallback(struct GPUIns
     return rmresAccessCallback((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_GPUInstanceSubscription_RmResource.offset), pInvokingClient, pAllocParams, accessRight);
 }
 
+NVOC_BUILD_CALLBACK(gisubscriptionCtrlCmdExecPartitionsCreate_IMPL);
+NVOC_BUILD_CALLBACK(gisubscriptionCtrlCmdExecPartitionsDelete_IMPL);
+NVOC_BUILD_CALLBACK(gisubscriptionCtrlCmdExecPartitionsGet_IMPL);
+NVOC_BUILD_CALLBACK(gisubscriptionCtrlCmdExecPartitionsGetActiveIds_IMPL);
+NVOC_BUILD_CALLBACK(gisubscriptionCtrlCmdExecPartitionsExport_IMPL);
+NVOC_BUILD_CALLBACK(gisubscriptionCtrlCmdExecPartitionsImport_IMPL);
+
 #if !defined(NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG)
 #define NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(x)      (0)
 #endif
 
-static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_GPUInstanceSubscription[] = 
+static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_GPUInstanceSubscription[] =
 {
     {               /*  [0] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) gisubscriptionCtrlCmdExecPartitionsCreate_IMPL,
+        /*pFunc=*/      gisubscriptionCtrlCmdExecPartitionsCreate_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*flags=*/      0x10u,
         /*accessRight=*/0x0u,
@@ -204,9 +214,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_GPUInsta
     },
     {               /*  [1] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) gisubscriptionCtrlCmdExecPartitionsDelete_IMPL,
+        /*pFunc=*/      gisubscriptionCtrlCmdExecPartitionsDelete_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*flags=*/      0x10u,
         /*accessRight=*/0x0u,
@@ -219,9 +229,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_GPUInsta
     },
     {               /*  [2] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) gisubscriptionCtrlCmdExecPartitionsGet_IMPL,
+        /*pFunc=*/      gisubscriptionCtrlCmdExecPartitionsGet_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*flags=*/      0x10u,
         /*accessRight=*/0x0u,
@@ -234,9 +244,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_GPUInsta
     },
     {               /*  [3] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) gisubscriptionCtrlCmdExecPartitionsGetActiveIds_IMPL,
+        /*pFunc=*/      gisubscriptionCtrlCmdExecPartitionsGetActiveIds_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*flags=*/      0x10u,
         /*accessRight=*/0x0u,
@@ -249,9 +259,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_GPUInsta
     },
     {               /*  [4] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x400u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) gisubscriptionCtrlCmdExecPartitionsExport_IMPL,
+        /*pFunc=*/      gisubscriptionCtrlCmdExecPartitionsExport_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x400u)
         /*flags=*/      0x400u,
         /*accessRight=*/0x0u,
@@ -264,9 +274,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_GPUInsta
     },
     {               /*  [5] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x400u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) gisubscriptionCtrlCmdExecPartitionsImport_IMPL,
+        /*pFunc=*/      gisubscriptionCtrlCmdExecPartitionsImport_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x400u)
         /*flags=*/      0x400u,
         /*accessRight=*/0x0u,
@@ -280,7 +290,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_GPUInsta
 
 };
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_GPUInstanceSubscription = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_GPUInstanceSubscription =
 {
     /*numEntries=*/     6,
     /*pExportEntries=*/ __nvoc_exported_method_def_GPUInstanceSubscription
@@ -450,4 +460,3 @@ NV_STATUS __nvoc_objCreateDynamic_GPUInstanceSubscription(GPUInstanceSubscriptio
 
     return status;
 }
-

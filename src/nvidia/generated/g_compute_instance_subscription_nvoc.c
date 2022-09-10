@@ -30,9 +30,12 @@ void __nvoc_init_dataField_ComputeInstanceSubscription(ComputeInstanceSubscripti
 void __nvoc_dtor_ComputeInstanceSubscription(ComputeInstanceSubscription*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_ComputeInstanceSubscription;
 
+#define __NVOC_CB_TYPE ComputeInstanceSubscription
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_ComputeInstanceSubscription, __nvoc_dtor_ComputeInstanceSubscription);
+
 static const struct NVOC_RTTI __nvoc_rtti_ComputeInstanceSubscription_ComputeInstanceSubscription = {
     /*pClassDef=*/          &__nvoc_class_def_ComputeInstanceSubscription,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_ComputeInstanceSubscription,
+    /*dtor=*/               __nvoc_dtor_ComputeInstanceSubscription_dtor,
     /*offset=*/             0,
 };
 
@@ -78,7 +81,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_ComputeInstanceSubscription = 
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_ComputeInstanceSubscription = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_ComputeInstanceSubscription =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(ComputeInstanceSubscription),
@@ -88,7 +91,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_ComputeInstanceSubscription =
         /*name=*/               "ComputeInstanceSubscription",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_ComputeInstanceSubscription,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_ComputeInstanceSubscription_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_ComputeInstanceSubscription,
     /*pExportInfo=*/        &__nvoc_export_info_ComputeInstanceSubscription
 };
@@ -181,17 +184,19 @@ static NvBool __nvoc_thunk_RmResource_cisubscriptionAccessCallback(struct Comput
     return rmresAccessCallback((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_ComputeInstanceSubscription_RmResource.offset), pInvokingClient, pAllocParams, accessRight);
 }
 
+NVOC_BUILD_CALLBACK(cisubscriptionCtrlCmdGetUuid_IMPL);
+
 #if !defined(NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG)
 #define NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(x)      (0)
 #endif
 
-static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_ComputeInstanceSubscription[] = 
+static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_ComputeInstanceSubscription[] =
 {
     {               /*  [0] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) cisubscriptionCtrlCmdGetUuid_IMPL,
+        /*pFunc=*/      cisubscriptionCtrlCmdGetUuid_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*flags=*/      0x10u,
         /*accessRight=*/0x0u,
@@ -205,7 +210,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_ComputeI
 
 };
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_ComputeInstanceSubscription = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_ComputeInstanceSubscription =
 {
     /*numEntries=*/     1,
     /*pExportEntries=*/ __nvoc_exported_method_def_ComputeInstanceSubscription
@@ -355,4 +360,3 @@ NV_STATUS __nvoc_objCreateDynamic_ComputeInstanceSubscription(ComputeInstanceSub
 
     return status;
 }
-

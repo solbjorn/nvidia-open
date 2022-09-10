@@ -50,7 +50,7 @@ const NvU32 nvswitch_i2c_device_allow_list_size_lr10 =
 // PMGR functions
 //
 
-/*! 
+/*!
  *  @brief Return I2c port info used in PMGR implementation.
  */
 NvU32
@@ -242,7 +242,7 @@ nvswitch_i2c_set_hw_speed_mode_lr10
             NVSWITCH_PRINT(device, ERROR,
                 "%s: undefined speed\n",
                 __FUNCTION__);
-            // Deliberate fallthrough
+            fallthrough;
         case NVSWITCH_CTRL_I2C_FLAGS_SPEED_MODE_100KHZ:
             timing = FLD_SET_DRF(_PMGR, _I2C_TIMING, _SCL_PERIOD, _100KHZ, timing);
             timing = FLD_SET_DRF_NUM(_PMGR, _I2C_TIMING, _TIMEOUT_CLK_CNT, NVSWITCH_I2C_SCL_CLK_TIMEOUT_100KHZ, timing);
@@ -332,4 +332,3 @@ nvswitch_i2c_is_device_access_allowed_lr10
 
     return bAllow;
 }
-

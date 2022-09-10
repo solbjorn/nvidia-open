@@ -24,9 +24,12 @@ void __nvoc_init_dataField_KernelGraphicsManager(KernelGraphicsManager*);
 void __nvoc_dtor_KernelGraphicsManager(KernelGraphicsManager*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_KernelGraphicsManager;
 
+#define __NVOC_CB_TYPE KernelGraphicsManager
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_KernelGraphicsManager, __nvoc_dtor_KernelGraphicsManager);
+
 static const struct NVOC_RTTI __nvoc_rtti_KernelGraphicsManager_KernelGraphicsManager = {
     /*pClassDef=*/          &__nvoc_class_def_KernelGraphicsManager,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_KernelGraphicsManager,
+    /*dtor=*/               __nvoc_dtor_KernelGraphicsManager_dtor,
     /*offset=*/             0,
 };
 
@@ -51,7 +54,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_KernelGraphicsManager = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_KernelGraphicsManager = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_KernelGraphicsManager =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(KernelGraphicsManager),
@@ -61,7 +64,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_KernelGraphicsManager =
         /*name=*/               "KernelGraphicsManager",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_KernelGraphicsManager,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_KernelGraphicsManager_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_KernelGraphicsManager,
     /*pExportInfo=*/        &__nvoc_export_info_KernelGraphicsManager
 };
@@ -146,7 +149,7 @@ static NvBool __nvoc_thunk_OBJENGSTATE_kgrmgrIsPresent(POBJGPU pGpu, struct Kern
     return engstateIsPresent(pGpu, (struct OBJENGSTATE *)(((unsigned char *)pEngstate) + __nvoc_rtti_KernelGraphicsManager_OBJENGSTATE.offset));
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_KernelGraphicsManager = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_KernelGraphicsManager =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -278,4 +281,3 @@ NV_STATUS __nvoc_objCreateDynamic_KernelGraphicsManager(KernelGraphicsManager **
 
     return status;
 }
-

@@ -50,7 +50,7 @@ typedef struct _def_rm_flcn_bl_desc RM_FLCN_BL_DESC;
 #define PRIVATE_FIELD(x) NVOC_PRIVATE_FIELD(x)
 #endif
 struct KernelSec2 {
-    const struct NVOC_RTTI *__nvoc_rtti;
+    struct __rtti_marker __nvoc_rtti;
     struct OBJENGSTATE __nvoc_base_OBJENGSTATE;
     struct KernelFalcon __nvoc_base_KernelFalcon;
     struct Object *__nvoc_pbase_Object;

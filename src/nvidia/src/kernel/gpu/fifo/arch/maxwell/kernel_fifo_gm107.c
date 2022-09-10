@@ -591,6 +591,15 @@ kfifoConvertInstToKernelChannel_GM107
     NV_ADDRESS_SPACE     instAperture;
     CHANNEL_ITERATOR     chanIt;
 
+    //
+    // The MMU_PTE version of aperture is what the HW should always
+    // report for an instance block. Compare the SW defines against
+    // these values here.
+    //
+    VERIFY_INST_BLOCK_APERTURE(NV_MMU_PTE_APERTURE_VIDEO_MEMORY,
+                               NV_MMU_PTE_APERTURE_SYSTEM_COHERENT_MEMORY,
+                               NV_MMU_PTE_APERTURE_SYSTEM_NON_COHERENT_MEMORY);
+
     NV_ASSERT_OR_RETURN(pInst != NULL, NV_ERR_INVALID_ARGUMENT);
     NV_ASSERT_OR_RETURN(ppKernelChannel != NULL, NV_ERR_INVALID_ARGUMENT);
     NV_ASSERT_OR_RETURN(!gpumgrGetBcEnabledStatus(pGpu), NV_ERR_INVALID_STATE);
@@ -611,15 +620,6 @@ kfifoConvertInstToKernelChannel_GM107
             DBG_BREAKPOINT();
             return NV_ERR_INVALID_ADDRESS;
     }
-
-    //
-    // The MMU_PTE version of aperture is what the HW should always
-    // report for an instance block. Compare the SW defines against
-    // these values here.
-    //
-    VERIFY_INST_BLOCK_APERTURE(NV_MMU_PTE_APERTURE_VIDEO_MEMORY,
-                               NV_MMU_PTE_APERTURE_SYSTEM_COHERENT_MEMORY,
-                               NV_MMU_PTE_APERTURE_SYSTEM_NON_COHERENT_MEMORY);
 
     memdescCreateExisting(&instMemDesc, pGpu, NV_RAMIN_ALLOC_SIZE,
                           ADDR_UNKNOWN, NV_MEMORY_UNCACHED,

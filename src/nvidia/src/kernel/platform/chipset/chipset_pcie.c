@@ -208,6 +208,8 @@ objClInitPcieChipset(OBJGPU *pGpu, OBJCL *pCl)
     NvBool    tempLtrSupported;
     NvBool    needsNosnoopWAR = NV_FALSE;
     NV_STATUS status;
+    OBJHWBC *pHWBC;
+    NvU8 childBus;
 
     if (pGpu != NULL)
     {
@@ -350,8 +352,8 @@ objClInitPcieChipset(OBJGPU *pGpu, OBJCL *pCl)
 
     domain = pGpu->gpuClData.upstreamPort.addr.domain;
 
-    OBJHWBC *pHWBC = pCl->pHWBC;
-    NvU8 childBus = pGpu->gpuClData.upstreamPort.addr.bus;
+    pHWBC = pCl->pHWBC;
+    childBus = pGpu->gpuClData.upstreamPort.addr.bus;
 
     while (pHWBC != NULL)
     {
@@ -1052,6 +1054,8 @@ objClInitGpuPortData
                         // need to remove from ASPM POR
                         if (pCl->getProperty(pCl, PDB_PROP_CL_INTEL_CPU_ROOTPORT1_NEEDS_H57_WAR))
                             break;
+
+                        fallthrough;
 
                     case INTEL_LYNNFIELD_ROOTPORT_CPU2:
                         pGpu->setProperty(pGpu, PDB_PROP_GPU_UPSTREAM_PORT_L1_POR_SUPPORTED, NV_TRUE);
@@ -2692,6 +2696,8 @@ clPcieReadWord_IMPL
     OBJSYS *pSys = SYS_GET_INSTANCE();
     OBJOS *pOS   = SYS_GET_OS(pSys);
     NvU16 *pData = NULL, value = 0;
+    void *handle;
+
     NV_ASSERT(offset + sizeof(value) <= 0x1000); // Enhanced Configuration Space is 4K
     NV_ASSERT(device < PCI_MAX_DEVICES); // Maximum device number is 32
     NV_ASSERT(func < PCI_MAX_FUNCTIONS); // Maximum function number is 8
@@ -2704,7 +2710,7 @@ clPcieReadWord_IMPL
     }
 
     // Check if there is an OS specific implementation
-    void *handle = osPciInitHandle(domain, bus, device, func, NULL, NULL);
+    handle = osPciInitHandle(domain, bus, device, func, NULL, NULL);
     if ((handle != NULL) && osTestPcieExtendedConfigAccess(handle, offset))
     {
         return osPciReadWord(handle, offset);
@@ -2735,6 +2741,8 @@ clPcieReadDword_IMPL
     OBJSYS *pSys = SYS_GET_INSTANCE();
     OBJOS *pOS   = SYS_GET_OS(pSys);
     NvU32 *pData = NULL, value = 0;
+    void *handle;
+
     NV_ASSERT(offset + sizeof(value) <= 0x1000); // Enhanced Configuration Space is 4K
     NV_ASSERT(device < PCI_MAX_DEVICES); // Maximum device number is 32
     NV_ASSERT(func < PCI_MAX_FUNCTIONS); // Maximum function number is 8
@@ -2747,7 +2755,7 @@ clPcieReadDword_IMPL
     }
 
     // Check if there is an OS specific implementation
-    void *handle = osPciInitHandle(domain, bus, device, func, NULL, NULL);
+    handle = osPciInitHandle(domain, bus, device, func, NULL, NULL);
     if ((handle != NULL) && osTestPcieExtendedConfigAccess(handle, offset))
     {
         return osPciReadDword(handle, offset);
@@ -2779,6 +2787,8 @@ clPcieWriteWord_IMPL
     OBJSYS *pSys = SYS_GET_INSTANCE();
     OBJOS *pOS   = SYS_GET_OS(pSys);
     NvU16 *pData = NULL;
+    void *handle;
+
     NV_ASSERT(offset + sizeof(value) <= 0x1000); // Enhanced Configuration Space is 4K
     NV_ASSERT(device < PCI_MAX_DEVICES); // Maximum device number is 32
     NV_ASSERT(func < PCI_MAX_FUNCTIONS); // Maximum function number is 8
@@ -2791,7 +2801,7 @@ clPcieWriteWord_IMPL
     }
 
     // Check if there is an OS specific implementation
-    void *handle = osPciInitHandle(domain, bus, device, func, NULL, NULL);
+    handle = osPciInitHandle(domain, bus, device, func, NULL, NULL);
     if ((handle != NULL) && osTestPcieExtendedConfigAccess(handle, offset))
     {
         osPciWriteWord(handle, offset, value);
@@ -2823,6 +2833,8 @@ clPcieWriteDword_IMPL
     OBJSYS *pSys = SYS_GET_INSTANCE();
     OBJOS *pOS   = SYS_GET_OS(pSys);
     NvU32 *pData = NULL;
+    void *handle;
+
     NV_ASSERT(offset + sizeof(value) <= 0x1000); // Enhanced Configuration Space is 4K
     NV_ASSERT(device < PCI_MAX_DEVICES); // Maximum device number is 32
     NV_ASSERT(func < PCI_MAX_FUNCTIONS); // Maximum function number is 8
@@ -2835,7 +2847,7 @@ clPcieWriteDword_IMPL
     }
 
     // Check if there is an OS specific implementation
-    void *handle = osPciInitHandle(domain, bus, device, func, NULL, NULL);
+    handle = osPciInitHandle(domain, bus, device, func, NULL, NULL);
     if ((handle != NULL) && osTestPcieExtendedConfigAccess(handle, offset))
     {
         osPciWriteDword(handle, offset, value);

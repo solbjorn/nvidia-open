@@ -22,9 +22,12 @@ void __nvoc_init_dataField_GpuDb(GpuDb*);
 void __nvoc_dtor_GpuDb(GpuDb*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_GpuDb;
 
+#define __NVOC_CB_TYPE GpuDb
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_GpuDb, __nvoc_dtor_GpuDb);
+
 static const struct NVOC_RTTI __nvoc_rtti_GpuDb_GpuDb = {
     /*pClassDef=*/          &__nvoc_class_def_GpuDb,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_GpuDb,
+    /*dtor=*/               __nvoc_dtor_GpuDb_dtor,
     /*offset=*/             0,
 };
 
@@ -42,7 +45,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_GpuDb = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_GpuDb = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_GpuDb =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(GpuDb),
@@ -52,12 +55,12 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_GpuDb =
         /*name=*/               "GpuDb",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_GpuDb,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_GpuDb_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_GpuDb,
     /*pExportInfo=*/        &__nvoc_export_info_GpuDb
 };
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_GpuDb = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_GpuDb =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -151,4 +154,3 @@ NV_STATUS __nvoc_objCreateDynamic_GpuDb(GpuDb **ppThis, Dynamic *pParent, NvU32 
 
     return status;
 }
-

@@ -131,6 +131,7 @@ knvlinkOverrideConfig_GV100
     NvU32         phase
 )
 {
+    NV2080_CTRL_NVLINK_PROCESS_FORCED_CONFIGS_PARAMS forcedConfigParams;
     NV_STATUS status = NV_OK;
     NvU32     i;
 
@@ -160,7 +161,6 @@ knvlinkOverrideConfig_GV100
         return NV_OK;
     }
 
-    NV2080_CTRL_NVLINK_PROCESS_FORCED_CONFIGS_PARAMS forcedConfigParams;
     portMemSet(&forcedConfigParams, 0, sizeof(forcedConfigParams));
 
     forcedConfigParams.bLegacyForcedConfig = NV_FALSE;
@@ -325,12 +325,12 @@ _knvlinkAreLinksDisconnected
     NvBool       *bLinkDisconnected
 )
 {
+    NV2080_CTRL_NVLINK_GET_LINK_AND_CLOCK_INFO_PARAMS params;
     NV_STATUS status = NV_OK;
     NvU32     linkId;
 
     NV_ASSERT_OR_RETURN(bLinkDisconnected != NULL, NV_ERR_INVALID_ARGUMENT);
 
-    NV2080_CTRL_NVLINK_GET_LINK_AND_CLOCK_INFO_PARAMS params;
 
     portMemSet(&params, 0, sizeof(params));
     params.linkMask = pKernelNvlink->enabledLinks;
@@ -381,13 +381,13 @@ knvlinkProgramLinkSpeed_GV100
     KernelNvlink *pKernelNvlink
 )
 {
-    NV_STATUS status = NV_OK;
-    NvU32     platformLineRate;
-
+    NV2080_CTRL_NVLINK_PROGRAM_LINK_SPEED_PARAMS programLinkSpeedParams;
     NV_STATUS platformLinerateDefined = NV_ERR_NOT_SUPPORTED;
+    NV_STATUS status = NV_OK;
+    NvU32 platformLineRate;
+
     platformLinerateDefined = osGetPlatformNvlinkLinerate(pGpu, &platformLineRate);
 
-    NV2080_CTRL_NVLINK_PROGRAM_LINK_SPEED_PARAMS programLinkSpeedParams;
     portMemSet(&programLinkSpeedParams, 0, sizeof(programLinkSpeedParams));
 
     programLinkSpeedParams.bPlatformLinerateDefined = (platformLinerateDefined == NV_OK);

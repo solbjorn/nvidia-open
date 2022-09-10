@@ -133,7 +133,7 @@ typedef struct RMRES_MEM_INTER_MAP_PARAMS RMRES_MEM_INTER_MAP_PARAMS;
 #define PRIVATE_FIELD(x) NVOC_PRIVATE_FIELD(x)
 #endif
 struct RmResourceCommon {
-    const struct NVOC_RTTI *__nvoc_rtti;
+    struct __rtti_marker __nvoc_rtti;
     struct RmResourceCommon *__nvoc_pbase_RmResourceCommon;
 };
 
@@ -180,7 +180,7 @@ NV_STATUS rmrescmnConstruct_IMPL(struct RmResourceCommon *arg_pResourceCommmon);
 #define PRIVATE_FIELD(x) NVOC_PRIVATE_FIELD(x)
 #endif
 struct RmResource {
-    const struct NVOC_RTTI *__nvoc_rtti;
+    struct __rtti_marker __nvoc_rtti;
     struct RsResource __nvoc_base_RsResource;
     struct RmResourceCommon __nvoc_base_RmResourceCommon;
     struct Object *__nvoc_pbase_Object;

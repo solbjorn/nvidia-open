@@ -70,7 +70,7 @@ enum __SCHED_POLICY
 #define PRIVATE_FIELD(x) NVOC_PRIVATE_FIELD(x)
 #endif
 struct KernelSchedMgr {
-    const struct NVOC_RTTI *__nvoc_rtti;
+    struct __rtti_marker __nvoc_rtti;
     struct Object __nvoc_base_Object;
     struct Object *__nvoc_pbase_Object;
     struct KernelSchedMgr *__nvoc_pbase_KernelSchedMgr;

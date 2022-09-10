@@ -22,9 +22,12 @@ void __nvoc_init_dataField_RsResource(RsResource*);
 void __nvoc_dtor_RsResource(RsResource*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_RsResource;
 
+#define __NVOC_CB_TYPE RsResource
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_RsResource, __nvoc_dtor_RsResource);
+
 static const struct NVOC_RTTI __nvoc_rtti_RsResource_RsResource = {
     /*pClassDef=*/          &__nvoc_class_def_RsResource,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_RsResource,
+    /*dtor=*/               __nvoc_dtor_RsResource_dtor,
     /*offset=*/             0,
 };
 
@@ -42,7 +45,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_RsResource = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_RsResource = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_RsResource =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(RsResource),
@@ -52,12 +55,12 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_RsResource =
         /*name=*/               "RsResource",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_RsResource,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_RsResource_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_RsResource,
     /*pExportInfo=*/        &__nvoc_export_info_RsResource
 };
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_RsResource = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_RsResource =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -183,4 +186,3 @@ NV_STATUS __nvoc_objCreateDynamic_RsResource(RsResource **ppThis, Dynamic *pPare
 
     return status;
 }
-

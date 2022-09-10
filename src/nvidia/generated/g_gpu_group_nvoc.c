@@ -22,9 +22,12 @@ void __nvoc_init_dataField_OBJGPUGRP(OBJGPUGRP*);
 void __nvoc_dtor_OBJGPUGRP(OBJGPUGRP*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJGPUGRP;
 
+#define __NVOC_CB_TYPE OBJGPUGRP
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_OBJGPUGRP, __nvoc_dtor_OBJGPUGRP);
+
 static const struct NVOC_RTTI __nvoc_rtti_OBJGPUGRP_OBJGPUGRP = {
     /*pClassDef=*/          &__nvoc_class_def_OBJGPUGRP,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_OBJGPUGRP,
+    /*dtor=*/               __nvoc_dtor_OBJGPUGRP_dtor,
     /*offset=*/             0,
 };
 
@@ -42,7 +45,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_OBJGPUGRP = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_OBJGPUGRP = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_OBJGPUGRP =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(OBJGPUGRP),
@@ -52,12 +55,12 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_OBJGPUGRP =
         /*name=*/               "OBJGPUGRP",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_OBJGPUGRP,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_OBJGPUGRP_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_OBJGPUGRP,
     /*pExportInfo=*/        &__nvoc_export_info_OBJGPUGRP
 };
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJGPUGRP = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJGPUGRP =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -145,4 +148,3 @@ NV_STATUS __nvoc_objCreateDynamic_OBJGPUGRP(OBJGPUGRP **ppThis, Dynamic *pParent
 
     return status;
 }
-

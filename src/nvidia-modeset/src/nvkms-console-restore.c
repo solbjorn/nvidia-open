@@ -265,24 +265,30 @@ ConstructModeOneHeadRequestForOneDpy(NVDpyEvoRec *pDpyEvo,
                                      const NvU32 dispIndex,
                                      NvU32 *pAvailableHeadsMask)
 {
-    NvBool ret = FALSE;
     const NvU32 possibleHeads = *pAvailableHeadsMask &
                                  pDpyEvo->pConnectorEvo->validHeadMask;
+    struct NvKmsSetModeOneDispRequest *pRequestDisp;
+    struct NvKmsSetModeOneHeadRequest *pRequestHead;
+    struct NvKmsSetModeRequest *pRequest;
+    NVDispEvoRec *pDispEvo;
+    NVDevEvoRec *pDevEvo;
+    NvBool ret = FALSE;
+    NvU32 head;
 
     if (possibleHeads == 0 || pDpyEvo->isVrHmd) {
         goto done;
     }
 
-    const NvU32 head = BIT_IDX_32(LOWESTBIT(possibleHeads));
+    head = BIT_IDX_32(LOWESTBIT(possibleHeads));
 
-    NVDispEvoRec *pDispEvo = pDpyEvo->pDispEvo;
-    struct NvKmsSetModeRequest *pRequest = &pParams->request;
-    struct NvKmsSetModeOneDispRequest *pRequestDisp =
+    pDispEvo = pDpyEvo->pDispEvo;
+    pRequest = &pParams->request;
+    pRequestDisp =
         &pRequest->disp[dispIndex];
-    struct NvKmsSetModeOneHeadRequest *pRequestHead =
+    pRequestHead =
         &pRequestDisp->head[head];
 
-    NVDevEvoRec *pDevEvo = pDispEvo->pDevEvo;
+    pDevEvo = pDispEvo->pDevEvo;
 
     if (!InitModeOneHeadRequest(pDpyEvo,
                                 pSurfaceEvo,
@@ -540,15 +546,17 @@ ConstructModeRequestForTiledDisplay(const NVDispEvoRec *pDispEvo,
         const NvU32 possibleHeads = *pAvailableHeadsMask &
                                      pDpyEvo->pConnectorEvo->validHeadMask &
                                      ~claimedHeadMask;
+        struct NvKmsSetModeOneHeadRequest *pRequestHead;
+        struct NvKmsMode mode;
+        NvU32 head;
 
         if (possibleHeads == 0 || pDpyEvo->isVrHmd) {
             goto failed;
         }
 
-        const NvU32 head = BIT_IDX_32(LOWESTBIT(possibleHeads));
-        struct NvKmsSetModeOneHeadRequest *pRequestHead =
+        head = BIT_IDX_32(LOWESTBIT(possibleHeads));
+        pRequestHead =
             &pRequestDisp->head[head];
-        struct NvKmsMode mode;
 
         if (firstClaimedHead == NV_INVALID_HEAD) {
             /*
@@ -668,6 +676,8 @@ NvBool nvEvoRestoreConsole(NVDevEvoPtr pDevEvo, const NvBool allowMST)
     NVSurfaceEvoPtr pSurfaceEvo =
         nvEvoGetPointerFromApiHandle(pOpenDevSurfaceHandles,
                                      pDevEvo->fbConsoleSurfaceHandle);
+    NvBool foundDpysConfigForConsoleRestore = FALSE;
+    struct NvKmsSetModeRequest *pRequest;
     struct NvKmsSetModeParams *params;
 
     /*
@@ -716,8 +726,7 @@ NvBool nvEvoRestoreConsole(NVDevEvoPtr pDevEvo, const NvBool allowMST)
     //
     // To start with, try to enable as many connected dpys as possible,
     // preferring boot displays first.
-    struct NvKmsSetModeRequest *pRequest = &params->request;
-    NvBool foundDpysConfigForConsoleRestore = FALSE;
+    pRequest = &params->request;
 
     FOR_ALL_EVO_DISPLAYS(pDispEvo, dispIndex, pDevEvo) {
         NvU32 availableHeadsMask = NVBIT(pDevEvo->numHeads) - 1;
@@ -727,6 +736,7 @@ NvBool nvEvoRestoreConsole(NVDevEvoPtr pDevEvo, const NvBool allowMST)
                                              pDispEvo->bootDisplays);
         struct NvKmsSetModeOneDispRequest *pRequestDisp =
             &pRequest->disp[dispIndex];
+        NVDpyIdList handledDpysList;
         int pass;
 
         pRequest->requestedDispsBitMask |= NVBIT(dispIndex);
@@ -738,7 +748,7 @@ NvBool nvEvoRestoreConsole(NVDevEvoPtr pDevEvo, const NvBool allowMST)
             continue;
         }
 
-        NVDpyIdList handledDpysList = nvEmptyDpyIdList();
+        handledDpysList = nvEmptyDpyIdList();
 
         for (pass = 0; pass < 2; pass++) {
             NVDpyIdList candidateDpys;

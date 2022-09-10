@@ -154,9 +154,11 @@ gpuacctCleanupDataStore
     GPU_ACCT_PROC_DATA_STORE *pDS
 )
 {
-    NV_ASSERT_OR_RETURN(pDS != NULL, NV_ERR_INVALID_ARGUMENT);
+    GPU_ACCT_PROC_LISTIter iter;
 
-    GPU_ACCT_PROC_LISTIter iter = listIterAll(&pDS->procList);
+    NV_ASSERT_OR_RETURN(pDS != NULL, NV_ERR_INVALID_ARGUMENT);
+    iter = listIterAll(&pDS->procList);
+
     while (listIterNext(&iter))
     {
         GPUACCT_PROC_ENTRY *pEntry = iter.pValue;
@@ -461,10 +463,11 @@ gpuacctSampleGpuUtil
     GPUACCT_GPU_INSTANCE_INFO *pGpuInstanceInfo = pTmrEvent->pUserData;
     NV2080_CTRL_PERF_GET_GPUMON_PERFMON_UTIL_SAMPLES_V2_PARAMS *pParams;
     NV_STATUS status;
+    RM_API *pRmApi;
 
     NV_ASSERT_OR_RETURN(!IS_GSP_CLIENT(pGpu), NV_ERR_INVALID_STATE);
 
-    RM_API *pRmApi = rmapiGetInterface(RMAPI_GPU_LOCK_INTERNAL);
+    pRmApi = rmapiGetInterface(RMAPI_GPU_LOCK_INTERNAL);
 
     if (pGpuInstanceInfo == NULL || pTmr == NULL || pGpuInstanceInfo->pSamplesParams == NULL)
     {
@@ -632,11 +635,12 @@ gpuacctStartGpuAccounting_IMPL
     NV_STATUS status = NV_OK;
     GPUACCT_PROC_ENTRY *pEntry = NULL;
     GPU_ACCT_PROC_DATA_STORE *pDS = NULL;
+    GPUACCT_GPU_INSTANCE_INFO *gpuInstanceInfo;
 
     pGpu = gpumgrGetGpu(gpuInstance);
     NV_ASSERT_OR_RETURN(pGpu != NULL, NV_ERR_INVALID_STATE);
-
-    GPUACCT_GPU_INSTANCE_INFO *gpuInstanceInfo = &pGpuAcct->gpuInstanceInfo[gpuInstance];
+    
+    gpuInstanceInfo = &pGpuAcct->gpuInstanceInfo[gpuInstance];
 
     vmIndex = NV_INVALID_VM_INDEX;
     pDS = &gpuInstanceInfo->liveProcAcctInfo;
@@ -706,12 +710,12 @@ gpuacctStopGpuAccounting_IMPL
 {
     OBJGPU *pGpu;
     GPUACCT_GPU_INSTANCE_INFO *pGpuInstanceInfo;
-    GPU_ACCT_PROC_DATA_STORE *pLiveDS;
+    GPU_ACCT_PROC_DATA_STORE *pLiveDS = NULL;
     GPU_ACCT_PROC_DATA_STORE *pDeadDS;
     GPUACCT_PROC_ENTRY *pEntry;
     GPUACCT_PROC_ENTRY *pOldEntry;
     NV_STATUS status;
-    NvU32 searchPid;
+    NvU32 searchPid = 0;
     NvU32 vmIndex;
 
     pGpu = gpumgrGetGpu(gpuInstance);
@@ -1031,11 +1035,12 @@ gpuacctGetAcctPids_IMPL
 )
 {
     GPUACCT_PROC_ENTRY *pEntry;
-    GPU_ACCT_PROC_LIST *pList;
+    GPU_ACCT_PROC_LIST *pList = NULL;
     OBJGPU *pGpu;
     NvU32 count;
     NvU32 vmIndex;
     GPUACCT_GPU_INSTANCE_INFO *pGpuInstanceInfo;
+    GPU_ACCT_PROC_LISTIter iter;
 
     ct_assert((NV_MAX_LIVE_ACCT_PROCESS + NV_MAX_DEAD_ACCT_PROCESS) <= NV0000_GPUACCT_PID_MAX_COUNT);
 
@@ -1056,7 +1061,7 @@ gpuacctGetAcctPids_IMPL
     }
     NV_ASSERT_OR_RETURN(pList != NULL, NV_ERR_INVALID_STATE);
 
-    GPU_ACCT_PROC_LISTIter iter = listIterAll(pList);
+    iter = listIterAll(pList);
     while (listIterNext(&iter))
     {
         pEntry = iter.pValue;
@@ -1243,6 +1248,7 @@ gpuacctEnableAccounting_IMPL
     OBJGPU *pGpu;
     GPUACCT_GPU_INSTANCE_INFO *pGpuInstanceInfo;
     NV_STATUS status = NV_OK;
+    NvU32 vmPid;
 
     NV_ASSERT_OR_RETURN(pSetAcctModeParams != NULL, NV_ERR_INVALID_ARGUMENT);
 
@@ -1261,7 +1267,7 @@ gpuacctEnableAccounting_IMPL
     // Set vmPid if we are on VGX host and pParams->pid is non zero.
     // pParams->pid will be set when the RM control call is coming
     // from VGPU plugin, otherwise will be 0.
-    NvU32 vmPid = (hypervisorIsVgxHyper() && (pSetAcctModeParams->pid != 0)) ?
+    vmPid = (hypervisorIsVgxHyper() && (pSetAcctModeParams->pid != 0)) ?
                    pSetAcctModeParams->pid :
                    NV_INVALID_VM_PID;
 

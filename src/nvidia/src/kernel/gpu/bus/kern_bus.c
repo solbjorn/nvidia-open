@@ -800,6 +800,7 @@ kbusSetupBindFla_KERNEL
 
     if (!gpuIsWarBug200577889SriovHeavyEnabled(pGpu))
     {
+        NV2080_CTRL_FLA_ADDRSPACE paramAddrSpace;
         MEMORY_DESCRIPTOR  *pMemDesc;
         RmPhysAddr          imbPhysAddr;
         NvU32               addrSpace;
@@ -807,7 +808,7 @@ kbusSetupBindFla_KERNEL
         pMemDesc     = pKernelBus->flaInfo.pInstblkMemDesc;
         imbPhysAddr  = memdescGetPhysAddr(pMemDesc, AT_GPU, 0);
         addrSpace    = memdescGetAddressSpace(pMemDesc);
-        NV2080_CTRL_FLA_ADDRSPACE paramAddrSpace = NV2080_CTRL_FLA_ADDRSPACE_FBMEM;
+        paramAddrSpace = NV2080_CTRL_FLA_ADDRSPACE_FBMEM;
 
         switch(addrSpace)
         {

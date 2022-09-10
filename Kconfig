@@ -1,0 +1,34 @@
+# SPDX-License-Identifier: GPL-2.0-only
+
+menuconfig DRM_NVIDIA
+	tristate "NVIDIA Linux GPU driver"
+	depends on DRM
+	select DRM_KMS_HELPER
+	# This must have way more depends and selects, but Nvidia doesn't
+	# provide any Kconfig to rely on. For now, rely on that usual distro
+	# configs already have all that is needed.
+	help
+	  NVIDIA open-source GPU driver ported from their official repo.
+
+	  https://github.com/NVIDIA/open-gpu-kernel-modules
+
+if DRM_NVIDIA
+
+choice
+	prompt "Driver build type"
+	default DRM_NVIDIA_RELEASE
+
+config DRM_NVIDIA_DEBUG
+	bool "Debug"
+
+config DRM_NVIDIA_DEVELOP
+	bool "Develop"
+
+config DRM_NVIDIA_RELEASE
+	bool "Release"
+
+endchoice
+
+# Something will happen here later.
+
+endif

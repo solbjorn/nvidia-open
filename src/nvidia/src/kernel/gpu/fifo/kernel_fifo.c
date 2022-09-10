@@ -747,9 +747,11 @@ kfifoChidMgrRetainChid_IMPL
 
     if (IS_GFID_VF(gfid))
     {
+        PEMEMBLOCK  pVirtChIdBlock;
+
         NV_ASSERT_OR_RETURN(pChidMgr->ppVirtualChIDHeap[gfid] != NULL,
                             NV_ERR_INVALID_STATE);
-        PEMEMBLOCK  pVirtChIdBlock = pChidMgr->ppVirtualChIDHeap[gfid]->eheapGetBlock(
+        pVirtChIdBlock = pChidMgr->ppVirtualChIDHeap[gfid]->eheapGetBlock(
             pChidMgr->ppVirtualChIDHeap[gfid],
             ChID,
             NV_FALSE);
@@ -759,8 +761,10 @@ kfifoChidMgrRetainChid_IMPL
     }
     else
     {
+        PEMEMBLOCK  pChIdBlock;
+
         NV_ASSERT_OR_RETURN(pChidMgr->pGlobalChIDHeap != NULL, NV_ERR_INVALID_STATE);
-        PEMEMBLOCK  pChIdBlock = pChidMgr->pGlobalChIDHeap->eheapGetBlock(
+        pChIdBlock = pChidMgr->pGlobalChIDHeap->eheapGetBlock(
             pChidMgr->pGlobalChIDHeap,
             ChID,
             NV_FALSE);

@@ -47,12 +47,13 @@ kdispGetChannelNum_v03_00
     NvU32 *pChannelNum
 )
 {
+    const KernelDisplayStaticInfo *pStaticInfo;
     NV_STATUS status = NV_ERR_INVALID_ARGUMENT;
 
     if (pChannelNum == NULL)
         return NV_ERR_INVALID_ARGUMENT;
 
-    const KernelDisplayStaticInfo *pStaticInfo = pKernelDisplay->pStaticInfo;
+    pStaticInfo = pKernelDisplay->pStaticInfo;
     NV_ASSERT_OR_RETURN(pStaticInfo != NULL, NV_ERR_INVALID_STATE);
 
     switch (channelClass)

@@ -218,7 +218,7 @@ CliControlSystemEvent
                     break;
                 }
 
-            //fall through
+                fallthrough;
             }
             case NV0000_CTRL_EVENT_SET_NOTIFICATION_ACTION_DISABLE:
             {
@@ -591,11 +591,11 @@ cliresCtrlCmdSystemGetBuildVersionV2_IMPL
     NV0000_CTRL_SYSTEM_GET_BUILD_VERSION_V2_PARAMS *pParams
 )
 {
-    LOCK_ASSERT_AND_RETURN(rmApiLockIsOwner());
-
     ct_assert(sizeof(NV_VERSION_STRING) <= sizeof(pParams->driverVersionBuffer));
     ct_assert(sizeof(NV_BUILD_BRANCH_VERSION) <= sizeof(pParams->versionBuffer));
     ct_assert(sizeof(NV_DISPLAY_DRIVER_TITLE) <= sizeof(pParams->titleBuffer));
+
+    LOCK_ASSERT_AND_RETURN(rmApiLockIsOwner());
 
     portMemCopy(pParams->driverVersionBuffer, sizeof(pParams->driverVersionBuffer),
                 NV_VERSION_STRING, sizeof(NV_VERSION_STRING));
@@ -1319,6 +1319,8 @@ cliresCtrlCmdGpuAcctSetAccountingState_IMPL
 {
     OBJGPU     *pGpu = NULL;
     NV_STATUS status = NV_OK;
+    GpuAccounting *pGpuAcct;
+    OBJSYS     *pSys;
 
     LOCK_ASSERT_AND_RETURN(rmApiLockIsOwner());
 
@@ -1328,8 +1330,8 @@ cliresCtrlCmdGpuAcctSetAccountingState_IMPL
         return NV_ERR_INVALID_ARGUMENT;
     }
 
-    OBJSYS     *pSys = SYS_GET_INSTANCE();
-    GpuAccounting *pGpuAcct = SYS_GET_GPUACCT(pSys);
+    pSys = SYS_GET_INSTANCE();
+    pGpuAcct = SYS_GET_GPUACCT(pSys);
 
     if (IS_GSP_CLIENT(pGpu))
     {
@@ -2543,8 +2545,9 @@ cliresCtrlCmdClientShareObject_IMPL
     RsClient        *pClient = RES_GET_CLIENT(pRmCliRes);
     RsResourceRef   *pObjectRef;
 
-    CALL_CONTEXT  callContext;
     CALL_CONTEXT *pOldCallContext;
+    CALL_CONTEXT *pCallContext;
+    CALL_CONTEXT  callContext;
 
     NV_STATUS status;
 
@@ -2555,7 +2558,7 @@ cliresCtrlCmdClientShareObject_IMPL
     if (status != NV_OK)
         return status;
 
-    CALL_CONTEXT *pCallContext = resservGetTlsCallContext();
+    pCallContext = resservGetTlsCallContext();
 
     portMemSet(&callContext, 0, sizeof(callContext));
     callContext.pServer = &g_resServ;

@@ -42,7 +42,7 @@ extern "C" {
 #define PRIVATE_FIELD(x) NVOC_PRIVATE_FIELD(x)
 #endif
 struct RmHalspecOwner {
-    const struct NVOC_RTTI *__nvoc_rtti;
+    struct __rtti_marker __nvoc_rtti;
     struct RmHalspecOwner *__nvoc_pbase_RmHalspecOwner;
     struct ChipHal chipHal;
     struct RmVariantHal rmVariantHal;

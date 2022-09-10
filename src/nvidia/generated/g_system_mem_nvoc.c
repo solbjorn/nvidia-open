@@ -32,9 +32,12 @@ void __nvoc_init_dataField_SystemMemory(SystemMemory*);
 void __nvoc_dtor_SystemMemory(SystemMemory*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_SystemMemory;
 
+#define __NVOC_CB_TYPE SystemMemory
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_SystemMemory, __nvoc_dtor_SystemMemory);
+
 static const struct NVOC_RTTI __nvoc_rtti_SystemMemory_SystemMemory = {
     /*pClassDef=*/          &__nvoc_class_def_SystemMemory,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_SystemMemory,
+    /*dtor=*/               __nvoc_dtor_SystemMemory_dtor,
     /*offset=*/             0,
 };
 
@@ -87,7 +90,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_SystemMemory = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_SystemMemory = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_SystemMemory =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(SystemMemory),
@@ -97,7 +100,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_SystemMemory =
         /*name=*/               "SystemMemory",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_SystemMemory,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_SystemMemory_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_SystemMemory,
     /*pExportInfo=*/        &__nvoc_export_info_SystemMemory
 };
@@ -186,17 +189,20 @@ static NvBool __nvoc_thunk_RmResource_sysmemAccessCallback(struct SystemMemory *
     return rmresAccessCallback((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_SystemMemory_RmResource.offset), pInvokingClient, pAllocParams, accessRight);
 }
 
+NVOC_BUILD_CALLBACK(sysmemCtrlCmdGetSurfaceNumPhysPages_IMPL);
+NVOC_BUILD_CALLBACK(sysmemCtrlCmdGetSurfacePhysPages_IMPL);
+
 #if !defined(NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG)
 #define NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(x)      (0)
 #endif
 
-static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_SystemMemory[] = 
+static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_SystemMemory[] =
 {
     {               /*  [0] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x0u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) sysmemCtrlCmdGetSurfaceNumPhysPages_IMPL,
+        /*pFunc=*/      sysmemCtrlCmdGetSurfaceNumPhysPages_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x0u)
         /*flags=*/      0x0u,
         /*accessRight=*/0x0u,
@@ -209,9 +215,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_SystemMe
     },
     {               /*  [1] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x0u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) sysmemCtrlCmdGetSurfacePhysPages_IMPL,
+        /*pFunc=*/      sysmemCtrlCmdGetSurfacePhysPages_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x0u)
         /*flags=*/      0x0u,
         /*accessRight=*/0x0u,
@@ -225,7 +231,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_SystemMe
 
 };
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_SystemMemory = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_SystemMemory =
 {
     /*numEntries=*/     2,
     /*pExportEntries=*/ __nvoc_exported_method_def_SystemMemory
@@ -375,4 +381,3 @@ NV_STATUS __nvoc_objCreateDynamic_SystemMemory(SystemMemory **ppThis, Dynamic *p
 
     return status;
 }
-

@@ -204,7 +204,7 @@ void GroupImpl::expired(const void * tag)
 {
     if (tag == &tagHDCPReauthentication)
     {
-        HDCPState hdcpState = {0};
+        HDCPState hdcpState = { };
         parent->main->configureHDCPGetHDCPState(hdcpState);
 
         if (authRetries < HDCP_AUTHENTICATION_RETRIES)

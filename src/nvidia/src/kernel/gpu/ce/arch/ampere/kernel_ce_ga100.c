@@ -200,6 +200,10 @@ kceGetNvlinkAutoConfigCeValues_GA100
     NvBool        bEntryExists;
     NvU32         pceIdx, grceIdx, i;
     NVLINK_TOPOLOGY_PARAMS currentTopo;
+    // Bug 200283711: Use the largest of all chips in allocating these arrays
+    NvU32 localPceLceMap[NV_CE_PCE2LCE_CONFIG__SIZE_1_MAX];
+    NvU32 localGrceConfig[MAX_CE_CNT];
+    NvU32 localExposeCeMask = 0;
 
     NV_ASSERT_OR_RETURN(!RMCFG_FEATURE_PLATFORM_GSP, NV_ERR_NOT_SUPPORTED);
 
@@ -220,11 +224,6 @@ kceGetNvlinkAutoConfigCeValues_GA100
     {
         pPceLceMap[pceIdx] = NV_CE_PCE2LCE_CONFIG_PCE_ASSIGNED_LCE_NONE;
     }
-
-    // Bug 200283711: Use the largest of all chips in allocating these arrays
-    NvU32 localPceLceMap[NV_CE_PCE2LCE_CONFIG__SIZE_1_MAX];
-    NvU32 localGrceConfig[MAX_CE_CNT];
-    NvU32 localExposeCeMask = 0;
 
     // Initialize to ASSIGNED_LCE_NONE
     for (i = 0; i < pce2lceConfigSize1; i++)

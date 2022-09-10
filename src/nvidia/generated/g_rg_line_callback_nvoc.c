@@ -30,9 +30,12 @@ void __nvoc_init_dataField_RgLineCallback(RgLineCallback*);
 void __nvoc_dtor_RgLineCallback(RgLineCallback*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_RgLineCallback;
 
+#define __NVOC_CB_TYPE RgLineCallback
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_RgLineCallback, __nvoc_dtor_RgLineCallback);
+
 static const struct NVOC_RTTI __nvoc_rtti_RgLineCallback_RgLineCallback = {
     /*pClassDef=*/          &__nvoc_class_def_RgLineCallback,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_RgLineCallback,
+    /*dtor=*/               __nvoc_dtor_RgLineCallback_dtor,
     /*offset=*/             0,
 };
 
@@ -78,7 +81,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_RgLineCallback = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_RgLineCallback = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_RgLineCallback =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(RgLineCallback),
@@ -88,7 +91,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_RgLineCallback =
         /*name=*/               "RgLineCallback",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_RgLineCallback,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_RgLineCallback_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_RgLineCallback,
     /*pExportInfo=*/        &__nvoc_export_info_RgLineCallback
 };
@@ -181,7 +184,7 @@ static NvBool __nvoc_thunk_RmResource_rglcbAccessCallback(struct RgLineCallback 
     return rmresAccessCallback((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_RgLineCallback_RmResource.offset), pInvokingClient, pAllocParams, accessRight);
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_RgLineCallback = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_RgLineCallback =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -325,4 +328,3 @@ NV_STATUS __nvoc_objCreateDynamic_RgLineCallback(RgLineCallback **ppThis, Dynami
 
     return status;
 }
-

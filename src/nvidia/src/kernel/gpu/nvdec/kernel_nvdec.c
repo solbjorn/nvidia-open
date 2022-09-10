@@ -49,13 +49,13 @@ knvdecConstructEngine_IMPL
 void knvdecRegisterIntrService_IMPL(OBJGPU *pGpu, KernelNvdec *pKernelNvdec, IntrServiceRecord pRecords[MC_ENGINE_IDX_MAX])
 {
     KernelFalcon *pKernelFalcon = staticCast(pKernelNvdec, KernelFalcon);
+    NvU32 mcIdx = MC_ENGINE_IDX_NVDEC0;
+
     NV_ASSERT_OR_RETURN_VOID(pKernelFalcon);
 
     NV_PRINTF(LEVEL_INFO, "physEngDesc 0x%x\n", pKernelFalcon->physEngDesc);
 
     NV_ASSERT(pKernelFalcon->physEngDesc == ENG_NVDEC(0));
-
-    NvU32 mcIdx = MC_ENGINE_IDX_NVDEC0;
 
     NV_ASSERT(pRecords[mcIdx].pNotificationService == NULL);
     pRecords[mcIdx].bFifoWaiveNotify = NV_FALSE;

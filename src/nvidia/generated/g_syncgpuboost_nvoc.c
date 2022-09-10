@@ -28,9 +28,12 @@ void __nvoc_init_dataField_SyncGpuBoost(SyncGpuBoost*);
 void __nvoc_dtor_SyncGpuBoost(SyncGpuBoost*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_SyncGpuBoost;
 
+#define __NVOC_CB_TYPE SyncGpuBoost
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_SyncGpuBoost, __nvoc_dtor_SyncGpuBoost);
+
 static const struct NVOC_RTTI __nvoc_rtti_SyncGpuBoost_SyncGpuBoost = {
     /*pClassDef=*/          &__nvoc_class_def_SyncGpuBoost,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_SyncGpuBoost,
+    /*dtor=*/               __nvoc_dtor_SyncGpuBoost_dtor,
     /*offset=*/             0,
 };
 
@@ -69,7 +72,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_SyncGpuBoost = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_SyncGpuBoost = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_SyncGpuBoost =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(SyncGpuBoost),
@@ -79,7 +82,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_SyncGpuBoost =
         /*name=*/               "SyncGpuBoost",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_SyncGpuBoost,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_SyncGpuBoost_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_SyncGpuBoost,
     /*pExportInfo=*/        &__nvoc_export_info_SyncGpuBoost
 };
@@ -156,7 +159,7 @@ static NvBool __nvoc_thunk_RmResource_syncgpuboostAccessCallback(struct SyncGpuB
     return rmresAccessCallback((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_SyncGpuBoost_RmResource.offset), pInvokingClient, pAllocParams, accessRight);
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_SyncGpuBoost = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_SyncGpuBoost =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -291,4 +294,3 @@ NV_STATUS __nvoc_objCreateDynamic_SyncGpuBoost(SyncGpuBoost **ppThis, Dynamic *p
 
     return status;
 }
-

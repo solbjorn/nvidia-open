@@ -117,11 +117,13 @@ typedef struct
 static ENGLIST_ITER gpuGetEngineOrderListIter(OBJGPU *pGpu, NvU32 flags);
 static NvBool gpuGetNextInEngineOrderList(OBJGPU *pGpu, ENGLIST_ITER *pIt, PENGDESCRIPTOR pEngDesc);
 
+#if 0
 static inline void _setPlatformNoHostbridgeDetect(NvBool bValue)
 {
     OBJPFM *pPfm = SYS_GET_PFM(SYS_GET_INSTANCE());
     pPfm->setProperty(pPfm, PDB_PROP_PFM_NO_HOSTBRIDGE_DETECT, bValue);
 }
+#endif
 
 // Forward declare all the class definitions so that we don't need to pull in all the headers
 #define GPU_CHILD(className, accessorName, numInstances, bConstructEarly, bAlwaysCreate, gpuField) \
@@ -263,6 +265,7 @@ gpuPostConstruct_IMPL
 )
 {
     NV_STATUS rmStatus;
+    OBJCL *pCl;
 
     gpumgrAddDeviceInstanceToGpus(NVBIT(pGpu->gpuInstance));
 
@@ -371,7 +374,7 @@ gpuPostConstruct_IMPL
     gpuGetHwDefaults(pGpu);
 
     // Handle per-device core logic registry settings
-    OBJCL *pCl  = SYS_GET_CL(SYS_GET_INSTANCE());
+    pCl = SYS_GET_CL(SYS_GET_INSTANCE());
     if (pCl != NULL)
     {
         clInitPropertiesFromRegistry(pGpu, pCl);
@@ -480,9 +483,11 @@ static NV_STATUS _gpuRmApiControl
     //
     if (hClient == pGpu->hInternalClient && hObject == pGpu->hInternalSubdevice)
     {
+        const struct NVOC_EXPORTED_METHOD_DEF *pEntry;
+        Dynamic *sub;
+
         NV_ASSERT_OR_RETURN(pGpu->pCachedSubdevice && pGpu->pCachedRsClient, NV_ERR_INVALID_STATE);
 
-        const struct NVOC_EXPORTED_METHOD_DEF *pEntry;
         pEntry = objGetExportedMethodDef((void*)pGpu->pCachedSubdevice, cmd);
 
         NV_ASSERT_OR_RETURN(pEntry != NULL, NV_ERR_NOT_SUPPORTED);
@@ -516,13 +521,15 @@ static NV_STATUS _gpuRmApiControl
 
         resservSwapTlsCallContext(&oldCtx, &callCtx);
 
+        sub = nvoc_to_dynamic(pGpu->pCachedSubdevice, Subdevice);
+
         if (pEntry->paramSize == 0)
         {
-            status = ((NV_STATUS(*)(void*))pEntry->pFunc)(pGpu->pCachedSubdevice);
+            status = pEntry->pFunc(sub, NULL);
         }
         else
         {
-            status = ((NV_STATUS(*)(void*,void*))pEntry->pFunc)(pGpu->pCachedSubdevice, pParams);
+            status = pEntry->pFunc(sub, pParams);
         }
 
         resservRestoreTlsCallContext(oldCtx);
@@ -1462,10 +1469,11 @@ gpuGetGpuMask_IMPL
 
 static NV_STATUS gspSupportsEngine(OBJGPU *pGpu, ENGDESCRIPTOR engdesc, NvBool *supports)
 {
+    NvU32 clientEngineId = 0;
+    NvU32 i;
+
     if (!IS_GSP_CLIENT(pGpu))
         return NV_WARN_NOTHING_TO_DO;
-
-    NvU32 clientEngineId = 0;
 
     if (gpuXlateEngDescToClientEngineId(pGpu, engdesc, &clientEngineId) != NV_OK)
     {
@@ -1475,12 +1483,15 @@ static NV_STATUS gspSupportsEngine(OBJGPU *pGpu, ENGDESCRIPTOR engdesc, NvBool *
 
     if (pGpu->gspSupportedEngines == NULL)
     {
+        NV_STATUS status;
+        RM_API *pRmApi;
+
         pGpu->gspSupportedEngines = portMemAllocNonPaged(sizeof(*pGpu->gspSupportedEngines));
         NV_ASSERT_OR_RETURN(pGpu->gspSupportedEngines != NULL, NV_ERR_NO_MEMORY);
 
-        RM_API *pRmApi = GPU_GET_PHYSICAL_RMAPI(pGpu);
+        pRmApi = GPU_GET_PHYSICAL_RMAPI(pGpu);
 
-        NV_STATUS status = pRmApi->Control(pRmApi,
+        status = pRmApi->Control(pRmApi,
                         pGpu->hInternalClient,
                         pGpu->hInternalSubdevice,
                         NV2080_CTRL_CMD_GPU_GET_ENGINES_V2,
@@ -1494,7 +1505,6 @@ static NV_STATUS gspSupportsEngine(OBJGPU *pGpu, ENGDESCRIPTOR engdesc, NvBool *
         }
     }
 
-    NvU32 i;
     for (i = 0; i < pGpu->gspSupportedEngines->engineCount; i++)
     {
         if (pGpu->gspSupportedEngines->engineList[i] == clientEngineId)
@@ -1926,10 +1936,12 @@ gpuStatePreInit_IMPL
     pGpu->boardInfo = portMemAllocNonPaged(sizeof(*pGpu->boardInfo));
     if (pGpu->boardInfo)
     {
+        RM_API *pRmApi;
+
         // To avoid potential race of xid reporting with the control, zero it out
         portMemSet(pGpu->boardInfo, '\0', sizeof(*pGpu->boardInfo));
 
-        RM_API *pRmApi = GPU_GET_PHYSICAL_RMAPI(pGpu);
+        pRmApi = GPU_GET_PHYSICAL_RMAPI(pGpu);
 
         if (pRmApi->Control(pRmApi,
                         pGpu->hInternalClient,
@@ -3913,6 +3925,8 @@ gpuInitDispIpHal_IMPL
     NvU32   ipver
 )
 {
+    void __nvoc_init_funcTable_KernelDisplay(KernelDisplay *, RmHalspecOwner *);
+    void __nvoc_init_funcTable_DisplayInstanceMemory(DisplayInstanceMemory *, RmHalspecOwner *);
     RmHalspecOwner *pRmHalspecOwner = staticCast(pGpu, RmHalspecOwner);
     DispIpHal *pDispIpHal = &pRmHalspecOwner->dispIpHal;
     KernelDisplay *pKernelDisplay = GPU_GET_KERNEL_DISPLAY(pGpu);
@@ -3964,10 +3978,8 @@ gpuInitDispIpHal_IMPL
         }
     }
 
-    void __nvoc_init_funcTable_KernelDisplay(KernelDisplay *, RmHalspecOwner *);
     __nvoc_init_funcTable_KernelDisplay(pKernelDisplay, pRmHalspecOwner);
 
-    void __nvoc_init_funcTable_DisplayInstanceMemory(DisplayInstanceMemory *, RmHalspecOwner *);
     __nvoc_init_funcTable_DisplayInstanceMemory(KERNEL_DISPLAY_GET_INST_MEM(pKernelDisplay),
                                                 pRmHalspecOwner);
 

@@ -30,9 +30,12 @@ void __nvoc_init_dataField_UserModeApi(UserModeApi*, RmHalspecOwner* );
 void __nvoc_dtor_UserModeApi(UserModeApi*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_UserModeApi;
 
+#define __NVOC_CB_TYPE UserModeApi
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_UserModeApi, __nvoc_dtor_UserModeApi);
+
 static const struct NVOC_RTTI __nvoc_rtti_UserModeApi_UserModeApi = {
     /*pClassDef=*/          &__nvoc_class_def_UserModeApi,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_UserModeApi,
+    /*dtor=*/               __nvoc_dtor_UserModeApi_dtor,
     /*offset=*/             0,
 };
 
@@ -78,7 +81,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_UserModeApi = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_UserModeApi = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_UserModeApi =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(UserModeApi),
@@ -88,7 +91,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_UserModeApi =
         /*name=*/               "UserModeApi",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_UserModeApi,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_UserModeApi_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_UserModeApi,
     /*pExportInfo=*/        &__nvoc_export_info_UserModeApi
 };
@@ -177,7 +180,7 @@ static NvBool __nvoc_thunk_RmResource_usrmodeAccessCallback(struct UserModeApi *
     return rmresAccessCallback((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_UserModeApi_RmResource.offset), pInvokingClient, pAllocParams, accessRight);
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_UserModeApi = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_UserModeApi =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -335,4 +338,3 @@ NV_STATUS __nvoc_objCreateDynamic_UserModeApi(UserModeApi **ppThis, Dynamic *pPa
 
     return status;
 }
-

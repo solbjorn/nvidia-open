@@ -951,11 +951,11 @@ static NvU32 GetAudioDeviceEntry(const NVDispEvoRec *pDispEvo, const NvU32 head)
     const NVConnectorEvoRec *pConnectorEvo =
         pHeadState->pConnectorEvo;
 
+    ct_assert(MAX_AUDIO_DEVICE_ENTRIES == NVKMS_MAX_HEADS_PER_DISP);
+
     if (pConnectorEvo == NULL) {
         return NV0073_CTRL_DFP_ELD_AUDIO_CAPS_DEVICE_ENTRY_NONE;
     }
-
-    ct_assert(MAX_AUDIO_DEVICE_ENTRIES == NVKMS_MAX_HEADS_PER_DISP);
 
     if (nvConnectorUsesDPLib(pConnectorEvo) &&
             (nvDPGetActiveLinkMode(pConnectorEvo->pDpLibConnector) ==

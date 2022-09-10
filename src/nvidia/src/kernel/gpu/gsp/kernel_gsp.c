@@ -883,6 +883,7 @@ _kgspInitRpcInfrastructure
 )
 {
     NV_STATUS nvStatus = NV_OK;
+    OBJRPC *pRpc;
 
     pKernelGsp->pRpc = initRpcObject(pGpu);
     if (pKernelGsp->pRpc == NULL)
@@ -891,7 +892,7 @@ _kgspInitRpcInfrastructure
         return NV_ERR_INSUFFICIENT_RESOURCES;
     }
 
-    OBJRPC *pRpc = pKernelGsp->pRpc;
+    pRpc = pKernelGsp->pRpc;
 
     pRpc->pMessageQueueInfo   = NULL;
 
@@ -1811,13 +1812,15 @@ _kgspCreateRadix3
 
     if (pData != NULL)
     {
+        NvU32 clearSize;
+
         dataOffset = radix3[3].offset;
 
         // Optionally copy data into the radix3 buffer.
         portMemCopy(pRadix3Buf + dataOffset, size, pData, size);
 
         // If we only have part of the last page, clear the rest.
-        NvU32 clearSize = allocSize - dataOffset - size;
+        clearSize = allocSize - dataOffset - size;
         if (clearSize != 0)
             portMemSet(pRadix3Buf + dataOffset + size, 0, clearSize);
 

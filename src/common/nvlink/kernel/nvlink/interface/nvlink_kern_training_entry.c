@@ -596,6 +596,8 @@ nvlink_lib_retrain_link_from_swcfg_to_active
 {
     nvlink_intranode_conn *conn   = NULL;
     NvlStatus              status = NVL_SUCCESS;
+    nvlink_intranode_conn *conns[1];
+    nvlink_link           *links[2];
 
     if (!link)
     {
@@ -640,8 +642,7 @@ nvlink_lib_retrain_link_from_swcfg_to_active
     }
 
     // create array of one conn and two link endpoints
-    nvlink_intranode_conn *conns[1] = {conn};
-    nvlink_link           *links[2] = {0};
+    conns[0] = conn;
 
     links[0] = conn->end0;
     links[1] = conn->end1;
@@ -728,6 +729,7 @@ nvlink_lib_save_training_seeds
 )
 {
     NvlStatus status = NVL_SUCCESS;
+    NvU32 size;
 
     // Check to make sure we are given a buffer of data
     if (seedData == NULL)
@@ -738,7 +740,7 @@ nvlink_lib_save_training_seeds
         return NVL_ERR_GENERIC;
     }
 
-    NvU32 size = seedData[0];
+    size = seedData[0];
 
     // check to make sure the size is not out of bounds 
     if (size > NVLINK_MAX_SEED_NUM)
@@ -785,6 +787,7 @@ nvlink_lib_copy_training_seeds
 )
 {
     NvlStatus status = NVL_SUCCESS;
+    NvU32 size;
 
     // Check to make sure we are given a buffer to copy into
     if (seedDataCopy == NULL)
@@ -795,7 +798,7 @@ nvlink_lib_copy_training_seeds
         return NVL_ERR_GENERIC;
     }
 
-    NvU32 size = link->seedData[0];
+    size = link->seedData[0];
 
     // check to make sure the size is not out of bounds
     if (size > NVLINK_MAX_SEED_NUM)

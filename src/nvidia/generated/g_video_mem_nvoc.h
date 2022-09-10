@@ -45,7 +45,7 @@ typedef struct PMA_ALLOC_INFO PMA_ALLOC_INFO;
 #define PRIVATE_FIELD(x) NVOC_PRIVATE_FIELD(x)
 #endif
 struct VideoMemory {
-    const struct NVOC_RTTI *__nvoc_rtti;
+    struct __rtti_marker __nvoc_rtti;
     struct StandardMemory __nvoc_base_StandardMemory;
     struct Object *__nvoc_pbase_Object;
     struct RsResource *__nvoc_pbase_RsResource;

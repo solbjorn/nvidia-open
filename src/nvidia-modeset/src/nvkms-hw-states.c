@@ -327,6 +327,8 @@ NvBool nvEvoLockHWStateFrameLockClient(NVDispEvoPtr pDispEvo,
 {
     NVEvoLockPin pin = nvEvoGetPinForSignal(pDispEvo, pEvoSubDev,
                                             NV_EVO_LOCK_SIGNAL_FRAME_LOCK);
+    NVEvoHeadControlPtr pHC;
+    int head;
 
     if (pin == NV_EVO_LOCK_PIN_ERROR) {
         return FALSE;
@@ -340,8 +342,8 @@ NvBool nvEvoLockHWStateFrameLockClient(NVDispEvoPtr pDispEvo,
     nvAssert(pHeads != NULL && pHeads[0] != NV_INVALID_HEAD);
 
     /* Additionally enable the first head as a frame lock client */
-    const int head = pHeads[0];
-    NVEvoHeadControlPtr pHC = &pEvoSubDev->headControlAssy[head];
+    head = pHeads[0];
+    pHC = &pEvoSubDev->headControlAssy[head];
 
     pHC->clientLock = NV_EVO_FRAME_LOCK;
     pHC->clientLockPin = pin;
@@ -360,6 +362,8 @@ NvBool nvEvoLockHWStateFrameLockServer(NVDispEvoPtr pDispEvo,
                                             NV_EVO_LOCK_SIGNAL_RASTER_LOCK);
     NVEvoLockPin flPin = nvEvoGetPinForSignal(pDispEvo, pEvoSubDev,
                                               NV_EVO_LOCK_SIGNAL_FLIP_LOCK);
+    NVEvoHeadControlPtr pHC;
+    int head;
 
     if (pin == NV_EVO_LOCK_PIN_ERROR || flPin == NV_EVO_LOCK_PIN_ERROR) {
         return FALSE;
@@ -371,8 +375,8 @@ NvBool nvEvoLockHWStateFrameLockServer(NVDispEvoPtr pDispEvo,
     nvAssert(pHeads != NULL && pHeads[0] != NV_INVALID_HEAD);
 
     /* Enable the first head as a raster lock server on the external pin */
-    const int head = pHeads[0];
-    NVEvoHeadControlPtr pHC = &pEvoSubDev->headControlAssy[head];
+    head = pHeads[0];
+    pHC = &pEvoSubDev->headControlAssy[head];
 
     pHC->serverLock = NV_EVO_RASTER_LOCK;
     pHC->serverLockPin = pin;
@@ -392,12 +396,14 @@ NvBool nvEvoLockHWStateFrameLockServerHouseSync(NVDispEvoPtr pDispEvo,
                                                 NVEvoSubDevPtr pEvoSubDev,
                                                 const NvU32 *pHeads)
 {
+    int head;
+
     /* As far as EVO is concerned, House Sync means FL client */
     if (!nvEvoLockHWStateFrameLockClient(pDispEvo, pEvoSubDev, pHeads)) {
         return FALSE;
     }
 
-    const int head = pHeads[0];
+    head = pHeads[0];
     pEvoSubDev->frameLockServerMaskAssy |= 1 << head;
     pEvoSubDev->frameLockClientMaskAssy &= ~(1 << head);
     pEvoSubDev->frameLockHouseSync = TRUE;
@@ -411,6 +417,8 @@ NvBool nvEvoLockHWStateFrameLockClientManyHeads(NVDispEvoPtr pDispEvo,
 {
     NVEvoLockPin pin = nvEvoGetPinForSignal(pDispEvo, pEvoSubDev,
                                             NV_EVO_LOCK_SIGNAL_FRAME_LOCK);
+    NVEvoHeadControlPtr pHC;
+    int head;
 
     if (pin == NV_EVO_LOCK_PIN_ERROR) {
         return FALSE;
@@ -422,8 +430,8 @@ NvBool nvEvoLockHWStateFrameLockClientManyHeads(NVDispEvoPtr pDispEvo,
     }
 
     /* Additionally enable the first head as a frame lock client */
-    const int head = pHeads[0];
-    NVEvoHeadControlPtr pHC = &pEvoSubDev->headControlAssy[head];
+    head = pHeads[0];
+    pHC = &pEvoSubDev->headControlAssy[head];
 
     pHC->clientLock = NV_EVO_FRAME_LOCK;
     pHC->clientLockPin = pin;
@@ -502,12 +510,14 @@ NvBool nvEvoLockHWStateFrameLockServerHouseSyncManyHeads(NVDispEvoPtr pDispEvo,
                                                          NVEvoSubDevPtr pEvoSubDev,
                                                          const NvU32 *pHeads)
 {
+    int head;
+
     /* As far as EVO is concerned, House Sync means FL client */
     if (!nvEvoLockHWStateFrameLockClientManyHeads(pDispEvo, pEvoSubDev, pHeads)) {
         return FALSE;
     }
 
-    const int head = pHeads[0];
+    head = pHeads[0];
     pEvoSubDev->frameLockServerMaskAssy |= 1 << head;
     pEvoSubDev->frameLockClientMaskAssy &= ~(1 << head);
     pEvoSubDev->frameLockHouseSync = TRUE;
@@ -573,12 +583,14 @@ NvBool nvEvoLockHWStateLockHeadsFrameLockServerHouseSync(NVDispEvoPtr pDispEvo,
                                                          NVEvoSubDevPtr pEvoSubDev,
                                                          const NvU32 *pHeads)
 {
+    int head;
+
     /* As far as EVO is concerned, House Sync means FL client */
     if (!nvEvoLockHWStateLockHeadsFrameLockClient(pDispEvo, pEvoSubDev, pHeads)) {
         return FALSE;
     }
 
-    const int head = pHeads[0];
+    head = pHeads[0];
     pEvoSubDev->frameLockServerMaskAssy |= 1 << head;
     pEvoSubDev->frameLockClientMaskAssy &= ~(1 << head);
     pEvoSubDev->frameLockHouseSync = TRUE;
@@ -592,6 +604,8 @@ NvBool nvEvoLockHWStateLockHeadsFrameLockClient(NVDispEvoPtr pDispEvo,
 {
     NVEvoLockPin pin = nvEvoGetPinForSignal(pDispEvo, pEvoSubDev,
                                             NV_EVO_LOCK_SIGNAL_FRAME_LOCK);
+    NVEvoHeadControlPtr pHC;
+    int head;
 
     if (pin == NV_EVO_LOCK_PIN_ERROR) {
         return FALSE;
@@ -603,8 +617,8 @@ NvBool nvEvoLockHWStateLockHeadsFrameLockClient(NVDispEvoPtr pDispEvo,
     }
 
     /* Additionally, enable the first head as a frame lock client */
-    const int head = pHeads[0];
-    NVEvoHeadControlPtr pHC = &pEvoSubDev->headControlAssy[head];
+    head = pHeads[0];
+    pHC = &pEvoSubDev->headControlAssy[head];
 
     pHC->clientLock = NV_EVO_FRAME_LOCK;
     pHC->clientLockPin = pin;
@@ -642,6 +656,8 @@ NvBool nvEvoLockHWStateSliPrimary(NVDispEvoPtr pDispEvo,
     NVEvoLockPin pin = pEvoSubDev->sliServerLockPin;
     NVEvoLockPin flPin = nvEvoGetPinForSignal(pDispEvo, pEvoSubDev,
                                               NV_EVO_LOCK_SIGNAL_FLIP_LOCK);
+    NVEvoHeadControlPtr pHC;
+    int head;
 
     if (pin == NV_EVO_LOCK_PIN_ERROR || flPin == NV_EVO_LOCK_PIN_ERROR) {
         return FALSE;
@@ -652,8 +668,8 @@ NvBool nvEvoLockHWStateSliPrimary(NVDispEvoPtr pDispEvo,
 
     nvEvoLockHWStateNoLock(pDispEvo, pEvoSubDev, pHeads);
 
-    const int head = pHeads[0];
-    NVEvoHeadControlPtr pHC = &pEvoSubDev->headControlAssy[head];
+    head = pHeads[0];
+    pHC = &pEvoSubDev->headControlAssy[head];
 
     pHC->serverLock = NV_EVO_RASTER_LOCK;
     pHC->serverLockPin = pin;
@@ -724,6 +740,8 @@ NvBool nvEvoLockHWStateSliSecondary(NVDispEvoPtr pDispEvo,
     NvU32 clientLockoutWindow = pEvoSubDev->forceZeroClientLockoutWindow ? 0 : 2;
     NVEvoLockPin flPin = nvEvoGetPinForSignal(pDispEvo, pEvoSubDev,
                                               NV_EVO_LOCK_SIGNAL_FLIP_LOCK);
+    NVEvoHeadControlPtr pHC;
+    int head;
 
     if (clientPin == NV_EVO_LOCK_PIN_ERROR ||
         serverPin == NV_EVO_LOCK_PIN_ERROR ||
@@ -736,8 +754,8 @@ NvBool nvEvoLockHWStateSliSecondary(NVDispEvoPtr pDispEvo,
     nvAssert(pHeads[0] != NV_INVALID_HEAD);
     nvAssert(pHeads[1] == NV_INVALID_HEAD);
 
-    const int head = pHeads[0];
-    NVEvoHeadControlPtr pHC = &pEvoSubDev->headControlAssy[head];
+    head = pHeads[0];
+    pHC = &pEvoSubDev->headControlAssy[head];
 
     /* Server lock to be consumed by GPUs further down the chain */
     pHC->serverLock = NV_EVO_RASTER_LOCK;
@@ -779,6 +797,8 @@ NvBool nvEvoLockHWStateSliLastSecondary(NVDispEvoPtr pDispEvo,
     NvU32 clientLockoutWindow = pEvoSubDev->forceZeroClientLockoutWindow ? 0 : 2;
     NVEvoLockPin flPin = nvEvoGetPinForSignal(pDispEvo, pEvoSubDev,
                                               NV_EVO_LOCK_SIGNAL_FLIP_LOCK);
+    NVEvoHeadControlPtr pHC;
+    int head;
 
     if (clientPin == NV_EVO_LOCK_PIN_ERROR || flPin == NV_EVO_LOCK_PIN_ERROR) {
         return FALSE;
@@ -789,8 +809,8 @@ NvBool nvEvoLockHWStateSliLastSecondary(NVDispEvoPtr pDispEvo,
     nvAssert(pHeads[0] != NV_INVALID_HEAD);
     nvAssert(pHeads[1] == NV_INVALID_HEAD);
 
-    const int head = pHeads[0];
-    NVEvoHeadControlPtr pHC = &pEvoSubDev->headControlAssy[head];
+    head = pHeads[0];
+    pHC = &pEvoSubDev->headControlAssy[head];
 
     /* Only set up client lock; no more GPUs to consume server lock */
     pHC->clientLock = NV_EVO_RASTER_LOCK;
@@ -808,6 +828,8 @@ NvBool nvEvoLockHWStateSliLastSecondaryFrameLockClient(NVDispEvoPtr pDispEvo,
                                                        NVEvoSubDevPtr pEvoSubDev,
                                                        const NvU32 *pHeads)
 {
+    int head;
+
     if (!nvEvoLockHWStateSliLastSecondary(pDispEvo, pEvoSubDev, pHeads)) {
         return FALSE;
     }
@@ -815,7 +837,7 @@ NvBool nvEvoLockHWStateSliLastSecondaryFrameLockClient(NVDispEvoPtr pDispEvo,
     nvAssert(pHeads[0] != NV_INVALID_HEAD);
     nvAssert(pHeads[1] == NV_INVALID_HEAD);
 
-    const int head = pHeads[0];
+    head = pHeads[0];
     pEvoSubDev->frameLockClientMaskAssy |= 1 << head;
 
     return TRUE;
@@ -979,12 +1001,14 @@ NvBool nvEvoLockHWStateSliPrimaryFrameLockServerHouseSync(NVDispEvoPtr pDispEvo,
                                                           NVEvoSubDevPtr pEvoSubDev,
                                                           const NvU32 *pHeads)
 {
+    int head;
+
     /* As far as EVO is concerned, House Sync means FL client */
     if (!nvEvoLockHWStateSliPrimaryFrameLockClient(pDispEvo, pEvoSubDev, pHeads)) {
         return FALSE;
     }
 
-    const int head = pHeads[0];
+    head = pHeads[0];
     pEvoSubDev->frameLockServerMaskAssy |= 1 << head;
     pEvoSubDev->frameLockClientMaskAssy &= ~(1 << head);
     pEvoSubDev->frameLockHouseSync = TRUE;
@@ -1071,12 +1095,14 @@ NvBool nvEvoLockHWStateSliPrimaryLockHeadsFrameLockServerHouseSync(NVDispEvoPtr 
                                                                    NVEvoSubDevPtr pEvoSubDev,
                                                                    const NvU32 *pHeads)
 {
+    int head;
+
     /* As far as EVO is concerned, House Sync means FL client */
     if (!nvEvoLockHWStateSliPrimaryLockHeadsFrameLockClient(pDispEvo, pEvoSubDev, pHeads)) {
         return FALSE;
     }
 
-    const int head = pHeads[0];
+    head = pHeads[0];
     pEvoSubDev->frameLockServerMaskAssy |= 1 << head;
     pEvoSubDev->frameLockClientMaskAssy &= ~(1 << head);
     pEvoSubDev->frameLockHouseSync = TRUE;

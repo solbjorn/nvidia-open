@@ -28,9 +28,12 @@ void __nvoc_init_dataField_SwIntr(SwIntr*, RmHalspecOwner* );
 void __nvoc_dtor_SwIntr(SwIntr*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_SwIntr;
 
+#define __NVOC_CB_TYPE SwIntr
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_SwIntr, __nvoc_dtor_SwIntr);
+
 static const struct NVOC_RTTI __nvoc_rtti_SwIntr_SwIntr = {
     /*pClassDef=*/          &__nvoc_class_def_SwIntr,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_SwIntr,
+    /*dtor=*/               __nvoc_dtor_SwIntr_dtor,
     /*offset=*/             0,
 };
 
@@ -69,7 +72,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_SwIntr = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_SwIntr = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_SwIntr =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(SwIntr),
@@ -79,7 +82,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_SwIntr =
         /*name=*/               "SwIntr",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_SwIntr,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_SwIntr_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_SwIntr,
     /*pExportInfo=*/        &__nvoc_export_info_SwIntr
 };
@@ -196,7 +199,7 @@ static NV_STATUS __nvoc_thunk_OBJENGSTATE_swintrConstructEngine(POBJGPU pGpu, st
     return engstateConstructEngine(pGpu, (struct OBJENGSTATE *)(((unsigned char *)pEngstate) + __nvoc_rtti_SwIntr_OBJENGSTATE.offset), arg0);
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_SwIntr = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_SwIntr =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -398,4 +401,3 @@ NV_STATUS __nvoc_objCreateDynamic_SwIntr(SwIntr **ppThis, Dynamic *pParent, NvU3
 
     return status;
 }
-

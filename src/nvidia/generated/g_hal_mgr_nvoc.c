@@ -22,9 +22,12 @@ void __nvoc_init_dataField_OBJHALMGR(OBJHALMGR*);
 void __nvoc_dtor_OBJHALMGR(OBJHALMGR*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJHALMGR;
 
+#define __NVOC_CB_TYPE OBJHALMGR
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_OBJHALMGR, __nvoc_dtor_OBJHALMGR);
+
 static const struct NVOC_RTTI __nvoc_rtti_OBJHALMGR_OBJHALMGR = {
     /*pClassDef=*/          &__nvoc_class_def_OBJHALMGR,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_OBJHALMGR,
+    /*dtor=*/               __nvoc_dtor_OBJHALMGR_dtor,
     /*offset=*/             0,
 };
 
@@ -42,7 +45,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_OBJHALMGR = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_OBJHALMGR = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_OBJHALMGR =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(OBJHALMGR),
@@ -52,12 +55,12 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_OBJHALMGR =
         /*name=*/               "OBJHALMGR",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_OBJHALMGR,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_OBJHALMGR_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_OBJHALMGR,
     /*pExportInfo=*/        &__nvoc_export_info_OBJHALMGR
 };
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJHALMGR = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJHALMGR =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -151,4 +154,3 @@ NV_STATUS __nvoc_objCreateDynamic_OBJHALMGR(OBJHALMGR **ppThis, Dynamic *pParent
 
     return status;
 }
-

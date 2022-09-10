@@ -2331,6 +2331,7 @@ subdeviceCtrlCmdKGrGetCapsV2_IMPL
     KernelGraphicsManager *pKernelGraphicsManager = GPU_GET_KERNEL_GRAPHICS_MANAGER(pGpu);
     KernelGraphics *pKernelGraphics;
     NV2080_CTRL_GR_ROUTE_INFO grRouteInfo = pParams->grRouteInfo;
+    const KGRAPHICS_STATIC_INFO *pKernelGraphicsStaticInfo;
 
     kgrmgrCtrlSetEngineID(0, &grRouteInfo);
     NV_CHECK_OK_OR_RETURN(LEVEL_ERROR,
@@ -2338,7 +2339,7 @@ subdeviceCtrlCmdKGrGetCapsV2_IMPL
 
     LOCK_ASSERT_AND_RETURN(rmApiLockIsOwner());
 
-    const KGRAPHICS_STATIC_INFO *pKernelGraphicsStaticInfo = kgraphicsGetStaticInfo(pGpu, pKernelGraphics);
+    pKernelGraphicsStaticInfo = kgraphicsGetStaticInfo(pGpu, pKernelGraphics);
     if (pKernelGraphicsStaticInfo == NULL)
     {
         return NV_ERR_INVALID_STATE;

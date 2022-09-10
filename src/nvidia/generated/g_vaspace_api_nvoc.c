@@ -30,9 +30,12 @@ void __nvoc_init_dataField_VaSpaceApi(VaSpaceApi*);
 void __nvoc_dtor_VaSpaceApi(VaSpaceApi*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_VaSpaceApi;
 
+#define __NVOC_CB_TYPE VaSpaceApi
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_VaSpaceApi, __nvoc_dtor_VaSpaceApi);
+
 static const struct NVOC_RTTI __nvoc_rtti_VaSpaceApi_VaSpaceApi = {
     /*pClassDef=*/          &__nvoc_class_def_VaSpaceApi,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_VaSpaceApi,
+    /*dtor=*/               __nvoc_dtor_VaSpaceApi_dtor,
     /*offset=*/             0,
 };
 
@@ -78,7 +81,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_VaSpaceApi = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_VaSpaceApi = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_VaSpaceApi =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(VaSpaceApi),
@@ -88,7 +91,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_VaSpaceApi =
         /*name=*/               "VaSpaceApi",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_VaSpaceApi,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_VaSpaceApi_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_VaSpaceApi,
     /*pExportInfo=*/        &__nvoc_export_info_VaSpaceApi
 };
@@ -181,17 +184,23 @@ static NvBool __nvoc_thunk_RmResource_vaspaceapiAccessCallback(struct VaSpaceApi
     return rmresAccessCallback((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_VaSpaceApi_RmResource.offset), pInvokingClient, pAllocParams, accessRight);
 }
 
+NVOC_BUILD_CALLBACK(vaspaceapiCtrlCmdVaspaceGetGmmuFormat_IMPL);
+NVOC_BUILD_CALLBACK(vaspaceapiCtrlCmdVaspaceGetPageLevelInfo_IMPL);
+NVOC_BUILD_CALLBACK(vaspaceapiCtrlCmdVaspaceReserveEntries_IMPL);
+NVOC_BUILD_CALLBACK(vaspaceapiCtrlCmdVaspaceReleaseEntries_IMPL);
+NVOC_BUILD_CALLBACK(vaspaceapiCtrlCmdVaspaceCopyServerReservedPdes_IMPL);
+
 #if !defined(NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG)
 #define NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(x)      (0)
 #endif
 
-static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_VaSpaceApi[] = 
+static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_VaSpaceApi[] =
 {
     {               /*  [0] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x0u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) vaspaceapiCtrlCmdVaspaceGetGmmuFormat_IMPL,
+        /*pFunc=*/      vaspaceapiCtrlCmdVaspaceGetGmmuFormat_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x0u)
         /*flags=*/      0x0u,
         /*accessRight=*/0x0u,
@@ -204,9 +213,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_VaSpaceA
     },
     {               /*  [1] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x0u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) vaspaceapiCtrlCmdVaspaceGetPageLevelInfo_IMPL,
+        /*pFunc=*/      vaspaceapiCtrlCmdVaspaceGetPageLevelInfo_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x0u)
         /*flags=*/      0x0u,
         /*accessRight=*/0x0u,
@@ -219,9 +228,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_VaSpaceA
     },
     {               /*  [2] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x0u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) vaspaceapiCtrlCmdVaspaceReserveEntries_IMPL,
+        /*pFunc=*/      vaspaceapiCtrlCmdVaspaceReserveEntries_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x0u)
         /*flags=*/      0x0u,
         /*accessRight=*/0x0u,
@@ -234,9 +243,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_VaSpaceA
     },
     {               /*  [3] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x0u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) vaspaceapiCtrlCmdVaspaceReleaseEntries_IMPL,
+        /*pFunc=*/      vaspaceapiCtrlCmdVaspaceReleaseEntries_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x0u)
         /*flags=*/      0x0u,
         /*accessRight=*/0x0u,
@@ -249,9 +258,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_VaSpaceA
     },
     {               /*  [4] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x4u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) vaspaceapiCtrlCmdVaspaceCopyServerReservedPdes_IMPL,
+        /*pFunc=*/      vaspaceapiCtrlCmdVaspaceCopyServerReservedPdes_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x4u)
         /*flags=*/      0x4u,
         /*accessRight=*/0x0u,
@@ -265,7 +274,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_VaSpaceA
 
 };
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_VaSpaceApi = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_VaSpaceApi =
 {
     /*numEntries=*/     5,
     /*pExportEntries=*/ __nvoc_exported_method_def_VaSpaceApi
@@ -431,4 +440,3 @@ NV_STATUS __nvoc_objCreateDynamic_VaSpaceApi(VaSpaceApi **ppThis, Dynamic *pPare
 
     return status;
 }
-

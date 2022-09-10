@@ -87,16 +87,8 @@ engstateLogStateTransitionPost_IMPL
     ENGSTATE_TRANSITION_DATA *pData
 )
 {
-    ENGSTATE_STATS *stats = &pEngstate->stats[targetState];
-    NvU64 endTimeNs;
-
-    NV_ASSERT_OR_RETURN_VOID(targetState < ENGSTATE_STATE_COUNT);
-
-    osGetPerformanceCounter(&endTimeNs);
-    stats->transitionTimeUs = (endTimeNs - pData->transitionStartTimeNs) / 1000;
-
 #if NV_PRINTF_STRINGS_ALLOWED
-    const char *stateStrings[ENGSTATE_STATE_COUNT] =
+    static const char * const stateStrings[ENGSTATE_STATE_COUNT] =
     {
         "Undefined",
         "Construct",
@@ -111,7 +103,17 @@ engstateLogStateTransitionPost_IMPL
         "Destroy"
     };
     ct_assert(ENGSTATE_STATE_COUNT == 11);
+#endif
 
+    ENGSTATE_STATS *stats = &pEngstate->stats[targetState];
+    NvU64 endTimeNs;
+
+    NV_ASSERT_OR_RETURN_VOID(targetState < ENGSTATE_STATE_COUNT);
+
+    osGetPerformanceCounter(&endTimeNs);
+    stats->transitionTimeUs = (endTimeNs - pData->transitionStartTimeNs) / 1000;
+
+#if NV_PRINTF_STRINGS_ALLOWED
     NV_PRINTF(LEVEL_INFO,
         "Engine %s state change: %s -> %s, took %uus\n",
         engstateGetName(pEngstate),

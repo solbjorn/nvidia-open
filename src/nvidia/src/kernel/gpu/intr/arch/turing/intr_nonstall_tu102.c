@@ -52,16 +52,6 @@ intrGetNonStallEnable_TU102
 
     NvU32 isNonStallEnabled = 0;
 
-    if (IS_VIRTUAL_WITHOUT_SRIOV(pGpu))
-    {
-        if (vgpuShmIsNonStallEnabled(pGpu, &isNonStallEnabled) == NV_OK)
-        {
-            if (isNonStallEnabled)
-                return INTERRUPT_TYPE_MULTI;
-        }
-        return INTERRUPT_TYPE_DISABLED;
-    }
-
     //
     // We're doing an optimization below to read the TOP_EN_CLEAR register once
     // after the for() loop that loops over the subtrees. It assumes that we
@@ -72,6 +62,16 @@ intrGetNonStallEnable_TU102
     // assumption has not changed.
     //
     ct_assert(sizeof(nonStallMask) == sizeof(NvU32));
+
+    if (IS_VIRTUAL_WITHOUT_SRIOV(pGpu))
+    {
+        if (vgpuShmIsNonStallEnabled(pGpu, &isNonStallEnabled) == NV_OK)
+        {
+            if (isNonStallEnabled)
+                return INTERRUPT_TYPE_MULTI;
+        }
+        return INTERRUPT_TYPE_DISABLED;
+    }
 
     val = intrReadRegTopEnSet_HAL(pGpu, pIntr, 0, pThreadState);
 

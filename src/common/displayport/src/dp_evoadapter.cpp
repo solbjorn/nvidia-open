@@ -57,7 +57,7 @@ using namespace DisplayPort;
 // The first EvoMainLink constructor will populate that data base.
 // Later EvoMainLink will use values from that data base.
 //
-static struct DP_REGKEY_DATABASE dpRegkeyDatabase = {0};
+static struct DP_REGKEY_DATABASE dpRegkeyDatabase = { };
 
 enum DP_REG_VAL_TYPE
 {
@@ -153,7 +153,7 @@ EvoMainLink::EvoMainLink(EvoInterface * provider, Timer * timer) :
 
 bool EvoMainLink::vrrRunEnablementStage(unsigned stage, NvU32 *status)
 {
-    NV0073_CTRL_CMD_DP_ENABLE_VRR_PARAMS  params = {0};
+    NV0073_CTRL_CMD_DP_ENABLE_VRR_PARAMS  params = { };
     params.subDeviceInstance = subdeviceIndex;
     params.displayId = this->displayId;
 
@@ -322,7 +322,7 @@ void EvoMainLink::queryGPUCapability()
 
 void EvoMainLink::triggerACT()
 {
-    NV0073_CTRL_CMD_DP_SEND_ACT_PARAMS params = {0};
+    NV0073_CTRL_CMD_DP_SEND_ACT_PARAMS params = { };
     params.subDeviceInstance = this->subdeviceIndex;
     params.displayId = this->displayId;
 
@@ -351,7 +351,7 @@ void EvoMainLink::configureSingleStream(NvU32 head,
                                         bool bAudioOverRightPanel,
                                         bool bEnable2Head1Or)
 {
-    NV0073_CTRL_CMD_DP_CONFIG_STREAM_PARAMS params = {0};
+    NV0073_CTRL_CMD_DP_CONFIG_STREAM_PARAMS params = { };
     params.subDeviceInstance = this->subdeviceIndex;
     params.head = head;
     params.sorIndex = provider->getSorIndex();
@@ -388,7 +388,7 @@ void EvoMainLink::configureSingleHeadMultiStreamMode(NvU32 displayIDs[],
                                                      bool  bSetConfig,
                                                      NvU8  vbiosPrimaryDispIdIndex)
 {
-    NV0073_CTRL_CMD_DP_CONFIG_SINGLE_HEAD_MULTI_STREAM_PARAMS params = {0};
+    NV0073_CTRL_CMD_DP_CONFIG_SINGLE_HEAD_MULTI_STREAM_PARAMS params = { };
     params.subDeviceInstance = this->subdeviceIndex;
 
     for (NvU32 pipelineID = 0; pipelineID < numStreams; pipelineID++)
@@ -418,7 +418,7 @@ void EvoMainLink::configureMultiStream(NvU32 head,
                                        bool bAudioOverRightPanel,
                                        bool bEnable2Head1Or)
 {
-    NV0073_CTRL_CMD_DP_CONFIG_STREAM_PARAMS params = {0};
+    NV0073_CTRL_CMD_DP_CONFIG_STREAM_PARAMS params = { };
     params.head = head;
     params.subDeviceInstance = this->subdeviceIndex;
     params.sorIndex = provider->getSorIndex();
@@ -445,7 +445,7 @@ void EvoMainLink::configureMsScratchRegisters(NvU32 address,
                                               NvU32 hopCount,
                                               NvU32 dpMsDevAddrState)
 {
-    NV0073_CTRL_CMD_DP_CONFIG_RAD_SCRATCH_REG_PARAMS params = {0};
+    NV0073_CTRL_CMD_DP_CONFIG_RAD_SCRATCH_REG_PARAMS params = { };
     params.subDeviceInstance = this->subdeviceIndex;
     params.displayId = this->displayId;
     params.activeDevAddr = address;
@@ -471,7 +471,7 @@ void EvoMainLink::configureMsScratchRegisters(NvU32 address,
 //
 bool EvoMainLink::setDpStereoMSAParameters(bool bStereoEnable, const NV0073_CTRL_CMD_DP_SET_MSA_PROPERTIES_PARAMS &msaparams)
 {
-    NV0073_CTRL_CMD_DP_SET_STEREO_MSA_PROPERTIES_PARAMS params = {0};
+    NV0073_CTRL_CMD_DP_SET_STEREO_MSA_PROPERTIES_PARAMS params = { };
     params.subDeviceInstance = this->subdeviceIndex;
     params.displayId = msaparams.displayId;
     //clubbing the MSA params passed by DD with Dp Library Stereo Override
@@ -518,7 +518,7 @@ bool EvoMainLink::setDpStereoMSAParameters(bool bStereoEnable, const NV0073_CTRL
 //
 bool EvoMainLink::setDpMSAParameters(bool bStereoEnable, const NV0073_CTRL_CMD_DP_SET_MSA_PROPERTIES_PARAMS &msaparams)
 {
-    NV0073_CTRL_CMD_DP_SET_MSA_PROPERTIES_PARAMS params = {0};
+    NV0073_CTRL_CMD_DP_SET_MSA_PROPERTIES_PARAMS params = { };
     params.subDeviceInstance = this->subdeviceIndex;
     params.displayId = msaparams.displayId;
     //clubbing the MSA params passed by DD with Dp Library Stereo Override
@@ -1392,7 +1392,7 @@ bool EvoMainLink::queryAndUpdateDfpParams()
     {
         default:
             DP_ASSERT(0 && "maxLinkRate is set improperly in dfp object.");
-            // intentionally fall-thru.
+            fallthrough;
         case NV0073_CTRL_DFP_FLAGS_DP_LINK_BW_1_62GBPS:
             _maxLinkRateSupportedDfp = RBR;
             break;
@@ -1535,7 +1535,7 @@ bool EvoMainLink::isActive()
 
 bool EvoMainLink::controlRateGoverning(NvU32 head, bool enable, bool updateNow)
 {
-    NV0073_CTRL_CMD_DP_SET_RATE_GOV_PARAMS params = {0};
+    NV0073_CTRL_CMD_DP_SET_RATE_GOV_PARAMS params = { };
     params.subDeviceInstance = this->subdeviceIndex;
     params.head = head;
     params.sorIndex = provider->getSorIndex();
@@ -1564,7 +1564,7 @@ bool EvoMainLink::controlRateGoverning(NvU32 head, bool enable, bool updateNow)
 
 bool EvoMainLink::getDpTestPattern(NV0073_CTRL_DP_TESTPATTERN * testPattern)
 {
-    NV0073_CTRL_DP_GET_TESTPATTERN_PARAMS params = {0};
+    NV0073_CTRL_DP_GET_TESTPATTERN_PARAMS params = { };
 
     params.subDeviceInstance = this->subdeviceIndex;
     params.displayId = this->displayId;
@@ -1580,7 +1580,7 @@ bool EvoMainLink::getDpTestPattern(NV0073_CTRL_DP_TESTPATTERN * testPattern)
 
 bool EvoMainLink::setDpTestPattern(NV0073_CTRL_DP_TESTPATTERN testPattern, NvU8 laneMask, NV0073_CTRL_DP_CSTM cstm, NvBool bIsHBR2, NvBool bSkipLaneDataOverride)
 {
-    NV0073_CTRL_DP_SET_TESTPATTERN_PARAMS params = {0};
+    NV0073_CTRL_DP_SET_TESTPATTERN_PARAMS params = { };
 
     params.subDeviceInstance = this->subdeviceIndex;
     params.displayId = this->displayId;
@@ -1598,7 +1598,7 @@ bool EvoMainLink::setDpTestPattern(NV0073_CTRL_DP_TESTPATTERN testPattern, NvU8 
 
 bool EvoMainLink::getDpLaneData(NvU32 *numLanes, NvU32 *data)
 {
-    NV0073_CTRL_DP_LANE_DATA_PARAMS params = {0};
+    NV0073_CTRL_DP_LANE_DATA_PARAMS params = { };
 
     params.subDeviceInstance = this->subdeviceIndex;
     params.displayId = this->displayId;
@@ -1615,7 +1615,7 @@ bool EvoMainLink::getDpLaneData(NvU32 *numLanes, NvU32 *data)
 
 bool EvoMainLink::setDpLaneData(NvU32 numLanes, NvU32 *data)
 {
-    NV0073_CTRL_DP_LANE_DATA_PARAMS params = {0};
+    NV0073_CTRL_DP_LANE_DATA_PARAMS params = { };
 
     params.subDeviceInstance = this->subdeviceIndex;
     params.displayId = this->displayId;
@@ -1634,7 +1634,7 @@ NvU32 EvoMainLink::monitorDenylistInfo(NvU32 ManufacturerID, NvU32 ProductID, Dp
 }
 bool EvoMainLink::rmUpdateDynamicDfpCache(NvU32 headIndex, RmDfpCache* dfpCache, NvBool bResetDfp)
 {
-    NV0073_CTRL_DFP_UPDATE_DYNAMIC_DFP_CACHE_PARAMS params = {0};
+    NV0073_CTRL_DFP_UPDATE_DYNAMIC_DFP_CACHE_PARAMS params = { };
     params.headIndex = headIndex;
     params.bcaps = dfpCache->bcaps;
     for (unsigned i=0; i<5; i++)
@@ -1654,7 +1654,7 @@ bool EvoMainLink::rmUpdateDynamicDfpCache(NvU32 headIndex, RmDfpCache* dfpCache,
 
 NvU32 EvoMainLink::allocDisplayId()
 {
-    NV0073_CTRL_CMD_DP_TOPOLOGY_ALLOCATE_DISPLAYID_PARAMS params = {0};
+    NV0073_CTRL_CMD_DP_TOPOLOGY_ALLOCATE_DISPLAYID_PARAMS params = { };
 
     params.subDeviceInstance = subdeviceIndex;
     params.displayId = displayId;
@@ -1670,7 +1670,7 @@ NvU32 EvoMainLink::allocDisplayId()
 
 bool EvoMainLink::freeDisplayId(NvU32 displayId)
 {
-    NV0073_CTRL_CMD_DP_TOPOLOGY_FREE_DISPLAYID_PARAMS params = {0};
+    NV0073_CTRL_CMD_DP_TOPOLOGY_FREE_DISPLAYID_PARAMS params = { };
 
     params.subDeviceInstance = subdeviceIndex;
     params.displayId = displayId;
@@ -1681,7 +1681,7 @@ bool EvoMainLink::freeDisplayId(NvU32 displayId)
 
 void EvoMainLink::configureTriggerSelect(NvU32 head, DP_SINGLE_HEAD_MULTI_STREAM_PIPELINE_ID streamIdentifier)
 {
-    NV0073_CTRL_CMD_DP_SET_TRIGGER_SELECT_PARAMS params = {0};
+    NV0073_CTRL_CMD_DP_SET_TRIGGER_SELECT_PARAMS params = { };
     params.head = head;
     params.subDeviceInstance = subdeviceIndex;
     params.sorIndex = provider->getSorIndex();
@@ -1691,7 +1691,7 @@ void EvoMainLink::configureTriggerSelect(NvU32 head, DP_SINGLE_HEAD_MULTI_STREAM
 
 void EvoMainLink::configureTriggerAll(NvU32 head, bool enable)
 {
-    NV0073_CTRL_CMD_DP_SET_TRIGGER_ALL_PARAMS params = {0};
+    NV0073_CTRL_CMD_DP_SET_TRIGGER_ALL_PARAMS params = { };
     params.head = head;
     params.subDeviceInstance = subdeviceIndex;
     params.enable = enable;

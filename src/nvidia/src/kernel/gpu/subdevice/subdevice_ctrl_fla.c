@@ -41,10 +41,11 @@ _subdeviceFlaRangeModeHostManagedVasDestroy
 )
 {
     OBJGPU *pGpu = GPU_RES_GET_GPU(pSubdevice);
+    KernelNvlink *pKernelNvlink;
     NvU32   gfid;
 
     NV_ASSERT_OK_OR_RETURN(vgpuGetCallingContextGfid(pGpu, &gfid));
-    KernelNvlink *pKernelNvlink = GPU_GET_KERNEL_NVLINK(pGpu);
+    pKernelNvlink = GPU_GET_KERNEL_NVLINK(pGpu);
 
     // See _subdeviceFlaRangeModeHostManagedVasInit for details about this check.
     if (!RMCFG_FEATURE_PLATFORM_GSP && IS_GFID_PF(gfid) &&
@@ -68,11 +69,12 @@ _subdeviceFlaRangeModeHostManagedVasInit
     NvU32 hSubdevice = RES_GET_HANDLE(pSubdevice);
     NvHandle hDevice = RES_GET_PARENT_HANDLE(pSubdevice);
     NvHandle hClient = RES_GET_CLIENT_HANDLE(pSubdevice);
+    KernelNvlink *pKernelNvlink;
     NvU32 gfid;
     NV_STATUS status;
 
     NV_ASSERT_OK_OR_RETURN(vgpuGetCallingContextGfid(pGpu, &gfid));
-    KernelNvlink *pKernelNvlink = GPU_GET_KERNEL_NVLINK(pGpu);
+    pKernelNvlink = GPU_GET_KERNEL_NVLINK(pGpu);
     if (!RMCFG_FEATURE_PLATFORM_GSP && IS_GFID_PF(gfid) &&
         (pKernelNvlink != NULL) && !knvlinkIsGpuConnectedToNvswitch(pGpu, pKernelNvlink))
         return NV_ERR_NOT_SUPPORTED;

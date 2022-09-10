@@ -22,9 +22,12 @@ void __nvoc_init_dataField_OBJENGSTATE(OBJENGSTATE*);
 void __nvoc_dtor_OBJENGSTATE(OBJENGSTATE*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJENGSTATE;
 
+#define __NVOC_CB_TYPE OBJENGSTATE
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_OBJENGSTATE, __nvoc_dtor_OBJENGSTATE);
+
 static const struct NVOC_RTTI __nvoc_rtti_OBJENGSTATE_OBJENGSTATE = {
     /*pClassDef=*/          &__nvoc_class_def_OBJENGSTATE,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_OBJENGSTATE,
+    /*dtor=*/               __nvoc_dtor_OBJENGSTATE_dtor,
     /*offset=*/             0,
 };
 
@@ -42,7 +45,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_OBJENGSTATE = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_OBJENGSTATE = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_OBJENGSTATE =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(OBJENGSTATE),
@@ -52,12 +55,12 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_OBJENGSTATE =
         /*name=*/               "OBJENGSTATE",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_OBJENGSTATE,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_OBJENGSTATE_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_OBJENGSTATE,
     /*pExportInfo=*/        &__nvoc_export_info_OBJENGSTATE
 };
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJENGSTATE = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJENGSTATE =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -186,4 +189,3 @@ NV_STATUS __nvoc_objCreateDynamic_OBJENGSTATE(OBJENGSTATE **ppThis, Dynamic *pPa
 
     return status;
 }
-

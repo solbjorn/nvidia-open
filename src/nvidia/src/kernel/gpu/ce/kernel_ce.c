@@ -33,9 +33,12 @@
 
 NV_STATUS kceConstructEngine_IMPL(OBJGPU *pGpu, KernelCE *pKCe, ENGDESCRIPTOR engDesc)
 {
+    NvU32 thisPublicID;
+    NvU32 data32 = 0;
+
     NV_ASSERT_OR_RETURN(!RMCFG_FEATURE_PLATFORM_GSP, NV_ERR_NOT_SUPPORTED);
 
-    NvU32 thisPublicID = GET_CE_IDX(engDesc);
+    thisPublicID = GET_CE_IDX(engDesc);
 
     NV_PRINTF(LEVEL_INFO, "KernelCE: thisPublicID = %d\n", thisPublicID);
 
@@ -43,7 +46,6 @@ NV_STATUS kceConstructEngine_IMPL(OBJGPU *pGpu, KernelCE *pKCe, ENGDESCRIPTOR en
     pKCe->bIsAutoConfigEnabled = NV_TRUE;
     pKCe->bUseGen4Mapping = NV_FALSE;
 
-    NvU32 data32 = 0;
     if ((osReadRegistryDword(pGpu, NV_REG_STR_RM_CE_ENABLE_AUTO_CONFIG, &data32) == NV_OK) &&
         (data32 == NV_REG_STR_RM_CE_ENABLE_AUTO_CONFIG_FALSE))
     {
@@ -116,13 +118,17 @@ static void kceGetNvlinkCaps(OBJGPU *pGpu, KernelCE *pKCe, NvU8 *pKCeCaps)
 
 NV_STATUS kceGetDeviceCaps_IMPL(OBJGPU *pGpu, KernelCE *pKCe, NvU32 engineType, NvU8 *pKCeCaps)
 {
+    NV2080_CTRL_CE_GET_CAPS_V2_PARAMS physicalCaps;
+    KernelNvlink *pKernelNvlink;
+    RM_API *pRmApi;
+
     if (pKCe->bStubbed)
     {
         NV_PRINTF(LEVEL_INFO, "Skipping stubbed CE %d\n", pKCe->publicID);
         return NV_ERR_NOT_SUPPORTED;
     }
 
-    KernelNvlink *pKernelNvlink = GPU_GET_KERNEL_NVLINK(pGpu);
+    pKernelNvlink = GPU_GET_KERNEL_NVLINK(pGpu);
 
     //
     // Since some CE capabilities depend on the nvlink topology,
@@ -135,13 +141,12 @@ NV_STATUS kceGetDeviceCaps_IMPL(OBJGPU *pGpu, KernelCE *pKCe, NvU32 engineType, 
 
     portMemSet(pKCeCaps, 0, NV2080_CTRL_CE_CAPS_TBL_SIZE);
 
-    NV2080_CTRL_CE_GET_CAPS_V2_PARAMS physicalCaps;
     portMemSet(&physicalCaps, 0, sizeof(physicalCaps));
 
     physicalCaps.ceEngineType = NV2080_ENGINE_TYPE_COPY(pKCe->publicID);
     NV_PRINTF(LEVEL_INFO, "Querying caps for LCE(%d)\n", pKCe->publicID);
 
-    RM_API *pRmApi = GPU_GET_PHYSICAL_RMAPI(pGpu);
+    pRmApi = GPU_GET_PHYSICAL_RMAPI(pGpu);
     NV_ASSERT_OK_OR_RETURN(pRmApi->Control(pRmApi,
                             pGpu->hInternalClient,
                             pGpu->hInternalSubdevice,
@@ -172,6 +177,7 @@ subdeviceCtrlCmdCeGetAllCaps_IMPL
     OBJGPU      *pGpu = GPU_RES_GET_GPU(pSubdevice);
     KernelMIGManager *pKernelMIGManager = NULL;
     MIG_INSTANCE_REF migRef;
+    RM_API *pRmApi;
 
     ct_assert(ENG_CE__SIZE_1 <= sizeof(pCeCapsParams->capsTbl) / sizeof(pCeCapsParams->capsTbl[0]));
 
@@ -199,7 +205,7 @@ subdeviceCtrlCmdCeGetAllCaps_IMPL
 
     portMemSet(pCeCapsParams, 0, sizeof(pCeCapsParams));
 
-    RM_API *pRmApi = GPU_GET_PHYSICAL_RMAPI(pGpu);
+    pRmApi = GPU_GET_PHYSICAL_RMAPI(pGpu);
     NV_ASSERT_OK_OR_RETURN(pRmApi->Control(pRmApi,
                             pGpu->hInternalClient,
                             pGpu->hInternalSubdevice,
@@ -210,6 +216,8 @@ subdeviceCtrlCmdCeGetAllCaps_IMPL
     for (NvU32 i = 0; i < ENG_CE__SIZE_1; i++)
     {
         KernelCE *pKCe = GPU_GET_KCE(pGpu, i);
+        NvU8 *pKCeCaps;
+
         if (pKCe == NULL || pKCe->bStubbed)
         {
             NV_PRINTF(LEVEL_INFO, "Skipping missing or stubbed CE %d\n", i);
@@ -225,7 +233,7 @@ subdeviceCtrlCmdCeGetAllCaps_IMPL
 
         pCeCapsParams->present |= BIT(i);
 
-        NvU8 *pKCeCaps = pCeCapsParams->capsTbl[i];
+        pKCeCaps = pCeCapsParams->capsTbl[i];
 
         if (pKernelNvlink != NULL)
             kceGetNvlinkCaps(pGpu, pKCe, pKCeCaps);
@@ -389,6 +397,8 @@ NV_STATUS kceTopLevelPceLceMappingsUpdate_IMPL(OBJGPU *pGpu, KernelCE *pKCe)
     NvBool       bUpdateNvlinkPceLce = NV_FALSE;
     NV_STATUS    status              = NV_OK;
     KernelNvlink *pKernelNvlink      = GPU_GET_KERNEL_NVLINK(pGpu);
+    NV2080_CTRL_CE_UPDATE_PCE_LCE_MAPPINGS_PARAMS params;
+    RM_API *pRmApi;
 
     //
     // Sync class DB before proceeding with the algorithm.
@@ -443,8 +453,7 @@ NV_STATUS kceTopLevelPceLceMappingsUpdate_IMPL(OBJGPU *pGpu, KernelCE *pKCe)
     //
     // exposeCeMask will be 0x0 when bUpdateNvlinkPceLce is NV_FALSE.
     //
-    RM_API *pRmApi = GPU_GET_PHYSICAL_RMAPI(pGpu);
-    NV2080_CTRL_CE_UPDATE_PCE_LCE_MAPPINGS_PARAMS params;
+    pRmApi = GPU_GET_PHYSICAL_RMAPI(pGpu);
 
     if (bUpdateNvlinkPceLce)
     {
@@ -518,8 +527,8 @@ kceGetAvailableHubPceMask_IMPL
     RM_API *pRmApi = GPU_GET_PHYSICAL_RMAPI(pGpu);
     NV2080_CTRL_CE_GET_HUB_PCE_MASK_PARAMS params;
 
-    NV_ASSERT_OR_RETURN(pTopoParams != NULL, NV_ERR_INVALID_ARGUMENT);
     ct_assert(NV_ARRAY_ELEMENTS(pTopoParams->pceAvailableMaskPerHshub) == NV_ARRAY_ELEMENTS(params.hshubPceMasks));
+    NV_ASSERT_OR_RETURN(pTopoParams != NULL, NV_ERR_INVALID_ARGUMENT);
 
     NV_ASSERT_OK_OR_RETURN(
         pRmApi->Control(pRmApi,

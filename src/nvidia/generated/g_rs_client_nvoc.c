@@ -22,9 +22,12 @@ void __nvoc_init_dataField_RsClient(RsClient*);
 void __nvoc_dtor_RsClient(RsClient*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_RsClient;
 
+#define __NVOC_CB_TYPE RsClient
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_RsClient, __nvoc_dtor_RsClient);
+
 static const struct NVOC_RTTI __nvoc_rtti_RsClient_RsClient = {
     /*pClassDef=*/          &__nvoc_class_def_RsClient,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_RsClient,
+    /*dtor=*/               __nvoc_dtor_RsClient_dtor,
     /*offset=*/             0,
 };
 
@@ -42,7 +45,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_RsClient = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_RsClient = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_RsClient =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(RsClient),
@@ -52,12 +55,12 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_RsClient =
         /*name=*/               "RsClient",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_RsClient,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_RsClient_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_RsClient,
     /*pExportInfo=*/        &__nvoc_export_info_RsClient
 };
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_RsClient = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_RsClient =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -189,9 +192,13 @@ void __nvoc_init_dataField_RsClientResource(RsClientResource*);
 void __nvoc_dtor_RsClientResource(RsClientResource*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_RsClientResource;
 
+#undef __NVOC_CB_TYPE
+#define __NVOC_CB_TYPE RsClientResource
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_RsClientResource, __nvoc_dtor_RsClientResource);
+
 static const struct NVOC_RTTI __nvoc_rtti_RsClientResource_RsClientResource = {
     /*pClassDef=*/          &__nvoc_class_def_RsClientResource,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_RsClientResource,
+    /*dtor=*/               __nvoc_dtor_RsClientResource_dtor,
     /*offset=*/             0,
 };
 
@@ -216,7 +223,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_RsClientResource = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_RsClientResource = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_RsClientResource =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(RsClientResource),
@@ -226,7 +233,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_RsClientResource =
         /*name=*/               "RsClientResource",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_RsClientResource,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_RsClientResource_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_RsClientResource,
     /*pExportInfo=*/        &__nvoc_export_info_RsClientResource
 };
@@ -291,7 +298,7 @@ static NvBool __nvoc_thunk_RsResource_clientresAccessCallback(struct RsClientRes
     return resAccessCallback((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_RsClientResource_RsResource.offset), pInvokingClient, pAllocParams, accessRight);
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_RsClientResource = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_RsClientResource =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -418,4 +425,3 @@ NV_STATUS __nvoc_objCreateDynamic_RsClientResource(RsClientResource **ppThis, Dy
 
     return status;
 }
-

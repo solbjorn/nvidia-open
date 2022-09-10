@@ -331,8 +331,6 @@ getBusInfos(OBJGPU *pGpu, NV2080_CTRL_BUS_INFO *pBusInfos, NvU32 busInfoListSize
                 break;
             }
             case NV2080_CTRL_BUS_INFO_INDEX_PCIE_GPU_LINK_CAPS:
-            {
-            }
             case NV2080_CTRL_BUS_INFO_INDEX_PCIE_ROOT_LINK_CAPS:
             case NV2080_CTRL_BUS_INFO_INDEX_PCIE_UPSTREAM_LINK_CAPS:
             case NV2080_CTRL_BUS_INFO_INDEX_PCIE_UPSTREAM_GEN_INFO:

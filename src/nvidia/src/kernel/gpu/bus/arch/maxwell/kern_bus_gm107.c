@@ -1872,11 +1872,13 @@ _kbusWalkCBMapNextEntries_RmAperture
                 }
                 else
                 {
+                    NvU8 *pMapping = NULL;
+                    NvU64 entryStart;
+                    NvU32 i;
+
                     // Use BAR0 or nvlink if available
                     sizeInDWord = (NvU32)NV_CEIL(pLevelFmt->entrySize, sizeof(NvU32));
-                    NvU64 entryStart = memdescGetPhysAddr(pMemDesc, FORCE_VMMU_TRANSLATION(pMemDesc, AT_GPU), entryOffset);
-                    NvU32 i;
-                    NvU8 *pMapping = NULL;
+                    entryStart = memdescGetPhysAddr(pMemDesc, FORCE_VMMU_TRANSLATION(pMemDesc, AT_GPU), entryOffset);
 
                     if (pKernelBus->coherentCpuMapping.bCoherentCpuMapping)
                     {

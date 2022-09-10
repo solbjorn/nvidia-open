@@ -64,6 +64,9 @@ hdmiPacketCtrl0073(NVHDMIPKT_CLASS*  pThis,
 {
     NVHDMIPKT_RESULT result = NVHDMIPKT_SUCCESS;
     NV0073_CTRL_SPECIFIC_SET_OD_PACKET_CTRL_PARAMS params = {0};
+#if !NVHDMIPKT_RM_CALLS_INTERNAL
+    NvBool bSuccess;
+#endif
 
     NVMISC_MEMSET(&params, 0, sizeof(params));
 
@@ -80,7 +83,7 @@ hdmiPacketCtrl0073(NVHDMIPKT_CLASS*  pThis,
                     sizeof(params)) != NVOS_STATUS_SUCCESS)
 
 #else // !NVHDMIPKT_RM_CALLS_INTERNAL
-    NvBool bSuccess =  pThis->callback.rmDispControl2(pThis->cbHandle,
+    bSuccess =  pThis->callback.rmDispControl2(pThis->cbHandle,
                                                       params.subDeviceInstance,
                                                       NV0073_CTRL_CMD_SPECIFIC_SET_OD_PACKET_CTRL, 
                                                       &params, sizeof(params));
@@ -110,6 +113,9 @@ hdmiPacketWrite0073(NVHDMIPKT_CLASS*   pThis,
 {
     NVHDMIPKT_RESULT result = NVHDMIPKT_SUCCESS;
     NV0073_CTRL_SPECIFIC_SET_OD_PACKET_PARAMS params = {0};
+#if !NVHDMIPKT_RM_CALLS_INTERNAL
+    NvBool bSuccess;
+#endif
 
     NVMISC_MEMSET(&params, 0, sizeof(params));
 
@@ -132,7 +138,7 @@ hdmiPacketWrite0073(NVHDMIPKT_CLASS*   pThis,
                     sizeof(params)) != NVOS_STATUS_SUCCESS)
 
 #else // !NVHDMIPKT_RM_CALLS_INTERNAL
-    NvBool bSuccess = pThis->callback.rmDispControl2(pThis->cbHandle,
+    bSuccess = pThis->callback.rmDispControl2(pThis->cbHandle,
                                                      params.subDeviceInstance,
                                                      NV0073_CTRL_CMD_SPECIFIC_SET_OD_PACKET, 
                                                      &params, 

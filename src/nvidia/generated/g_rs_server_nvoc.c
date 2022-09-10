@@ -22,9 +22,12 @@ void __nvoc_init_dataField_RsShared(RsShared*);
 void __nvoc_dtor_RsShared(RsShared*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_RsShared;
 
+#define __NVOC_CB_TYPE RsShared
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_RsShared, __nvoc_dtor_RsShared);
+
 static const struct NVOC_RTTI __nvoc_rtti_RsShared_RsShared = {
     /*pClassDef=*/          &__nvoc_class_def_RsShared,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_RsShared,
+    /*dtor=*/               __nvoc_dtor_RsShared_dtor,
     /*offset=*/             0,
 };
 
@@ -42,7 +45,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_RsShared = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_RsShared = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_RsShared =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(RsShared),
@@ -52,12 +55,12 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_RsShared =
         /*name=*/               "RsShared",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_RsShared,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_RsShared_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_RsShared,
     /*pExportInfo=*/        &__nvoc_export_info_RsShared
 };
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_RsShared = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_RsShared =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -169,9 +172,13 @@ void __nvoc_init_dataField_RsSession(RsSession*);
 void __nvoc_dtor_RsSession(RsSession*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_RsSession;
 
+#undef __NVOC_CB_TYPE
+#define __NVOC_CB_TYPE RsSession
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_RsSession, __nvoc_dtor_RsSession);
+
 static const struct NVOC_RTTI __nvoc_rtti_RsSession_RsSession = {
     /*pClassDef=*/          &__nvoc_class_def_RsSession,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_RsSession,
+    /*dtor=*/               __nvoc_dtor_RsSession_dtor,
     /*offset=*/             0,
 };
 
@@ -196,7 +203,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_RsSession = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_RsSession = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_RsSession =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(RsSession),
@@ -206,12 +213,12 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_RsSession =
         /*name=*/               "RsSession",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_RsSession,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_RsSession_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_RsSession,
     /*pExportInfo=*/        &__nvoc_export_info_RsSession
 };
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_RsSession = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_RsSession =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -310,4 +317,3 @@ NV_STATUS __nvoc_objCreateDynamic_RsSession(RsSession **ppThis, Dynamic *pParent
 
     return status;
 }
-

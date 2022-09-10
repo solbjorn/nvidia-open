@@ -221,7 +221,7 @@ static void BlankHeadEvo(NVDispEvoPtr pDispEvo, const NvU32 head,
                                  &emptyCursorCompParams);
 
     {
-        NVFlipChannelEvoHwState hwState = { { 0 } };
+        NVFlipChannelEvoHwState hwState = { };
         NvU32 layer;
 
         for (layer = 0; layer < pDevEvo->head[head].numLayers; layer++) {
@@ -639,7 +639,7 @@ static void TweakTimingsForGsync(const NVDpyEvoRec *pDpyEvo,
             break;
         case NVKMS_PROTOCOL_PIOR_EXT_TMDS_ENC:
             nvAssert(!"GSYNC_GET_OPTIMIZED_TIMING doesn't handle external TMDS.");
-            // fallthrough
+            fallthrough;
         case NVKMS_PROTOCOL_SOR_SINGLE_TMDS_A:
             gsyncOptTimingParams.protocol =
                 NV30F1_CTRL_GSYNC_GET_OPTIMIZED_TIMING_PROTOCOL_SOR_SINGLE_TMDS_A;
@@ -1122,11 +1122,12 @@ static void DisableLockState(NVDevEvoPtr pDevEvo,
     FOR_ALL_EVO_DISPLAYS(pDispEvo, dispIndex, pDevEvo) {
         NvU32 head;
         for (head = 0; head < NVKMS_MAX_HEADS_PER_DISP; head++) {
+            NvU32 flipLockEnable = 0;
+            NvBool needsUpdate;
+
             if (!nvHeadIsActive(pDispEvo, head)) {
                 continue;
             }
-            NvU32 flipLockEnable = 0;
-            NvBool needsUpdate;
 
             if (!nvUpdateFlipLockEvoOneHead(pDispEvo, head,
                                             &flipLockEnable, TRUE /* set */,
@@ -1960,7 +1961,7 @@ void nvSetDitheringEvo(
         break;
     default:
         nvAssert(!"Unknown Dithering configuration");
-        // Fall through
+        fallthrough;
     case NV_KMS_DPY_ATTRIBUTE_REQUESTED_DITHERING_AUTO:
         /*
          * Left it initialized
@@ -1978,7 +1979,7 @@ void nvSetDitheringEvo(
         break;
     default:
         nvAssert(!"Unknown Dithering Depth");
-        // Fall through
+        fallthrough;
     case NV_KMS_DPY_ATTRIBUTE_REQUESTED_DITHERING_DEPTH_AUTO:
         /*
          * Left it initialized
@@ -2037,7 +2038,7 @@ void nvSetDitheringEvo(
             break;
         default:
             nvAssert(!"Unknown Dithering Mode");
-            // Fall through
+            fallthrough;
         case NV_KMS_DPY_ATTRIBUTE_REQUESTED_DITHERING_MODE_AUTO:
             /*
              * Left it initialized
@@ -2209,6 +2210,8 @@ static NvU32 GpuIndex(const NVDevEvoRec *pDevEvo, NvU32 sd)
 static NvU32 GetRefreshRate10kHz(const NVDispEvoRec *pDispEvo, NvU32 headMask)
 {
     const NVHwModeTimingsEvo *pTimings = NULL;
+    NvU32 factor = 10000000;
+    NvU32 totalPixels;
     NvU32 head;
 
     FOR_ALL_HEADS(head, headMask) {
@@ -2242,8 +2245,7 @@ static NvU32 GetRefreshRate10kHz(const NVDispEvoRec *pDispEvo, NvU32 headMask)
      * we want 0.0001/s
      * factor = 1000/0.0001 = 10000000.
      */
-    NvU32 factor = 10000000;
-    NvU32 totalPixels = pTimings->rasterSize.x * pTimings->rasterSize.y;
+    totalPixels = pTimings->rasterSize.x * pTimings->rasterSize.y;
 
     if (pTimings->doubleScan) factor /= 2;
     if (pTimings->interlaced) factor *= 2;
@@ -3280,6 +3282,7 @@ NvBool nvSetStereoEvo(
     NVEvoSubDevPtr pEvoSubDev = &pDevEvo->gpus[pDispEvo->displayOwner];
     NVEvoHeadControlPtr pHC;
     NVEvoLockPin pin;
+    NvBool stereo;
 
     nvAssert(head != NV_INVALID_HEAD);
 
@@ -3287,7 +3290,7 @@ NvBool nvSetStereoEvo(
     pin = NV_EVO_LOCK_PIN_INTERNAL(head);
 
     // make sure we're dealing with a bool
-    NvBool stereo = !NV_EVO_LOCK_PIN_IS_INTERNAL(pHC->stereoPin);
+    stereo = !NV_EVO_LOCK_PIN_IS_INTERNAL(pHC->stereoPin);
 
     if (enable ^ stereo) {
         NVEvoUpdateState updateState = { };
@@ -3299,6 +3302,8 @@ NvBool nvSetStereoEvo(
             // If any other head is already driving stereo, fail
             for (otherHead = 0; otherHead < NVKMS_MAX_HEADS_PER_DISP;
                  otherHead++) {
+                const NVEvoHeadControl *pOtherHC;
+
                 if (!nvHeadIsActive(pDispEvo, otherHead)) {
                     continue;
                 }
@@ -3306,7 +3311,7 @@ NvBool nvSetStereoEvo(
                     continue;
                 }
 
-                const NVEvoHeadControl *pOtherHC =
+                pOtherHC =
                     &pEvoSubDev->headControl[otherHead];
 
                 if (!NV_EVO_LOCK_PIN_IS_INTERNAL(pOtherHC->stereoPin)) {
@@ -3544,6 +3549,8 @@ NvBool nvAllocCoreChannelEvo(NVDevEvoPtr pDevEvo)
     NvU32 dispIndex;
     NvU32 head;
 
+    ct_assert(sizeof(pDevEvo->capsBits) == sizeof(capsParams.capsTbl));
+
     /* Do nothing if the display was already allocated */
     if (pDevEvo->displayHandle != 0) {
         return TRUE;
@@ -3592,7 +3599,6 @@ NvBool nvAllocCoreChannelEvo(NVDevEvoPtr pDevEvo)
 
     /* Get the display caps bits */
 
-    ct_assert(sizeof(pDevEvo->capsBits) == sizeof(capsParams.capsTbl));
     ret = nvRmApiControl(nvEvoGlobal.clientHandle,
                          pDevEvo->displayHandle,
                          NV5070_CTRL_CMD_SYSTEM_GET_CAPS_V2,
@@ -3886,16 +3892,16 @@ void nvRestoreSORAssigmentsEvo(NVDevEvoRec *pDevEvo)
         }
 
         for (sorIndex = 0; sorIndex < ARRAY_LEN(sorAssignList); sorIndex++) {
+            NV0073_CTRL_DFP_ASSIGN_SOR_PARAMS params = { 0 };
+            NvU32 ret;
+
             if (sorAssignList[sorIndex] == NULL) {
                 continue;
             }
 
-            NV0073_CTRL_DFP_ASSIGN_SOR_PARAMS params = {
-                .subDeviceInstance = pDispEvo->displayOwner,
-                .displayId = nvDpyIdToNvU32(sorAssignList[sorIndex]->displayId),
-                .sorExcludeMask = ~NVBIT(sorIndex),
-            };
-            NvU32 ret;
+            params.subDeviceInstance = pDispEvo->displayOwner;
+            params.displayId = nvDpyIdToNvU32(sorAssignList[sorIndex]->displayId);
+            params.sorExcludeMask = ~NVBIT(sorIndex);
 
             ret = nvRmApiControl(nvEvoGlobal.clientHandle,
                                  pDevEvo->displayCommonHandle,
@@ -6461,6 +6467,7 @@ void nvEvoSetLut(NVDispEvoPtr pDispEvo, NvU32 head, NvBool kickoff,
         pDevEvo->lut.head[head].disp[dispIndex].curBaseLutEnabled ;
     NvBool outputLutEnabled =
         pDevEvo->lut.head[head].disp[dispIndex].curOutputLutEnabled;
+    NvBool previousUpdateComplete;
 
     if (!pParams->input.specified && !pParams->output.specified) {
         return;
@@ -6506,7 +6513,7 @@ void nvEvoSetLut(NVDispEvoPtr pDispEvo, NvU32 head, NvBool kickoff,
     // We can do that if this is the very first update, or if the previous
     // update is complete, or if we need to guarantee that this update
     // is synchronous.
-    NvBool previousUpdateComplete =
+    previousUpdateComplete =
         pDevEvo->hal->IsCompNotifierComplete(pDispEvo,
                                              LUTNotifierForHead(head));
     if (!waitForPreviousUpdate || previousUpdateComplete ||
@@ -6773,6 +6780,11 @@ NVDevEvoPtr nvAllocDevEvo(const struct NvKmsAllocDeviceRequest *pRequest,
         NVKMS_ALLOC_DEVICE_STATUS_NO_HARDWARE_AVAILABLE;
     NvU32 i;
 
+    ct_assert(ARRAY_LEN(pRequest->registryKeys) ==
+              ARRAY_LEN(pDevEvo->registryKeys));
+    ct_assert(ARRAY_LEN(pRequest->registryKeys[0].name) ==
+              ARRAY_LEN(pDevEvo->registryKeys[0].name));
+
     nvAssert(nvFindDevEvoByDeviceId(pRequest->deviceId) == NULL);
 
     pDevEvo = nvCalloc(1, sizeof(*pDevEvo));
@@ -6824,10 +6836,6 @@ NVDevEvoPtr nvAllocDevEvo(const struct NvKmsAllocDeviceRequest *pRequest,
      * will initialize DP lib which may read registry keys that we want to
      * allow clients to override.
      */
-    ct_assert(ARRAY_LEN(pRequest->registryKeys) ==
-              ARRAY_LEN(pDevEvo->registryKeys));
-    ct_assert(ARRAY_LEN(pRequest->registryKeys[0].name) ==
-              ARRAY_LEN(pDevEvo->registryKeys[0].name));
 
     for (i = 0; i < ARRAY_LEN(pRequest->registryKeys); i++) {
         const size_t nameLen = sizeof(pDevEvo->registryKeys[i].name);

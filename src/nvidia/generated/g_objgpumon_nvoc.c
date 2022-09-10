@@ -24,9 +24,12 @@ void __nvoc_init_dataField_OBJGPUMON(OBJGPUMON*, RmHalspecOwner* );
 void __nvoc_dtor_OBJGPUMON(OBJGPUMON*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJGPUMON;
 
+#define __NVOC_CB_TYPE OBJGPUMON
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_OBJGPUMON, __nvoc_dtor_OBJGPUMON);
+
 static const struct NVOC_RTTI __nvoc_rtti_OBJGPUMON_OBJGPUMON = {
     /*pClassDef=*/          &__nvoc_class_def_OBJGPUMON,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_OBJGPUMON,
+    /*dtor=*/               __nvoc_dtor_OBJGPUMON_dtor,
     /*offset=*/             0,
 };
 
@@ -51,7 +54,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_OBJGPUMON = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_OBJGPUMON = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_OBJGPUMON =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(OBJGPUMON),
@@ -61,7 +64,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_OBJGPUMON =
         /*name=*/               "OBJGPUMON",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_OBJGPUMON,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_OBJGPUMON_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_OBJGPUMON,
     /*pExportInfo=*/        &__nvoc_export_info_OBJGPUMON
 };
@@ -146,7 +149,7 @@ static NvBool __nvoc_thunk_OBJENGSTATE_gpumonIsPresent(POBJGPU pGpu, struct OBJG
     return engstateIsPresent(pGpu, (struct OBJENGSTATE *)(((unsigned char *)pEngstate) + __nvoc_rtti_OBJGPUMON_OBJENGSTATE.offset));
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJGPUMON = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJGPUMON =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -290,4 +293,3 @@ NV_STATUS __nvoc_objCreateDynamic_OBJGPUMON(OBJGPUMON **ppThis, Dynamic *pParent
 
     return status;
 }
-

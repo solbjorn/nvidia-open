@@ -22,9 +22,12 @@ void __nvoc_init_dataField_OBJVMM(OBJVMM*);
 void __nvoc_dtor_OBJVMM(OBJVMM*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJVMM;
 
+#define __NVOC_CB_TYPE OBJVMM
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_OBJVMM, __nvoc_dtor_OBJVMM);
+
 static const struct NVOC_RTTI __nvoc_rtti_OBJVMM_OBJVMM = {
     /*pClassDef=*/          &__nvoc_class_def_OBJVMM,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_OBJVMM,
+    /*dtor=*/               __nvoc_dtor_OBJVMM_dtor,
     /*offset=*/             0,
 };
 
@@ -42,7 +45,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_OBJVMM = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_OBJVMM = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_OBJVMM =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(OBJVMM),
@@ -52,12 +55,12 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_OBJVMM =
         /*name=*/               "OBJVMM",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_OBJVMM,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_OBJVMM_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_OBJVMM,
     /*pExportInfo=*/        &__nvoc_export_info_OBJVMM
 };
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJVMM = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJVMM =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -145,4 +148,3 @@ NV_STATUS __nvoc_objCreateDynamic_OBJVMM(OBJVMM **ppThis, Dynamic *pParent, NvU3
 
     return status;
 }
-

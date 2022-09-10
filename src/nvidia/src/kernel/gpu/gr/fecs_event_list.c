@@ -365,6 +365,7 @@ _fecsEventBufferAdd
     NV_STATUS status;
     NvBool bNotify;
     NvP64 notificationHandle;
+    NV_EVENT_BUFFER_FECS_RECORD_V2 fecsRecord;
     EVENT_BUFFER_PRODUCER_DATA notifyEvent;
     NvU32 notifyIndex;
 
@@ -384,7 +385,6 @@ _fecsEventBufferAdd
     notifyEvent.pVardata = NV_PTR_TO_NvP64(NULL);
     notifyEvent.vardataSize = 0;
 
-    NV_EVENT_BUFFER_FECS_RECORD_V2 fecsRecord;
     portMemSet(&fecsRecord, 0, sizeof(fecsRecord));
     fecsRecord.tag = tag;
     fecsRecord.pid = pid;

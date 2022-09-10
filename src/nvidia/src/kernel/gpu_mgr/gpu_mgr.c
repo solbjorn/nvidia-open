@@ -249,6 +249,7 @@ _gpumgrDestroyGpu(NvU32 gpuInstance)
     OBJGPUMGR *pGpuMgr = SYS_GET_GPUMGR(pSys);
     OBJGPU    *pGpu;
     NvU32      i;
+    OBJPFM *pPfm;
 
     osSyncWithGpuDestroy(NV_TRUE);
 
@@ -271,7 +272,7 @@ _gpumgrDestroyGpu(NvU32 gpuInstance)
     }
 
     // Destroy pointers of blob data if it is created
-    OBJPFM *pPfm = SYS_GET_PFM(pSys);
+    pPfm = SYS_GET_PFM(pSys);
     pfmBlobDataDestroy(pPfm);
 
     osSyncWithGpuDestroy(NV_FALSE);
@@ -782,11 +783,10 @@ static NvBool gpumgrCheckRmFirmwarePolicy
     NvU32  pmcBoot42
 )
 {
+    NvU32 data;
 
     if (!bRequestFwClientRm)
         return NV_FALSE;
-
-    NvU32 data;
 
     if (!_gpumgrIsRmFirmwareCapableChip(pmcBoot42))
     {
@@ -960,6 +960,7 @@ gpumgrAttachGpu(NvU32 gpuInstance, GPUATTACHARG *pAttachArg)
     OBJGPUMGR *pGpuMgr = SYS_GET_GPUMGR(pSys);
     OBJGPU    *pGpu = NULL;
     NV_STATUS  status;
+    Intr *pIntr;
 
     LOCK_ASSERT_AND_RETURN(rmApiLockIsOwner());
 
@@ -1020,7 +1021,7 @@ gpumgrAttachGpu(NvU32 gpuInstance, GPUATTACHARG *pAttachArg)
 
     _gpumgrGetEncSessionStatsReportingState(pGpu);
 
-    Intr *pIntr = GPU_GET_INTR(pGpu);
+    pIntr = GPU_GET_INTR(pGpu);
     // On some boards, vbios enables interrupt early before RM
     // initialize pGpu so that hotplug intrs can be serviced on
     // the mfg line. Disable interrupt here for this case.

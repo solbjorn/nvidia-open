@@ -36,9 +36,12 @@ void __nvoc_init_dataField_TimedSemaSwObject(TimedSemaSwObject*);
 void __nvoc_dtor_TimedSemaSwObject(TimedSemaSwObject*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_TimedSemaSwObject;
 
+#define __NVOC_CB_TYPE TimedSemaSwObject
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_TimedSemaSwObject, __nvoc_dtor_TimedSemaSwObject);
+
 static const struct NVOC_RTTI __nvoc_rtti_TimedSemaSwObject_TimedSemaSwObject = {
     /*pClassDef=*/          &__nvoc_class_def_TimedSemaSwObject,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_TimedSemaSwObject,
+    /*dtor=*/               __nvoc_dtor_TimedSemaSwObject_dtor,
     /*offset=*/             0,
 };
 
@@ -105,7 +108,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_TimedSemaSwObject = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_TimedSemaSwObject = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_TimedSemaSwObject =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(TimedSemaSwObject),
@@ -115,7 +118,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_TimedSemaSwObject =
         /*name=*/               "TimedSemaSwObject",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_TimedSemaSwObject,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_TimedSemaSwObject_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_TimedSemaSwObject,
     /*pExportInfo=*/        &__nvoc_export_info_TimedSemaSwObject
 };
@@ -236,17 +239,21 @@ static NV_STATUS __nvoc_thunk_Notifier_tsemaGetOrAllocNotifShare(struct TimedSem
     return notifyGetOrAllocNotifShare((struct Notifier *)(((unsigned char *)pNotifier) + __nvoc_rtti_TimedSemaSwObject_Notifier.offset), hNotifierClient, hNotifierResource, ppNotifShare);
 }
 
+NVOC_BUILD_CALLBACK(tsemaCtrlCmdFlush_IMPL);
+NVOC_BUILD_CALLBACK(tsemaCtrlCmdGetTime_IMPL);
+NVOC_BUILD_CALLBACK(tsemaCtrlCmdRelease_IMPL);
+
 #if !defined(NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG)
 #define NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(x)      (0)
 #endif
 
-static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_TimedSemaSwObject[] = 
+static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_TimedSemaSwObject[] =
 {
     {               /*  [0] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) tsemaCtrlCmdFlush_IMPL,
+        /*pFunc=*/      tsemaCtrlCmdFlush_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*flags=*/      0x10u,
         /*accessRight=*/0x0u,
@@ -259,9 +266,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_TimedSem
     },
     {               /*  [1] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) tsemaCtrlCmdGetTime_IMPL,
+        /*pFunc=*/      tsemaCtrlCmdGetTime_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*flags=*/      0x10u,
         /*accessRight=*/0x0u,
@@ -274,9 +281,9 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_TimedSem
     },
     {               /*  [2] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
-        /*pFunc=*/      (void (*)(void)) NULL,
+        /*pFunc=*/      NULL,
 #else
-        /*pFunc=*/      (void (*)(void)) tsemaCtrlCmdRelease_IMPL,
+        /*pFunc=*/      tsemaCtrlCmdRelease_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*flags=*/      0x10u,
         /*accessRight=*/0x0u,
@@ -290,7 +297,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_TimedSem
 
 };
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_TimedSemaSwObject = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_TimedSemaSwObject =
 {
     /*numEntries=*/     3,
     /*pExportEntries=*/ __nvoc_exported_method_def_TimedSemaSwObject
@@ -470,4 +477,3 @@ NV_STATUS __nvoc_objCreateDynamic_TimedSemaSwObject(TimedSemaSwObject **ppThis, 
 
     return status;
 }
-

@@ -22,9 +22,12 @@ void __nvoc_init_dataField_OBJPFM(OBJPFM*);
 void __nvoc_dtor_OBJPFM(OBJPFM*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJPFM;
 
+#define __NVOC_CB_TYPE OBJPFM
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_OBJPFM, __nvoc_dtor_OBJPFM);
+
 static const struct NVOC_RTTI __nvoc_rtti_OBJPFM_OBJPFM = {
     /*pClassDef=*/          &__nvoc_class_def_OBJPFM,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_OBJPFM,
+    /*dtor=*/               __nvoc_dtor_OBJPFM_dtor,
     /*offset=*/             0,
 };
 
@@ -42,7 +45,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_OBJPFM = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_OBJPFM = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_OBJPFM =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(OBJPFM),
@@ -52,12 +55,12 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_OBJPFM =
         /*name=*/               "OBJPFM",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_OBJPFM,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_OBJPFM_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_OBJPFM,
     /*pExportInfo=*/        &__nvoc_export_info_OBJPFM
 };
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJPFM = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_OBJPFM =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -152,4 +155,3 @@ NV_STATUS __nvoc_objCreateDynamic_OBJPFM(OBJPFM **ppThis, Dynamic *pParent, NvU3
 
     return status;
 }
-

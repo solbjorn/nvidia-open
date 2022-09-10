@@ -36,9 +36,12 @@ void __nvoc_init_dataField_NvdecContext(NvdecContext*, RmHalspecOwner* );
 void __nvoc_dtor_NvdecContext(NvdecContext*);
 extern const struct NVOC_EXPORT_INFO __nvoc_export_info_NvdecContext;
 
+#define __NVOC_CB_TYPE NvdecContext
+NVOC_BUILD_CTOR_DTOR(__nvoc_objCreateDynamic_NvdecContext, __nvoc_dtor_NvdecContext);
+
 static const struct NVOC_RTTI __nvoc_rtti_NvdecContext_NvdecContext = {
     /*pClassDef=*/          &__nvoc_class_def_NvdecContext,
-    /*dtor=*/               (NVOC_DYNAMIC_DTOR) &__nvoc_dtor_NvdecContext,
+    /*dtor=*/               __nvoc_dtor_NvdecContext_dtor,
     /*offset=*/             0,
 };
 
@@ -105,7 +108,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_NvdecContext = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_NvdecContext = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_NvdecContext =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(NvdecContext),
@@ -115,7 +118,7 @@ const struct NVOC_CLASS_DEF __nvoc_class_def_NvdecContext =
         /*name=*/               "NvdecContext",
 #endif
     },
-    /*objCreatefn=*/        (NVOC_DYNAMIC_OBJ_CREATE) &__nvoc_objCreateDynamic_NvdecContext,
+    /*objCreatefn=*/        __nvoc_objCreateDynamic_NvdecContext_ctor,
     /*pCastInfo=*/          &__nvoc_castinfo_NvdecContext,
     /*pExportInfo=*/        &__nvoc_export_info_NvdecContext
 };
@@ -236,7 +239,7 @@ static NV_STATUS __nvoc_thunk_Notifier_nvdecctxGetOrAllocNotifShare(struct Nvdec
     return notifyGetOrAllocNotifShare((struct Notifier *)(((unsigned char *)pNotifier) + __nvoc_rtti_NvdecContext_Notifier.offset), hNotifierClient, hNotifierResource, ppNotifShare);
 }
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_NvdecContext = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_NvdecContext =
 {
     /*numEntries=*/     0,
     /*pExportEntries=*/  0
@@ -412,4 +415,3 @@ NV_STATUS __nvoc_objCreateDynamic_NvdecContext(NvdecContext **ppThis, Dynamic *p
 
     return status;
 }
-

@@ -187,6 +187,7 @@ NvBool osRmInitRm(OBJOS *pOS)
 {
     OBJSYS    *pSys = SYS_GET_INSTANCE();
     NvU64 system_memory_size = (NvU64)-1;
+    NvU32 data;
 
     NV_PRINTF(LEVEL_INFO, "init rm\n");
 
@@ -199,7 +200,7 @@ NvBool osRmInitRm(OBJOS *pOS)
     // try to check the value of ResmanDebugLevel
     RmInitRegistry();
 
-    NvU32 data = 0;
+    data = 0;
     if ((osReadRegistryDword(NULL,
                 NV_REG_ENABLE_PCIE_GEN3, &data) == NV_OK) &&
             (data != 0))
@@ -365,6 +366,8 @@ osHandleGpuLost
         RM_API *pRmApi = rmapiGetInterface(RMAPI_GPU_LOCK_INTERNAL);
         NV2080_CTRL_GPU_GET_OEM_BOARD_INFO_PARAMS *pBoardInfoParams;
         NV_STATUS status;
+        OBJSYS *pSys;
+        OBJCL *pCl;
 
         //
         // This doesn't support PEX Reset and Recovery yet.
@@ -419,8 +422,8 @@ osHandleGpuLost
             osModifyGpuSwStatePersistence(pGpu->pOsGpuInfo, NV_TRUE);
         }
 
-        OBJSYS *pSys = SYS_GET_INSTANCE();
-        OBJCL  *pCl  = SYS_GET_CL(pSys);
+        pSys = SYS_GET_INSTANCE();
+        pCl  = SYS_GET_CL(pSys);
         // Set SURPRISE_REMOVAL flag for eGPU to help in device removal.
         if ((pCl != NULL) &&
             pCl->getProperty(pCl, PDB_PROP_CL_IS_EXTERNAL_GPU))
@@ -885,6 +888,8 @@ RmInitNvDevice(
     OBJGPU *pGpu = gpumgrGetGpu(deviceReference);
     nv_state_t *nv = NV_GET_NV_STATE(pGpu);
     nv_priv_t *nvp = NV_GET_NV_PRIV(nv);
+    KernelBif *pKernelBif;
+    Intr *pIntr;
 
     NV_PRINTF(LEVEL_INFO, "RmInitNvDevice:\n");
 
@@ -914,7 +919,7 @@ RmInitNvDevice(
     }
     nvp->flags |= NV_INIT_FLAG_GPU_STATE;
 
-    KernelBif *pKernelBif = GPU_GET_KERNEL_BIF(pGpu);
+    pKernelBif = GPU_GET_KERNEL_BIF(pGpu);
     //
     // Make sure bifIsMSIEnabled() gets a chance to look up the OS PCI
     // handle for this GPU. This must happen after GPU state
@@ -927,7 +932,7 @@ RmInitNvDevice(
 
     // Set RM's interrupt enable state to zero here so that interrupts
     // won't be enabled during loading
-    Intr *pIntr = GPU_GET_INTR(pGpu);
+    pIntr = GPU_GET_INTR(pGpu);
     if (pIntr != NULL)
     {
         intrSetIntrEn(pIntr, INTERRUPT_TYPE_DISABLED);
@@ -1550,6 +1555,11 @@ NvBool RmInitAdapter(
     KernelDisplay  *pKernelDisplay;
     const void     *gspFwHandle = NULL;
     const void     *gspFwLogHandle = NULL;
+    KernelFifo *pKernelFifo;
+    KernelRc *pKernelRc;
+    NvU32 udsize = 0;
+    NvU64 udaddr = 0;
+    Intr *pIntr;
 
     GSP_FIRMWARE    gspFw = {0};
     PORT_UNREFERENCED_VARIABLE(gspFw);
@@ -1770,13 +1780,13 @@ NvBool RmInitAdapter(
         goto shutdown;
     }
 
-    Intr *pIntr = GPU_GET_INTR(pGpu);
+    pIntr = GPU_GET_INTR(pGpu);
     if (pIntr != NULL)
     {
         intrSetIntrEn(pIntr, INTERRUPT_TYPE_HARDWARE);
     }
 
-    KernelRc *pKernelRc = GPU_GET_KERNEL_RC(pGpu);
+    pKernelRc = GPU_GET_KERNEL_RC(pGpu);
     // initialize the watchdog (disabled by default)
     status.rmStatus = pKernelRc != NULL ? krcWatchdogInit_HAL(pGpu, pKernelRc) :
                                           NV_ERR_NOT_SUPPORTED;
@@ -1820,9 +1830,7 @@ NvBool RmInitAdapter(
 
     // This fifo hal call will fail on pre-fermi gpus. In that case, userd
     // info will remain 0 and skipped by fb mmap code
-    KernelFifo *pKernelFifo = GPU_GET_KERNEL_FIFO(pGpu);
-    NvU64       udaddr = 0;
-    NvU32       udsize = 0;
+    pKernelFifo = GPU_GET_KERNEL_FIFO(pGpu);
     if (pKernelFifo != NULL)
     {
         status.rmStatus = kfifoGetUserdBar1MapInfo_HAL(pGpu, pKernelFifo, &udaddr, &udsize);
@@ -1952,12 +1960,15 @@ void RmShutdownAdapter(
         // LOCK: acquire GPUs lock
         if (rmGpuLocksAcquire(GPUS_LOCK_FLAGS_NONE, RM_LOCK_MODULES_DESTROY) == NV_OK)
         {
+            OBJCL *pCl;
+            OBJOS *pOS;
+
             RmDestroyDeferredDynamicPowerManagement(nv);
 
             gpuFreeEventHandle(pGpu);
 
-            OBJCL          *pCl  = SYS_GET_CL(pSys);
-            OBJOS          *pOS  = GPU_GET_OS(pGpu);
+            pCl = SYS_GET_CL(pSys);
+            pOS = GPU_GET_OS(pGpu);
             if (pCl != NULL)
             {
                 if (nvp->flags & NV_INIT_FLAG_CORE_LOGIC)
@@ -2083,11 +2094,15 @@ void RmDisableAdapter(
     // LOCK: acquire GPUs lock
     if (rmGpuLocksAcquire(GPUS_LOCK_FLAGS_NONE, RM_LOCK_MODULES_DESTROY) == NV_OK)
     {
+        OBJSYS *pSys;
+        OBJCL *pCl;
+        OBJOS *pOS;
+
         nv_stop_rc_timer(nv);
 
-        OBJSYS    *pSys = SYS_GET_INSTANCE();
-        OBJCL     *pCl  = SYS_GET_CL(pSys);
-        OBJOS     *pOS  = SYS_GET_OS(pSys);
+        pSys = SYS_GET_INSTANCE();
+        pCl  = SYS_GET_CL(pSys);
+        pOS  = SYS_GET_OS(pSys);
         if (pCl != NULL)
         {
             teardownCoreLogic(pOS, pGpu);

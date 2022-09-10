@@ -599,11 +599,11 @@ remote_fla_bind:
     {
         if (pRemoteKernelBus->flaInfo.bFlaAllocated && !pRemoteKernelBus->flaInfo.bFlaBind)
         {
+            Device *pRemoteDevice;
             if (!IS_VIRTUAL(pRemoteGpu))
             {
                 return status;
             }
-            Device *pRemoteDevice;
             NV_ASSERT_OK(deviceGetByHandle(pClient, hPeerDevice, &pRemoteDevice));
             NV_ASSERT_OK_OR_RETURN(vgpuGetGfidFromDeviceInfo(pRemoteGpu, pRemoteDevice, &gfid));
 

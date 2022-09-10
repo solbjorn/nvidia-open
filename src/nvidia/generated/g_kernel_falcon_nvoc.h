@@ -78,7 +78,7 @@ typedef struct KernelFalconEngineConfig {
 #define PRIVATE_FIELD(x) NVOC_PRIVATE_FIELD(x)
 #endif
 struct KernelFalcon {
-    const struct NVOC_RTTI *__nvoc_rtti;
+    struct __rtti_marker __nvoc_rtti;
     struct KernelFalcon *__nvoc_pbase_KernelFalcon;
     NvBool (*__kflcnIsRiscvActive__)(struct OBJGPU *, struct KernelFalcon *);
     void (*__kflcnRiscvProgramBcr__)(struct OBJGPU *, struct KernelFalcon *, NvBool);
@@ -452,7 +452,7 @@ struct KernelFalcon *kflcnGetKernelFalconForEngine_IMPL(struct OBJGPU *pGpu, ENG
 #define PRIVATE_FIELD(x) NVOC_PRIVATE_FIELD(x)
 #endif
 struct GenericKernelFalcon {
-    const struct NVOC_RTTI *__nvoc_rtti;
+    struct __rtti_marker __nvoc_rtti;
     struct KernelFalcon __nvoc_base_KernelFalcon;
     struct IntrService __nvoc_base_IntrService;
     struct Object __nvoc_base_Object;

@@ -619,6 +619,12 @@ _gpuboostmgrApplyPolicyFilters(NV0000_SYNC_GPU_BOOST_GROUP_CONFIG *pBoostConfig)
     NvBool     bIsSli           = NV_TRUE;
     NvBool     bIsUnlinkedSli   = NV_TRUE;
     NvBool     bMatchingDevId   = NV_TRUE;
+    GspStaticConfigInfo *pGSCI = NULL;
+    NvU64 boardProjNum = 0;
+    NvU64 boardSkuNum  = 0;
+    NvU16 subVendor    = 0;
+    NvU16 subDevice    = 0;
+    NvU32 pciDevId = 0;
     NvU32      i;
 
     NV_ASSERT_OR_RETURN(NULL != pBoostConfig, NV_ERR_INVALID_ARGUMENT);
@@ -684,12 +690,6 @@ _gpuboostmgrApplyPolicyFilters(NV0000_SYNC_GPU_BOOST_GROUP_CONFIG *pBoostConfig)
     // Check if all the GPUs have same dev id. This needs to be ensured for the Sync
     // Boost algorithm to provide the expected benefits, unless otherwise specified.
     //
-    NvU32 pciDevId = 0;
-    NvU64 boardProjNum = 0;
-    NvU64 boardSkuNum  = 0;
-    NvU16 subVendor    = 0;
-    NvU16 subDevice    = 0;
-    GspStaticConfigInfo *pGSCI = NULL;
 
     pciDevId = DRF_VAL(_PCI, _DEVID, _DEVICE, pGpu->idInfo.PCIDeviceID);
 

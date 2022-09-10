@@ -133,6 +133,7 @@ deviceInitClientShare
     else if (hClientShare == RES_GET_CLIENT_HANDLE(pDevice))
     {
         NvU32 flags = VASPACE_FLAGS_DEFAULT_PARAMS;
+        MemoryManager *pMemoryManager;
         NvU64 vaLimit;
 
         flags |= (deviceAllocFlags & NV_DEVICE_ALLOCATION_FLAGS_VASPACE_SHARED_MANAGEMENT) ?
@@ -236,7 +237,7 @@ deviceInitClientShare
         //     flag should still be exposed, or some other solution implemented.
         //     See bug 2844476
         //
-        MemoryManager *pMemoryManager = GPU_GET_MEMORY_MANAGER(pGpu);
+        pMemoryManager = GPU_GET_MEMORY_MANAGER(pGpu);
         if (memmgrIsPmaInitialized(pMemoryManager) &&
             memmgrAreClientPageTablesPmaManaged(pMemoryManager) &&
             (deviceAllocFlags & NV_DEVICE_ALLOCATION_FLAGS_VASPACE_PTABLE_PMA_MANAGED))
