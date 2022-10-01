@@ -1933,28 +1933,6 @@ gpuStatePreInit_IMPL
         }
     }
 
-    pGpu->boardInfo = portMemAllocNonPaged(sizeof(*pGpu->boardInfo));
-    if (pGpu->boardInfo)
-    {
-        RM_API *pRmApi;
-
-        // To avoid potential race of xid reporting with the control, zero it out
-        portMemSet(pGpu->boardInfo, '\0', sizeof(*pGpu->boardInfo));
-
-        pRmApi = GPU_GET_PHYSICAL_RMAPI(pGpu);
-
-        if (pRmApi->Control(pRmApi,
-                        pGpu->hInternalClient,
-                        pGpu->hInternalSubdevice,
-                        NV2080_CTRL_CMD_GPU_GET_OEM_BOARD_INFO,
-                        pGpu->boardInfo,
-                        sizeof(*pGpu->boardInfo)) != NV_OK)
-        {
-            portMemFree(pGpu->boardInfo);
-            pGpu->boardInfo = NULL;
-        }
-    }
-
     return rmStatus;
 }
 
@@ -2303,6 +2281,28 @@ gpuStatePostLoad
             goto gpuStatePostLoad_exit;
     }
 
+    pGpu->boardInfo = portMemAllocNonPaged(sizeof(*pGpu->boardInfo));
+    if (pGpu->boardInfo)
+    {
+        RM_API *pRmApi;
+
+        // To avoid potential race of xid reporting with the control, zero it out
+        portMemSet(pGpu->boardInfo, '\0', sizeof(*pGpu->boardInfo));
+
+        pRmApi = GPU_GET_PHYSICAL_RMAPI(pGpu);
+
+        if(pRmApi->Control(pRmApi,
+                           pGpu->hInternalClient,
+                           pGpu->hInternalSubdevice,
+                           NV2080_CTRL_CMD_GPU_GET_OEM_BOARD_INFO,
+                           pGpu->boardInfo,
+                           sizeof(*pGpu->boardInfo)) != NV_OK)
+        {
+            portMemFree(pGpu->boardInfo);
+            pGpu->boardInfo = NULL;
+        }
+    }
+
 gpuStatePostLoad_exit:
     return rmStatus;
 }
@@ -2337,6 +2337,9 @@ gpuStatePreUnload
     NvU32               numEngDescriptors;
     NvU32               curEngDescIdx;
     NV_STATUS           rmStatus = NV_OK;
+
+    portMemFree(pGpu->boardInfo);
+    pGpu->boardInfo = NULL;
 
     engDescriptorList = gpuGetUnloadEngineDescriptors(pGpu);
     numEngDescriptors = gpuGetNumEngDescriptors(pGpu);
@@ -2659,9 +2662,6 @@ gpuStateDestroy_IMPL
 
     _gpuFreeInternalObjects(pGpu);
     gpuDestroyGenericKernelFalconList(pGpu);
-
-    portMemFree(pGpu->boardInfo);
-    pGpu->boardInfo = NULL;
 
     portMemFree(pGpu->gspSupportedEngines);
     pGpu->gspSupportedEngines = NULL;
