@@ -49,24 +49,6 @@ endif
 $(call ASSIGN_PER_OBJ_CFLAGS, $(NVIDIA_OBJECTS), $(NVIDIA_CFLAGS))
 
 #
-# Build nv-interface.o from the kernel interface layer objects, suitable
-# for further processing by the top-level makefile to produce a precompiled
-# kernel interface file.
-#
-
-NVIDIA_INTERFACE := nvidia/nv-interface.o
-
-# Linux kernel v5.12 and later looks at "always-y", Linux kernel versions
-# before v5.6 looks at "always"; kernel versions between v5.12 and v5.6
-# look at both.
-
-always += $(NVIDIA_INTERFACE)
-always-y += $(NVIDIA_INTERFACE)
-
-$(obj)/$(NVIDIA_INTERFACE): $(addprefix $(obj)/,$(NVIDIA_OBJECTS)) FORCE
-	$(call if_changed,link_multi-m)
-
-#
 # Register the conftests needed by nvidia.ko
 #
 
@@ -203,6 +185,7 @@ NV_CONFTEST_TYPE_COMPILE_TESTS += vmalloc_has_pgprot_t_arg
 NV_CONFTEST_TYPE_COMPILE_TESTS += mm_has_mmap_lock
 NV_CONFTEST_TYPE_COMPILE_TESTS += pci_channel_state
 NV_CONFTEST_TYPE_COMPILE_TESTS += pci_dev_has_ats_enabled
+NV_CONFTEST_TYPE_COMPILE_TESTS += mt_device_gre
 NV_CONFTEST_TYPE_COMPILE_TESTS += remove_memory_has_nid_arg
 NV_CONFTEST_TYPE_COMPILE_TESTS += add_memory_driver_managed_has_mhp_flags_arg
 NV_CONFTEST_TYPE_COMPILE_TESTS += num_registered_fb

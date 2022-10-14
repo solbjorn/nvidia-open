@@ -271,7 +271,7 @@ nvswitch_is_device_blacklisted
     NVSWITCH_DEVICE_FABRIC_STATE device_fabric_state = 0;
     NvlStatus status;
 
-    status = nvswitch_lib_read_fabric_state(nvswitch_dev->lib_device, 
+    status = nvswitch_lib_read_fabric_state(nvswitch_dev->lib_device,
                                             &device_fabric_state, NULL, NULL);
 
     if (status != NVL_SUCCESS)
@@ -1739,7 +1739,7 @@ nvswitch_init
         goto alloc_chrdev_region_fail;
     }
 
-    printk(KERN_ERR, "nvidia-nvswitch: Major: %d Minor: %d\n",
+    pr_info("nvidia-nvswitch: Major: %d Minor: %d\n",
            MAJOR(nvswitch.devno),
            MINOR(nvswitch.devno));
 

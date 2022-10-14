@@ -58,6 +58,7 @@
 #include <nvSha256.h>
 #include <gpu/gsp/kernel_gsp.h>
 #include <logdecode.h>
+#include <gpu/fsp/kern_fsp.h>
 
 #include <mem_mgr/virt_mem_mgr.h>
 
@@ -1540,6 +1541,7 @@ NvBool RmInitAdapter(
     const void     *gspFwHandle = NULL;
     const void     *gspFwLogHandle = NULL;
     KernelFifo *pKernelFifo;
+    KernelFsp *pKernelFsp;
     KernelRc *pKernelRc;
     NvU32 udsize = 0;
     NvU64 udaddr = 0;
@@ -1664,6 +1666,17 @@ NvBool RmInitAdapter(
     {
         RM_SET_ERROR(status, RM_INIT_SCALABILITY_FAILED);
         goto shutdown;
+    }
+
+    pKernelFsp = GPU_GET_KERNEL_FSP(pGpu);
+    if ((pKernelFsp != NULL) && !IS_GSP_CLIENT(pGpu) && !IS_VIRTUAL(pGpu))
+    {
+        status.rmStatus = kfspSendBootCommands_HAL(pGpu, pKernelFsp);
+        if (status.rmStatus != NV_OK)
+        {
+            NV_PRINTF(LEVEL_ERROR, "FSP boot command failed.\n");
+            goto shutdown;
+        }
     }
 
     RmSetConsolePreservationParams(pGpu);
@@ -1839,7 +1852,7 @@ NvBool RmInitAdapter(
     RmInitS0ixPowerManagement(nv);
     RmInitDeferredDynamicPowerManagement(nv);
 
-    if (!NV_IS_SOC_DISPLAY_DEVICE(nv))
+    if (!NV_IS_SOC_DISPLAY_DEVICE(nv) && !NV_IS_SOC_IGPU_DEVICE(nv))
     {
         status.rmStatus = RmRegisterGpudb(pGpu);
         if (status.rmStatus != NV_OK)

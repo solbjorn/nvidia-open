@@ -722,6 +722,13 @@ static NvBool _gpumgrIsRmFirmwareCapableChip(NvU32 pmcBoot42)
 }
 #undef NV_PMC_BOOT_42_ARCHITECTURE_TU100
 
+#define NV_PMC_BOOT_42_ARCHITECTURE_GH100                0x00000018
+static NvBool _gpumgrIsRmFirmwareDefaultChip(NvU32 pmcBoot42)
+{
+    return (DRF_VAL(_PMC, _BOOT_42, _ARCHITECTURE, pmcBoot42) == NV_PMC_BOOT_42_ARCHITECTURE_GH100);
+}
+#undef NV_PMC_BOOT_42_ARCHITECTURE_GH100
+
 NvBool gpumgrIsDeviceRmFirmwareCapable
 (
     NvU16 devId,
@@ -752,8 +759,6 @@ NvBool gpumgrIsDeviceRmFirmwareCapable
         0x2236, // A10   SKU215     Pris-24
         0x2237, // A10G  SKU215     Pris-24
         0x25B6, // A16
-        0x20F5, // A800-80
-        0x20F6, // A800-40
     };
     NvU32 count = NV_ARRAY_ELEMENTS(defaultGspRmGpus);
     NvU32 i;
@@ -763,16 +768,27 @@ NvBool gpumgrIsDeviceRmFirmwareCapable
     if (!_gpumgrIsRmFirmwareCapableChip(pmcBoot42))
         return NV_FALSE;
 
-    for (i = 0; i < count; i++)
+    if (_gpumgrIsRmFirmwareDefaultChip(pmcBoot42))
     {
-        if (defaultGspRmGpus[i] == devId)
+        *pbEnabledByDefault = NV_TRUE;
+    }
+    else
+    {
+        for (i = 0; i < count; i++)
         {
-            NV_PRINTF(LEVEL_INFO,
-                      "DevId 0x%x is GSP-RM enabled by default\n",
-                      devId);
-            *pbEnabledByDefault = NV_TRUE;
-            break;
+            if (defaultGspRmGpus[i] == devId)
+            {
+                *pbEnabledByDefault = NV_TRUE;
+                break;
+            }
         }
+    }
+
+    if (*pbEnabledByDefault)
+    {
+        NV_PRINTF(LEVEL_INFO,
+                  "DevId 0x%x is GSP-RM enabled by default\n",
+                  devId);
     }
 
     return NV_TRUE;
@@ -2999,6 +3015,9 @@ gpumgrAddSystemMIGInstanceTopo_IMPL
         {
             pGpuMgr->MIGTopologyInfo[i].bValid = NV_TRUE;
             pGpuMgr->MIGTopologyInfo[i].domainBusDevice = domainBusDevice;
+                        
+            // Set MIG enablement to disabled by default
+            pGpuMgr->MIGTopologyInfo[i].bMIGEnabled = NV_FALSE;
             break;
         }
     }
@@ -3049,6 +3068,78 @@ gpumgrGetSystemMIGInstanceTopo_IMPL
     }
 
     return NV_FALSE;
+}
+
+/*!
+ * @brief Retrieves the entry in the system partition topology save for the given GPU
+ *        ID and returns value of bMIGEnabled.
+ *
+ * @param[in]  domainBusDevice: the PCI DomainBusDevice for the gpu to be registered
+ *
+ * @returns NV_TRUE if entry found
+ *          NV_FALSE otherwise
+ */
+NvBool
+gpumgrIsSystemMIGEnabled_IMPL
+(
+    NvU64 domainBusDevice
+)
+{
+    OBJSYS    *pSys = SYS_GET_INSTANCE();
+    OBJGPUMGR *pGpuMgr = SYS_GET_GPUMGR(pSys);
+    NvU32 i;
+
+    for (i = 0; i < NV_ARRAY_ELEMENTS(pGpuMgr->MIGTopologyInfo); i++)
+    {
+        //
+        // Choose the correct GPU by comparing PCI BusDomainDevice
+        // This ensures we are using the same GPU across gpu load/unload
+        //
+        if (pGpuMgr->MIGTopologyInfo[i].bValid &&
+            (pGpuMgr->MIGTopologyInfo[i].domainBusDevice == domainBusDevice))
+        {
+            return pGpuMgr->MIGTopologyInfo[i].bMIGEnabled;
+        }
+    }
+
+    return NV_FALSE;
+}
+
+
+/*!
+ * @brief Retrieves the entry in the system partition topology save for the given GPU
+ *        ID and sets value of bMIGEnabled.
+ *
+ * @param[in]  DomainBusDevice: the PCI DomainBusDevice for the gpu to be registered
+ * @param[in]  bMIGEnabled:     The new MIG enablement state to be set
+ *
+ * @returns NV_TRUE if entry found
+ *          NV_FALSE otherwise
+ */
+void 
+gpumgrSetSystemMIGEnabled_IMPL
+(  
+    NvU64 domainBusDevice,
+    NvBool bMIGEnabled
+)
+{
+    OBJSYS    *pSys = SYS_GET_INSTANCE();
+    OBJGPUMGR *pGpuMgr = SYS_GET_GPUMGR(pSys);
+    NvU32 i;
+
+    for (i = 0; i < NV_ARRAY_ELEMENTS(pGpuMgr->MIGTopologyInfo); i++)
+    {
+        //
+        // Choose the correct GPU by comparing PCI BusDomainDevice
+        // This ensures we are using the same GPU across gpu load/unload
+        //
+        if (pGpuMgr->MIGTopologyInfo[i].bValid &&
+            (pGpuMgr->MIGTopologyInfo[i].domainBusDevice == domainBusDevice))
+        {
+            pGpuMgr->MIGTopologyInfo[i].bMIGEnabled = bMIGEnabled;
+            break;
+        }
+    }
 }
 
 static void

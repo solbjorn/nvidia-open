@@ -73,25 +73,6 @@ NVIDIA_MODESET_CFLAGS += -UDEBUG -U_DEBUG -DNDEBUG -DNV_BUILD_MODULE_INSTANCES=0
 
 $(call ASSIGN_PER_OBJ_CFLAGS, $(NVIDIA_MODESET_OBJECTS), $(NVIDIA_MODESET_CFLAGS))
 
-
-#
-# Build nv-modeset-interface.o from the kernel interface layer
-# objects, suitable for further processing by the installer and
-# inclusion as a precompiled kernel interface file.
-#
-
-NVIDIA_MODESET_INTERFACE := nvidia-modeset/nv-modeset-interface.o
-
-# Linux kernel v5.12 and later looks at "always-y", Linux kernel versions
-# before v5.6 looks at "always"; kernel versions between v5.12 and v5.6
-# look at both.
-
-always += $(NVIDIA_MODESET_INTERFACE)
-always-y += $(NVIDIA_MODESET_INTERFACE)
-
-$(obj)/$(NVIDIA_MODESET_INTERFACE): $(addprefix $(obj)/,$(NVIDIA_MODESET_OBJECTS)) FORCE
-	$(call if_changed,link_multi-m)
-
 #
 # Register the conftests needed by nvidia-modeset.ko
 #

@@ -1,7 +1,7 @@
 # NVIDIA Linux Open GPU Kernel Module Source
 
 This is the source release of the NVIDIA Linux open GPU kernel modules,
-version 515.65.01.
+version 520.56.06.
 
 This fork is not perfect, but at least something to start from.
 

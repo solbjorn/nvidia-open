@@ -62,7 +62,7 @@
 const char NV_KMS_ID[] = "nvidia id: NVIDIA UNIX Open Kernel Mode Setting Driver for " NV_MACHINE "  " NV_VERSION_STRING "  Release Build";
 const char * const pNV_KMS_ID = NV_KMS_ID + 11;
 
-static bool output_rounding_fix = false;
+static bool output_rounding_fix = true;
 module_param_named(output_rounding_fix, output_rounding_fix, bool, 0400);
 
 /* These parameters are used for fault injection tests.  Normally the defaults
@@ -87,110 +87,6 @@ NvBool nvkms_output_rounding_fix(void)
 /*************************************************************************
  * NVKMS interface for nvhost unit for sync point APIs.
  *************************************************************************/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 #ifdef NVKMS_SYNCPT_STUBS_NEEDED
 /* Unsupported STUB for nvkms_syncpt APIs */
@@ -1738,11 +1634,7 @@ module_init(nvkms_init);
 module_exit(nvkms_exit);
 
 #if defined(MODULE_LICENSE)
-
   MODULE_LICENSE("Dual MIT/GPL");
-
-
-
 #endif
 #if defined(MODULE_INFO)
   MODULE_INFO(supported, "external");

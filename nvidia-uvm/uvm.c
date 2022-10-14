@@ -1097,7 +1097,6 @@ static int uvm_init(void)
     if (uvm_enable_builtin_tests)
         pr_info("Built-in UVM tests are enabled. This is a security risk.\n");
 
-
     // After Open RM is released, both the enclosing "#if" and this comment
     // block should be removed, because the uvm_hmm_is_enabled_system_wide()
     // check is both necessary and sufficient for reporting functionality.
@@ -1106,7 +1105,6 @@ static int uvm_init(void)
 
     if (uvm_hmm_is_enabled_system_wide())
         UVM_INFO_PRINT("HMM (Heterogeneous Memory Management) is enabled in the UVM driver.\n");
-
 
     return 0;
 
@@ -1149,4 +1147,4 @@ module_exit(uvm_exit_entry);
 
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_INFO(supported, "external");
-
+MODULE_VERSION(NV_VERSION_STRING);

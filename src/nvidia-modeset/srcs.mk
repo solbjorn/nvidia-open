@@ -124,6 +124,7 @@ NVIDIA_MODESET_API_SRCS += src/common/modeset/hdmipacket/nvhdmipkt_9471.c
 NVIDIA_MODESET_API_SRCS += src/common/modeset/hdmipacket/nvhdmipkt_9571.c
 NVIDIA_MODESET_API_SRCS += src/common/modeset/hdmipacket/nvhdmipkt_C371.c
 NVIDIA_MODESET_API_SRCS += src/common/modeset/hdmipacket/nvhdmipkt_C671.c
+NVIDIA_MODESET_API_SRCS += src/common/modeset/hdmipacket/nvhdmipkt_C771.c
 NVIDIA_MODESET_API_SRCS += src/common/modeset/timing/nvt_cvt.c
 NVIDIA_MODESET_API_SRCS += src/common/modeset/timing/nvt_displayid20.c
 NVIDIA_MODESET_API_SRCS += src/common/modeset/timing/nvt_dmt.c

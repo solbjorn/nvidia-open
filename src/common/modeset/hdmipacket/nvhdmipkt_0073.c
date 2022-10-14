@@ -47,8 +47,8 @@ hdmiPacketWrite0073(NVHDMIPKT_CLASS*   pThis,
                     NvU32              displayId,
                     NvU32              head,
                     NVHDMIPKT_TYPE     packetType,
-                    NVHDMIPKT_TC       transmitControl, 
-                    NvU32              packetLen, 
+                    NVHDMIPKT_TC       transmitControl,
+                    NvU32              packetLen,
                     NvU8 const *const  pPacket);
 
 /*
@@ -85,7 +85,7 @@ hdmiPacketCtrl0073(NVHDMIPKT_CLASS*  pThis,
 #else // !NVHDMIPKT_RM_CALLS_INTERNAL
     bSuccess =  pThis->callback.rmDispControl2(pThis->cbHandle,
                                                       params.subDeviceInstance,
-                                                      NV0073_CTRL_CMD_SPECIFIC_SET_OD_PACKET_CTRL, 
+                                                      NV0073_CTRL_CMD_SPECIFIC_SET_OD_PACKET_CTRL,
                                                       &params, sizeof(params));
     if (bSuccess == NV_FALSE)
 #endif // NVHDMIPKT_RM_CALLS_INTERNAL
@@ -107,15 +107,21 @@ hdmiPacketWrite0073(NVHDMIPKT_CLASS*   pThis,
                     NvU32              displayId,
                     NvU32              head,
                     NVHDMIPKT_TYPE     packetType,
-                    NVHDMIPKT_TC       transmitControl, 
-                    NvU32              packetLen, 
+                    NVHDMIPKT_TC       transmitControl,
+                    NvU32              packetLen,
                     NvU8 const *const  pPacket)
 {
+    NV0073_CTRL_SPECIFIC_SET_OD_PACKET_PARAMS params = { };
     NVHDMIPKT_RESULT result = NVHDMIPKT_SUCCESS;
-    NV0073_CTRL_SPECIFIC_SET_OD_PACKET_PARAMS params = {0};
 #if !NVHDMIPKT_RM_CALLS_INTERNAL
     NvBool bSuccess;
 #endif
+
+    if (packetLen > NV0073_CTRL_SET_OD_MAX_PACKET_SIZE)
+    {
+        return NVHDMIPKT_INVALID_ARG;
+    }
+
 
     NVMISC_MEMSET(&params, 0, sizeof(params));
 
@@ -140,8 +146,8 @@ hdmiPacketWrite0073(NVHDMIPKT_CLASS*   pThis,
 #else // !NVHDMIPKT_RM_CALLS_INTERNAL
     bSuccess = pThis->callback.rmDispControl2(pThis->cbHandle,
                                                      params.subDeviceInstance,
-                                                     NV0073_CTRL_CMD_SPECIFIC_SET_OD_PACKET, 
-                                                     &params, 
+                                                     NV0073_CTRL_CMD_SPECIFIC_SET_OD_PACKET,
+                                                     &params,
                                                      sizeof(params));
     if (bSuccess == NV_FALSE)
 #endif // NVHDMIPKT_RM_CALLS_INTERNAL
@@ -265,8 +271,8 @@ hdmiDestructor0073(NVHDMIPKT_CLASS* pThis)
 void
 hdmiWriteDummyPacket(NVHDMIPKT_CLASS*   pThis,
                      NvU32*             pBaseReg,
-                     NvU32              head, 
-                     NvU32              packetLen, 
+                     NvU32              head,
+                     NvU32              packetLen,
                      NvU8 const *const  pPacket)
 {
     NvHdmiPkt_Print(pThis, "ERROR - Dummy function hdmiWriteDummyPacket called. "

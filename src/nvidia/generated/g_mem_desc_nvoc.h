@@ -1060,6 +1060,12 @@ void memdescUnmapInternal(OBJGPU *pGpu, MEMORY_DESCRIPTOR *pMemDesc, NvU32 flags
 #define MEMDESC_FLAGS_REGISTERED_TO_GSP      NVBIT64(42)
 
 //
+// If this flag is set then it indicates that the memory associated with
+// this descriptor was allocated from local EGM.
+//
+#define MEMDESC_FLAGS_ALLOC_FROM_EGM               NVBIT64(43)
+
+//
 // Indicates that this memdesc is tracking client sysmem allocation as
 // against RM internal sysmem allocation
 //
@@ -1071,7 +1077,6 @@ void memdescUnmapInternal(OBJGPU *pGpu, MEMORY_DESCRIPTOR *pMemDesc, NvU32 flags
 // currently for this, so a WAR is required for r515. The intent
 // is to remove this by r525.
 //
-#define MEMDESC_FLAGS_WSL_SHARED_MEMORY             NVBIT64(46)
 
 #endif // _MEMDESC_H_
 

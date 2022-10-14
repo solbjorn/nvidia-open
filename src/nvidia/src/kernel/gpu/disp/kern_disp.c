@@ -74,6 +74,8 @@
 #include "class/clc67d.h"
 #include "class/clc67e.h"
 
+#include "class/clc77d.h"
+
 #include "gpu/disp/rg_line_callback/rg_line_callback.h"
 
 NV_STATUS
@@ -400,6 +402,7 @@ kdispGetIntChnClsForHwCls_IMPL
         case NVC37D_CORE_CHANNEL_DMA:
         case NVC57D_CORE_CHANNEL_DMA:
         case NVC67D_CORE_CHANNEL_DMA:
+        case NVC77D_CORE_CHANNEL_DMA:
             *pDispChnClass = dispChnClass_Core;
             break;
 
@@ -844,8 +847,6 @@ kdispServiceVblank_KERNEL
         return;
     }
 
-    NVRM_TRACE('VBLK');
-
     //
     // Although we have separate handlers for each head, attempt to process all
     // interrupting heads now. What about DPCs schedule already?
@@ -860,7 +861,7 @@ kdispServiceVblank_KERNEL
         }
 
         // Process the callback list for this Head...
-        kheadProcessVblankCallbacks_HAL(pGpu, pKernelHead, state);
+        kheadProcessVblankCallbacks(pGpu, pKernelHead, state);
     }
 
     //
@@ -898,7 +899,6 @@ kdispServiceVblank_KERNEL
     }
 
     return;
-    NVRM_TRACE('vblk');
 }
 
 NvU32 kdispReadPendingVblank_KERNEL(OBJGPU *pGpu, KernelDisplay *pKernelDisplay, THREAD_STATE_NODE *pThreadState)

@@ -30,11 +30,7 @@ const char NVRM_ID[] = "nvidia id: NVIDIA UNIX Open Kernel Module for " NV_MACHI
 const char * const pNVRM_ID = NVRM_ID + 11;
 
 #if defined(MODULE_LICENSE)
-
 MODULE_LICENSE("Dual MIT/GPL");
-
-
-
 #endif
 #if defined(MODULE_INFO)
 MODULE_INFO(supported, "external");
@@ -53,13 +49,11 @@ MODULE_ALIAS_CHARDEV_MAJOR(NV_MAJOR_DEVICE_NUMBER);
  */
 #if defined(MODULE_IMPORT_NS)
 
-
 /*
  * DMA_BUF namespace is added by commit id 16b0314aa746
  * ("dma-buf: move dma-buf symbols into the DMA_BUF module namespace") in 5.16
  */
 MODULE_IMPORT_NS(DMA_BUF);
-
 
 #endif
 

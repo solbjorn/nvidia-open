@@ -137,6 +137,18 @@ knvlinkCtrlCmdBusGetNvlinkCaps
 
     switch (pKernelNvlink->ipVerNvlink)
     {
+        case NV2080_CTRL_NVLINK_CAPS_NVLINK_VERSION_4_0:
+        {
+            pParams->lowestNvlinkVersion  = NV2080_CTRL_NVLINK_CAPS_NVLINK_VERSION_4_0;
+            pParams->highestNvlinkVersion = NV2080_CTRL_NVLINK_CAPS_NVLINK_VERSION_4_0;
+            pParams->lowestNciVersion     = NV2080_CTRL_NVLINK_CAPS_NCI_VERSION_4_0;
+            pParams->highestNciVersion    = NV2080_CTRL_NVLINK_CAPS_NCI_VERSION_4_0;
+
+            // Supported power states
+            RMCTRL_SET_CAP(tempCaps, NV2080_CTRL_NVLINK_CAPS, _POWER_STATE_L0);
+            RMCTRL_SET_CAP(tempCaps, NV2080_CTRL_NVLINK_CAPS, _POWER_STATE_L1);
+            break;
+        }
         case NV2080_CTRL_NVLINK_CAPS_NVLINK_VERSION_3_1:
         {
             pParams->lowestNvlinkVersion  = NV2080_CTRL_NVLINK_CAPS_NVLINK_VERSION_3_1;
@@ -269,13 +281,6 @@ subdeviceCtrlCmdBusGetNvlinkStatus_IMPL
 
     portMemSet(tempCaps, 0, NV2080_CTRL_NVLINK_CAPS_TBL_SIZE);
 
-    pParams->enabledLinkMask = pKernelNvlink->enabledLinks;
-
-    r = pParams->enabledLinkMask;
-    while (r >>= 1 ) i++;
-
-    NV_ASSERT(i <= NV2080_CTRL_NVLINK_MAX_LINKS);
-
     // Get the remote ends of the links from the nvlink core
     if (!knvlinkIsForcedConfig(pGpu, pKernelNvlink) &&
         !(IS_RTLSIM(pGpu) && !pKernelNvlink->bForceEnableCoreLibRtlsims))
@@ -283,6 +288,13 @@ subdeviceCtrlCmdBusGetNvlinkStatus_IMPL
         // Get the nvlink connections for this device from the core
         knvlinkCoreGetRemoteDeviceInfo(pGpu, pKernelNvlink);
     }
+
+    pParams->enabledLinkMask = pKernelNvlink->enabledLinks;
+
+    r = pParams->enabledLinkMask;
+    while (r >>= 1 ) i++;
+
+    NV_ASSERT(i <= NV2080_CTRL_NVLINK_MAX_LINKS);
 
     //
     // Some links might have passed receiver detect (bridge is present),
@@ -294,6 +306,7 @@ subdeviceCtrlCmdBusGetNvlinkStatus_IMPL
     portMemSet(&nvlinkLinkAndClockInfoParams, 0, sizeof(nvlinkLinkAndClockInfoParams));
 
     nvlinkLinkAndClockInfoParams.linkMask = pParams->enabledLinkMask;
+    nvlinkLinkAndClockInfoParams.bSublinkStateInst = pParams->bSublinkStateInst;
 
     status = knvlinkExecGspRmRpc(pGpu, pKernelNvlink,
                                  NV2080_CTRL_CMD_NVLINK_GET_LINK_AND_CLOCK_INFO,
@@ -361,6 +374,8 @@ subdeviceCtrlCmdBusGetNvlinkStatus_IMPL
             case NV2080_CTRL_NVLINK_CAPS_NVLINK_VERSION_2_0:
                 RMCTRL_SET_CAP(tempCaps, NV2080_CTRL_NVLINK_CAPS, _POWER_STATE_L0);
                 break;
+
+            case NV2080_CTRL_NVLINK_CAPS_NVLINK_VERSION_4_0:
             case NV2080_CTRL_NVLINK_CAPS_NVLINK_VERSION_3_1:
             case NV2080_CTRL_NVLINK_CAPS_NVLINK_VERSION_3_0:
             case NV2080_CTRL_NVLINK_CAPS_NVLINK_VERSION_2_2:
@@ -389,7 +404,10 @@ subdeviceCtrlCmdBusGetNvlinkStatus_IMPL
 
         switch (pKernelNvlink->ipVerNvlink)
         {
-
+            case NV2080_CTRL_NVLINK_CAPS_NVLINK_VERSION_4_0:
+                pParams->linkInfo[i].nvlinkVersion = NV2080_CTRL_NVLINK_STATUS_NVLINK_VERSION_4_0;
+                pParams->linkInfo[i].nciVersion    = NV2080_CTRL_NVLINK_STATUS_NCI_VERSION_4_0;
+                break;
             case NV2080_CTRL_NVLINK_CAPS_NVLINK_VERSION_3_1:
                 pParams->linkInfo[i].nvlinkVersion = NV2080_CTRL_NVLINK_STATUS_NVLINK_VERSION_3_1;
                 pParams->linkInfo[i].nciVersion    = NV2080_CTRL_NVLINK_STATUS_NCI_VERSION_3_1;

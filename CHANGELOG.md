@@ -1,5 +1,25 @@
 # Changelog
 
+## Release 520 Entries
+
+### [520.56.06] 2022-10-12
+
+#### Added
+
+- Introduce support for GeForce RTX 4090 GPUs.
+
+### [520.61.05] 2022-10-10
+
+#### Added
+
+- Introduce support for NVIDIA H100 GPUs.
+
+#### Fixed
+
+- Fix/Improve Makefile, [#308](https://github.com/NVIDIA/open-gpu-kernel-modules/pull/308/) by @izenynn
+- Make nvLogBase2 more efficient, [#177](https://github.com/NVIDIA/open-gpu-kernel-modules/pull/177/) by @DMaroo
+- nv-pci: fixed always true expression, [#195](https://github.com/NVIDIA/open-gpu-kernel-modules/pull/195/) by @ValZapod
+
 ## Release 515 Entries
 
 ### [515.76] 2022-09-20

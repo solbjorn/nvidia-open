@@ -83,7 +83,7 @@ endif
 
 COMMON_CFLAGS += -I$(abspath $(src))/common/inc
 COMMON_CFLAGS += -I$(abspath $(src))
-COMMON_CFLAGS += -DNVRM -DNV_VERSION_STRING=$(call stringify,515.76)
+COMMON_CFLAGS += -DNVRM -DNV_VERSION_STRING=$(call stringify,520.56.06)
 
 #EXTRA_CFLAGS += -Wno-unused-function
 

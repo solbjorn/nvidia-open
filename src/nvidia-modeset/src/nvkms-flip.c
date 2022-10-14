@@ -1934,6 +1934,7 @@ void nvFlipEvoOneHead(
         }
 
         nvPushEvoSubDevMask(pDevEvo, subDeviceMask);
+
         pDevEvo->hal->Flip(pDevEvo,
                            pDevEvo->head[head].layer[layer],
                            &pFlipState->layer[layer],
