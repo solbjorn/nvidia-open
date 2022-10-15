@@ -132,7 +132,7 @@ _nvswitch_read_rom_header
     NvU32 *offset
 )
 {
-    NVSWITCH_EEPROM_HEADER eeprom_header = {{0}};
+    NVSWITCH_EEPROM_HEADER eeprom_header = { };
     NvlStatus retval;
 
     firmware->firmware_size = 0;

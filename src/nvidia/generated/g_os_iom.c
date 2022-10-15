@@ -87,16 +87,16 @@ static const struct NVOC_CASTINFO __iom_castinfo_OBJOS =
 extern const NVOC_RTTI_PROVIDER __iom_rtti_provider;
 const struct NVOC_CLASS_DEF __iom_class_def_OBJOS =
 {
-    {
-        sizeof(OBJOS),
-        classId(OBJOS),
-        &__iom_rtti_provider,
+    .classInfo = {
+        .size = sizeof(OBJOS),
+        .classId = classId(OBJOS),
+        .providerId = &__iom_rtti_provider,
 #if NV_PRINTF_STRINGS_ALLOWED
-        "OBJOS",
+        .name = "OBJOS",
 #endif
     },
-    __iom_objCreateDynamic_OBJOS_ctor,
-    &__iom_castinfo_OBJOS,
+    .objCreatefn = __iom_objCreateDynamic_OBJOS_ctor,
+    .pCastInfo = &__iom_castinfo_OBJOS,
 };
 
 

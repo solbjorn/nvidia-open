@@ -51,57 +51,61 @@ typedef struct nv_cap_table_entry
 
 #define NV_CAP_NUM_ENTRIES(_table) (sizeof(_table) / sizeof(_table[0]))
 
+#define NV_CAP_ENTRY(_name)	{	\
+	.name	= (_name),		\
+}
+
 static nv_cap_table_entry_t g_nv_cap_nvlink_table[] __ro_after_init =
 {
-    {"/driver/nvidia-nvlink/capabilities/fabric-mgmt"}
+    NV_CAP_ENTRY("/driver/nvidia-nvlink/capabilities/fabric-mgmt"),
 };
 
 static nv_cap_table_entry_t g_nv_cap_mig_table[] __ro_after_init =
 {
-    {"/driver/nvidia/capabilities/mig/config"},
-    {"/driver/nvidia/capabilities/mig/monitor"}
+    NV_CAP_ENTRY("/driver/nvidia/capabilities/mig/config"),
+    NV_CAP_ENTRY("/driver/nvidia/capabilities/mig/monitor"),
 };
 
-#define NV_CAP_MIG_CI_ENTRIES(_gi)  \
-    {_gi "/ci0/access"},            \
-    {_gi "/ci1/access"},            \
-    {_gi "/ci2/access"},            \
-    {_gi "/ci3/access"},            \
-    {_gi "/ci4/access"},            \
-    {_gi "/ci5/access"},            \
-    {_gi "/ci6/access"},            \
-    {_gi "/ci7/access"}
+#define NV_CAP_MIG_CI_ENTRIES(_gi)        \
+    NV_CAP_ENTRY(_gi "/ci0/access"),      \
+    NV_CAP_ENTRY(_gi "/ci1/access"),      \
+    NV_CAP_ENTRY(_gi "/ci2/access"),      \
+    NV_CAP_ENTRY(_gi "/ci3/access"),      \
+    NV_CAP_ENTRY(_gi "/ci4/access"),      \
+    NV_CAP_ENTRY(_gi "/ci5/access"),      \
+    NV_CAP_ENTRY(_gi "/ci6/access"),      \
+    NV_CAP_ENTRY(_gi "/ci7/access")
 
 #define NV_CAP_MIG_GI_ENTRIES(_gpu)       \
-    {_gpu "/gi0/access"},                 \
+    NV_CAP_ENTRY(_gpu "/gi0/access"),     \
     NV_CAP_MIG_CI_ENTRIES(_gpu "/gi0"),   \
-    {_gpu "/gi1/access"},                 \
+    NV_CAP_ENTRY(_gpu "/gi1/access"),     \
     NV_CAP_MIG_CI_ENTRIES(_gpu "/gi1"),   \
-    {_gpu "/gi2/access"},                 \
+    NV_CAP_ENTRY(_gpu "/gi2/access"),     \
     NV_CAP_MIG_CI_ENTRIES(_gpu "/gi2"),   \
-    {_gpu "/gi3/access"},                 \
+    NV_CAP_ENTRY(_gpu "/gi3/access"),     \
     NV_CAP_MIG_CI_ENTRIES(_gpu "/gi3"),   \
-    {_gpu "/gi4/access"},                 \
+    NV_CAP_ENTRY(_gpu "/gi4/access"),     \
     NV_CAP_MIG_CI_ENTRIES(_gpu "/gi4"),   \
-    {_gpu "/gi5/access"},                 \
+    NV_CAP_ENTRY(_gpu "/gi5/access"),     \
     NV_CAP_MIG_CI_ENTRIES(_gpu "/gi5"),   \
-    {_gpu "/gi6/access"},                 \
+    NV_CAP_ENTRY(_gpu "/gi6/access"),     \
     NV_CAP_MIG_CI_ENTRIES(_gpu "/gi6"),   \
-    {_gpu "/gi7/access"},                 \
+    NV_CAP_ENTRY(_gpu "/gi7/access"),     \
     NV_CAP_MIG_CI_ENTRIES(_gpu "/gi7"),   \
-    {_gpu "/gi8/access"},                 \
+    NV_CAP_ENTRY(_gpu "/gi8/access"),     \
     NV_CAP_MIG_CI_ENTRIES(_gpu "/gi8"),   \
-    {_gpu "/gi9/access"},                 \
+    NV_CAP_ENTRY(_gpu "/gi9/access"),     \
     NV_CAP_MIG_CI_ENTRIES(_gpu "/gi9"),   \
-    {_gpu "/gi10/access"},                \
+    NV_CAP_ENTRY(_gpu "/gi10/access"),    \
     NV_CAP_MIG_CI_ENTRIES(_gpu "/gi10"),  \
-    {_gpu "/gi11/access"},                \
+    NV_CAP_ENTRY(_gpu "/gi11/access"),    \
     NV_CAP_MIG_CI_ENTRIES(_gpu "/gi11"),  \
-    {_gpu "/gi12/access"},                \
+    NV_CAP_ENTRY(_gpu "/gi12/access"),    \
     NV_CAP_MIG_CI_ENTRIES(_gpu "/gi12"),  \
-    {_gpu "/gi13/access"},                \
+    NV_CAP_ENTRY(_gpu "/gi13/access"),    \
     NV_CAP_MIG_CI_ENTRIES(_gpu "/gi13"),  \
-    {_gpu "/gi14/access"},                \
+    NV_CAP_ENTRY(_gpu "/gi14/access"),    \
     NV_CAP_MIG_CI_ENTRIES(_gpu "/gi14")
 
 static nv_cap_table_entry_t g_nv_cap_mig_gpu_table[] __ro_after_init =
@@ -137,7 +141,7 @@ static nv_cap_table_entry_t g_nv_cap_mig_gpu_table[] __ro_after_init =
     NV_CAP_MIG_GI_ENTRIES("/driver/nvidia/capabilities/gpu28/mig"),
     NV_CAP_MIG_GI_ENTRIES("/driver/nvidia/capabilities/gpu29/mig"),
     NV_CAP_MIG_GI_ENTRIES("/driver/nvidia/capabilities/gpu30/mig"),
-    NV_CAP_MIG_GI_ENTRIES("/driver/nvidia/capabilities/gpu31/mig")
+    NV_CAP_MIG_GI_ENTRIES("/driver/nvidia/capabilities/gpu31/mig"),
 };
 
 struct nv_cap

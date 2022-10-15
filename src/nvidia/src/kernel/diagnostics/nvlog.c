@@ -45,14 +45,9 @@ volatile NvU32 nvlogInitCount;
 static void *nvlogRegRoot;
 
 // Zero (null) buffer definition.
-static NVLOG_BUFFER _nvlogZeroBuffer =
-{
-    {nvlogStringBufferPush},
-    0,
-    NvU32_BUILD('l','l','u','n'),
-    0,
-    0,
-    0
+static NVLOG_BUFFER _nvlogZeroBuffer = {
+	.push.fn	= nvlogStringBufferPush,
+	.tag		= NvU32_BUILD('l', 'l', 'u', 'n'),
 };
 
 NVLOG_LOGGER NvLogLogger =
@@ -731,4 +726,3 @@ void nvlogDumpToKernelLogIfEnabled(void)
 
     nvlogDumpToKernelLog(NV_FALSE);
 }
-
