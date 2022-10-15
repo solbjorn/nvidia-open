@@ -148,15 +148,6 @@ subdeviceCtrlCmdOsUnixAudioDynamicPower_IMPL
 }
 
 void
-RmUpdateGc6ConsoleRefCount
-(
-    nv_state_t *nv,
-    NvBool bIncrease
-)
-{
-}
-
-void
 RmInitS0ixPowerManagement
 (
     nv_state_t *nv

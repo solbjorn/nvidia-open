@@ -1749,34 +1749,6 @@ rmDeviceGpuLockSetOwner(OBJGPU *pGpu, OS_THREAD_HANDLE threadId)
 }
 
 //
-// WAR for bug 200288016: In some cases due to GSYNC updates a worker thread
-// does not release all the locks it acquired. This is an attempt at recovery.
-//
-void bug200288016_WAR_ReleaseAllOwnedLocked(void)
-{
-    NvU32 gpuInst;
-    NvU32 gpuMask = 0;
-    OS_THREAD_HANDLE threadId;
-
-    osGetCurrentThread(&threadId);
-    for (gpuInst = 0; gpuInst < NV_MAX_DEVICES; gpuInst++)
-    {
-        if (rmGpuLockInfo.gpuLocks[gpuInst].threadId == threadId)
-            gpuMask |= NVBIT(gpuInst);
-    }
-
-    if (gpuMask != 0)
-    {
-        NV_PRINTF(LEVEL_ERROR,
-                  "Worker thread finished without releasing all locks. gpuMask=%x\n",
-                  gpuMask);
-        _rmGpuLocksRelease(gpuMask, GPUS_LOCK_FLAGS_NONE, NULL, NV_RETURN_ADDRESS());
-    }
-}
-
-
-
-//
 // IntrMask Locking Support
 //
 typedef struct INTR_MASK_LOCK
@@ -1810,4 +1782,3 @@ void rmIntrMaskLockRelease(OBJGPU *pGpu, NvU64 oldIrql)
     if ((pGpu != NULL) && (intrMaskLock[pGpu->gpuInstance].pLock != NULL))
         portSyncSpinlockRelease(intrMaskLock[pGpu->gpuInstance].pLock);
 }
-

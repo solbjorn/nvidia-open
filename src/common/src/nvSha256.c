@@ -52,7 +52,6 @@
 
 #define SHFR(x, n)    (x >> n)
 #define ROTR(x, n)   ((x >> n) | (x << ((sizeof(x) << 3) - n)))
-#define ROTL(x, n)   ((x << n) | (x >> ((sizeof(x) << 3) - n)))
 #define CH(x, y, z)  ((x & y) ^ (~x & z))
 #define MAJ(x, y, z) ((x & y) ^ (x & z) ^ (y & z))
 
@@ -86,6 +85,7 @@
           + SHA256_F3(w[i - 15]) + w[i - 16]; \
 }
 
+#ifdef UNROLL_LOOPS
 #define SHA256_EXP(a, b, c, d, e, f, g, h, j)               \
 {                                                           \
     t1 = wv[h] + SHA256_F2(wv[e]) + CH(wv[e], wv[f], wv[g]) \
@@ -94,6 +94,7 @@
     wv[d] += t1;                                            \
     wv[h] = t1 + t2;                                        \
 }
+#endif
 
 static const NvU32 sha256_h0[8] =
             {0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,

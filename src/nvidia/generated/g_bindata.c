@@ -48,7 +48,6 @@ CONS_SEGMENT("PAGErGEN")
 
 struct BINDATA_STORAGE_PVT_ALL
 {
-#define BINDATA_NO_SEGMENTS
 #define BINDATA_INCLUDE_STORAGE_PVT_DECL
 
 #include "g_bindata_kgspGetBinArchiveGspRmBoot_TU102.c"
@@ -71,7 +70,6 @@ struct BINDATA_STORAGE_PVT_ALL
 #include "g_bindata_ksec2GetBinArchiveBlUcode_TU102.c"
 
 #undef BINDATA_INCLUDE_STORAGE_PVT_DECL
-#undef BINDATA_NO_SEGMENTS
 };
 
 // First include the data as it's referenced by storage_pvt
@@ -102,7 +100,6 @@ struct BINDATA_STORAGE_PVT_ALL
 
 BINDATA_CONST struct BINDATA_STORAGE_PVT_ALL g_bindata_pvt =
 {
-#define BINDATA_NO_SEGMENTS
 #define BINDATA_INCLUDE_STORAGE_PVT_DEFN
 
 #include "g_bindata_kgspGetBinArchiveGspRmBoot_TU102.c"
@@ -125,7 +122,6 @@ BINDATA_CONST struct BINDATA_STORAGE_PVT_ALL g_bindata_pvt =
 #include "g_bindata_ksec2GetBinArchiveBlUcode_TU102.c"
 
 #undef BINDATA_INCLUDE_STORAGE_PVT_DEFN
-#undef BINDATA_NO_SEGMENTS
 };
 
 const NvU32 g_bindata_pvt_count = sizeof(g_bindata_pvt) / sizeof(BINDATA_STORAGE_PVT);

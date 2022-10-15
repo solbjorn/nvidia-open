@@ -124,21 +124,6 @@ __iom_ctor_OBJOS_fail_Object:
     return status;
 }
 
-NV_STATUS __iom_vctor_OBJOS(Dynamic *pDynamic, va_list args)
-{
-    NV_STATUS status;
-    POBJOS pThis = dynamicCast(pDynamic, OBJOS);
-    if (pThis != NULL)
-    {
-        status = __iom_ctor_OBJOS(pThis);
-    }
-    else
-    {
-        status = NV_ERR_INVALID_OBJECT;
-    }
-    return status;
-}
-
 void __iom_dtor_OBJOS(POBJOS pOs)
 {
     __nvoc_dtor_Object(&pOs->__nvoc_base_Object);
