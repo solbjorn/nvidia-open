@@ -197,7 +197,7 @@ static inline struct nv_drm_fence_context *__nv_drm_fence_context_new(
 
     /* Allocate backup nvkms resources */
 
-    pSemSurface = nvKms->importMemory(nv_dev->pDevice,
+    pSemSurface = NvKmsImportMemory(nv_dev->pDevice,
                                       p->size,
                                       p->import_mem_nvkms_params_ptr,
                                       p->import_mem_nvkms_params_size);
@@ -209,7 +209,7 @@ static inline struct nv_drm_fence_context *__nv_drm_fence_context_new(
         goto failed;
     }
 
-    if (!nvKms->mapMemory(nv_dev->pDevice,
+    if (!NvKmsMapMemory(nv_dev->pDevice,
                           pSemSurface,
                           NVKMS_KAPI_MAPPING_TYPE_KERNEL,
                           (void **) &pLinearAddress)) {
@@ -257,7 +257,7 @@ static inline struct nv_drm_fence_context *__nv_drm_fence_context_new(
      * not require spin-lock protection.
      */
     nv_fence_context->cb =
-        nvKms->allocateChannelEvent(nv_dev->pDevice,
+        NvKmsAllocateChannelEvent(nv_dev->pDevice,
                                     nv_drm_gem_prime_fence_event,
                                     nv_fence_context,
                                     p->event_nvkms_params_ptr,
@@ -275,13 +275,13 @@ failed_to_allocate_channel_event:
 
 failed_alloc_fence_context:
 
-    nvKms->unmapMemory(nv_dev->pDevice,
+    NvKmsUnmapMemory(nv_dev->pDevice,
                        pSemSurface,
                        NVKMS_KAPI_MAPPING_TYPE_KERNEL,
                        (void *) pLinearAddress);
 
 failed_to_map_memory:
-    nvKms->freeMemory(nv_dev->pDevice, pSemSurface);
+    NvKmsFreeMemory(nv_dev->pDevice, pSemSurface);
 
 failed:
     return NULL;
@@ -296,7 +296,7 @@ static void __nv_drm_fence_context_destroy(
      * Free channel event before destroying the fence context, otherwise event
      * callback continue to get called.
      */
-    nvKms->freeChannelEvent(nv_dev->pDevice, nv_fence_context->cb);
+    NvKmsFreeChannelEvent(nv_dev->pDevice, nv_fence_context->cb);
 
     /* Force signal all pending fences and empty pending list */
     spin_lock(&nv_fence_context->lock);
@@ -307,12 +307,12 @@ static void __nv_drm_fence_context_destroy(
 
     /* Free nvkms resources */
 
-    nvKms->unmapMemory(nv_dev->pDevice,
+    NvKmsUnmapMemory(nv_dev->pDevice,
                        nv_fence_context->pSemSurface,
                        NVKMS_KAPI_MAPPING_TYPE_KERNEL,
                        (void *) nv_fence_context->pLinearAddress);
 
-    nvKms->freeMemory(nv_dev->pDevice, nv_fence_context->pSemSurface);
+    NvKmsFreeMemory(nv_dev->pDevice, nv_fence_context->pSemSurface);
 
     nv_drm_free(nv_fence_context);
 }

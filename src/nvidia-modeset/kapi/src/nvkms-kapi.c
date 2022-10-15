@@ -3055,51 +3055,285 @@ NvBool nvKmsKapiGetFunctionsTableInternal
     funcsTable->systemInfo.bAllowWriteCombining =
         nvkms_allow_write_combining();
 
-    funcsTable->enumerateGpus = EnumerateGpus;
-
-    funcsTable->allocateDevice = AllocateDevice;
-    funcsTable->freeDevice     = FreeDevice;
-
-    funcsTable->grabOwnership    = GrabOwnership;
-    funcsTable->releaseOwnership = ReleaseOwnership;
-
-    funcsTable->declareEventInterest = DeclareEventInterest;
-
-    funcsTable->getDeviceResourcesInfo = GetDeviceResourcesInfo;
-    funcsTable->getDisplays            = GetDisplays;
-    funcsTable->getConnectorInfo       = GetConnectorInfo;
-
-    funcsTable->getStaticDisplayInfo   = GetStaticDisplayInfo;
-    funcsTable->getDynamicDisplayInfo  = GetDynamicDisplayInfo;
-
-    funcsTable->allocateVideoMemory  = AllocateVideoMemory;
-    funcsTable->allocateSystemMemory = AllocateSystemMemory;
-    funcsTable->importMemory         = ImportMemory;
-    funcsTable->dupMemory            = DupMemory;
-    funcsTable->exportMemory         = ExportMemory;
-    funcsTable->freeMemory           = FreeMemory;
-    funcsTable->getSystemMemoryHandleFromSgt = GetSystemMemoryHandleFromSgt;
-    funcsTable->getSystemMemoryHandleFromDmaBuf =
-        GetSystemMemoryHandleFromDmaBuf;
-
-    funcsTable->mapMemory   = MapMemory;
-    funcsTable->unmapMemory = UnmapMemory;
-
-    funcsTable->createSurface  = CreateSurface;
-    funcsTable->destroySurface = DestroySurface;
-
-    funcsTable->getDisplayMode      = GetDisplayMode;
-    funcsTable->validateDisplayMode = ValidateDisplayMode;
-
-    funcsTable->applyModeSetConfig   = ApplyModeSetConfig;
-
-    funcsTable->allocateChannelEvent = nvKmsKapiAllocateChannelEvent;
-    funcsTable->freeChannelEvent = nvKmsKapiFreeChannelEvent;
-
-    funcsTable->getCRC32 = GetCRC32;
-
-    funcsTable->getMemoryPages = GetMemoryPages;
-    funcsTable->freeMemoryPages = FreeMemoryPages;
-
     return NV_TRUE;
+}
+
+NvU32 NvKmsEnumerateGpus(nv_gpu_info_t *gpuInfo)
+{
+    return EnumerateGpus(gpuInfo);
+}
+
+struct NvKmsKapiDevice *NvKmsAllocateDevice
+    (
+        const struct NvKmsKapiAllocateDeviceParams *params
+    )
+{
+    return AllocateDevice(params);
+}
+
+void NvKmsFreeDevice(struct NvKmsKapiDevice *device)
+{
+    FreeDevice(device);
+}
+
+NvBool NvKmsGrabOwnership(struct NvKmsKapiDevice *device)
+{
+    return GrabOwnership(device);
+}
+
+void NvKmsReleaseOwnership(struct NvKmsKapiDevice *device)
+{
+    ReleaseOwnership(device);
+}
+
+NvBool NvKmsDeclareEventInterest
+    (
+        const struct NvKmsKapiDevice *device,
+        const NvU32 interestMask
+    )
+{
+    return DeclareEventInterest(device, interestMask);
+}
+
+NvBool NvKmsGetDeviceResourcesInfo
+    (
+        struct NvKmsKapiDevice *device,
+        struct NvKmsKapiDeviceResourcesInfo *info
+    )
+{
+    return GetDeviceResourcesInfo(device, info);
+}
+
+NvBool NvKmsGetDisplays
+    (
+        struct NvKmsKapiDevice *device,
+        NvU32 *numDisplays, NvKmsKapiDisplay *displayHandles
+    )
+{
+    return GetDisplays(device, numDisplays, displayHandles);
+}
+
+NvBool NvKmsGetConnectorInfo
+    (
+        struct NvKmsKapiDevice *device,
+        NvKmsKapiConnector connector, struct NvKmsKapiConnectorInfo *info
+    )
+{
+    return GetConnectorInfo(device, connector, info);
+}
+
+NvBool NvKmsGetStaticDisplayInfo
+    (
+        struct NvKmsKapiDevice *device,
+        NvKmsKapiDisplay display, struct NvKmsKapiStaticDisplayInfo *info
+    )
+{
+    return GetStaticDisplayInfo(device, display, info);
+}
+
+NvBool NvKmsGetDynamicDisplayInfo
+    (
+        struct NvKmsKapiDevice *device,
+        struct NvKmsKapiDynamicDisplayParams *params
+    )
+{
+    return GetDynamicDisplayInfo(device, params);
+}
+
+struct NvKmsKapiMemory *NvKmsAllocateVideoMemory
+    (
+        struct NvKmsKapiDevice *device,
+        enum NvKmsSurfaceMemoryLayout layout,
+        enum NvKmsKapiAllocationType type,
+        NvU64 size,
+        NvU8 *compressible
+    )
+{
+    return AllocateVideoMemory(device, layout, type, size, compressible);
+}
+
+struct NvKmsKapiMemory *NvKmsAllocateSystemMemory
+    (
+        struct NvKmsKapiDevice *device,
+        enum NvKmsSurfaceMemoryLayout layout,
+        enum NvKmsKapiAllocationType type,
+        NvU64 size,
+        NvU8 *compressible
+    )
+{
+    return AllocateSystemMemory(device, layout, type, size, compressible);
+}
+
+struct NvKmsKapiMemory *NvKmsImportMemory
+    (
+        struct NvKmsKapiDevice *device, NvU64 size,
+        NvU64 nvKmsParamsUser,
+        NvU64 nvKmsParamsSize
+    )
+{
+    return ImportMemory(device, size, nvKmsParamsUser, nvKmsParamsSize);
+}
+
+struct NvKmsKapiMemory *NvKmsDupMemory
+    (
+        struct NvKmsKapiDevice *device,
+        const struct NvKmsKapiDevice *srcDevice,
+        const struct NvKmsKapiMemory *srcMemory
+    )
+{
+    return DupMemory(device, srcDevice, srcMemory);
+}
+
+NvBool NvKmsExportMemory
+    (
+        const struct NvKmsKapiDevice *device,
+        const struct NvKmsKapiMemory *memory,
+        NvU64 nvKmsParamsUser,
+        NvU64 nvKmsParamsSize
+    )
+{
+    return ExportMemory(device, memory, nvKmsParamsUser, nvKmsParamsSize);
+}
+
+void NvKmsFreeMemory
+    (
+        struct NvKmsKapiDevice *device, struct NvKmsKapiMemory *memory
+    )
+{
+    FreeMemory(device, memory);
+}
+
+NvBool NvKmsMapMemory
+    (
+        const struct NvKmsKapiDevice *device,
+        const struct NvKmsKapiMemory *memory, NvKmsKapiMappingType type,
+        void **ppLinearAddress
+    )
+{
+    return MapMemory(device, memory, type, ppLinearAddress);
+}
+
+void NvKmsUnmapMemory
+    (
+        const struct NvKmsKapiDevice *device,
+        const struct NvKmsKapiMemory *memory, NvKmsKapiMappingType type,
+        const void *pLinearAddress
+    )
+{
+    UnmapMemory(device, memory, type, pLinearAddress);
+}
+
+struct NvKmsKapiSurface *NvKmsCreateSurface
+    (
+        struct NvKmsKapiDevice *device,
+        struct NvKmsKapiCreateSurfaceParams *params
+    )
+{
+    return CreateSurface(device, params);
+}
+
+void NvKmsDestroySurface
+    (
+        struct NvKmsKapiDevice *device, struct NvKmsKapiSurface *surface
+    )
+{
+    DestroySurface(device, surface);
+}
+
+int NvKmsGetDisplayMode
+    (
+        struct NvKmsKapiDevice *device,
+        NvKmsKapiDisplay display, NvU32 modeIndex,
+        struct NvKmsKapiDisplayMode *mode, NvBool *valid,
+        NvBool *preferredMode
+    )
+{
+    return GetDisplayMode(device, display, modeIndex, mode, valid, preferredMode);
+}
+
+NvBool NvKmsValidateDisplayMode
+    (
+        struct NvKmsKapiDevice *device,
+        NvKmsKapiDisplay display, const struct NvKmsKapiDisplayMode *mode
+    )
+{
+    return ValidateDisplayMode(device, display, mode);
+}
+
+NvBool NvKmsApplyModeSetConfig
+    (
+        struct NvKmsKapiDevice *device,
+        const struct NvKmsKapiRequestedModeSetConfig *requestedConfig,
+        struct NvKmsKapiModeSetReplyConfig *replyConfig,
+        const NvBool commit
+    )
+{
+    return ApplyModeSetConfig(device, requestedConfig, replyConfig, commit);
+}
+
+struct NvKmsKapiChannelEvent *NvKmsAllocateChannelEvent
+    (
+        struct NvKmsKapiDevice *device,
+        NvKmsChannelEventProc *proc,
+        void *data,
+        NvU64 nvKmsParamsUser,
+        NvU64 nvKmsParamsSize
+    )
+{
+    return nvKmsKapiAllocateChannelEvent(device, proc, data, nvKmsParamsUser, nvKmsParamsSize);
+}
+
+void NvKmsFreeChannelEvent
+    (
+        struct NvKmsKapiDevice *device,
+        struct NvKmsKapiChannelEvent *cb
+    )
+{
+    nvKmsKapiFreeChannelEvent(device, cb);
+}
+
+NvBool NvKmsGetCRC32
+    (
+        struct NvKmsKapiDevice *device,
+        NvU32 head,
+        struct NvKmsKapiCrcs *crc32
+    )
+{
+    return GetCRC32(device, head, crc32);
+}
+
+NvBool NvKmsGetMemoryPages
+    (
+        const struct NvKmsKapiDevice *device,
+        const struct NvKmsKapiMemory *memory,
+        NvU64 **pPages,
+        NvU32 *pNumPages
+    )
+{
+    return GetMemoryPages(device, memory, pPages, pNumPages);
+}
+
+void NvKmsFreeMemoryPages
+    (
+        NvU64 *pPages
+    )
+{
+    FreeMemoryPages(pPages);
+}
+
+struct NvKmsKapiMemory *
+    NvKmsGetSystemMemoryHandleFromSgt(struct NvKmsKapiDevice *device,
+                                    NvP64 sgt,
+                                    NvP64 gem,
+                                    NvU32 limit)
+{
+    return GetSystemMemoryHandleFromSgt(device, sgt, gem, limit);
+}
+
+struct NvKmsKapiMemory *
+    NvKmsGetSystemMemoryHandleFromDmaBuf(struct NvKmsKapiDevice *device,
+                                       NvP64 dmaBuf,
+                                       NvU32 limit)
+{
+    return GetSystemMemoryHandleFromDmaBuf(device, dmaBuf, limit);
 }

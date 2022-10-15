@@ -50,7 +50,7 @@ void __nv_drm_gem_dma_buf_free(struct nv_drm_gem_object *nv_gem)
 #if defined(NV_DRM_ATOMIC_MODESET_AVAILABLE)
     if (nv_dma_buf->base.pMemory) {
         /* Free NvKmsKapiMemory handle associated with this gem object */
-        nvKms->freeMemory(nv_dev->pDevice, nv_dma_buf->base.pMemory);
+        NvKmsFreeMemory(nv_dev->pDevice, nv_dma_buf->base.pMemory);
     }
 #endif
 
@@ -127,7 +127,7 @@ nv_drm_gem_prime_import_sg_table(struct drm_device *dev,
     pMemory = NULL;
 #if defined(NV_DRM_ATOMIC_MODESET_AVAILABLE)
     if (drm_core_check_feature(dev, DRIVER_MODESET)) {
-        pMemory = nvKms->getSystemMemoryHandleFromDmaBuf(nv_dev->pDevice,
+        pMemory = NvKmsGetSystemMemoryHandleFromDmaBuf(nv_dev->pDevice,
                                                   (NvP64)(NvUPtr)dma_buf,
                                                   dma_buf->size - 1);
     }
@@ -179,7 +179,7 @@ int nv_drm_gem_export_dmabuf_memory_ioctl(struct drm_device *dev,
              * on this GEM object to prevent the DMA-BUF from being unpinned
              * prematurely.
              */
-            pTmpMemory = nvKms->getSystemMemoryHandleFromSgt(
+            pTmpMemory = NvKmsGetSystemMemoryHandleFromSgt(
                              nv_dev->pDevice,
                              (NvP64)(NvUPtr)nv_dma_buf->sgt,
                              (NvP64)(NvUPtr)&nv_dma_buf->base.base,
@@ -197,7 +197,7 @@ int nv_drm_gem_export_dmabuf_memory_ioctl(struct drm_device *dev,
         goto done;
     }
 
-    if (!nvKms->exportMemory(nv_dev->pDevice,
+    if (!NvKmsExportMemory(nv_dev->pDevice,
                              nv_dma_buf->base.pMemory ?
                                 nv_dma_buf->base.pMemory : pTmpMemory,
                              p->nvkms_params_ptr,
@@ -216,7 +216,7 @@ done:
          * Release reference on RM system memory to prevent circular
          * refcounting. Another refcount will still be held by RM FD.
          */
-        nvKms->freeMemory(nv_dev->pDevice, pTmpMemory);
+        NvKmsFreeMemory(nv_dev->pDevice, pTmpMemory);
     }
 
     if (nv_dma_buf != NULL) {

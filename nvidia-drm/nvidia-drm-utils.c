@@ -49,7 +49,7 @@ nvkms_get_connector_info(struct NvKmsKapiDevice *pDevice,
         return ERR_PTR(-ENOMEM);
     }
 
-    if (!nvKms->getConnectorInfo(pDevice, hConnector, connectorInfo)) {
+    if (!NvKmsGetConnectorInfo(pDevice, hConnector, connectorInfo)) {
         nv_drm_free(connectorInfo);
 
         return ERR_PTR(-EINVAL);

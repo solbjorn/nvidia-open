@@ -111,7 +111,7 @@ __nv_drm_detect_encoder(struct NvKmsKapiDynamicDisplayParams *pDetectParams,
         }
     }
 
-    if (!nvKms->getDynamicDisplayInfo(nv_dev->pDevice, pDetectParams)) {
+    if (!NvKmsGetDynamicDisplayInfo(nv_dev->pDevice, pDetectParams)) {
         NV_DRM_DEV_LOG_ERR(
             nv_dev,
             "Failed to detect display state");
@@ -246,7 +246,7 @@ static int nv_drm_connector_get_modes(struct drm_connector *connector)
         NvBool preferredMode = NV_FALSE;
         int ret;
 
-        ret = nvKms->getDisplayMode(nv_dev->pDevice,
+        ret = NvKmsGetDisplayMode(nv_dev->pDevice,
                                     nv_detected_encoder->hDisplay,
                                     modeIndex++, &displayMode, &valid,
                                     &preferredMode);
@@ -313,7 +313,7 @@ nv_drm_connector_mode_valid(struct drm_connector *connector,
 
     drm_mode_to_nvkms_display_mode(mode, &displayMode);
 
-    if (!nvKms->validateDisplayMode(nv_dev->pDevice,
+    if (!NvKmsValidateDisplayMode(nv_dev->pDevice,
                                     nv_detected_encoder->hDisplay,
                                     &displayMode)) {
         return MODE_BAD;

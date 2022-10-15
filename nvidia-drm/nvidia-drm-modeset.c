@@ -282,7 +282,7 @@ nv_drm_atomic_apply_modeset_config(struct drm_device *dev,
          nv_drm_write_combine_flush();
     }
 
-    if (!nvKms->applyModeSetConfig(nv_dev->pDevice,
+    if (!NvKmsApplyModeSetConfig(nv_dev->pDevice,
                                    requested_config,
                                    &reply_config,
                                    commit)) {

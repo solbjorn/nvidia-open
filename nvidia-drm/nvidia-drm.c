@@ -27,7 +27,7 @@
 #include "nvidia-drm-priv.h"
 #include "nvidia-drm-drv.h"
 
-static struct NvKmsKapiFunctionsTable nvKmsFuncsTable = {
+static struct NvKmsKapiFunctionsTable nvKmsFuncsTable __ro_after_init = {
     .versionString = NV_VERSION_STRING,
 };
 
@@ -35,7 +35,7 @@ const struct NvKmsKapiFunctionsTable* const nvKms = &nvKmsFuncsTable;
 
 #endif
 
-int nv_drm_init(void)
+int __init nv_drm_init(void)
 {
 #if defined(NV_DRM_AVAILABLE)
     if (!nvKmsKapiGetFunctionsTable(&nvKmsFuncsTable)) {
@@ -51,7 +51,7 @@ int nv_drm_init(void)
 #endif
 }
 
-void nv_drm_exit(void)
+void __exit nv_drm_exit(void)
 {
 #if defined(NV_DRM_AVAILABLE)
     nv_drm_remove_devices();

@@ -60,7 +60,7 @@ static void nv_drm_framebuffer_destroy(struct drm_framebuffer *fb)
 
     /* Free NvKmsKapiSurface associated with this framebuffer object */
 
-    nvKms->destroySurface(nv_dev->pDevice, nv_fb->pSurface);
+    NvKmsDestroySurface(nv_dev->pDevice, nv_fb->pSurface);
 
     __nv_drm_framebuffer_free(nv_fb);
 }
@@ -171,7 +171,7 @@ static int nv_drm_framebuffer_init(struct drm_device *dev,
 
     /* Create NvKmsKapiSurface */
 
-    nv_fb->pSurface = nvKms->createSurface(nv_dev->pDevice, &params);
+    nv_fb->pSurface = NvKmsCreateSurface(nv_dev->pDevice, &params);
     if (nv_fb->pSurface == NULL) {
         NV_DRM_DEV_DEBUG_DRIVER(nv_dev, "Failed to create NvKmsKapiSurface");
         drm_framebuffer_cleanup(&nv_fb->base);

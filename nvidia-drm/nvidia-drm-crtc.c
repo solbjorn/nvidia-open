@@ -1197,7 +1197,7 @@ int nv_drm_get_crtc_crc32_v2_ioctl(struct drm_device *dev,
 
     nv_crtc = to_nv_crtc(crtc);
 
-    if (!nvKms->getCRC32(nv_dev->pDevice, nv_crtc->head, &crc32)) {
+    if (!NvKmsGetCRC32(nv_dev->pDevice, nv_crtc->head, &crc32)) {
         return -ENODEV;
     }
     NvKmsKapiCrcsToDrm(&crc32, &params->crc32);
@@ -1225,7 +1225,7 @@ int nv_drm_get_crtc_crc32_ioctl(struct drm_device *dev,
 
     nv_crtc = to_nv_crtc(crtc);
 
-    if (!nvKms->getCRC32(nv_dev->pDevice, nv_crtc->head, &crc32)) {
+    if (!NvKmsGetCRC32(nv_dev->pDevice, nv_crtc->head, &crc32)) {
         return -ENODEV;
     }
     params->crc32 = crc32.outputCrc32.value;

@@ -277,7 +277,7 @@ static void nv_drm_enumerate_encoders_and_connectors
     struct drm_device *dev = nv_dev->dev;
     NvU32 nDisplays = 0;
 
-    if (!nvKms->getDisplays(nv_dev->pDevice, &nDisplays, NULL)) {
+    if (!NvKmsGetDisplays(nv_dev->pDevice, &nDisplays, NULL)) {
         NV_DRM_DEV_LOG_ERR(
             nv_dev,
             "Failed to enumurate NvKmsKapiDisplay count");
@@ -288,7 +288,7 @@ static void nv_drm_enumerate_encoders_and_connectors
             nv_drm_calloc(nDisplays, sizeof(*hDisplays));
 
         if (hDisplays != NULL) {
-            if (!nvKms->getDisplays(nv_dev->pDevice, &nDisplays, hDisplays)) {
+            if (!NvKmsGetDisplays(nv_dev->pDevice, &nDisplays, hDisplays)) {
                 NV_DRM_DEV_LOG_ERR(
                     nv_dev,
                     "Failed to enumurate NvKmsKapiDisplay handles");
@@ -382,7 +382,7 @@ static int nv_drm_load(struct drm_device *dev, unsigned long flags)
     allocateDeviceParams.privateData = nv_dev;
     allocateDeviceParams.eventCallback = nv_drm_event_callback;
 
-    pDevice = nvKms->allocateDevice(&allocateDeviceParams);
+    pDevice = NvKmsAllocateDevice(&allocateDeviceParams);
 
     if (pDevice == NULL) {
         NV_DRM_DEV_LOG_ERR(nv_dev, "Failed to allocate NvKmsKapiDevice");
@@ -391,9 +391,9 @@ static int nv_drm_load(struct drm_device *dev, unsigned long flags)
 
     /* Query information of resources available on device */
 
-    if (!nvKms->getDeviceResourcesInfo(pDevice, &resInfo)) {
+    if (!NvKmsGetDeviceResourcesInfo(pDevice, &resInfo)) {
 
-        nvKms->freeDevice(pDevice);
+        NvKmsFreeDevice(pDevice);
 
         NV_DRM_DEV_LOG_ERR(
             nv_dev,
@@ -449,7 +449,7 @@ static int nv_drm_load(struct drm_device *dev, unsigned long flags)
         return -ENODEV;
     }
 
-    if (!nvKms->declareEventInterest(
+    if (!NvKmsDeclareEventInterest(
             nv_dev->pDevice,
             ((1 << NVKMS_EVENT_TYPE_DPY_CHANGED) |
              (1 << NVKMS_EVENT_TYPE_DYNAMIC_DPY_CONNECTED) |
@@ -519,7 +519,7 @@ static void __nv_drm_unload(struct drm_device *dev)
 
     drm_mode_config_cleanup(dev);
 
-    if (!nvKms->declareEventInterest(nv_dev->pDevice, 0x0)) {
+    if (!NvKmsDeclareEventInterest(nv_dev->pDevice, 0x0)) {
         NV_DRM_DEV_LOG_ERR(nv_dev, "Failed to stop event listening");
     }
 
@@ -530,7 +530,7 @@ static void __nv_drm_unload(struct drm_device *dev)
 
     mutex_unlock(&nv_dev->lock);
 
-    nvKms->freeDevice(pDevice);
+    NvKmsFreeDevice(pDevice);
 
 #endif /* NV_DRM_ATOMIC_MODESET_AVAILABLE */
 }
@@ -556,7 +556,7 @@ static int __nv_drm_master_set(struct drm_device *dev,
 {
     struct nv_drm_device *nv_dev = to_nv_device(dev);
 
-    if (!nvKms->grabOwnership(nv_dev->pDevice)) {
+    if (!NvKmsGrabOwnership(nv_dev->pDevice)) {
         return -EINVAL;
     }
 
@@ -616,7 +616,7 @@ void nv_drm_master_drop(struct drm_device *dev, struct drm_file *file_priv)
 
     drm_modeset_unlock_all(dev);
 
-    nvKms->releaseOwnership(nv_dev->pDevice);
+    NvKmsReleaseOwnership(nv_dev->pDevice);
 }
 #endif /* NV_DRM_ATOMIC_MODESET_AVAILABLE */
 
@@ -982,7 +982,7 @@ int nv_drm_probe_devices(void)
         goto done;
     }
 
-    gpu_count = nvKms->enumerateGpus(gpu_info);
+    gpu_count = NvKmsEnumerateGpus(gpu_info);
 
     if (gpu_count == 0) {
         NV_DRM_LOG_INFO("Not found NVIDIA GPUs");

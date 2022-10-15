@@ -187,7 +187,7 @@ nv_drm_add_encoder(struct drm_device *dev, NvKmsKapiDisplay hDisplay)
         goto done;
     }
 
-    if (!nvKms->getStaticDisplayInfo(nv_dev->pDevice, hDisplay, displayInfo)) {
+    if (!NvKmsGetStaticDisplayInfo(nv_dev->pDevice, hDisplay, displayInfo)) {
         ret = -EINVAL;
         goto done;
     }

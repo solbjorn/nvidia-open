@@ -51,19 +51,19 @@ static void __nv_drm_gem_nvkms_memory_free(struct nv_drm_gem_object *nv_gem)
             iounmap(nv_nvkms_memory->pWriteCombinedIORemapAddress);
         }
 
-        nvKms->unmapMemory(nv_dev->pDevice,
+        NvKmsUnmapMemory(nv_dev->pDevice,
                            nv_nvkms_memory->base.pMemory,
                            NVKMS_KAPI_MAPPING_TYPE_USER,
                            nv_nvkms_memory->pPhysicalAddress);
     }
 
     if (nv_nvkms_memory->pages_count != 0) {
-        nvKms->freeMemoryPages((NvU64 *)nv_nvkms_memory->pages);
+        NvKmsFreeMemoryPages((NvU64 *)nv_nvkms_memory->pages);
     }
 
     /* Free NvKmsKapiMemory handle associated with this gem object */
 
-    nvKms->freeMemory(nv_dev->pDevice, nv_nvkms_memory->base.pMemory);
+    NvKmsFreeMemory(nv_dev->pDevice, nv_nvkms_memory->base.pMemory);
 
     nv_drm_free(nv_nvkms_memory);
 }
@@ -140,7 +140,7 @@ static int __nv_drm_gem_nvkms_map(
         return 0;
     }
 
-    if (!nvKms->mapMemory(nv_dev->pDevice,
+    if (!NvKmsMapMemory(nv_dev->pDevice,
                           pMemory,
                           NVKMS_KAPI_MAPPING_TYPE_USER,
                           &nv_nvkms_memory->pPhysicalAddress)) {
@@ -233,7 +233,7 @@ static int __nv_drm_nvkms_gem_obj_init(
     nv_nvkms_memory->pWriteCombinedIORemapAddress = NULL;
     nv_nvkms_memory->physically_mapped = false;
 
-    if (!nvKms->getMemoryPages(nv_dev->pDevice,
+    if (!NvKmsGetMemoryPages(nv_dev->pDevice,
                                pMemory,
                                &pages,
                                &numPages) &&
@@ -283,13 +283,13 @@ int nv_drm_dumb_create(
     }
 
     if (nv_dev->hasVideoMemory) {
-        pMemory = nvKms->allocateVideoMemory(nv_dev->pDevice,
+        pMemory = NvKmsAllocateVideoMemory(nv_dev->pDevice,
                                              NvKmsSurfaceMemoryLayoutPitch,
                                              NVKMS_KAPI_ALLOCATION_TYPE_SCANOUT,
                                              args->size,
                                              &compressible);
     } else {
-        pMemory = nvKms->allocateSystemMemory(nv_dev->pDevice,
+        pMemory = NvKmsAllocateSystemMemory(nv_dev->pDevice,
                                               NvKmsSurfaceMemoryLayoutPitch,
                                               NVKMS_KAPI_ALLOCATION_TYPE_SCANOUT,
                                               args->size,
@@ -325,7 +325,7 @@ int nv_drm_dumb_create(
                                                    &args->handle);
 
 nvkms_gem_obj_init_failed:
-    nvKms->freeMemory(nv_dev->pDevice, pMemory);
+    NvKmsFreeMemory(nv_dev->pDevice, pMemory);
 
 nvkms_alloc_memory_failed:
     nv_drm_free(nv_nvkms_memory);
@@ -354,7 +354,7 @@ int nv_drm_gem_import_nvkms_memory_ioctl(struct drm_device *dev,
         goto failed;
     }
 
-    pMemory = nvKms->importMemory(nv_dev->pDevice,
+    pMemory = NvKmsImportMemory(nv_dev->pDevice,
                                   p->mem_size,
                                   p->nvkms_params_ptr,
                                   p->nvkms_params_size);
@@ -376,7 +376,7 @@ int nv_drm_gem_import_nvkms_memory_ioctl(struct drm_device *dev,
                                                    &nv_nvkms_memory->base,
                                                    &p->handle);
 nvkms_gem_obj_init_failed:
-    nvKms->freeMemory(nv_dev->pDevice, pMemory);
+    NvKmsFreeMemory(nv_dev->pDevice, pMemory);
 
 nvkms_import_memory_failed:
     nv_drm_free(nv_nvkms_memory);
@@ -416,7 +416,7 @@ int nv_drm_gem_export_nvkms_memory_ioctl(struct drm_device *dev,
         goto done;
     }
 
-    if (!nvKms->exportMemory(nv_dev->pDevice,
+    if (!NvKmsExportMemory(nv_dev->pDevice,
                              nv_nvkms_memory->base.pMemory,
                              p->nvkms_params_ptr,
                              p->nvkms_params_size)) {
@@ -469,13 +469,13 @@ int nv_drm_gem_alloc_nvkms_memory_ioctl(struct drm_device *dev,
         NVKMS_KAPI_ALLOCATION_TYPE_OFFSCREEN : NVKMS_KAPI_ALLOCATION_TYPE_SCANOUT;
 
     if (nv_dev->hasVideoMemory) {
-        pMemory = nvKms->allocateVideoMemory(nv_dev->pDevice,
+        pMemory = NvKmsAllocateVideoMemory(nv_dev->pDevice,
                                              layout,
                                              type,
                                              p->memory_size,
                                              &p->compressible);
     } else {
-        pMemory = nvKms->allocateSystemMemory(nv_dev->pDevice,
+        pMemory = NvKmsAllocateSystemMemory(nv_dev->pDevice,
                                               layout,
                                               type,
                                               p->memory_size,
@@ -500,7 +500,7 @@ int nv_drm_gem_alloc_nvkms_memory_ioctl(struct drm_device *dev,
                                                    &p->handle);
 
 nvkms_gem_obj_init_failed:
-    nvKms->freeMemory(nv_dev->pDevice, pMemory);
+    NvKmsFreeMemory(nv_dev->pDevice, pMemory);
 
 nvkms_alloc_memory_failed:
     nv_drm_free(nv_nvkms_memory);
@@ -529,7 +529,7 @@ static struct drm_gem_object *__nv_drm_gem_nvkms_prime_dup(
         return NULL;
     }
 
-    pMemory = nvKms->dupMemory(nv_dev->pDevice,
+    pMemory = NvKmsDupMemory(nv_dev->pDevice,
                                nv_dev_src->pDevice, nv_gem_src->pMemory);
     if (pMemory == NULL) {
         NV_DRM_DEV_LOG_ERR(
@@ -548,7 +548,7 @@ static struct drm_gem_object *__nv_drm_gem_nvkms_prime_dup(
     return &nv_nvkms_memory->base.base;
 
 nvkms_gem_obj_init_failed:
-    nvKms->freeMemory(nv_dev->pDevice, pMemory);
+    NvKmsFreeMemory(nv_dev->pDevice, pMemory);
 
 nvkms_dup_memory_failed:
     nv_drm_free(nv_nvkms_memory);
