@@ -2500,7 +2500,7 @@ nvswitch_os_assert_log
             va_start(arglist, fmt);
             vsnprintf(fmt_printk, sizeof(fmt_printk), fmt, arglist);
             va_end(arglist);
-            nvswitch_os_print(NVSWITCH_DBG_LEVEL_ERROR, fmt_printk);
+            nvswitch_os_print(NVSWITCH_DBG_LEVEL_ERROR, "%s", fmt_printk);
             WARN_ON(1);
          }
          dbg_breakpoint();

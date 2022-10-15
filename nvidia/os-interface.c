@@ -1308,7 +1308,7 @@ NvU32 NV_API_CALL os_get_grid_csp_support(void)
 
 void NV_API_CALL os_bug_check(NvU32 bugCode, const char *bugCodeStr)
 {
-    panic(bugCodeStr);
+    panic("%s", bugCodeStr);
 }
 
 NV_STATUS NV_API_CALL os_get_euid(NvU32 *pSecToken)

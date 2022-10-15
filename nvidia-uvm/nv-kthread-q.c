@@ -183,7 +183,7 @@ static struct task_struct *thread_create_on_node(int (*threadfn)(void *data),
     for (i = 0;; i++) {
         struct page *stack;
 
-        thread[i] = kthread_create_on_node(threadfn, q, preferred_node, q_name);
+        thread[i] = kthread_create_on_node(threadfn, q, preferred_node, "%s", q_name);
 
         if (unlikely(IS_ERR(thread[i]))) {
 
