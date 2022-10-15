@@ -138,7 +138,7 @@ _nvswitch_device_discovery_lr10
     NvU32   discovery_offset,
     DISCOVERY_TABLE_TYPE_LR10 *discovery_table,
     NvU32 discovery_table_size,
-    NVSWITCH_DISCOVERY_HANDLERS_LR10 *discovery_handlers
+    const NVSWITCH_DISCOVERY_HANDLERS_LR10 *discovery_handlers
 )
 {
     ENGINE_DESCRIPTOR_TYPE_LR10 *engine = NULL;
@@ -919,7 +919,7 @@ nvswitch_nxbar_handle_data2_lr10
     }
 
 #define NVSWITCH_BUILD_HANDLERS(name, a, b, c, d)	\
-static NVSWITCH_DISCOVERY_HANDLERS_LR10			\
+static const NVSWITCH_DISCOVERY_HANDLERS_LR10		\
 discovery_handlers_##name##_lr10 = {			\
 	.parse_entry	= (a),				\
 	.parse_enum	= (b),				\

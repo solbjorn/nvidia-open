@@ -456,7 +456,7 @@ static void nvkms_resume(NvU32 gpuId)
 
 static nvidia_modeset_rm_ops_t __rm_ops __ro_after_init;
 
-static nvidia_modeset_callbacks_t nvkms_rm_callbacks = {
+static const nvidia_modeset_callbacks_t nvkms_rm_callbacks = {
     .suspend = nvkms_suspend,
     .resume  = nvkms_resume
 };

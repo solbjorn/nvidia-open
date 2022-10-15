@@ -51,12 +51,12 @@ typedef struct nv_cap_table_entry
 
 #define NV_CAP_NUM_ENTRIES(_table) (sizeof(_table) / sizeof(_table[0]))
 
-static nv_cap_table_entry_t g_nv_cap_nvlink_table[] =
+static nv_cap_table_entry_t g_nv_cap_nvlink_table[] __ro_after_init =
 {
     {"/driver/nvidia-nvlink/capabilities/fabric-mgmt"}
 };
 
-static nv_cap_table_entry_t g_nv_cap_mig_table[] =
+static nv_cap_table_entry_t g_nv_cap_mig_table[] __ro_after_init =
 {
     {"/driver/nvidia/capabilities/mig/config"},
     {"/driver/nvidia/capabilities/mig/monitor"}
@@ -104,7 +104,7 @@ static nv_cap_table_entry_t g_nv_cap_mig_table[] =
     {_gpu "/gi14/access"},                \
     NV_CAP_MIG_CI_ENTRIES(_gpu "/gi14")
 
-static nv_cap_table_entry_t g_nv_cap_mig_gpu_table[] =
+static nv_cap_table_entry_t g_nv_cap_mig_gpu_table[] __ro_after_init =
 {
     NV_CAP_MIG_GI_ENTRIES("/driver/nvidia/capabilities/gpu0/mig"),
     NV_CAP_MIG_GI_ENTRIES("/driver/nvidia/capabilities/gpu1/mig"),
@@ -241,7 +241,7 @@ static void nv_cap_procfs_exit(void)
     nv_cap_procfs_dir = NULL;
 }
 
-int nv_cap_procfs_init(void)
+static int __init nv_cap_procfs_init(void)
 {
     nv_cap_procfs_dir = NV_CREATE_PROC_DIR(NV_CAP_PROCFS_DIR, NULL);
     if (nv_cap_procfs_dir == NULL)
@@ -275,7 +275,7 @@ cleanup:
     return -EACCES;
 }
 
-static int nv_cap_find_minor(char *path)
+static int nv_cap_find_minor(const char *path)
 {
     unsigned int key = nv_cap_hash_key(path);
     nv_cap_table_entry_t *entry;
@@ -291,7 +291,7 @@ static int nv_cap_find_minor(char *path)
     return -1;
 }
 
-static void _nv_cap_table_init(nv_cap_table_entry_t *table, int count)
+static void __init _nv_cap_table_init(nv_cap_table_entry_t *table, int count)
 {
     int i;
     unsigned int key;
@@ -311,7 +311,7 @@ static void _nv_cap_table_init(nv_cap_table_entry_t *table, int count)
 #define nv_cap_table_init(table) \
     _nv_cap_table_init(table, NV_CAP_NUM_ENTRIES(table))
 
-static void nv_cap_tables_init(void)
+static void __init nv_cap_tables_init(void)
 {
     BUILD_BUG_ON(offsetof(nv_cap_table_entry_t, name) != 0);
 
@@ -455,7 +455,7 @@ static nv_proc_ops_t g_nv_cap_procfs_fops = {
 };
 
 /* forward declaration of g_nv_cap_drv_fops */
-static struct file_operations g_nv_cap_drv_fops;
+static const struct file_operations g_nv_cap_drv_fops;
 
 int NV_API_CALL nv_cap_validate_and_dup_fd(const nv_cap_t *cap, int fd)
 {
@@ -743,14 +743,14 @@ static int nv_cap_drv_release(struct inode *inode, struct file *file)
     return 0;
 }
 
-static struct file_operations g_nv_cap_drv_fops =
+static const struct file_operations g_nv_cap_drv_fops =
 {
     .owner = THIS_MODULE,
     .open    = nv_cap_drv_open,
     .release = nv_cap_drv_release
 };
 
-int NV_API_CALL nv_cap_drv_init(void)
+int NV_API_CALL __init nv_cap_drv_init(void)
 {
     int rc;
 
