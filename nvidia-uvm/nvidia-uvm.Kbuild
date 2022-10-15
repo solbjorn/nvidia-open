@@ -29,8 +29,6 @@ endif
 obj-$(CONFIG_DRM_NVIDIA) += nvidia-uvm.o
 nvidia-uvm-y := $(NVIDIA_UVM_OBJECTS)
 
-NVIDIA_UVM_KO = nvidia-uvm/nvidia-uvm.ko
-
 #
 # Define nvidia-uvm.ko-specific CFLAGS.
 #

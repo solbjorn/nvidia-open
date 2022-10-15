@@ -12,8 +12,6 @@ NVIDIA_OBJECTS = $(patsubst %.c,%.o,$(NVIDIA_SOURCES))
 obj-$(CONFIG_DRM_NVIDIA) += nvidia.o
 nvidia-y := $(NVIDIA_OBJECTS)
 
-NVIDIA_KO = nvidia/nvidia.ko
-
 #
 # Former nv-kernel.o, now part of Kbuild.
 #

@@ -22,6 +22,9 @@ if [ "$ARCH" = "i386" -o "$ARCH" = "x86_64" ]; then
     fi
 fi
 
+CFLAGS=""
+CONFTEST_PREAMBLE="#include \"conftest/headers.h\""
+
 # VGX_BUILD parameter defined only for VGX builds (vGPU Host driver)
 # VGX_KVM_BUILD parameter defined only vGPU builds on KVM hypervisor
 # GRID_BUILD parameter defined only for GRID builds (GRID Guest driver)
@@ -97,138 +100,6 @@ test_header_presence() {
         fi
     fi
 }
-
-build_cflags() {
-    CFLAGS=""
-}
-
-# build_cflags() {
-#     BASE_CFLAGS="-O2 -D__KERNEL__ \
-# -DKBUILD_BASENAME=\"#conftest$$\" -DKBUILD_MODNAME=\"#conftest$$\" \
-# -nostdinc -isystem $ISYSTEM"
-#
-#     if [ "$OUTPUT" != "$SOURCES" ]; then
-#         OUTPUT_CFLAGS="-I$OUTPUT/include2 -I$OUTPUT/include"
-#         if [ -f "$OUTPUT/include/generated/autoconf.h" ]; then
-#             AUTOCONF_FILE="$OUTPUT/include/generated/autoconf.h"
-#         else
-#             AUTOCONF_FILE="$OUTPUT/include/linux/autoconf.h"
-#         fi
-#     else
-#         if [ -f "$HEADERS/generated/autoconf.h" ]; then
-#             AUTOCONF_FILE="$HEADERS/generated/autoconf.h"
-#         else
-#             AUTOCONF_FILE="$HEADERS/linux/autoconf.h"
-#         fi
-#     fi
-#
-#     test_xen
-#
-#     if [ "$XEN_PRESENT" != "0" ]; then
-#         MACH_CFLAGS="-I$HEADERS/asm/mach-xen"
-#     fi
-#
-#     SOURCE_HEADERS="$HEADERS"
-#     SOURCE_ARCH_HEADERS="$SOURCES/arch/$KERNEL_ARCH/include"
-#     OUTPUT_HEADERS="$OUTPUT/include"
-#     OUTPUT_ARCH_HEADERS="$OUTPUT/arch/$KERNEL_ARCH/include"
-#
-#     # Look for mach- directories on this arch, and add it to the list of
-#     # includes if that platform is enabled in the configuration file, which
-#     # may have a definition like this:
-#     #   #define CONFIG_ARCH_<MACHUPPERCASE> 1
-#     for _mach_dir in `ls -1d $SOURCES/arch/$KERNEL_ARCH/mach-* 2>/dev/null`; do
-#         _mach=`echo $_mach_dir | \
-#             sed -e "s,$SOURCES/arch/$KERNEL_ARCH/mach-,," | \
-#             tr 'a-z' 'A-Z'`
-#         grep "CONFIG_ARCH_$_mach \+1" $AUTOCONF_FILE > /dev/null 2>&1
-#         if [ $? -eq 0 ]; then
-#             MACH_CFLAGS="$MACH_CFLAGS -I$_mach_dir/include"
-#         fi
-#     done
-#
-#     if [ "$ARCH" = "arm" ]; then
-#         MACH_CFLAGS="$MACH_CFLAGS -D__LINUX_ARM_ARCH__=7"
-#     fi
-#
-#     # Add the mach-default includes (only found on x86/older kernels)
-#     MACH_CFLAGS="$MACH_CFLAGS -I$SOURCE_HEADERS/asm-$KERNEL_ARCH/mach-default"
-#     MACH_CFLAGS="$MACH_CFLAGS -I$SOURCE_ARCH_HEADERS/asm/mach-default"
-#
-#     CFLAGS="$BASE_CFLAGS $MACH_CFLAGS $OUTPUT_CFLAGS -include $AUTOCONF_FILE"
-#     CFLAGS="$CFLAGS -I$SOURCE_HEADERS"
-#     CFLAGS="$CFLAGS -I$SOURCE_HEADERS/uapi"
-#     CFLAGS="$CFLAGS -I$SOURCE_HEADERS/xen"
-#     CFLAGS="$CFLAGS -I$OUTPUT_HEADERS/generated/uapi"
-#     CFLAGS="$CFLAGS -I$SOURCE_ARCH_HEADERS"
-#     CFLAGS="$CFLAGS -I$SOURCE_ARCH_HEADERS/uapi"
-#     CFLAGS="$CFLAGS -I$OUTPUT_ARCH_HEADERS/generated"
-#     CFLAGS="$CFLAGS -I$OUTPUT_ARCH_HEADERS/generated/uapi"
-#
-#     if [ -n "$BUILD_PARAMS" ]; then
-#         CFLAGS="$CFLAGS -D$BUILD_PARAMS"
-#     fi
-#
-#     # Check if gcc supports asm goto and set CC_HAVE_ASM_GOTO if it does.
-#     # Older kernels perform this check and set this flag in Kbuild, and since
-#     # conftest.sh runs outside of Kbuild it ends up building without this flag.
-#     # Starting with commit e9666d10a5677a494260d60d1fa0b73cc7646eb3 this test
-#     # is done within Kconfig, and the preprocessor flag is no longer needed.
-#
-#     GCC_GOTO_SH="$SOURCES/build/gcc-goto.sh"
-#
-#     if [ -f "$GCC_GOTO_SH" ]; then
-#         # Newer versions of gcc-goto.sh don't print anything on success, but
-#         # this is okay, since it's no longer necessary to set CC_HAVE_ASM_GOTO
-#         # based on the output of those versions of gcc-goto.sh.
-#         if [ `/bin/sh "$GCC_GOTO_SH" "$CC"` = "y" ]; then
-#             CFLAGS="$CFLAGS -DCC_HAVE_ASM_GOTO"
-#         fi
-#     fi
-#
-#     #
-#     # If CONFIG_HAVE_FENTRY is enabled and gcc supports -mfentry flags then set
-#     # CC_USING_FENTRY and add -mfentry into cflags.
-#     #
-#     # linux/ftrace.h file indirectly gets included into the conftest source and
-#     # fails to get compiled, because conftest.sh runs outside of Kbuild it ends
-#     # up building without -mfentry and CC_USING_FENTRY flags.
-#     #
-#     grep "CONFIG_HAVE_FENTRY \+1" $AUTOCONF_FILE > /dev/null 2>&1
-#     if [ $? -eq 0 ]; then
-#         echo "" > conftest$$.c
-#
-#         $CC -mfentry -c -x c conftest$$.c > /dev/null 2>&1
-#         rm -f conftest$$.c
-#
-#         if [ -f conftest$$.o ]; then
-#             rm -f conftest$$.o
-#
-#             CFLAGS="$CFLAGS -mfentry -DCC_USING_FENTRY"
-#         fi
-#     fi
-# }
-#
-CONFTEST_PREAMBLE="#include \"conftest/headers.h\""
-#     #if defined(NV_LINUX_KCONFIG_H_PRESENT)
-#     #include <linux/kconfig.h>
-#     #endif
-#     #if defined(NV_GENERATED_AUTOCONF_H_PRESENT)
-#     #include <generated/autoconf.h>
-#     #else
-#     #include <linux/autoconf.h>
-#     #endif
-#     #if defined(CONFIG_XEN) && \
-#         defined(CONFIG_XEN_INTERFACE_VERSION) &&  !defined(__XEN_INTERFACE_VERSION__)
-#     #define __XEN_INTERFACE_VERSION__ CONFIG_XEN_INTERFACE_VERSION
-#     #endif
-#     #if defined(CONFIG_KASAN) && defined(CONFIG_ARM64)
-#     #if defined(CONFIG_KASAN_SW_TAGS)
-#     #define KASAN_SHADOW_SCALE_SHIFT 4
-#     #else
-#     #define KASAN_SHADOW_SCALE_SHIFT 3
-#     #endif
-#     #endif"
 
 test_configuration_option() {
     #
@@ -5857,17 +5728,6 @@ case "$5" in
         done
 
         exit $?
-    ;;
-
-
-    build_cflags)
-        #
-        # Generate CFLAGS for use in the compile tests
-        #
-
-        build_cflags
-        echo $CFLAGS
-        exit 0
     ;;
 
     module_symvers_sanity_check)

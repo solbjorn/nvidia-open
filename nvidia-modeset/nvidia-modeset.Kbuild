@@ -14,10 +14,6 @@ NVIDIA_MODESET_OBJECTS = $(patsubst %.c,%.o,$(NVIDIA_MODESET_SOURCES))
 obj-$(CONFIG_DRM_NVIDIA) += nvidia-modeset.o
 nvidia-modeset-y := $(NVIDIA_MODESET_OBJECTS)
 
-NVIDIA_MODESET_KO = nvidia-modeset/nvidia-modeset.ko
-
-NV_KERNEL_MODULE_TARGETS += $(NVIDIA_MODESET_KO)
-
 #
 # Former nv-modeset-kernel.o, now part of Kbuild.
 #

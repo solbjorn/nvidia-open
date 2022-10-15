@@ -85,36 +85,7 @@ COMMON_CFLAGS += -I$(abspath $(src))/common/inc
 COMMON_CFLAGS += -I$(abspath $(src))
 COMMON_CFLAGS += -DNVRM -DNV_VERSION_STRING=$(call stringify,520.56.06)
 
-#EXTRA_CFLAGS += -Wno-unused-function
-
-#ifneq ($(NV_BUILD_TYPE),debug)
- COMMON_CFLAGS += -Wuninitialized
-#endif
-
-#EXTRA_CFLAGS += -fno-strict-aliasing
-
-#ifeq ($(ARCH),arm64)
-# EXTRA_CFLAGS += -mstrict-align
-#endif
-
-#ifeq ($(NV_BUILD_TYPE),debug)
-# EXTRA_CFLAGS += -g -gsplit-dwarf
-#endif
-
-#EXTRA_CFLAGS += -ffreestanding
-
-#ifeq ($(ARCH),arm64)
-# EXTRA_CFLAGS += -mgeneral-regs-only -march=armv8-a
-# EXTRA_CFLAGS += $(call cc-option,-mno-outline-atomics,)
-#endif
-
-#ifeq ($(ARCH),x86_64)
-# EXTRA_CFLAGS += -mno-red-zone -mcmodel=kernel
-#endif
-
-#ifeq ($(ARCH),powerpc)
-# EXTRA_CFLAGS += -mlittle-endian -mno-strict-align -mno-altivec
-#endif
+COMMON_CFLAGS += -Wuninitialized
 
 COMMON_CFLAGS += -DNV_UVM_ENABLE
 COMMON_CFLAGS += $(call cc-option,-Werror=undef,)
@@ -144,9 +115,6 @@ $(foreach _module, $(NV_KERNEL_MODULES), \
 # The conftest machinery below will run the requested tests and
 # generate the appropriate header files.
 #
-
-CC ?= cc
-LD ?= ld
 
 NV_CONFTEST_SCRIPT := $(src)/conftest.sh
 NV_CONFTEST_HEADER := $(obj)/conftest/headers.h

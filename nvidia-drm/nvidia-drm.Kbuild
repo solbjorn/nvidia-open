@@ -30,10 +30,6 @@ NVIDIA_DRM_OBJECTS = $(patsubst %.c,%.o,$(NVIDIA_DRM_SOURCES))
 obj-$(CONFIG_DRM_NVIDIA) += nvidia-drm.o
 nvidia-drm-y := $(NVIDIA_DRM_OBJECTS)
 
-NVIDIA_DRM_KO = nvidia-drm/nvidia-drm.ko
-
-NV_KERNEL_MODULE_TARGETS += $(NVIDIA_DRM_KO)
-
 #
 # Define nvidia-drm.ko-specific CFLAGS.
 #
