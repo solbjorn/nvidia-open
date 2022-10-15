@@ -12,6 +12,8 @@
 
 #include "g_rpc_hal.h"
 
+// the "_UNASSIGNED" function for all IP_VERSIONS dynamic interfaces
+NV_STATUS iGrp_ipVersions_UNASSIGNED(void);
 
                                                // RPC:VGPU_PF_REG_READ32
 RpcVgpuPfRegRead32                 rpcVgpuPfRegRead32_v15_00;
@@ -2198,13 +2200,6 @@ static void rpc_iGrp_ipVersions_Install_v20_04(IGRP_IP_VERSIONS_TABLE_INFO *pInf
 
 #endif // 
 }
-
-
-
-
-// the "_UNASSIGNED" function for all IP_VERSIONS dynamic interfaces
-NV_STATUS iGrp_ipVersions_UNASSIGNED(void);
-
 
 static NV_STATUS rpc_iGrp_ipVersions_Wrapup(IGRP_IP_VERSIONS_TABLE_INFO *pInfo)
 {

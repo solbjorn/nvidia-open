@@ -27,6 +27,7 @@
 #include "rmflcnbl.h"
 #include "nvBinSegment.h"
 #include "../src/kernel/core/bin_data_pvt.h"
+#include "g_kernel_gsp_nvoc.h"
 
 //
 // Forward declarations.

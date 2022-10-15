@@ -220,7 +220,7 @@ _nvswitch_train_forced_config_link_lr10
 
 }
 
-void
+static void
 _nvswitch_setup_chiplib_forced_config_lr10
 (
     nvswitch_device *device
@@ -440,7 +440,7 @@ _nvswitch_setup_link_system_registers_lr10
  *
  * @return 'NV_OK'
  */
-NV_STATUS
+static NV_STATUS
 _nvswitch_devinit_unpack_structure
 (
     const char *format,
@@ -523,7 +523,7 @@ _nvswitch_devinit_unpack_structure
  * @param[out]  unpackedSize    Unpacked data size
  *
  */
-void
+static void
 _nvswitch_devinit_calculate_sizes
 (
     const char *format,
@@ -588,7 +588,7 @@ _nvswitch_devinit_calculate_sizes
  *
  */
 
-NV_STATUS
+static NV_STATUS
 _nvswitch_vbios_read_structure
 (
     nvswitch_device *device,
@@ -624,8 +624,7 @@ _nvswitch_vbios_read_structure
                                               &unpacked_bytes, NULL);
 }
 
-
-NvlStatus
+static NvlStatus
 nvswitch_vbios_read_structure_lr10
 (
     nvswitch_device *device,
@@ -645,7 +644,7 @@ nvswitch_vbios_read_structure_lr10
     }
 }
 
-NvU8
+static NvU8
 _nvswitch_vbios_read8
 (
     nvswitch_device *device,
@@ -659,7 +658,7 @@ _nvswitch_vbios_read8
     return (NvU8) data;
 }
 
-NvU16
+static NvU16
 _nvswitch_vbios_read16
 (
     nvswitch_device *device,
@@ -673,8 +672,7 @@ _nvswitch_vbios_read16
     return (NvU16) data;
 }
 
-
-NvU32
+static NvU32
 _nvswitch_vbios_read32
 (
     nvswitch_device *device,
@@ -688,7 +686,7 @@ _nvswitch_vbios_read32
     return (NvU32) data;
 }
 
-NV_STATUS
+static NV_STATUS
 _nvswitch_perform_BIT_offset_update
 (
     nvswitch_device *device,
@@ -714,7 +712,7 @@ _nvswitch_perform_BIT_offset_update
                        __FUNCTION__);
         return rmStatus;
     }
-   
+
     for(i=0; i < bitHeader.TokenEntries; i++)
     {
         NvU32 BitTokenLocation = bios_config->bit_address + bitHeader.HeaderSize + (i * bitHeader.TokenSize);
@@ -759,7 +757,7 @@ _nvswitch_perform_BIT_offset_update
     return NV_OK;
 }
 
-NV_STATUS
+static NV_STATUS
 _nvswitch_validate_BIT_header
 (
     nvswitch_device *device,
@@ -789,8 +787,7 @@ _nvswitch_validate_BIT_header
     return NV_OK;
 }
 
-
-NV_STATUS
+static NV_STATUS
 nvswitch_verify_header
 (
     nvswitch_device *device,
@@ -839,7 +836,7 @@ nvswitch_verify_header
     return status;
 }
 
-NV_STATUS
+static NV_STATUS
 _nvswitch_vbios_update_bit_Offset
 (
     nvswitch_device *device,
@@ -873,8 +870,7 @@ vbios_update_bit_Offset_done:
     return status;
 }
 
-
-NV_STATUS
+static NV_STATUS
 _nvswitch_vbios_identify_pci_image_loc
 (
     nvswitch_device         *device,
@@ -939,7 +935,7 @@ vbios_identify_pci_image_loc_done:
     return status;
 }
 
-NvU32 _nvswitch_get_nvlink_config_address
+static NvU32 _nvswitch_get_nvlink_config_address
 (
     nvswitch_device         *device,
     NVSWITCH_BIOS_NVLINK_CONFIG *bios_config
@@ -948,7 +944,7 @@ NvU32 _nvswitch_get_nvlink_config_address
     return bios_config->nvlink_config_table_address;
 }
 
-NV_STATUS
+static NV_STATUS
 _nvswitch_read_vbios_link_base_entry
 (
     nvswitch_device *device,
@@ -973,7 +969,7 @@ _nvswitch_read_vbios_link_base_entry
     return status;
 }
 
-NvlStatus
+static NvlStatus
 nvswitch_read_vbios_link_entries_lr10
 (
     nvswitch_device              *device,
@@ -1033,7 +1029,7 @@ nvswitch_read_vbios_link_entries_lr10
     return status;
 }
 
-NV_STATUS
+static NV_STATUS
 _nvswitch_vbios_fetch_nvlink_entries
 (
     nvswitch_device         *device,
@@ -1151,7 +1147,7 @@ vbios_fetch_nvlink_entries_done:
     return status;
 }
 
-NV_STATUS
+static NV_STATUS
 _nvswitch_vbios_assign_base_entry
 (
     nvswitch_device         *device,
@@ -1181,7 +1177,7 @@ _nvswitch_vbios_assign_base_entry
     return NV_OK;
 }
 
-NV_STATUS
+static NV_STATUS
 _nvswitch_setup_link_vbios_overrides
 (
     nvswitch_device *device,
@@ -1340,7 +1336,7 @@ _nvswitch_load_link_disable_settings_lr10
  *
  * @param[in] device        a reference to the device to initialize
  */
-NvlStatus
+static NvlStatus
 nvswitch_setup_link_system_registers_lr10
 (
     nvswitch_device *device
@@ -1398,7 +1394,7 @@ nvswitch_setup_link_system_registers_lr10
     return NVL_SUCCESS;
 }
 
-NvlStatus
+static NvlStatus
 nvswitch_deassert_link_reset_lr10
 (
     nvswitch_device *device,
@@ -1448,7 +1444,7 @@ _nvswitch_get_num_vcs_lr10
     return NVSWITCH_NUM_VCS_LR10;
 }
 
-void
+static void
 nvswitch_determine_platform_lr10
 (
     nvswitch_device *device
@@ -1527,7 +1523,7 @@ _nvswitch_portstat_reset_latency_counters
 // the SW to read. It then resets the counters to start collecting fresh latencies.
 //
 
-void
+static void
 nvswitch_internal_latency_bin_log_lr10
 (
     nvswitch_device *device
@@ -1640,7 +1636,7 @@ nvswitch_internal_latency_bin_log_lr10
     }
 }
 
-void
+static void
 nvswitch_ecc_writeback_task_lr10
 (
     nvswitch_device *device
@@ -1648,7 +1644,7 @@ nvswitch_ecc_writeback_task_lr10
 {
 }
 
-void
+static void
 nvswitch_set_ganged_link_table_lr10
 (
     nvswitch_device *device,
@@ -1931,7 +1927,7 @@ nvswitch_init_warm_reset_lr10
  * CTRL_NVSWITCH_SET_REMAP_POLICY
  */
 
-NvlStatus
+static NvlStatus
 nvswitch_get_remap_table_selector_lr10
 (
     nvswitch_device *device,
@@ -1960,7 +1956,7 @@ nvswitch_get_remap_table_selector_lr10
     return NVL_SUCCESS;
 }
 
-NvU32
+static NvU32
 nvswitch_get_ingress_ram_size_lr10
 (
     nvswitch_device *device,
@@ -2038,7 +2034,7 @@ _nvswitch_set_remap_policy_lr10
     }
 }
 
-NvlStatus
+static NvlStatus
 nvswitch_ctrl_set_remap_policy_lr10
 (
     nvswitch_device *device,
@@ -2236,7 +2232,7 @@ nvswitch_ctrl_set_remap_policy_lr10
 
 #define NVSWITCH_NUM_REMAP_POLICY_REGS_LR10 5
 
-NvlStatus
+static NvlStatus
 nvswitch_ctrl_get_remap_policy_lr10
 (
     nvswitch_device *device,
@@ -2364,7 +2360,7 @@ nvswitch_ctrl_get_remap_policy_lr10
 /*
  * CTRL_NVSWITCH_SET_REMAP_POLICY_VALID
  */
-NvlStatus
+static NvlStatus
 nvswitch_ctrl_set_remap_policy_valid_lr10
 (
     nvswitch_device *device,
@@ -2532,7 +2528,7 @@ _nvswitch_set_routing_id_lr10
 
 #define NVSWITCH_NUM_RIDTABDATA_REGS_LR10 6
 
-NvlStatus
+static NvlStatus
 nvswitch_ctrl_get_routing_id_lr10
 (
     nvswitch_device *device,
@@ -2661,7 +2657,7 @@ nvswitch_ctrl_get_routing_id_lr10
     return NVL_SUCCESS;
 }
 
-NvlStatus
+static NvlStatus
 nvswitch_ctrl_set_routing_id_valid_lr10
 (
     nvswitch_device *device,
@@ -2734,7 +2730,7 @@ nvswitch_ctrl_set_routing_id_valid_lr10
     return NVL_SUCCESS;
 }
 
-NvlStatus
+static NvlStatus
 nvswitch_ctrl_set_routing_id_lr10
 (
     nvswitch_device *device,
@@ -2893,7 +2889,7 @@ _nvswitch_set_routing_lan_lr10
     }
 }
 
-NvlStatus
+static NvlStatus
 nvswitch_ctrl_set_routing_lan_lr10
 (
     nvswitch_device *device,
@@ -2968,7 +2964,7 @@ nvswitch_ctrl_set_routing_lan_lr10
 
 #define NVSWITCH_NUM_RLANTABDATA_REGS_LR10 6
 
-NvlStatus
+static NvlStatus
 nvswitch_ctrl_get_routing_lan_lr10
 (
     nvswitch_device *device,
@@ -3154,7 +3150,7 @@ nvswitch_ctrl_get_routing_lan_lr10
     return NVL_SUCCESS;
 }
 
-NvlStatus
+static NvlStatus
 nvswitch_ctrl_set_routing_lan_valid_lr10
 (
     nvswitch_device *device,
@@ -3597,7 +3593,7 @@ _nvswitch_init_portstat_counters
      return NVL_SUCCESS;
 }
 
-NvlStatus
+static NvlStatus
 nvswitch_init_nxbar_lr10
 (
     nvswitch_device *device
@@ -3627,7 +3623,7 @@ nvswitch_init_nxbar_lr10
     return NVL_SUCCESS;
 }
 
-NvlStatus
+static NvlStatus
 nvswitch_init_nport_lr10
 (
     nvswitch_device *device
@@ -3748,7 +3744,7 @@ nvswitch_init_nport_lr10
     return NVL_SUCCESS;
 }
 
-void *
+static void *
 nvswitch_alloc_chipdevice_lr10
 (
     nvswitch_device *device
@@ -3811,8 +3807,7 @@ nvswitch_initialize_route_exit:
     return retval;
 }
 
-
-NvlStatus
+static NvlStatus
 nvswitch_pri_ring_init_lr10
 (
     nvswitch_device *device
@@ -3898,7 +3893,7 @@ nvswitch_pri_ring_init_lr10
  *                          -NVL_BAD_ARGS if bad arguments provided
  *                          -NVL_PCI_ERROR if bar info unable to be retrieved
  */
-NvlStatus
+static NvlStatus
 nvswitch_initialize_device_state_lr10
 (
     nvswitch_device *device
@@ -4166,7 +4161,7 @@ nvswitch_initialize_device_state_exit:
  *
  * @param[in] device        a reference to the device to initialize
  */
-void
+static void
 nvswitch_destroy_device_state_lr10
 (
     nvswitch_device *device
@@ -4278,7 +4273,7 @@ nvswitch_link_lane_reversed_lr10
     return NV_FALSE;
 }
 
-NvlStatus
+static NvlStatus
 nvswitch_ctrl_get_nvlink_status_lr10
 (
     nvswitch_device *device,
@@ -4437,7 +4432,7 @@ nvswitch_ctrl_get_nvlink_status_lr10
     return retval;
 }
 
-NvlStatus
+static NvlStatus
 nvswitch_ctrl_get_counters_lr10
 (
     nvswitch_device *device,
@@ -4763,7 +4758,7 @@ _nvswitch_inforom_bbx_supported
  *
  */
 
-NvlStatus
+static NvlStatus
 nvswitch_ctrl_get_info_lr10
 (
     nvswitch_device *device,
@@ -4945,7 +4940,7 @@ nvswitch_ctrl_get_info_lr10
     return retval;
 }
 
-NvlStatus
+static NvlStatus
 nvswitch_set_nport_port_config_lr10
 (
     nvswitch_device *device,
@@ -5014,7 +5009,7 @@ nvswitch_set_nport_port_config_lr10
     return NVL_SUCCESS;
 }
 
-NvlStatus
+static NvlStatus
 nvswitch_ctrl_set_switch_port_config_lr10
 (
     nvswitch_device *device,
@@ -5104,7 +5099,7 @@ nvswitch_ctrl_set_switch_port_config_lr10
     return NVL_SUCCESS;
 }
 
-NvlStatus
+static NvlStatus
 nvswitch_ctrl_set_ingress_request_table_lr10
 (
     nvswitch_device *device,
@@ -5114,7 +5109,7 @@ nvswitch_ctrl_set_ingress_request_table_lr10
     return -NVL_ERR_NOT_SUPPORTED;
 }
 
-NvlStatus
+static NvlStatus
 nvswitch_ctrl_get_ingress_request_table_lr10
 (
     nvswitch_device *device,
@@ -5124,7 +5119,7 @@ nvswitch_ctrl_get_ingress_request_table_lr10
     return -NVL_ERR_NOT_SUPPORTED;
 }
 
-NvlStatus
+static NvlStatus
 nvswitch_ctrl_set_ingress_request_valid_lr10
 (
     nvswitch_device *device,
@@ -5134,7 +5129,7 @@ nvswitch_ctrl_set_ingress_request_valid_lr10
     return -NVL_ERR_NOT_SUPPORTED;
 }
 
-NvlStatus
+static NvlStatus
 nvswitch_ctrl_get_ingress_response_table_lr10
 (
     nvswitch_device *device,
@@ -5145,7 +5140,7 @@ nvswitch_ctrl_get_ingress_response_table_lr10
 }
 
 
-NvlStatus
+static NvlStatus
 nvswitch_ctrl_set_ingress_response_table_lr10
 (
     nvswitch_device *device,
@@ -5226,7 +5221,7 @@ nvswitch_ctrl_get_internal_latency_lr10
     return NVL_SUCCESS;
 }
 
-NvlStatus
+static NvlStatus
 nvswitch_ctrl_set_latency_bins_lr10
 (
     nvswitch_device *device,
@@ -5287,7 +5282,7 @@ nvswitch_ctrl_set_latency_bins_lr10
  * @returns                     NVL_SUCCESS if action succeeded,
  *                              -NVL_ERR_INVALID_STATE invalid link
  */
-NvlStatus
+static NvlStatus
 nvswitch_ctrl_get_ingress_reqlinkid_lr10
 (
     nvswitch_device *device,
@@ -5327,7 +5322,7 @@ nvswitch_ctrl_get_ingress_reqlinkid_lr10
     return NVL_SUCCESS;
 }
 
-NvlStatus
+static NvlStatus
 nvswitch_ctrl_get_bios_info_lr10
 (
     nvswitch_device *device,
@@ -5565,7 +5560,9 @@ _nvswitch_link_reset_interrupts_lr10
  *                         -NVL_INITIALIZATION_TOTAL_FAILURE if NPORT initialization failed and a retry is required.
  */
 
-NvlStatus
+static void nvswitch_init_scratch_lr10(nvswitch_device *device);
+
+static NvlStatus
 nvswitch_reset_and_drain_links_lr10
 (
     nvswitch_device *device,
@@ -5876,7 +5873,7 @@ nvswitch_reset_and_drain_links_exit:
     return status;
 }
 
-NvlStatus
+static NvlStatus
 nvswitch_get_nvlink_ecc_errors_lr10
 (
     nvswitch_device *device,
@@ -5956,7 +5953,7 @@ nvswitch_get_num_links_lr10
     return num_links;
 }
 
-NvBool
+static NvBool
 nvswitch_is_link_valid_lr10
 (
     nvswitch_device *device,
@@ -5970,7 +5967,7 @@ nvswitch_is_link_valid_lr10
     return device->link[link_id].valid;
 }
 
-NvlStatus
+static NvlStatus
 nvswitch_ctrl_get_fom_values_lr10
 (
     nvswitch_device *device,
@@ -5997,7 +5994,7 @@ nvswitch_ctrl_get_fom_values_lr10
     return status;
 }
 
-void
+static void
 nvswitch_set_fatal_error_lr10
 (
     nvswitch_device *device,
@@ -6050,7 +6047,7 @@ nvswitch_get_latency_sample_interval_msec_lr10
     return chip_device->latency_stats->sample_interval_msec;
 }
 
-NvU32
+static NvU32
 nvswitch_get_swap_clk_default_lr10
 (
     nvswitch_device *device
@@ -6059,7 +6056,7 @@ nvswitch_get_swap_clk_default_lr10
     return -NVL_ERR_NOT_SUPPORTED;
 }
 
-NvBool
+static NvBool
 nvswitch_is_link_in_use_lr10
 (
     nvswitch_device *device,
@@ -6098,7 +6095,7 @@ nvswitch_get_device_dma_width_lr10
     return DMA_ADDR_WIDTH_LR10;
 }
 
-NvU32
+static NvU32
 nvswitch_get_link_ip_version_lr10
 (
     nvswitch_device *device,
@@ -6203,7 +6200,7 @@ _nvswitch_get_reserved_throughput_counters
     return NVL_SUCCESS;
 }
 
-NvlStatus
+static NvlStatus
 nvswitch_ctrl_get_throughput_counters_lr10
 (
     nvswitch_device *device,
@@ -6249,7 +6246,7 @@ nvswitch_is_soe_supported_lr10
     return NV_TRUE;
 }
 
-NvBool
+static NvBool
 nvswitch_is_inforom_supported_lr10
 (
     nvswitch_device *device
@@ -6272,7 +6269,7 @@ nvswitch_is_inforom_supported_lr10
     return NV_TRUE;
 }
 
-NvBool
+static NvBool
 nvswitch_is_spi_supported_lr10
 (
     nvswitch_device *device
@@ -6281,7 +6278,7 @@ nvswitch_is_spi_supported_lr10
     return nvswitch_is_soe_supported(device);
 }
 
-NvBool
+static NvBool
 nvswitch_is_smbpbi_supported_lr10
 (
     nvswitch_device *device
@@ -6311,7 +6308,7 @@ nvswitch_is_smbpbi_supported_lr10
  *
  * @param[in] device        a reference to the device to initialize
  */
-NvlStatus
+static NvlStatus
 nvswitch_post_init_device_setup_lr10
 (
     nvswitch_device *device
@@ -6363,7 +6360,7 @@ nvswitch_post_init_device_setup_lr10
  *
  * @param[in] device        a reference to the device to initialize
  */
-void
+static void
 nvswitch_post_init_blacklist_device_setup_lr10
 (
     nvswitch_device *device
@@ -6400,7 +6397,7 @@ nvswitch_post_init_blacklist_device_setup_lr10
     }
 }
 
-void
+static void
 nvswitch_load_uuid_lr10
 (
     nvswitch_device *device
@@ -6420,7 +6417,7 @@ nvswitch_load_uuid_lr10
     nvswitch_os_memcpy(&device->uuid.uuid, (NvU8 *)regData, NV_UUID_LEN);
 }
 
-NvlStatus
+static NvlStatus
 nvswitch_read_oob_blacklist_state_lr10
 (
     nvswitch_device *device
@@ -6461,7 +6458,7 @@ nvswitch_read_oob_blacklist_state_lr10
     return NVL_SUCCESS;
 }
 
-NvlStatus
+static NvlStatus
 nvswitch_write_fabric_state_lr10
 (
     nvswitch_device *device
@@ -6519,7 +6516,7 @@ _nvswitch_get_eng_descriptor_lr10
     return engine;
 }
 
-NvU32
+static NvU32
 nvswitch_get_eng_base_lr10
 (
     nvswitch_device *device,
@@ -6586,7 +6583,7 @@ nvswitch_get_eng_base_lr10
     return base_addr;
 }
 
-NvU32
+static NvU32
 nvswitch_get_eng_count_lr10
 (
     nvswitch_device *device,
@@ -6643,7 +6640,7 @@ nvswitch_get_eng_count_lr10
     return eng_count;
 }
 
-NvU32
+static NvU32
 nvswitch_eng_rd_lr10
 (
     nvswitch_device *device,
@@ -6692,7 +6689,7 @@ nvswitch_eng_rd_lr10
     return data;
 }
 
-void
+static void
 nvswitch_eng_wr_lr10
 (
     nvswitch_device *device,
@@ -6739,7 +6736,7 @@ nvswitch_eng_wr_lr10
 #endif  //defined(DEVELOP) || defined(DEBUG) || defined(NV_MODS)
 }
 
-NvU32
+static NvU32
 nvswitch_get_link_eng_inst_lr10
 (
     nvswitch_device *device,
@@ -6794,7 +6791,7 @@ nvswitch_get_link_eng_inst_lr10
     return eng_instance;
 }
 
-NvU32
+static NvU32
 nvswitch_get_caps_nvlink_version_lr10
 (
     nvswitch_device *device
@@ -6805,7 +6802,7 @@ nvswitch_get_caps_nvlink_version_lr10
     return NVSWITCH_NVLINK_CAPS_NVLINK_VERSION_3_0;
 }
 
-NVSWITCH_BIOS_NVLINK_CONFIG *
+static NVSWITCH_BIOS_NVLINK_CONFIG *
 nvswitch_get_bios_nvlink_config_lr10
 (
     nvswitch_device *device
@@ -6923,7 +6920,7 @@ nvswitch_ctrl_inband_read_data_lr10
 * @params[in]  linkId        link to retrieve NVLIPT public ID from
 * @params[out] publicId      Public ID of NVLIPT owning linkId
 */
-NvlStatus nvswitch_get_link_public_id_lr10
+static NvlStatus nvswitch_get_link_public_id_lr10
 (
     nvswitch_device *device,
     NvU32 linkId,
@@ -6949,7 +6946,7 @@ NvlStatus nvswitch_get_link_public_id_lr10
 * @params[in]  linkId        link to retrieve NVLIPT public ID from
 * @params[out] localLinkIdx  Internal link index of linkId
 */
-NvlStatus nvswitch_get_link_local_idx_lr10
+static NvlStatus nvswitch_get_link_local_idx_lr10
 (
     nvswitch_device *device,
     NvU32 linkId,
@@ -6967,7 +6964,7 @@ NvlStatus nvswitch_get_link_local_idx_lr10
     return NVL_SUCCESS;
 }
 
-NvlStatus nvswitch_set_training_error_info_lr10
+static NvlStatus nvswitch_set_training_error_info_lr10
 (
     nvswitch_device *device,
     NVSWITCH_SET_TRAINING_ERROR_INFO_PARAMS *pLinkTrainingErrorInfoParams
@@ -6990,7 +6987,7 @@ NvlStatus nvswitch_set_training_error_info_lr10
                                                &linkRuntimeErrorInfo);
 }
 
-NvlStatus nvswitch_ctrl_get_fatal_error_scope_lr10
+static NvlStatus nvswitch_ctrl_get_fatal_error_scope_lr10
 (
     nvswitch_device *device,
     NVSWITCH_GET_FATAL_ERROR_SCOPE_PARAMS *pParams
@@ -7017,7 +7014,7 @@ NvlStatus nvswitch_ctrl_get_fatal_error_scope_lr10
     return NVL_SUCCESS;
 }
 
-void nvswitch_init_scratch_lr10
+static void nvswitch_init_scratch_lr10
 (
     nvswitch_device *device
 )
@@ -7040,7 +7037,7 @@ void nvswitch_init_scratch_lr10
     }
 }
 
-NvlStatus
+static NvlStatus
 nvswitch_launch_ALI_lr10
 (
     nvswitch_device *device
@@ -7049,7 +7046,7 @@ nvswitch_launch_ALI_lr10
     return -NVL_ERR_NOT_SUPPORTED;
 }
 
-NvlStatus
+static NvlStatus
 nvswitch_set_training_mode_lr10
 (
     nvswitch_device *device
@@ -7058,7 +7055,7 @@ nvswitch_set_training_mode_lr10
     return NVL_SUCCESS;
 }
 
-NvlStatus
+static NvlStatus
 nvswitch_parse_bios_image_lr10
 (
     nvswitch_device *device
@@ -7093,7 +7090,7 @@ nvswitch_parse_bios_image_lr10
     return NVL_SUCCESS;
 }
 
-NvlStatus
+static NvlStatus
 nvswitch_ctrl_get_nvlink_lp_counters_lr10
 (
     nvswitch_device *device,
@@ -7103,7 +7100,7 @@ nvswitch_ctrl_get_nvlink_lp_counters_lr10
     return -NVL_ERR_NOT_SUPPORTED;
 }
 
-NvlStatus
+static NvlStatus
 nvswitch_ctrl_get_sw_info_lr10
 (
     nvswitch_device *device,
@@ -7162,5 +7159,5 @@ void nvswitch_setup_hal_lr10(nvswitch_device *device)
     }
 
     NVSWITCH_INIT_HAL(device, lr10);
-    NVSWITCH_INIT_HAL_LS10(device, lr10);                             
+    NVSWITCH_INIT_HAL_LS10(device, lr10);
 }

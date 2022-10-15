@@ -133,7 +133,6 @@ RmDeprecatedControlHandler RmDeprecatedGetControlHandler(NVOS54_PARAMETERS *pArg
     // Check if the cmd is part of the legacy GSS control.
     if (pGpu && IS_GSP_CLIENT(pGpu) && IsGssLegacyCall(pArgs->cmd))
     {
-        extern NV_STATUS RmGssLegacyRpcCmd(API_SECURITY_INFO*, DEPRECATED_CONTEXT*, NVOS54_PARAMETERS*);
         return RmGssLegacyRpcCmd;
     }
 

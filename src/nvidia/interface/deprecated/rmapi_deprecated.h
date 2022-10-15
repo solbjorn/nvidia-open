@@ -117,4 +117,7 @@ NV_STATUS RmDeprecatedGetOrAllocObject(DEPRECATED_CONTEXT *pContext, NvHandle hC
 
 NV_STATUS RmCopyUserForDeprecatedApi(RMAPI_DEPRECATED_COPY_OP op,RMAPI_DEPRECATED_BUFFER_POLICY bufPolicy,
                                      NvP64 dataPtr, NvU32 dataSize, void **ppKernelPtr, NvBool bUserModeArgs);
+
+NV_STATUS RmGssLegacyRpcCmd(API_SECURITY_INFO*, DEPRECATED_CONTEXT*, NVOS54_PARAMETERS*);
+
 #endif

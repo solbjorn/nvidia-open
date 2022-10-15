@@ -26,6 +26,7 @@
 #include <osapi.h>
 #include <core/thread_state.h>
 #include "rmapi/nv_gpu_ops.h"
+#include "rmapi/rm-gpu-ops.h"
 #include "gpu/mem_mgr/phys_mem_allocator/phys_mem_allocator.h"
 
 NV_STATUS NV_API_CALL rm_gpu_ops_create_session(
@@ -810,4 +811,3 @@ rm_gpu_ops_paging_channel_push_stream(nvidia_stack_t *sp,
     NV_EXIT_RM_RUNTIME(sp,fp);
     return rmStatus;
 }
-

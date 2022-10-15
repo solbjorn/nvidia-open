@@ -22,6 +22,7 @@
  */
 
 #include <nv.h>
+#include <osapi.h>
 #include <rmconfig.h>
 #include <gpu/subdevice/subdevice.h>
 #include <ctrl/ctrl0080/ctrl0080unix.h>

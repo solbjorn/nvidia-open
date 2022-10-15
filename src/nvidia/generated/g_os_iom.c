@@ -30,7 +30,7 @@
 //
 // Initialize OS's object-level interfaces
 //
-void
+static void
 osSetPropertiesSpecial
 (
     POBJOS    pOs
@@ -54,7 +54,7 @@ osSetPropertiesSpecial
 extern const struct NVOC_CLASS_DEF __iom_class_def_OBJOS;
 extern const struct NVOC_CLASS_DEF __nvoc_class_def_Object;
 
-void      __iom_dtor_OBJOS(POBJOS);
+static void __iom_dtor_OBJOS(POBJOS);
 NV_STATUS __iom_objCreate_OBJOS(POBJOS *ppThis, Dynamic *pParent, NvU32 createFlags);
 static NV_STATUS __iom_objCreateDynamic_OBJOS(POBJOS *ppThis, Dynamic *pParent, NvU32 createFlags, va_list args);
 
@@ -112,8 +112,7 @@ NV_STATUS __nvoc_ctor_Object(Object*);
 void      __nvoc_dtor_Object(Object*);
 NV_STATUS __nvoc_vctor_Object(Dynamic*, va_list);
 
-
-NV_STATUS __iom_ctor_OBJOS(POBJOS pOs)
+static NV_STATUS __iom_ctor_OBJOS(POBJOS pOs)
 {
     NV_STATUS status;
     RMCFG_MODULE_ENABLED_OR_ASSERT_AND_BAIL(OS);
@@ -124,13 +123,13 @@ __iom_ctor_OBJOS_fail_Object:
     return status;
 }
 
-void __iom_dtor_OBJOS(POBJOS pOs)
+static void __iom_dtor_OBJOS(POBJOS pOs)
 {
     __nvoc_dtor_Object(&pOs->__nvoc_base_Object);
 }
 
 // OS's object initializer function to set up vtables and RTTI
-void __iom_init_OBJOS(POBJOS pOs)
+static void __iom_init_OBJOS(POBJOS pOs)
 {
     pOs->__nvoc_pbase_Object = &pOs->__nvoc_base_Object;
     __nvoc_init_Object(&pOs->__nvoc_base_Object);

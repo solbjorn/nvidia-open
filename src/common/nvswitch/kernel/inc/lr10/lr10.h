@@ -596,7 +596,6 @@ void nvswitch_lib_enable_interrupts_lr10(nvswitch_device *device);
 void nvswitch_lib_disable_interrupts_lr10(nvswitch_device *device);
 NvlStatus nvswitch_lib_service_interrupts_lr10(nvswitch_device *device);
 NvlStatus nvswitch_lib_check_interrupts_lr10(nvswitch_device *device);
-void nvswitch_set_ganged_link_table_lr10(nvswitch_device *device, NvU32 firstIndex, NvU64 *ganged_link_table, NvU32 numEntries);
 NvlStatus nvswitch_pmgr_init_config_lr10(nvswitch_device *device);
 NvlStatus nvswitch_minion_service_falcon_interrupts_lr10(nvswitch_device *device, NvU32 instance);
 NvlStatus nvswitch_ctrl_i2c_indexed_lr10(nvswitch_device *device,
@@ -623,36 +622,22 @@ NvBool    nvswitch_is_link_in_reset_lr10(nvswitch_device *device, nvlink_link *l
 NvlStatus nvswitch_wait_for_tl_request_ready_lr10(nvlink_link *link);
 NvlStatus nvswitch_request_tl_link_state_lr10(nvlink_link *link, NvU32 tlLinkState, NvBool bSync);
 void      nvswitch_execute_unilateral_link_shutdown_lr10(nvlink_link *link);
-NvlStatus nvswitch_get_link_public_id_lr10(nvswitch_device *device, NvU32 linkId, NvU32 *publicId);
-NvlStatus nvswitch_get_link_local_idx_lr10(nvswitch_device *device, NvU32 linkId, NvU32 *localLinkIdx);
-NvlStatus nvswitch_set_training_error_info_lr10(nvswitch_device *device,
-                                                NVSWITCH_SET_TRAINING_ERROR_INFO_PARAMS *pLinkTrainingErrorInfoParams);
-NvlStatus nvswitch_read_vbios_link_entries_lr10(nvswitch_device *device, NvU32 tblPtr,NvU32 entriesCount,NVLINK_CONFIG_DATA_LINKENTRY *link_entries, NvU32 *identified_entriesCount);
-NvlStatus nvswitch_ctrl_get_fatal_error_scope_lr10(nvswitch_device *device, NVSWITCH_GET_FATAL_ERROR_SCOPE_PARAMS *pParams);
-void      nvswitch_init_scratch_lr10(nvswitch_device *device);
 void      nvswitch_init_dlpl_interrupts_lr10(nvlink_link *link);
-NvlStatus nvswitch_init_nport_lr10(nvswitch_device *device);
 NvlStatus nvswitch_poll_sublink_state_lr10(nvswitch_device *device, nvlink_link *link);
 void      nvswitch_setup_link_loopback_mode_lr10(nvswitch_device *device, NvU32 linkNumber);
 void nvswitch_reset_persistent_link_hw_state_lr10(nvswitch_device *device, NvU32 linkNumber);
 void nvswitch_store_topology_information_lr10(nvswitch_device *device, nvlink_link *link);
 void nvswitch_init_lpwr_regs_lr10(nvlink_link *link);
-NvlStatus nvswitch_set_training_mode_lr10(nvswitch_device *device);
 NvBool nvswitch_i2c_is_device_access_allowed_lr10(nvswitch_device *device, NvU32 port, NvU8 addr, NvBool bIsRead);
 NvU32     nvswitch_get_sublink_width_lr10(nvswitch_device *device,NvU32 linkNumber);
-NvlStatus nvswitch_parse_bios_image_lr10(nvswitch_device *device);
-NvlStatus nvswitch_ctrl_get_throughput_counters_lr10(nvswitch_device *device, NVSWITCH_GET_THROUGHPUT_COUNTERS_PARAMS *p);
 void nvswitch_corelib_get_uphy_load_lr10(nvlink_link *link, NvBool *bUnlocked);
 void      nvswitch_init_buffer_ready_lr10(nvswitch_device *device, nvlink_link *link, NvBool bNportBufferReady);
-NvlStatus nvswitch_ctrl_get_nvlink_lp_counters_lr10(nvswitch_device *device, NVSWITCH_GET_NVLINK_LP_COUNTERS_PARAMS *params);
 NvlStatus nvswitch_service_nvldl_fatal_link_lr10(nvswitch_device *device, NvU32 nvliptInstance, NvU32 link);
 NvlStatus nvswitch_ctrl_inband_send_data_lr10(nvswitch_device *device, NVSWITCH_INBAND_SEND_DATA_PARAMS *p);
 NvlStatus nvswitch_ctrl_inband_read_data_lr10(nvswitch_device *device, NVSWITCH_INBAND_READ_DATA_PARAMS *p);
 NvlStatus nvswitch_launch_ALI_link_training_lr10(nvswitch_device *device, nvlink_link *link);
 NvlStatus nvswitch_service_minion_link_lr10(nvswitch_device *device, NvU32 nvliptInstance);
 void      nvswitch_apply_recal_settings_lr10(nvswitch_device *device, nvlink_link *link);
-NvlStatus nvswitch_ctrl_get_sw_info_lr10(nvswitch_device *device, NVSWITCH_GET_SW_INFO_PARAMS *p);
 
-NvlStatus nvswitch_launch_ALI_lr10(nvswitch_device *device);
 
 #endif //_LR10_H_

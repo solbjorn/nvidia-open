@@ -26,6 +26,7 @@
 #include "common_nvswitch.h"
 #include "error_nvswitch.h"
 #include "lr10/lr10.h"
+#include "lr10/soe_lr10.h"
 #include "lr10/therm_lr10.h"
 #include "soe/soeiftherm.h"
 #include "rmflcncmdif_nvswitch.h"
@@ -125,7 +126,7 @@ nvswitch_ctrl_therm_read_temperature_lr10
     channel = NVSWITCH_THERM_CHANNEL_LR10_TSENSE_OFFSET_MAX;
     if (info->channelMask & NVBIT(channel))
     {
-        _nvswitch_read_max_tsense_temperature(device, info, channel);        
+        _nvswitch_read_max_tsense_temperature(device, info, channel);
         info->channelMask &= ~NVBIT(channel);
     }
 
@@ -189,7 +190,7 @@ nvswitch_ctrl_therm_get_temperature_limit_lr10
             return -NVL_BAD_ARGS;
         }
     }
-    
+
     info->temperatureLimit = NV_TSENSE_FXP_9_5_TO_24_8(temperature);
 
     return NVL_SUCCESS;
@@ -296,4 +297,3 @@ nvswitch_therm_soe_callback_lr10
         }
     }
 }
-

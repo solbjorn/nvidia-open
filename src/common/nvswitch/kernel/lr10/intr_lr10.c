@@ -730,7 +730,7 @@ _nvswitch_initialize_sourcetrack_interrupts
 
 }
 
-void
+static void
 _nvswitch_initialize_nport_interrupts
 (
     nvswitch_device *device
@@ -4403,7 +4403,7 @@ _nvswitch_service_nxbar_fatal_lr10
     return NVL_SUCCESS;
 }
 
-NvlStatus
+static NvlStatus
 _nvswitch_service_minion_fatal_lr10
 (
     nvswitch_device *device,
@@ -4549,7 +4549,7 @@ nvswitch_service_nvldl_fatal_link_lr10
     return NVL_SUCCESS;
 }
 
-NvlStatus
+static NvlStatus
 _nvswitch_service_nvldl_fatal_lr10
 (
     nvswitch_device *device,
@@ -5175,7 +5175,7 @@ _nvswitch_service_nvltlc_rx_lnk_fatal_1_lr10
     return NVL_SUCCESS;
 }
 
-NvlStatus
+static NvlStatus
 _nvswitch_service_nvltlc_fatal_lr10
 (
     nvswitch_device *device,

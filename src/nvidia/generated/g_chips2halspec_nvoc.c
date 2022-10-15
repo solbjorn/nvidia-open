@@ -1,4 +1,3 @@
-#define NVOC_CHIPS2HALSPEC_H_PRIVATE_ACCESS_ALLOWED
 #include "nvoc/runtime.h"
 #include "nvoc/rtti.h"
 #include "nvtypes.h"
@@ -127,4 +126,3 @@ void __nvoc_init_halspec_DpuIpHal(DpuIpHal *pDpuIpHal, NvU32 ipver)
         pDpuIpHal->__nvoc_HalVarIdx = 5;
     }
 }
-

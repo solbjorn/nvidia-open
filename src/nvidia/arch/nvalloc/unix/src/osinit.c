@@ -1206,7 +1206,7 @@ NvBool RmInitPrivateState(
     return NV_TRUE;
 }
 
-void RmClearPrivateState(
+static void RmClearPrivateState(
     nv_state_t *pNv
 )
 {

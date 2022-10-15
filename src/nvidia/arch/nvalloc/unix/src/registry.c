@@ -24,6 +24,7 @@
 #include <nv.h>
 #include <nv-priv.h>
 #include <nvos.h>
+#include <osapi.h>
 
 #if defined(DEBUG_REGISTRY)
 #define DBG_REG_PRINTF(a, ...) \
@@ -702,4 +703,3 @@ NV_STATUS RmPackageRegistry(
 
     return nvStatus;
 }
-

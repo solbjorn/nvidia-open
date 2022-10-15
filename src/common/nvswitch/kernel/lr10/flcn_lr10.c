@@ -143,7 +143,7 @@ _flcnWaitForResetToFinish_LR10
  *
  * @returns nothing
  */
-void
+static void
 _flcnDbgInfoCapturePcTrace_LR10
 (
     nvswitch_device *device,
@@ -183,7 +183,7 @@ _flcnDbgInfoCapturePcTrace_LR10
  *
  * @return @ref NV_FLCN_CORE_REV_X_Y.
  */
-NvU8
+static NvU8
 _flcnReadCoreRev_LR10
 (
     nvswitch_device *device,
@@ -200,7 +200,7 @@ _flcnReadCoreRev_LR10
 // Store pointers to ucode header and data.
 // Preload ucode from registry if available.
 //
-NV_STATUS
+static NV_STATUS
 _flcnConstruct_LR10
 (
     nvswitch_device    *device,
@@ -263,7 +263,7 @@ _flcnConstruct_LR10_fail:
     return status;
 }
 
-void
+static void
 _flcnDestruct_LR10
 (
     nvswitch_device    *device,
@@ -293,7 +293,8 @@ _flcnDestruct_LR10
         pFlcn->pQueueInfo = NULL;
     }
 }
-const char *
+
+static const char *
 _flcnGetName_LR10
 (
     nvswitch_device    *device,

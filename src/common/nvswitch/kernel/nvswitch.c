@@ -1622,7 +1622,7 @@ nvswitch_lib_notify_client_events
 /*!
    @brief: Release ROM image from memory.
 */
-void
+static void
 _nvswitch_destroy_rom(nvswitch_device *device)
 {
     if (device->biosImage.pImage != NULL)
