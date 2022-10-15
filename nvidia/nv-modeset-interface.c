@@ -30,20 +30,22 @@
 
 static const nvidia_modeset_callbacks_t *nv_modeset_callbacks;
 
-static int nvidia_modeset_rm_ops_alloc_stack(nvidia_stack_t **sp)
+int nvidia_modeset_alloc_stack(nvidia_stack_t **sp)
 {
     return nv_kmem_cache_alloc_stack(sp);
 }
+EXPORT_SYMBOL(nvidia_modeset_alloc_stack);
 
-static void nvidia_modeset_rm_ops_free_stack(nvidia_stack_t *sp)
+void nvidia_modeset_free_stack(nvidia_stack_t *sp)
 {
     if (sp != NULL)
     {
         nv_kmem_cache_free_stack(sp);
     }
 }
+EXPORT_SYMBOL(nvidia_modeset_free_stack);
 
-static int nvidia_modeset_set_callbacks(const nvidia_modeset_callbacks_t *cb)
+int nvidia_modeset_set_callbacks(const nvidia_modeset_callbacks_t *cb)
 {
     if ((nv_modeset_callbacks != NULL && cb != NULL) ||
         (nv_modeset_callbacks == NULL && cb == NULL))
@@ -54,6 +56,7 @@ static int nvidia_modeset_set_callbacks(const nvidia_modeset_callbacks_t *cb)
     nv_modeset_callbacks = cb;
     return 0;
 }
+EXPORT_SYMBOL(nvidia_modeset_set_callbacks);
 
 void nvidia_modeset_suspend(NvU32 gpuId)
 {
@@ -71,7 +74,7 @@ void nvidia_modeset_resume(NvU32 gpuId)
     }
 }
 
-static NvU32 nvidia_modeset_enumerate_gpus(nv_gpu_info_t *gpu_info)
+NvU32 nvidia_modeset_enumerate_gpus(nv_gpu_info_t *gpu_info)
 {
     nv_linux_state_t *nvl;
     unsigned int count;
@@ -111,21 +114,33 @@ static NvU32 nvidia_modeset_enumerate_gpus(nv_gpu_info_t *gpu_info)
 
     return count;
 }
+EXPORT_SYMBOL(nvidia_modeset_enumerate_gpus);
+
+int nvidia_modeset_open_gpu(NvU32 gpu_id, nvidia_modeset_stack_ptr sp)
+{
+    return nvidia_dev_get(gpu_id, sp);
+}
+EXPORT_SYMBOL(nvidia_modeset_open_gpu);
+
+void nvidia_modeset_close_gpu(NvU32 gpu_id, nvidia_modeset_stack_ptr sp)
+{
+    nvidia_dev_put(gpu_id, sp);
+}
+EXPORT_SYMBOL(nvidia_modeset_close_gpu);
+
+void nvidia_modeset_op(nvidia_modeset_stack_ptr sp, void *ops_cmd)
+{
+    rm_kernel_rmapi_op(sp, ops_cmd);
+}
+EXPORT_SYMBOL(nvidia_modeset_op);
 
 NV_STATUS nvidia_get_rm_ops(nvidia_modeset_rm_ops_t *rm_ops)
 {
-    const nvidia_modeset_rm_ops_t local_rm_ops = {
+    static const nvidia_modeset_rm_ops_t local_rm_ops = {
         .version_string = NV_VERSION_STRING,
         .system_info    = {
             .allow_write_combining = NV_FALSE,
         },
-        .alloc_stack    = nvidia_modeset_rm_ops_alloc_stack,
-        .free_stack     = nvidia_modeset_rm_ops_free_stack,
-        .enumerate_gpus = nvidia_modeset_enumerate_gpus,
-        .open_gpu       = nvidia_dev_get,
-        .close_gpu      = nvidia_dev_put,
-        .op             = rm_kernel_rmapi_op, /* provided by nv-kernel.o */
-        .set_callbacks  = nvidia_modeset_set_callbacks,
     };
 
     if (strcmp(rm_ops->version_string, NV_VERSION_STRING) != 0)

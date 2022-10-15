@@ -454,13 +454,14 @@ static void nvkms_resume(NvU32 gpuId)
  * Interface with resman.
  *************************************************************************/
 
-static nvidia_modeset_rm_ops_t __rm_ops = { 0 };
+static nvidia_modeset_rm_ops_t __rm_ops __ro_after_init;
+
 static nvidia_modeset_callbacks_t nvkms_rm_callbacks = {
     .suspend = nvkms_suspend,
     .resume  = nvkms_resume
 };
 
-static int nvkms_alloc_rm(void)
+static int __init nvkms_alloc_rm(void)
 {
     NV_STATUS nvstatus;
     int ret;
@@ -476,7 +477,7 @@ static int nvkms_alloc_rm(void)
         return -EINVAL;
     }
 
-    ret = __rm_ops.set_callbacks(&nvkms_rm_callbacks);
+    ret = nvidia_modeset_set_callbacks(&nvkms_rm_callbacks);
     if (ret < 0) {
         printk(KERN_ERR NVKMS_LOG_PREFIX "Failed to register callbacks\n");
         return ret;
@@ -487,20 +488,20 @@ static int nvkms_alloc_rm(void)
 
 static void nvkms_free_rm(void)
 {
-    __rm_ops.set_callbacks(NULL);
+    nvidia_modeset_set_callbacks(NULL);
 }
 
 void nvkms_call_rm(void *ops)
 {
     nvidia_modeset_stack_ptr stack = NULL;
 
-    if (__rm_ops.alloc_stack(&stack) != 0) {
+    if (nvidia_modeset_alloc_stack(&stack) != 0) {
         return;
     }
 
-    __rm_ops.op(stack, ops);
+    nvidia_modeset_op(stack, ops);
 
-    __rm_ops.free_stack(stack);
+    nvidia_modeset_free_stack(stack);
 }
 
 /*************************************************************************
@@ -848,13 +849,13 @@ NvBool nvkms_open_gpu(NvU32 gpuId)
     nvidia_modeset_stack_ptr stack = NULL;
     NvBool ret;
 
-    if (__rm_ops.alloc_stack(&stack) != 0) {
+    if (nvidia_modeset_alloc_stack(&stack) != 0) {
         return NV_FALSE;
     }
 
-    ret = __rm_ops.open_gpu(gpuId, stack) == 0;
+    ret = nvidia_modeset_open_gpu(gpuId, stack) == 0;
 
-    __rm_ops.free_stack(stack);
+    nvidia_modeset_free_stack(stack);
 
     return ret;
 }
@@ -863,18 +864,18 @@ void nvkms_close_gpu(NvU32 gpuId)
 {
     nvidia_modeset_stack_ptr stack = NULL;
 
-    if (__rm_ops.alloc_stack(&stack) != 0) {
+    if (nvidia_modeset_alloc_stack(&stack) != 0) {
         return;
     }
 
-    __rm_ops.close_gpu(gpuId, stack);
+    nvidia_modeset_close_gpu(gpuId, stack);
 
-    __rm_ops.free_stack(stack);
+    nvidia_modeset_free_stack(stack);
 }
 
 NvU32 nvkms_enumerate_gpus(nv_gpu_info_t *gpu_info)
 {
-    return __rm_ops.enumerate_gpus(gpu_info);
+    return nvidia_modeset_enumerate_gpus(gpu_info);
 }
 
 NvBool nvkms_allow_write_combining(void)
@@ -964,7 +965,7 @@ nvkms_register_backlight(NvU32 gpu_id, NvU32 display_id, void *drv_priv,
         return NULL;
     }
 
-    gpu_count = __rm_ops.enumerate_gpus(gpu_info);
+    gpu_count = nvidia_modeset_enumerate_gpus(gpu_info);
     if (gpu_count == 0) {
         goto done;
     }

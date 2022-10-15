@@ -82,6 +82,7 @@ typedef struct {
         /* Availability of write combining support for video memory */
         NvBool allow_write_combining;
     } system_info;
+} nvidia_modeset_rm_ops_t;
 
     /*
      * Allocate and free an nvidia_stack_t to pass into
@@ -92,8 +93,8 @@ typedef struct {
      * used, alloc_stack() will set sp=NULL even when it returns 0
      * (success).  I.e., check the return value, not the sp value.
      */
-    int (*alloc_stack)(nvidia_modeset_stack_ptr *sp);
-    void (*free_stack)(nvidia_modeset_stack_ptr sp);
+int nvidia_modeset_alloc_stack(nvidia_modeset_stack_ptr *sp);
+void nvidia_modeset_free_stack(nvidia_modeset_stack_ptr sp);
 
     /*
      * Enumerate list of gpus probed by nvidia driver.
@@ -101,21 +102,19 @@ typedef struct {
      * gpu_info is an array of NVIDIA_MAX_GPUS elements. The number of GPUs
      * in the system is returned.
      */
-    NvU32 (*enumerate_gpus)(nv_gpu_info_t *gpu_info);
+NvU32 nvidia_modeset_enumerate_gpus(nv_gpu_info_t *gpu_info);
 
     /*
      * {open,close}_gpu() raise and lower the reference count of the
      * specified GPU.  This is equivalent to opening and closing a
      * /dev/nvidiaN device file from user-space.
      */
-    int (*open_gpu)(NvU32 gpu_id, nvidia_modeset_stack_ptr sp);
-    void (*close_gpu)(NvU32 gpu_id, nvidia_modeset_stack_ptr sp);
+int nvidia_modeset_open_gpu(NvU32 gpu_id, nvidia_modeset_stack_ptr sp);
+void nvidia_modeset_close_gpu(NvU32 gpu_id, nvidia_modeset_stack_ptr sp);
 
-    void (*op)(nvidia_modeset_stack_ptr sp, void *ops_cmd);
+void nvidia_modeset_op(nvidia_modeset_stack_ptr sp, void *ops_cmd);
 
-    int (*set_callbacks)(const nvidia_modeset_callbacks_t *cb);
-
-} nvidia_modeset_rm_ops_t;
+int nvidia_modeset_set_callbacks(const nvidia_modeset_callbacks_t *cb);
 
 NV_STATUS nvidia_get_rm_ops(nvidia_modeset_rm_ops_t *rm_ops);
 
