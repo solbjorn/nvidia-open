@@ -659,7 +659,7 @@ nv_module_init(nv_stack_t **sp)
         goto cap_drv_exit;
     }
 
-    nv_init_rsync_info(); 
+    nv_init_rsync_info();
     nv_sev_init();
 
     if (!rm_init_rm(*sp))
@@ -2202,7 +2202,7 @@ nvidia_ioctl(
                 goto done;
             }
 
-            api->offline_addresses.numEntries = 
+            api->offline_addresses.numEntries =
                 ARRAY_SIZE(api->offline_addresses.addresses),
 
             rmStatus = rm_get_gpu_numa_info(sp, nv,
@@ -5279,7 +5279,7 @@ static int nv_match_dev_state(const void *data, struct file *filp, unsigned fd)
         filp->private_data == NULL ||
         NV_FILE_INODE(filp) == NULL)
         return 0;
- 
+
     rdev = (NV_FILE_INODE(filp))->i_rdev;
     if (MAJOR(rdev) != NV_MAJOR_DEVICE_NUMBER)
         return 0;
@@ -5467,7 +5467,7 @@ void NV_API_CALL nv_flush_coherent_cpu_cache_range(nv_state_t *nv, NvU64 cpu_vir
 #elif NVCPU_IS_AARCH64
     NvU64 va, cbsize;
     NvU64 end_cpu_virtual = cpu_virtual + size;
-    
+
     nv_printf(NV_DBG_INFO,
             "Flushing CPU virtual range [0x%llx, 0x%llx)\n",
             cpu_virtual, end_cpu_virtual);

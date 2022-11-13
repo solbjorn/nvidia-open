@@ -69,7 +69,7 @@ extern "C" {
 
 // Helper macro's for 32 bit bitmasks
 #define NV_BITMASK32_ELEMENT_SIZE            (sizeof(NvU32) << 3)
-#define NV_BITMASK32_IDX(chId)               (((chId) & ~(0x1F)) >> 5)  
+#define NV_BITMASK32_IDX(chId)               (((chId) & ~(0x1F)) >> 5)
 #define NV_BITMASK32_OFFSET(chId)            ((chId) & (0x1F))
 #define NV_BITMASK32_SET(pChannelMask, chId) \
         (pChannelMask)[NV_BITMASK32_IDX(chId)] |= NVBIT(NV_BITMASK32_OFFSET(chId))
@@ -912,4 +912,3 @@ static NV_FORCEINLINE void *NV_NVUPTR_TO_PTR(NvUPtr address)
 #endif //__cplusplus
 
 #endif // __NV_MISC_H
-

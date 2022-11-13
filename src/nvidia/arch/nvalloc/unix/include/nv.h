@@ -384,7 +384,7 @@ typedef struct nv_state_t
     NvU32 igpu_nonstall_irq;
     NvU32 num_stall_irqs;
     NvU64 dma_mask;
-    
+
     NvBool primary_vga;
 
     NvU32 sim_env;

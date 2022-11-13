@@ -1322,7 +1322,7 @@ nv_dma_maps_swiotlb(struct device *dev)
 
     /*
      * Commit 2017-11-07 d7b417fa08d ("x86/mm: Add DMA support for
-     * SEV memory encryption") forces SWIOTLB to be enabled when AMD SEV 
+     * SEV memory encryption") forces SWIOTLB to be enabled when AMD SEV
      * is active in all cases.
      */
     if (os_sev_enabled)
@@ -1681,7 +1681,7 @@ static inline struct kmem_cache *nv_kmem_cache_create(const char *name, unsigned
 {
     char *name_unique;
     struct kmem_cache *cache;
- 
+
 #if defined(NV_KMEM_CACHE_HAS_KOBJ_REMOVE_WORK) && !defined(NV_SYSFS_SLAB_UNLINK_PRESENT)
     size_t len;
     NvU64 tm_ns = nv_ktime_get_raw_ns();
@@ -1711,7 +1711,7 @@ static inline struct kmem_cache *nv_kmem_cache_create(const char *name, unsigned
     cache = kmem_cache_create(name_unique, size, align, 0, nv_kmem_ctor_dummy);
     if (name_unique != name)
         kfree(name_unique);
- 
+
     return cache;
 }
 

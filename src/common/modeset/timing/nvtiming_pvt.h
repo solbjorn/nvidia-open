@@ -23,7 +23,7 @@
 //
 //  File:       nvtiming_pvt.h
 //
-//  Purpose:    the private functions/structures which are only used inside 
+//  Purpose:    the private functions/structures which are only used inside
 //              the nv timing library.
 //
 //*****************************************************************************

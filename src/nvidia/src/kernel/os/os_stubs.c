@@ -821,4 +821,3 @@ osTegraSocFuseRegRead(NvU32 addr)
     return 0;
 }
 #endif
-

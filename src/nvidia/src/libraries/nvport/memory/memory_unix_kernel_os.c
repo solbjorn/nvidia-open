@@ -62,8 +62,6 @@ _portMemAllocNonPagedUntracked
     return pMem;
 }
 
-
-
 void
 _portMemFreeUntracked
 (

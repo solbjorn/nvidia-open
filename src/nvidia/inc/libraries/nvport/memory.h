@@ -568,7 +568,7 @@ NV_STATUS portMemExTrackingGetTotalStats(const PORT_MEM_ALLOCATOR *pAllocator, P
 /**
  * @brief Returns the statistics of peak allocations made with the given
  * allocator since it was created.
- * 
+ *
  * Peak data reports each field independently. For example, if the peak data
  * reports 100 allocations and 100000 bytes allocated, those two did not
  * necessarily happen *at the same time*. It could also be that the allocator

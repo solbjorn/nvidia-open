@@ -57,19 +57,19 @@ extern "C" {
 
 /* ------------------------ Forward Declarations ---------------------------- */
 
-// 
-// The OS module should NOT depend on RM modules. The only exception is 
+//
+// The OS module should NOT depend on RM modules. The only exception is
 // core/core.h.
-//  
-// DO NOT ADD INCLUDES TO RM MODULE HEADERS FROM THIS FILE.  OS module should be 
-// a leaf module. Dependencies on RM headers in this files results in circular 
+//
+// DO NOT ADD INCLUDES TO RM MODULE HEADERS FROM THIS FILE.  OS module should be
+// a leaf module. Dependencies on RM headers in this files results in circular
 // dependencies as most modules depend on the OS module.
-//  
-// Ideally, all types used by the OS module's interface are from the SDK, 
-// resman/interface or self-contained within the OS module header. For now, 
+//
+// Ideally, all types used by the OS module's interface are from the SDK,
+// resman/interface or self-contained within the OS module header. For now,
 // since the OS module depends on a few RM internal types we forward declare to
-// avoid the need to pull in headers from across RM. 
-//    
+// avoid the need to pull in headers from across RM.
+//
 typedef struct SYS_STATIC_CONFIG SYS_STATIC_CONFIG;
 typedef struct MEMORY_DESCRIPTOR MEMORY_DESCRIPTOR;
 typedef struct IOVAMAPPING *PIOVAMAPPING;
@@ -83,10 +83,10 @@ typedef struct _GUID *LPGUID;
 
 //
 // Forward declare OS_GPU_INFO type
-// 
+//
 // TODO - We shouldn't need a special definition per-OS. OS implementations
 // should use a consistent type
-// 
+//
 typedef struct nv_state_t OS_GPU_INFO;
 
 /* ------------------------ OS Interface ------------------------------------ */
@@ -202,7 +202,7 @@ typedef enum _OS_PEX_RECOVERY_STATUS
 
 // Flags needed by OSAllocPagesNode
 #define OS_ALLOC_PAGES_NODE_NONE                0x0
-#define OS_ALLOC_PAGES_NODE_SKIP_RECLAIM        0x1 
+#define OS_ALLOC_PAGES_NODE_SKIP_RECLAIM        0x1
 
 //
 // Structures for osPackageRegistry and osUnpackageRegistry
@@ -1405,16 +1405,16 @@ extern OSGetSimulationMode  osGetSimulationMode;
 // Notify callback action
 #define NV_OS_WRITE_THEN_AWAKEN 0x00000001
 
-// 
-// Include per-OS definitions 
-//  
-// #ifdef out for nvoctrans, this hides include to system headers which 
+//
+// Include per-OS definitions
+//
+// #ifdef out for nvoctrans, this hides include to system headers which
 // breaks the tool.
-// 
-// TODO - we should delete the per-OS os_custom.h files exposed to 
-// OS-agnostic code. Cross-OS code shouldn't pull in per-OS headers or 
-// per-OS definitions. 
-// 
+//
+// TODO - we should delete the per-OS os_custom.h files exposed to
+// OS-agnostic code. Cross-OS code shouldn't pull in per-OS headers or
+// per-OS definitions.
+//
 #include "os_custom.h"
 
 #define NV_SEMA_RELEASE_SUCCEED         0   // lock released, no waiting thread to notify

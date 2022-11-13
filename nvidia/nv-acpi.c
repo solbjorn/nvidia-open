@@ -1250,7 +1250,7 @@ static acpi_status nv_acpi_find_battery_info(
      * reason.
      * Hence just cheking if battery technology of slot is rechargable or not.
      */
-    
+
     if ((object_package->package.elements[battery_technology_offset].type != ACPI_TYPE_INTEGER) ||
         (object_package->package.elements[battery_technology_offset].integer.value != BATTERY_RECHARGABLE))
     {
