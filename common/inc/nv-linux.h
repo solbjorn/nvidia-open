@@ -38,22 +38,6 @@
 
 #define NV_KERNEL_NAME "Linux"
 
-#ifndef AUTOCONF_INCLUDED
-#if defined(NV_GENERATED_AUTOCONF_H_PRESENT)
-#include <generated/autoconf.h>
-#else
-#include <linux/autoconf.h>
-#endif
-#endif
-
-#if defined(NV_GENERATED_UTSRELEASE_H_PRESENT)
-//  #include <generated/utsrelease.h>
-#endif
-
-#if defined(NV_GENERATED_COMPILE_H_PRESENT)
-//  #include <generated/compile.h>
-#endif
-
 #include <linux/version.h>
 #include <linux/utsname.h>
 

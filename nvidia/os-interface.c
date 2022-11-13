@@ -23,6 +23,8 @@
 
 #define  __NO_VERSION__
 
+#include <generated/utsrelease.h>
+
 #include "os-interface.h"
 #include "nv-linux.h"
 
@@ -30,35 +32,12 @@
 
 extern char *NVreg_TemporaryFilePath;
 
-#define MAX_ERROR_STRING 512
-static char nv_error_string[MAX_ERROR_STRING];
-nv_spinlock_t nv_error_string_lock;
-
 extern nv_linux_state_t nv_ctl_device;
 
 extern nv_kthread_q_t nv_kthread_q;
 
-NvU32 os_page_size  = PAGE_SIZE;
-NvU64 os_page_mask  = NV_PAGE_MASK;
-NvU8  os_page_shift = PAGE_SHIFT;
 NvU32 os_sev_status = 0;
 NvBool os_sev_enabled = 0;
-
-#if defined(CONFIG_DMA_SHARED_BUFFER)
-NvBool os_dma_buf_enabled = NV_TRUE;
-#else
-NvBool os_dma_buf_enabled = NV_FALSE;
-#endif // CONFIG_DMA_SHARED_BUFFER
-
-void NV_API_CALL os_disable_console_access(void)
-{
-    console_lock();
-}
-
-void NV_API_CALL os_enable_console_access(void)
-{
-    console_unlock();
-}
 
 typedef struct semaphore os_mutex_t;
 
@@ -85,25 +64,6 @@ NV_STATUS NV_API_CALL os_alloc_mutex
     NV_INIT_MUTEX(os_mutex);
 
     return NV_OK;
-}
-
-//
-// os_free_mutex - Free resources associated with mutex allocated
-//                via os_alloc_mutex above.
-//
-//  pMutex - Pointer to opaque structure to mutex data type
-//
-void NV_API_CALL os_free_mutex
-(
-    void  *pMutex
-)
-{
-    os_mutex_t *os_mutex = (os_mutex_t *)pMutex;
-
-    if (os_mutex != NULL)
-    {
-        os_free_mem(pMutex);
-    }
 }
 
 //
@@ -178,16 +138,6 @@ void* NV_API_CALL os_alloc_semaphore
     return (void *)os_sema;
 }
 
-void NV_API_CALL os_free_semaphore
-(
-    void *pSema
-)
-{
-    os_semaphore_t *os_sema = (os_semaphore_t *)pSema;
-
-    os_free_mem(os_sema);
-}
-
 NV_STATUS NV_API_CALL os_acquire_semaphore
 (
     void *pSema
@@ -237,202 +187,6 @@ NvBool NV_API_CALL os_semaphore_may_sleep(void)
 {
     return NV_MAY_SLEEP();
 }
-
-NvBool NV_API_CALL os_is_isr(void)
-{
-    return (in_irq());
-}
-
-// return TRUE if the caller is the super-user
-NvBool NV_API_CALL os_is_administrator(void)
-{
-    return NV_IS_SUSER();
-}
-
-NvBool NV_API_CALL os_allow_priority_override(void)
-{
-    return capable(CAP_SYS_NICE);
-}
-
-NvU64 NV_API_CALL os_get_num_phys_pages(void)
-{
-    return (NvU64)NV_NUM_PHYSPAGES;
-}
-
-char* NV_API_CALL os_string_copy(
-    char *dst,
-    const char *src
-)
-{
-    return strcpy(dst, src);
-}
-
-NvU32 NV_API_CALL os_string_length(
-    const char* str
-)
-{
-    return strlen(str);
-}
-
-NvU32 NV_API_CALL os_strtoul(const char *str, char **endp, NvU32 base)
-{
-    return (NvU32)simple_strtoul(str, endp, base);
-}
-
-NvS32 NV_API_CALL os_string_compare(const char *str1, const char *str2)
-{
-    return strcmp(str1, str2);
-}
-
-void *os_mem_copy_custom(
-    void       *dstPtr,
-    const void *srcPtr,
-    NvU32       length
-)
-{
-    void *ret = dstPtr;
-    NvU32 dwords, bytes = length;
-    NvU8 *dst = dstPtr;
-    const NvU8 *src = srcPtr;
-
-    if ((length >= 128) &&
-        (((NvUPtr)dst & 3) == 0) & (((NvUPtr)src & 3) == 0))
-    {
-        dwords = (length / sizeof(NvU32));
-        bytes = (length % sizeof(NvU32));
-
-        while (dwords != 0)
-        {
-            *(NvU32 *)dst = *(const NvU32 *)src;
-            dst += sizeof(NvU32);
-            src += sizeof(NvU32);
-            dwords--;
-        }
-    }
-
-    while (bytes != 0)
-    {
-        *dst = *src;
-        dst++;
-        src++;
-        bytes--;
-    }
-
-    return ret;
-}
-
-void *NV_API_CALL os_mem_copy(
-    void       *dst,
-    const void *src,
-    NvU32       length
-)
-{
-#if defined(NVCPU_AARCH64)
-    /*
-     * TODO: Remove once memset/memcpy restructure is complete
-     *
-     * When performing memcpy for memory mapped as device, memcpy_[to/from]io
-     * must be used. WAR to check the source and destination to determine the
-     * correct memcpy_io to use.
-     *
-     * This WAR is limited to just aarch64 for now because the address range used
-     * to map ioremap and vmalloc is different on ppc64le, and is_vmalloc_addr()
-     * does not correctly handle this. is_ioremap_addr() is needed instead. This
-     * will have to be addressed when reorganizing RM to use the new memset model.
-     */
-    if (is_vmalloc_addr(dst) && !is_vmalloc_addr(src))
-    {
-        memcpy_toio(dst, src, length);
-        return dst;
-    }
-    else if (!is_vmalloc_addr(dst) && is_vmalloc_addr(src))
-    {
-        memcpy_fromio(dst, src, length);
-        return dst;
-    }
-    else if (is_vmalloc_addr(dst) && is_vmalloc_addr(src))
-    {
-        return os_mem_copy_custom(dst, src, length);
-    }
-    else
-#endif
-    {
-#if defined(CONFIG_CC_OPTIMIZE_FOR_SIZE)
-        /*
-         * When the kernel is configured with CC_OPTIMIZE_FOR_SIZE=y, Kbuild uses
-         * -Os universally. With -Os, GCC will aggressively inline builtins, even
-         * if -fno-builtin is specified, including memcpy with a tiny byte-copy
-         * loop on x86 (rep movsb). This is horrible for performance - a strict
-         * dword copy is much faster - so when we detect this case, just provide
-         * our own implementation.
-         */
-        return os_mem_copy_custom(dst, src, length);
-#else
-        /*
-         * Generally speaking, the kernel-provided memcpy will be the fastest,
-         * (optimized much better for the target architecture than the above
-         * loop), so we want to use that whenever we can get to it.
-         */
-        return memcpy(dst, src, length);
-#endif
-    }
-}
-
-NV_STATUS NV_API_CALL os_memcpy_from_user(
-    void       *to,
-    const void *from,
-    NvU32       n
-)
-{
-    return (NV_COPY_FROM_USER(to, from, n) ? NV_ERR_INVALID_ADDRESS : NV_OK);
-}
-
-NV_STATUS NV_API_CALL os_memcpy_to_user(
-    void       *to,
-    const void *from,
-    NvU32       n
-)
-{
-    return (NV_COPY_TO_USER(to, from, n) ? NV_ERR_INVALID_ADDRESS : NV_OK);
-}
-
-void* NV_API_CALL os_mem_set(
-    void  *dst,
-    NvU8   c,
-    NvU32  length
-)
-{
-#if defined(NVCPU_AARCH64)
-    /*
-     * TODO: Remove once memset/memcpy restructure is complete
-     *
-     * WAR to check the destination to determine if the memory is of type Device
-     * or Normal, and use the correct memset.
-     *
-     * This WAR is limited to just aarch64 for now because the address range used
-     * to map ioremap and vmalloc is different on ppc64le, and is_vmalloc_addr()
-     * does not correctly handle this. is_ioremap_addr() is needed instead. This
-     * will have to be addressed when reorganizing RM to use the new memset model.
-     */
-    if (is_vmalloc_addr(dst))
-    {
-        memset_io(dst, (int)c, length);
-        return dst;
-    }
-    else
-#endif
-       return memset(dst, (int)c, length);
-}
-
-NvS32 NV_API_CALL os_mem_cmp(
-    const NvU8 *buf0,
-    const NvU8* buf1,
-    NvU32 length
-)
-{
-    return memcmp(buf0, buf1, length);
-}
-
 
 /*
  * Operating System Memory Functions
@@ -516,6 +270,9 @@ NV_STATUS NV_API_CALL os_alloc_mem(
 void NV_API_CALL os_free_mem(void *address)
 {
     NvU32 size;
+
+	if (!address)
+		return;
 
     NV_MEM_TRACKING_RETRIEVE_SIZE(address, size);
 
@@ -680,145 +437,6 @@ NV_STATUS NV_API_CALL os_get_current_thread(NvU64 *threadId)
 // The current debug display level (default to maximum debug level)
 NvU32 cur_debuglevel = 0xffffffff;
 
-/*
- * The binary core of RM (nv-kernel.o) calls both out_string, and nv_printf.
- */
-inline void NV_API_CALL out_string(const char *str)
-{
-    printk("%s", str);
-}
-
-/*
- * nv_printf() prints to the kernel log for the driver.
- * Returns the number of characters written.
- */
-int NV_API_CALL nv_printf(NvU32 debuglevel, const char *printf_format, ...)
-{
-    va_list arglist;
-    int chars_written = 0;
-
-    if (debuglevel >= ((cur_debuglevel >> 4) & 0x3))
-    {
-        size_t length;
-        char *temp;
-
-        // When printk is called to extend the output of the previous line
-        // (i.e. when the previous line did not end in \n), the printk call
-        // must contain KERN_CONT.  Older kernels still print the line
-        // correctly, but KERN_CONT was technically always required.
-
-        // This means that every call to printk() needs to have a KERN_xxx
-        // prefix.  The only way to get this is to rebuild the format string
-        // into a new buffer, with a KERN_xxx prefix prepended.
-
-        // Unfortunately, we can't guarantee that two calls to nv_printf()
-        // won't be interrupted by a printk from another driver.  So to be
-        // safe, we always append KERN_CONT.  It's still technically wrong,
-        // but it works.
-
-        // The long-term fix is to modify all NV_PRINTF-ish calls so that the
-        // string always contains only one \n (at the end) and NV_PRINTF_EX
-        // is deleted.  But that is unlikely to ever happen.
-
-        length = strlen(printf_format);
-        if (length < 1)
-            return 0;
-
-        temp = kmalloc(length + sizeof(KERN_CONT), GFP_ATOMIC);
-        if (!temp)
-            return 0;
-
-        // KERN_CONT changed in the 3.6 kernel, so we can't assume its
-        // composition or size.
-        memcpy(temp, KERN_CONT, sizeof(KERN_CONT) - 1);
-        memcpy(temp + sizeof(KERN_CONT) - 1, printf_format, length + 1);
-
-        va_start(arglist, printf_format);
-        chars_written = vprintk(temp, arglist);
-        va_end(arglist);
-
-        kfree(temp);
-    }
-
-    return chars_written;
-}
-
-NvS32 NV_API_CALL os_snprintf(char *buf, NvU32 size, const char *fmt, ...)
-{
-    va_list arglist;
-    int chars_written;
-
-    va_start(arglist, fmt);
-    chars_written = vsnprintf(buf, size, fmt, arglist);
-    va_end(arglist);
-
-    return chars_written;
-}
-
-NvS32 NV_API_CALL os_vsnprintf(char *buf, NvU32 size, const char *fmt, va_list arglist)
-{
-    return vsnprintf(buf, size, fmt, arglist);
-}
-
-void NV_API_CALL os_log_error(const char *fmt, va_list ap)
-{
-    unsigned long flags;
-
-    NV_SPIN_LOCK_IRQSAVE(&nv_error_string_lock, flags);
-
-    vsnprintf(nv_error_string, MAX_ERROR_STRING, fmt, ap);
-    nv_error_string[MAX_ERROR_STRING - 1] = 0;
-    printk(KERN_ERR "%s", nv_error_string);
-
-    NV_SPIN_UNLOCK_IRQRESTORE(&nv_error_string_lock, flags);
-}
-
-void NV_API_CALL os_io_write_byte(
-    NvU32 address,
-    NvU8 value
-)
-{
-    outb(value, address);
-}
-
-void NV_API_CALL os_io_write_word(
-    NvU32 address,
-    NvU16 value
-)
-{
-    outw(value, address);
-}
-
-void NV_API_CALL os_io_write_dword(
-    NvU32 address,
-    NvU32 value
-)
-{
-    outl(value, address);
-}
-
-NvU8 NV_API_CALL os_io_read_byte(
-    NvU32 address
-)
-{
-    return inb(address);
-}
-
-NvU16 NV_API_CALL os_io_read_word(
-    NvU32 address
-)
-{
-    return inw(address);
-}
-
-NvU32 NV_API_CALL os_io_read_dword(
-    NvU32 address
-)
-{
-    return inl(address);
-}
-
-
 static NvBool NV_API_CALL xen_support_fully_virtualized_kernel(void)
 {
 #if defined(NV_XEN_SUPPORT_FULLY_VIRTUALIZED_KERNEL)
@@ -937,8 +555,6 @@ void NV_API_CALL os_dbg_init(void)
     NvU32 new_debuglevel;
     nvidia_stack_t *sp = NULL;
 
-    NV_SPIN_LOCK_INIT(&nv_error_string_lock);
-
     if (nv_kmem_cache_alloc_stack(&sp) != 0)
     {
         return;
@@ -960,11 +576,6 @@ void NV_API_CALL os_dbg_set_level(NvU32 new_debuglevel)
     nv_printf(NV_DBG_SETUP, "NVRM: Changing debuglevel from 0x%x to 0x%x\n",
         cur_debuglevel, new_debuglevel);
     cur_debuglevel = new_debuglevel;
-}
-
-NvU64 NV_API_CALL os_get_max_user_va(void)
-{
-	return TASK_SIZE;
 }
 
 NV_STATUS NV_API_CALL os_schedule(void)
@@ -1081,18 +692,6 @@ void NV_API_CALL os_dbg_breakpoint(void)
 #endif // CONFIG_X86_REMOTE_DEBUG || CONFIG_KGDB || CONFIG_XMON
 }
 
-NvU32 NV_API_CALL os_get_cpu_number(void)
-{
-    NvU32 cpu_id = get_cpu();
-    put_cpu();
-    return cpu_id;
-}
-
-NvU32 NV_API_CALL os_get_cpu_count(void)
-{
-    return NV_NUM_CPUS();
-}
-
 NvBool NV_API_CALL os_pat_supported(void)
 {
     return (nv_pat_mode != NV_PAT_MODE_DISABLED);
@@ -1168,11 +767,6 @@ void NV_API_CALL os_get_screen_info(
 #endif
 }
 
-void NV_API_CALL os_dump_stack(void)
-{
-    dump_stack();
-}
-
 typedef struct os_spinlock_s
 {
     nv_spinlock_t      lock;
@@ -1195,11 +789,6 @@ NV_STATUS NV_API_CALL os_alloc_spinlock(void **ppSpinlock)
     NV_SPIN_LOCK_INIT(&os_spinlock->lock);
     os_spinlock->eflags = 0;
     return NV_OK;
-}
-
-void NV_API_CALL os_free_spinlock(void *pSpinlock)
-{
-    os_free_mem(pSpinlock);
 }
 
 NvU64 NV_API_CALL os_acquire_spinlock(void *pSpinlock)
@@ -1304,11 +893,6 @@ NvU32 NV_API_CALL os_get_grid_csp_support(void)
 #else
     return 0;
 #endif
-}
-
-void NV_API_CALL os_bug_check(NvU32 bugCode, const char *bugCodeStr)
-{
-    panic("%s", bugCodeStr);
 }
 
 NV_STATUS NV_API_CALL os_get_euid(NvU32 *pSecToken)
@@ -1527,152 +1111,12 @@ NV_STATUS NV_API_CALL os_get_acpi_rsdp_from_uefi
     return status;
 }
 
-void NV_API_CALL os_add_record_for_crashLog(void *pbuffer, NvU32 size)
-{
-}
-
-void NV_API_CALL os_delete_record_for_crashLog(void *pbuffer)
-{
-}
-
 #if !defined(NV_VGPU_KVM_BUILD)
 NV_STATUS NV_API_CALL os_call_vgpu_vfio(void *pvgpu_vfio_info, NvU32 cmd_type)
 {
     return NV_ERR_NOT_SUPPORTED;
 }
 #endif
-
-NV_STATUS NV_API_CALL os_alloc_pages_node
-(
-    NvS32  nid,
-    NvU32  size,
-    NvU32  flag,
-    NvU64 *pAddress
-)
-{
-    NV_STATUS status = NV_ERR_NOT_SUPPORTED;
-
-#if defined(__GFP_THISNODE) && defined(GFP_HIGHUSER_MOVABLE) && \
-    defined(__GFP_COMP) && defined(__GFP_NORETRY) && defined(__GFP_NOWARN)
-    gfp_t gfp_mask;
-    struct page *alloc_addr;
-    unsigned int order = get_order(size);
-
-    /*
-     * Explanation of flags used:
-     *
-     * 1. __GFP_THISNODE:           This will make sure the allocation happens
-     *                              on the node specified by nid.
-     *
-     * 2. GFP_HIGHUSER_MOVABLE:     This makes allocations from ZONE_MOVABLE.
-     *
-     * 3. __GFP_COMP:               This will make allocations with compound
-     *                              pages, which is needed in order to use
-     *                              vm_insert_page API.
-     *
-     * 4. __GFP_NORETRY:            Used to avoid the Linux kernel OOM killer.
-     *
-     * 5. __GFP_NOWARN:             Used to avoid a WARN_ON in the slowpath if
-     *                              the requested order is too large (just fail
-     *                              instead).
-     *
-     * 6. (Optional) __GFP_RECLAIM: Used to allow/forbid reclaim.
-     *                              This is part of GFP_USER and consequently
-     *                              GFP_HIGHUSER_MOVABLE.
-     *
-     * Some of these flags are relatively more recent, with the last of them
-     * (GFP_HIGHUSER_MOVABLE) having been added with this Linux kernel commit:
-     *
-     * 2007-07-17 769848c03895b63e5662eb7e4ec8c4866f7d0183
-     *
-     * Assume that this feature will only be used on kernels that support all
-     * of the needed GFP flags.
-     */
-
-    gfp_mask = __GFP_THISNODE | GFP_HIGHUSER_MOVABLE | __GFP_COMP |
-               __GFP_NORETRY | __GFP_NOWARN;
-
-#if defined(__GFP_RECLAIM)
-    if (flag & NV_ALLOC_PAGES_NODE_SKIP_RECLAIM)
-    {
-        gfp_mask &= ~(__GFP_RECLAIM);
-    }
-#endif // defined(__GFP_RECLAIM)
-
-    alloc_addr = alloc_pages_node(nid, gfp_mask, order);
-    if (alloc_addr == NULL)
-    {
-        nv_printf(NV_DBG_INFO,
-            "NVRM: alloc_pages_node(node = %d, order = %u) failed\n",
-            nid, order);
-        status = NV_ERR_NO_MEMORY;
-    }
-    else if (page_to_nid(alloc_addr) != nid)
-    {
-        //
-        // We can hit this case when a Linux kernel bug is not patched.
-        // The needed patch is https://patchwork.kernel.org/patch/10427387/
-        //
-        nv_printf(NV_DBG_ERRORS,
-            "NVRM: alloc_pages_node(node = %d, order = %u) wrong node ID.\n",
-            nid, order);
-        __free_pages(alloc_addr, order);
-        status = NV_ERR_NO_MEMORY;
-    }
-    else
-    {
-        *pAddress = (NvU64)page_to_phys(alloc_addr);
-        status = NV_OK;
-    }
-#endif // GFP flags
-
-    return status;
-}
-
-NV_STATUS NV_API_CALL os_get_page
-(
-    NvU64 address
-)
-{
-    get_page(NV_GET_PAGE_STRUCT(address));
-    return NV_OK;
-}
-
-NV_STATUS NV_API_CALL os_put_page
-(
-    NvU64 address
-)
-{
-    put_page(NV_GET_PAGE_STRUCT(address));
-    return NV_OK;
-}
-
-NvU32 NV_API_CALL os_get_page_refcount
-(
-    NvU64 address
-)
-{
-    return NV_PAGE_COUNT(NV_GET_PAGE_STRUCT(address));
-}
-
-NvU32 NV_API_CALL os_count_tail_pages
-(
-    NvU64 address
-)
-{
-    NvU32 order = compound_order(compound_head(NV_GET_PAGE_STRUCT(address)));
-
-    return 1 << order;
-}
-
-void NV_API_CALL os_free_pages_phys
-(
-    NvU64 address,
-    NvU32 size
-)
-{
-    __free_pages(NV_GET_PAGE_STRUCT(address), get_order(size));
-}
 
 NV_STATUS NV_API_CALL os_numa_memblock_size
 (
@@ -1740,14 +1184,6 @@ NV_STATUS NV_API_CALL os_open_temporary_file
 #else
     return NV_ERR_NOT_SUPPORTED;
 #endif
-}
-
-void NV_API_CALL os_close_file
-(
-    void *pFile
-)
-{
-    filp_close(pFile, NULL);
 }
 
 #define NV_MAX_NUM_FILE_IO_RETRIES 10
@@ -1900,15 +1336,6 @@ NvBool NV_API_CALL os_is_nvswitch_present(void)
     };
 
     return !!pci_dev_present(nvswitch_pci_table);
-}
-
-void NV_API_CALL os_get_random_bytes
-(
-    NvU8 *bytes,
-    NvU16 numBytes
-)
-{
-    get_random_bytes(bytes, numBytes);
 }
 
 NV_STATUS NV_API_CALL os_alloc_wait_queue

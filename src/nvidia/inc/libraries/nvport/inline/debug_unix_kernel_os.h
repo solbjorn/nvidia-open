@@ -38,25 +38,51 @@ extern "C" {
 #error "This file can only be compiled on Unix."
 #endif
 
+#include <linux/printk.h>
+
 #include "nv-kernel-interface-api.h"
 void NV_API_CALL os_dbg_breakpoint(void);
-void NV_API_CALL out_string(const char *str);
-int  NV_API_CALL nv_printf(NvU32 debuglevel, const char *format, ...);
+
+#define NV_DBG_INFO       0x0
+#define NV_DBG_SETUP      0x1
+#define NV_DBG_USERERRORS 0x2
+#define NV_DBG_WARNINGS   0x3
+#define NV_DBG_ERRORS     0x4
+
+extern NvU32 cur_debuglevel;
+
+#define out_string(fmt, ...)		pr_info(fmt, ##__VA_ARGS__)
+
+#define nv_printf(lvl, fmt, ...) ({				\
+	int ___ret = 0;						\
+								\
+	if (lvl >= ((cur_debuglevel >> 4) & 0x3)) {		\
+		switch (lvl) {					\
+		case NV_DBG_INFO:				\
+			___ret = pr_info(fmt, ##__VA_ARGS__);	\
+			break;					\
+		case NV_DBG_SETUP:				\
+		case NV_DBG_USERERRORS:				\
+			___ret = pr_notice(fmt, ##__VA_ARGS__);	\
+			break;					\
+		case NV_DBG_WARNINGS:				\
+			___ret = pr_warn(fmt, ##__VA_ARGS__);	\
+			break;					\
+		case NV_DBG_ERRORS:				\
+		default:					\
+			___ret = pr_err(fmt, ##__VA_ARGS__);	\
+			break;					\
+		}						\
+	}							\
+								\
+	___ret;							\
+})
 
 // No init/shutdown needed
 #define portDbgInitialize()
 #define portDbgShutdown()
 
-
-PORT_DEBUG_INLINE void
-portDbgPrintString
-(
-    const char *str,
-    NvLength length
-)
-{
-    out_string(str);
-}
+#define portDbgPrintString(fmt, l, ...)	pr_info(fmt, ##__VA_ARGS__)
 
 #define portDbgPrintf(fmt, ...) nv_printf(0xFFFFFFFF, fmt, ##__VA_ARGS__)
 #undef portDbgPrintf_SUPPORTED

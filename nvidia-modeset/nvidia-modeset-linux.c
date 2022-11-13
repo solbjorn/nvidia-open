@@ -52,10 +52,6 @@
 #include "nv-time.h"
 #include "nv-lock.h"
 
-#if !defined(CONFIG_RETPOLINE)
-#include "nv-retpoline.h"
-#endif
-
 #include <linux/backlight.h>
 
 #define NVKMS_LOG_PREFIX "nvidia-modeset: "
@@ -65,18 +61,6 @@ const char * const pNV_KMS_ID = NV_KMS_ID + 11;
 
 static bool output_rounding_fix = true;
 module_param_named(output_rounding_fix, output_rounding_fix, bool, 0400);
-
-/* These parameters are used for fault injection tests.  Normally the defaults
- * should be used. */
-MODULE_PARM_DESC(fail_malloc, "Fail the Nth call to nvkms_alloc");
-static int fail_malloc_num = -1;
-module_param_named(fail_malloc, fail_malloc_num, int, 0400);
-
-MODULE_PARM_DESC(malloc_verbose, "Report information about malloc calls on module unload");
-static bool malloc_verbose = false;
-module_param_named(malloc_verbose, malloc_verbose, bool, 0400);
-
-static atomic_t nvkms_alloc_called_count;
 
 NvBool nvkms_output_rounding_fix(void)
 {
@@ -207,108 +191,24 @@ static inline void nvkms_write_unlock_pm_lock(void)
  * are called while nvkms_lock is held.
  *************************************************************************/
 
-/* Don't use kmalloc for allocations larger than one page */
-#define KMALLOC_LIMIT PAGE_SIZE
-
-void* nvkms_alloc(size_t size, NvBool zero)
-{
-    void *p;
-
-    if (malloc_verbose || fail_malloc_num >= 0) {
-        int this_alloc = atomic_inc_return(&nvkms_alloc_called_count) - 1;
-        if (fail_malloc_num >= 0 && fail_malloc_num == this_alloc) {
-            printk(KERN_WARNING NVKMS_LOG_PREFIX "Failing alloc %d\n",
-                   fail_malloc_num);
-            return NULL;
-        }
-    }
-
-    if (size <= KMALLOC_LIMIT) {
-        p = kmalloc(size, GFP_KERNEL);
-    } else {
-        p = vmalloc(size);
-    }
-
-    if (zero && (p != NULL)) {
-        memset(p, 0, size);
-    }
-
-    return p;
-}
-
-void nvkms_free(void *ptr, size_t size)
-{
-    if (size <= KMALLOC_LIMIT) {
-        kfree(ptr);
-    } else {
-        vfree(ptr);
-    }
-}
-
-void* nvkms_memset(void *ptr, NvU8 c, size_t size)
+void* __nvkms_memset(void *ptr, NvU8 c, size_t size)
 {
     return memset(ptr, c, size);
 }
 
-void* nvkms_memcpy(void *dest, const void *src, size_t n)
+void* __nvkms_memcpy(void *dest, const void *src, size_t n)
 {
     return memcpy(dest, src, n);
 }
 
-void* nvkms_memmove(void *dest, const void *src, size_t n)
-{
-    return memmove(dest, src, n);
-}
-
-int nvkms_memcmp(const void *s1, const void *s2, size_t n)
-{
-    return memcmp(s1, s2, n);
-}
-
-size_t nvkms_strlen(const char *s)
-{
-    return strlen(s);
-}
-
-int nvkms_strcmp(const char *s1, const char *s2)
-{
-    return strcmp(s1, s2);
-}
-
-char* nvkms_strncpy(char *dest, const char *src, size_t n)
+char* __nvkms_strncpy(char *dest, const char *src, size_t n)
 {
     return strncpy(dest, src, n);
 }
 
-void nvkms_usleep(NvU64 usec)
+void __nvkms_usleep(NvU64 usec)
 {
-    if (usec < 1000) {
-        /*
-         * If the period to wait is less than one millisecond, sleep
-         * using udelay(); note this is a busy wait.
-         */
-        udelay(usec);
-    } else {
-        /*
-         * Otherwise, sleep with millisecond precision.  Clamp the
-         * time to ~4 seconds (0xFFF/1000 => 4.09 seconds).
-         *
-         * Note that the do_div() macro divides the first argument in
-         * place.
-         */
-
-        int msec;
-        NvU64 tmp = usec + 500;
-        do_div(tmp, 1000);
-        msec = (int) (tmp & 0xFFF);
-
-        /*
-         * XXX NVKMS TODO: this may need to be msleep_interruptible(),
-         * though the callers would need to be made to handle
-         * returning early.
-         */
-        msleep(msec);
-    }
+	fsleep(usec);
 }
 
 NvU64 nvkms_get_usec(void)
@@ -320,59 +220,6 @@ NvU64 nvkms_get_usec(void)
 
     ns = timespec64_to_ns(&ts);
     return ns / 1000;
-}
-
-int nvkms_copyin(void *kptr, NvU64 uaddr, size_t n)
-{
-    if (!nvKmsNvU64AddressIsSafe(uaddr)) {
-        return -EINVAL;
-    }
-
-    if (copy_from_user(kptr, nvKmsNvU64ToPointer(uaddr), n) != 0) {
-        return -EFAULT;
-    }
-
-    return 0;
-}
-
-int nvkms_copyout(NvU64 uaddr, const void *kptr, size_t n)
-{
-    if (!nvKmsNvU64AddressIsSafe(uaddr)) {
-        return -EINVAL;
-    }
-
-    if (copy_to_user(nvKmsNvU64ToPointer(uaddr), kptr, n) != 0) {
-        return -EFAULT;
-    }
-
-    return 0;
-}
-
-void nvkms_yield(void)
-{
-    schedule();
-}
-
-void nvkms_dump_stack(void)
-{
-    dump_stack();
-}
-
-int nvkms_snprintf(char *str, size_t size, const char *format, ...)
-{
-    int ret;
-    va_list ap;
-
-    va_start(ap, format);
-    ret = vsnprintf(str, size, format, ap);
-    va_end(ap);
-
-    return ret;
-}
-
-int nvkms_vsnprintf(char *str, size_t size, const char *format, va_list ap)
-{
-    return vsnprintf(str, size, format, ap);
 }
 
 void nvkms_log(const int level, const char *gpuPrefix, const char *msg)
@@ -1232,11 +1079,6 @@ nvkms_sema_handle_t* nvkms_sema_alloc(void)
     return sema;
 }
 
-void nvkms_sema_free(nvkms_sema_handle_t *sema)
-{
-    nvkms_free(sema, sizeof(*sema));
-}
-
 void nvkms_sema_down(nvkms_sema_handle_t *sema)
 {
     down(&sema->os_sema);
@@ -1546,8 +1388,6 @@ static int __init nvkms_init(void)
 {
     int ret;
 
-    atomic_set(&nvkms_alloc_called_count, 0);
-
     ret = nvkms_alloc_rm();
 
     if (ret != 0) {
@@ -1659,11 +1499,6 @@ restart:
 
     nvidia_unregister_module(&nvidia_modeset_module);
     nvkms_free_rm();
-
-    if (malloc_verbose) {
-        printk(KERN_INFO NVKMS_LOG_PREFIX "Total allocations: %d\n",
-               atomic_read(&nvkms_alloc_called_count));
-    }
 }
 
 module_init(nvkms_init);

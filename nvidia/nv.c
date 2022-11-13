@@ -48,10 +48,6 @@
 #include "nv-pat.h"
 #include "nv-dmabuf.h"
 
-#if !defined(CONFIG_RETPOLINE)
-#include "nv-retpoline.h"
-#endif
-
 #include <linux/firmware.h>
 
 #include <sound/core.h>             /* HDA struct snd_card */
@@ -1126,12 +1122,6 @@ static int validate_numa_start_state(nv_linux_state_t *nvl)
     }
 
     return rc;
-}
-
-NV_STATUS NV_API_CALL nv_get_num_dpaux_instances(nv_state_t *nv, NvU32 *num_instances)
-{
-    *num_instances = nv->num_dpaux_instance;
-    return NV_OK;
 }
 
 void NV_API_CALL

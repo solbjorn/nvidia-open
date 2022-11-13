@@ -38,8 +38,6 @@
 // MK TODO: we should have unified memset/memcpy interface at some point
 #if PORT_MODULE_memory
 #include "nvport/nvport.h"
-#define memcpy(d,s,l)  portMemCopy(d,l,s,l)
-#define memset         portMemSet
 #else  // PORT_MODULE_memory
 #include <memory.h>
 #endif // PORT_MODULE_memory

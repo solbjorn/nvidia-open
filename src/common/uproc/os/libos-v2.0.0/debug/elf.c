@@ -24,8 +24,6 @@
 #ifdef NVRM
 
 #    include <nvport/nvport.h>
-#    define memcpy(d, s, l)    portMemCopy(d, l, s, l)
-#    define strcmp(str1, str2) portStringCompare(str1, str2, 0x1000)
 
 #else // NVRM
 

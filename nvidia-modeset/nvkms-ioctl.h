@@ -47,27 +47,4 @@ struct NvKmsIoctlParams {
 #define NVKMS_IOCTL_IOWR \
     _IOWR(NVKMS_IOCTL_MAGIC, NVKMS_IOCTL_CMD, struct NvKmsIoctlParams)
 
-/*!
- * User-space pointers are always passed to NVKMS in an NvU64.
- * This user-space address is eventually passed into the platform's
- * copyin/copyout functions, in a void* argument.
- *
- * This utility function converts from an NvU64 to a pointer.
- */
-
-static inline void *nvKmsNvU64ToPointer(NvU64 value)
-{
-    return (void *)(NvUPtr)value;
-}
-
-/*!
- * Before casting the NvU64 to a void*, check that casting to a pointer
- * size within the kernel does not lose any precision in the current
- * environment.
- */
-static inline NvBool nvKmsNvU64AddressIsSafe(NvU64 address)
-{
-    return address == (NvU64)(NvUPtr)address;
-}
-
 #endif /* NVKMS_IOCTL_H */

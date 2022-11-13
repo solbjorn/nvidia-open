@@ -33,6 +33,8 @@
 #ifndef _NVPORT_MEMORY_H_
 #define _NVPORT_MEMORY_H_
 
+#include <linux/uaccess.h>
+
 /**
  * Platform-specific inline implementations
  */
@@ -194,7 +196,11 @@ void portMemFree(void *pData);
  * @return pDestination on success, NULL if the operation failed.
  *
  */
-void *portMemCopy(void *pDestination, NvLength destSize, const void *pSource, NvLength srcSize);
+static __always_inline void *portMemCopy(void *pDestination, NvLength destSize,
+					 const void *pSource, NvLength srcSize)
+{
+	return memcpy(pDestination, pSource, srcSize);
+}
 
 /**
  * @brief Moves data from one address to another.
@@ -214,7 +220,11 @@ void *portMemCopy(void *pDestination, NvLength destSize, const void *pSource, Nv
  * @return pDestination on success, NULL if the operation failed.
  *
  */
-void *portMemMove(void *pDestination, NvLength destSize, const void *pSource, NvLength srcSize);
+static __always_inline void *portMemMove(void *pDestination, NvLength destSize,
+					 const void *pSource, NvLength srcSize)
+{
+	return memmove(pDestination, pSource, srcSize);
+}
 
 /**
  * @brief Sets given memory to specified value.
@@ -226,7 +236,11 @@ void *portMemMove(void *pDestination, NvLength destSize, const void *pSource, Nv
  *
  * @return pData
  */
-void *portMemSet(void *pData, NvU8 value, NvLength lengthBytes);
+static __always_inline void *portMemSet(void *pData, NvU8 value,
+					NvLength lengthBytes)
+{
+	return memset(pData, value, lengthBytes);
+}
 
 /**
  * @brief Sets given memory to specified pattern
@@ -269,8 +283,11 @@ void *portMemSetPattern(void *pData, NvLength lengthBytes, const NvU8 *pPattern,
  * The function will return 0 and breakpoint/assert if there is overlap. <br>
  * The function will return 0 and breakpoint/assert if the length is 0.
  */
-NvS32 portMemCmp(const void *pData0, const void *pData1, NvLength lengthBytes);
-
+static __always_inline NvS32 portMemCmp(const void *pData0, const void *pData1,
+					NvLength lengthBytes)
+{
+	return memcmp(pData0, pData1, lengthBytes);
+}
 
 typedef struct PORT_MEM_ALLOCATOR PORT_MEM_ALLOCATOR;
 
@@ -523,13 +540,13 @@ void portMemPrintTrackingInfo(const PORT_MEM_ALLOCATOR *pAllocator);
 /**
  * @brief Returns true if it is safe to allocate paged memory.
  */
-NvBool portMemExSafeForPagedAlloc(void);
+#define portMemExSafeForPagedAlloc()	NV_TRUE
 #define portMemExSafeForPagedAlloc_SUPPORTED PORT_IS_KERNEL_BUILD
 
 /**
  * @brief Returns true if it is safe to allocate non-paged memory.
  */
-NvBool portMemExSafeForNonPagedAlloc(void);
+#define portMemExSafeForNonPagedAlloc()	NV_TRUE
 #define portMemExSafeForNonPagedAlloc_SUPPORTED PORT_IS_KERNEL_BUILD
 
 /**
@@ -620,9 +637,13 @@ NV_STATUS portMemExTrackingGetNext(const PORT_MEM_ALLOCATOR *pAllocator, PORT_ME
  *   - NV_ERR_INVALID_POINTER if pUser is invalid or pKernel is NULL
  *   - NV_ERR_INVALID_ARGUMENT if lengthBytes is 0
  */
-NV_STATUS portMemExCopyFromUser(const NvP64 pUser, void *pKernel, NvLength lengthBytes);
+static __always_inline NV_STATUS __must_check
+portMemExCopyFromUser(const NvP64 __user pUser, void *pKernel,
+		      NvLength lengthBytes)
+{
+	return copy_from_user(pKernel, NvP64_VALUE(pUser), lengthBytes);
+}
 #define portMemExCopyFromUser_SUPPORTED PORT_IS_KERNEL_BUILD
-
 
 /**
  * @brief Copies from kernel memory to user memory.
@@ -633,14 +654,13 @@ NV_STATUS portMemExCopyFromUser(const NvP64 pUser, void *pKernel, NvLength lengt
  * See @ref portMemExCopyFromUser for more details.
  *
  */
-NV_STATUS portMemExCopyToUser(const void *pKernel, NvP64 pUser, NvLength lengthBytes);
+static __always_inline NV_STATUS __must_check
+portMemExCopyToUser(const void *pKernel, NvP64 __user pUser,
+		    NvLength lengthBytes)
+{
+	return copy_to_user(NvP64_VALUE(pUser), pKernel, lengthBytes);
+}
 #define portMemExCopyToUser_SUPPORTED PORT_IS_KERNEL_BUILD
-
-/**
- * @brief Returns the size (in bytes) of a single memory page.
- */
-NvLength portMemExGetPageSize(void);
-#define portMemExGetPageSize_SUPPORTED PORT_IS_KERNEL_BUILD
 
 /**
  * @brief Opaque container holding an allocation of physical system memory.

@@ -32,10 +32,16 @@
 #ifndef _NVPORT_MEMORY_INTERNAL_H_
 #define _NVPORT_MEMORY_INTERNAL_H_
 
-/** @brief Untracked paged memory allocation, platform specific */
-void *_portMemAllocPagedUntracked(NvLength lengthBytes);
 /** @brief Untracked nonpaged memory allocation, platform specific */
 void *_portMemAllocNonPagedUntracked(NvLength lengthBytes) __alloc_size(1);
+
+/** @brief Untracked paged memory allocation, platform specific */
+static __always_inline void __alloc_size(1) *
+_portMemAllocPagedUntracked(NvLength lengthBytes)
+{
+	return _portMemAllocNonPagedUntracked(lengthBytes);
+}
+
 /** @brief Untracked memory free, platform specific */
 void _portMemFreeUntracked(void *pMemory);
 /** @brief Wrapper around pAlloc->_portAlloc() that tracks the allocation */

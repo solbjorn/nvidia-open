@@ -29,6 +29,13 @@
 #if !defined(_NVIDIA_MODESET_OS_INTERFACE_H_)
 #define _NVIDIA_MODESET_OS_INTERFACE_H_
 
+#ifndef __cplusplus
+#include <linux/bitfield.h>
+#include <linux/delay.h>
+#include <linux/slab.h>
+#include <linux/uaccess.h>
+#endif
+
 #if defined(NV_KERNEL_INTERFACE_LAYER) && defined(NV_LINUX)
 #include <linux/stddef.h>  /* size_t */
 #else
@@ -113,49 +120,150 @@ typedef struct {
 NvBool nvkms_output_rounding_fix(void);
 
 void   nvkms_call_rm    (void *ops);
-void*  nvkms_alloc      (size_t size,
-                         NvBool zero);
-void   nvkms_free       (void *ptr,
-                         size_t size);
-void*  nvkms_memset     (void *ptr,
+
+#ifndef __cplusplus
+static __always_inline void __alloc_size(1) *
+nvkms_alloc(size_t size, NvBool zero)
+{
+	return zero ? kvzalloc(size, GFP_KERNEL) : kvmalloc(size, GFP_KERNEL);
+}
+
+static __always_inline void nvkms_free(const void *ptr, size_t size)
+{
+	kvfree(ptr);
+}
+
+static __always_inline void *nvkms_memset(void *ptr, NvU8 c, size_t size)
+{
+	return memset(ptr, c, size);
+}
+
+static __always_inline void *
+nvkms_memcpy(void *dest, const void *src, size_t n)
+{
+	return memcpy(dest, src, n);
+}
+
+static __always_inline void *
+nvkms_memmove(void *dest, const void *src, size_t n)
+{
+	return memmove(dest, src, n);
+}
+
+static __always_inline int
+nvkms_memcmp(const void *s1, const void *s2, size_t n)
+{
+	return memcmp(s1, s2, n);
+}
+
+static __always_inline size_t nvkms_strlen(const char *s)
+{
+	return strlen(s);
+}
+
+static __always_inline int nvkms_strcmp(const char *s1, const char *s2)
+{
+	return strcmp(s1, s2);
+}
+
+static __always_inline char *
+nvkms_strncpy(char *dest, const char *src, size_t n)
+{
+	return strncpy(dest, src, n);
+}
+
+static __always_inline void nvkms_usleep(NvU64 usec)
+{
+	fsleep(usec);
+}
+#endif
+
+void*  __nvkms_memset     (void *ptr,
                          NvU8 c,
                          size_t size);
-void*  nvkms_memcpy     (void *dest,
+void*  __nvkms_memcpy     (void *dest,
                          const void *src,
                          size_t n);
-void*  nvkms_memmove    (void *dest,
-                         const void *src,
-                         size_t n);
-int    nvkms_memcmp     (const void *s1,
-                         const void *s2,
-                         size_t n);
-size_t nvkms_strlen     (const char *s);
-int    nvkms_strcmp     (const char *s1,
-                         const char *s2);
-char*  nvkms_strncpy    (char *dest,
+char*  __nvkms_strncpy    (char *dest,
                          const char *src,
                          size_t n);
-void   nvkms_usleep     (NvU64 usec);
+void __nvkms_usleep(NvU64 usec);
+
+#ifdef __cplusplus
+#define nvkms_memset	__nvkms_memset
+#define nvkms_memcpy	__nvkms_memcpy
+#define nvkms_strncpy	__nvkms_strncpy
+#define nvkms_usleep	__nvkms_usleep
+#endif
+
 NvU64  nvkms_get_usec   (void);
-int    nvkms_copyin     (void *kptr,
-                         NvU64 uaddr,
-                         size_t n);
-int    nvkms_copyout    (NvU64 uaddr,
-                         const void *kptr,
-                         size_t n);
-void   nvkms_yield      (void);
-void   nvkms_dump_stack (void);
+
+/*!
+ * User-space pointers are always passed to NVKMS in an NvU64.
+ * This user-space address is eventually passed into the platform's
+ * copyin/copyout functions, in a void* argument.
+ *
+ * This utility function converts from an NvU64 to a pointer.
+ */
+
+#ifndef __cplusplus
+static __always_inline void *nvKmsNvU64ToPointer(NvU64 __user value)
+{
+	return (void *)(NvUPtr)value;
+}
+
+/*!
+ * Before casting the NvU64 to a void*, check that casting to a pointer
+ * size within the kernel does not lose any precision in the current
+ * environment.
+ */
+static __always_inline NvBool nvKmsNvU64AddressIsSafe(NvU64 __user address)
+{
+	return address == (NvU64)(NvUPtr)address;
+}
+
+static __always_inline int __must_check
+nvkms_copyin(void *kptr, NvU64 __user uaddr, size_t n)
+{
+	if (!nvKmsNvU64AddressIsSafe(uaddr))
+		return -EINVAL;
+
+	return copy_from_user(kptr, nvKmsNvU64ToPointer(uaddr), n);
+}
+
+static __always_inline int __must_check
+nvkms_copyout(NvU64 __user uaddr, const void *kptr, size_t n)
+{
+	if (!nvKmsNvU64AddressIsSafe(uaddr))
+		return -EINVAL;
+
+	return copy_to_user(nvKmsNvU64ToPointer(uaddr), kptr, n);
+}
+
+static __always_inline void nvkms_yield(void)
+{
+	schedule();
+}
+
+static __always_inline void nvkms_dump_stack(void)
+{
+	dump_stack();
+}
+#endif
+
 NvBool nvkms_syncpt_op  (enum NvKmsSyncPtOp op,
                          NvKmsSyncPtOpParams *params);
-int    nvkms_snprintf   (char *str,
-                         size_t size,
-                         const char *format, ...)
-    __attribute__((format (printf, 3, 4)));
 
-int    nvkms_vsnprintf  (char *str,
-                         size_t size,
-                         const char *format,
-                         va_list ap);
+#define nvkms_snprintf(str, size, fmt, ...)		\
+	snprintf(str, size, fmt, ##__VA_ARGS__)
+
+#ifndef __cplusplus
+static __always_inline int __printf(3, 0)
+nvkms_vsnprintf(char *str, size_t size, const char *format, va_list ap)
+{
+	return vsnprintf(str, size, format, ap);
+}
+#endif
 
 #define NVKMS_LOG_LEVEL_INFO  0
 #define NVKMS_LOG_LEVEL_WARN  1
@@ -345,7 +453,14 @@ typedef struct nvkms_sema_t nvkms_sema_handle_t;
 
 nvkms_sema_handle_t*
      nvkms_sema_alloc    (void);
-void nvkms_sema_free     (nvkms_sema_handle_t *sema);
+
+#ifndef __cplusplus
+static __always_inline void nvkms_sema_free(const nvkms_sema_handle_t *sema)
+{
+	nvkms_free(sema, 0);
+}
+#endif
+
 void nvkms_sema_down     (nvkms_sema_handle_t *sema);
 void nvkms_sema_up       (nvkms_sema_handle_t *sema);
 

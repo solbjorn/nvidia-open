@@ -19,12 +19,6 @@ NV_KERNEL_SOURCES = $(abspath $(srctree))
 NV_KERNEL_OUTPUT = $(abspath $(objtree))
 NV_KERNEL_MODULES = nvidia nvidia-drm nvidia-modeset nvidia-peermem nvidia-uvm
 
-ifdef CONFIG_RETPOLINE
-NV_SPECTRE_V2 = 1
-else
-NV_SPECTRE_V2 = 0
-endif
-
 ifdef CONFIG_DRM_NVIDIA_DEBUG
 NV_BUILD_TYPE = debug
 endif
@@ -89,7 +83,6 @@ COMMON_CFLAGS += -Wuninitialized
 
 COMMON_CFLAGS += -DNV_UVM_ENABLE
 COMMON_CFLAGS += $(call cc-option,-Werror=undef,)
-COMMON_CFLAGS += -DNV_SPECTRE_V2=$(NV_SPECTRE_V2)
 COMMON_CFLAGS += -DNV_KERNEL_INTERFACE_LAYER
 
 #

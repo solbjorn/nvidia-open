@@ -470,20 +470,6 @@ void osReleaseCpuAddressSpaceUpperBound(void *pSectionHandle)
 {
 }
 
-void osIoWriteDword(
-    NvU32         port,
-    NvU32         data
-)
-{
-}
-
-NvU32 osIoReadDword(
-    NvU32         port
-)
-{
-    return 0;
-}
-
 NvBool osIsVga(
     OS_GPU_INFO  *pArg1,
     NvBool        bIsGpuPrimaryDevice

@@ -1457,7 +1457,6 @@ NV_STATUS rpcRmfsTest_v15_00
 }
 
 #if NV_PRINTF_STRINGS_ALLOWED
-void osAssertFailed(void);
 #define RPC_LOCK_DEBUG_DUMP_STACK()                                     \
     do {                                                                \
         static NvU64 previousRetAddr;                                   \

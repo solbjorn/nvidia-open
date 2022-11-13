@@ -87,20 +87,6 @@ NvBool osIsRaisedIRQL(void)
     return (!os_semaphore_may_sleep());
 }
 
-NvBool osIsISR(void)
-{
-    return os_is_isr();
-}
-
-NV_STATUS osGetDriverBlock
-(
-    OS_GPU_INFO     *pOsGpuInfo,
-    OS_DRIVER_BLOCK *pBlock
-)
-{
-    return NV_ERR_NOT_SUPPORTED;
-}
-
 NV_STATUS osGetCurrentTick(NvU64 *pTimeInNs)
 {
     *pTimeInNs = os_get_current_tick();
@@ -146,19 +132,6 @@ NvU64 osGetTimestamp(void)
     NvU32 usec = 0;
     osGetCurrentTime(&sec, &usec);
     return (NvU64)sec * 1000000 + usec;
-}
-
-/*!
- * @brief Get timestamp frequency.
- *
- * Timestamps are OS dependent.  This call returns the frequency
- * required to decode them.
- *
- * @returns   Timestamp frequency.  For example, 1000000 for MHz.
- */
-NvU64 osGetTimestampFreq(void)
-{
-    return 1000000;
 }
 
 NV_STATUS osDelay(NvU32 milliseconds)
@@ -598,46 +571,6 @@ void osUnmapSystemMemory
     NV_ASSERT(status == NV_OK);
 }
 
-void osIoWriteByte(
-    NvU32   Address,
-    NvU8    Value
-)
-{
-    os_io_write_byte(Address, Value);
-}
-
-NvU16 osIoReadWord(
-    NvU32   Address
-)
-{
-    return os_io_read_word(Address);
-}
-
-void osIoWriteWord(
-    NvU32 Address,
-    NvU16 Value
-)
-{
-    os_io_write_word(Address, Value);
-}
-
-NvU8 osIoReadByte(
-    NvU32   Address
-)
-{
-    return os_io_read_byte(Address);
-}
-
-NvBool osIsAdministrator(void)
-{
-    return os_is_administrator();
-}
-
-NvBool osAllowPriorityOverride(void)
-{
-    return os_allow_priority_override();
-}
-
 NvU32 osGetCurrentProcess(void)
 {
     return os_get_current_process();
@@ -688,39 +621,13 @@ NV_STATUS osAttachToProcess(void** ppProcessInfo, NvU32 ProcessId)
     return NV_OK;
 }
 
-void osDetachFromProcess(void* pProcessInfo)
-{
-    // stub
-    return;
-}
-
 NvBool osDbgBreakpointEnabled(void)
 {
     return NV_TRUE;
 }
 
-NV_STATUS osAcquireRmSema(void *pSema)
-{
-    return NV_OK;
-}
-
-NV_STATUS osCondAcquireRmSema(void *pSema)
-{
-    return NV_OK;
-}
-
-NvU32 osReleaseRmSema(void *pSema, OBJGPU *pDpcGpu)
-{
-    return NV_SEMA_RELEASE_SUCCEED;
-}
-
 void osSpinLoop(void)
 {
-}
-
-NvU64 osGetMaxUserVa(void)
-{
-    return os_get_max_user_va();
 }
 
 NV_STATUS osSchedule(void)
@@ -1549,15 +1456,6 @@ void osErrorLog(OBJGPU *pGpu, NvU32 num, const char* pFormat, ...)
     va_end(arglist);
 }
 
-NvU32
-osPollHotkeyState
-(
-    OBJGPU  *pGpu
-)
-{
-    return 0;
-}
-
 void osDevWriteReg008(
      OBJGPU            *pGpu,
      DEVICE_MAPPING    *pMapping,
@@ -1765,16 +1663,6 @@ NV_STATUS osPackageRegistry(
 {
     nv_state_t *nv = NV_GET_NV_STATE(pGpu);
     return RmPackageRegistry(nv, pRegTable, pSize);
-}
-
-NvU32 osGetCpuCount(void)
-{
-    return os_get_cpu_count();   // Total number of logical CPUs.
-}
-
-NvU32 osGetCurrentProcessorNumber(void)
-{
-    return os_get_cpu_number();
 }
 
 void osGetTimeoutParams(OBJGPU *pGpu, NvU32 *pTimeoutUs, NvU32 *pScale, NvU32 *pFlags)
@@ -3304,15 +3192,7 @@ void osBugCheck(NvU32 bugCode)
         bugCode = OS_BUG_CHECK_BUGCODE_UNKNOWN;
     }
 
-    os_bug_check(bugCode, ppOsBugCheckBugcodeStr[bugCode]);
-}
-
-/*!
- * @brief Perform an action at assertion failure.
- */
-void osAssertFailed(void)
-{
-    os_dump_stack();
+    os_bug_check(bugCode, "%s", ppOsBugCheckBugcodeStr[bugCode]);
 }
 
 /*!
@@ -3943,53 +3823,6 @@ osAllocPagesNode
     return status;
 }
 
-NV_STATUS
-osAllocAcquirePage
-(
-    NvU64      pAddress
-)
-{
-    os_get_page(pAddress);
-    return NV_OK;
-}
-
-NV_STATUS
-osAllocReleasePage
-(
-    NvU64       pAddress
-)
-{
-    os_put_page(pAddress);
-    return NV_OK;
-}
-
-/*
- *  @brief Function to return refcount on a page
- *  @param[in] address  The physical address of the page
- */
-NvU32
-osGetPageRefcount
-(
-    NvU64       pAddress
-)
-{
-    return os_get_page_refcount(pAddress);
-}
-
-/*
- *  @brief Function to return the number of tail pages if the address is
- *  referring to a compound page; For non-compound pages, 1 is returned.
- *  @param[in] address  The physical address of the page
- */
-NvU32
-osCountTailPages
-(
-    NvU64       pAddress
-)
-{
-    return os_count_tail_pages(pAddress);
-}
-
 /*
  *  @brief Upon success, gets NPU register address range.
  *
@@ -4038,14 +3871,6 @@ osWaitForIbmnpuRsync
     nv_wait_for_ibmnpu_rsync(pOsGpuInfo);
 }
 
-NvU32
-osGetPageSize(void)
-{
-    return os_page_size;
-}
-
-
-
 /*
  * @brief Opens a new temporary file for reading and writing
  *
@@ -4062,22 +3887,6 @@ osOpenTemporaryFile
 )
 {
     return os_open_temporary_file(ppFile);
-}
-
-/*
- * @brief Closes the specified temporary file
- *
- * @param[in]  pFile      Pointer to file
- *
- * @returns void
- */
-void
-osCloseFile
-(
-    void *pFile
-)
-{
-    os_close_file(pFile);
 }
 
 /*
@@ -4627,25 +4436,6 @@ osRmCapInitDescriptor
 }
 
 /*
- * @brief Generates random bytes which can be used as a universally unique
- *        identifier.
- *
- * @param[out] pBytes        Array of random bytes
- * @param[in]  numBytes      Size of the array
- */
-NV_STATUS
-osGetRandomBytes
-(
-    NvU8 *pBytes,
-    NvU16 numBytes
-)
-{
-    os_get_random_bytes(pBytes, numBytes);
-
-    return NV_OK;
-}
-
-/*
  * @brief Allocate wait queue
  *
  * @param[out] ppWq        Wait queue
@@ -5017,10 +4807,4 @@ osIsGpuAccessible
 )
 {
     return nv_is_gpu_accessible(NV_GET_NV_STATE(pGpu));
-}
-
-NvBool
-osDmabufIsSupported(void)
-{
-    return os_dma_buf_enabled;
 }
