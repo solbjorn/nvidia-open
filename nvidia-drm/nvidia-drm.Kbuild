@@ -44,8 +44,6 @@ $(call ASSIGN_PER_OBJ_CFLAGS, $(NVIDIA_DRM_OBJECTS), $(NVIDIA_DRM_CFLAGS))
 # Register the conftests needed by nvidia-drm.ko
 #
 
-NV_OBJECTS_DEPEND_ON_CONFTEST += $(NVIDIA_DRM_OBJECTS)
-
 NV_CONFTEST_GENERIC_COMPILE_TESTS += drm_available
 NV_CONFTEST_GENERIC_COMPILE_TESTS += drm_atomic_available
 NV_CONFTEST_GENERIC_COMPILE_TESTS += is_export_symbol_gpl_refcount_inc

@@ -65,8 +65,6 @@ endif
 # Register the conftests needed by nvidia-uvm.ko
 #
 
-NV_OBJECTS_DEPEND_ON_CONFTEST += $(NVIDIA_UVM_OBJECTS)
-
 NV_CONFTEST_FUNCTION_COMPILE_TESTS += address_space_init_once
 NV_CONFTEST_FUNCTION_COMPILE_TESTS += vzalloc
 NV_CONFTEST_FUNCTION_COMPILE_TESTS += wait_on_bit_lock_argument_count

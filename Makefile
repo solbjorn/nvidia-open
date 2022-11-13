@@ -75,8 +75,7 @@ endif
 # $(EXTRA_CFLAGS) to ccflags-y for compatibility.
 #
 
-COMMON_CFLAGS += -I$(abspath $(src))/common/inc
-COMMON_CFLAGS += -I$(abspath $(src))
+COMMON_CFLAGS += -I$(src)/common/inc
 COMMON_CFLAGS += -DNVRM -DNV_VERSION_STRING=$(call stringify,520.56.06)
 
 COMMON_CFLAGS += -Wuninitialized
@@ -102,8 +101,6 @@ $(foreach _module, $(NV_KERNEL_MODULES), \
 #
 # - Append to the NV_CONFTEST_*_COMPILE_TESTS variables to indicate
 # which conftests they require.
-# - Append to the NV_OBJECTS_DEPEND_ON_CONFTEST variable any object files
-# that depend on conftest.
 #
 # The conftest machinery below will run the requested tests and
 # generate the appropriate header files.
@@ -115,7 +112,7 @@ NV_CONFTEST_HEADER := $(obj)/conftest/headers.h
 NV_CONFTEST_CMD := /bin/sh $(NV_CONFTEST_SCRIPT) \
  "$(CC)" $(ARCH) $(NV_KERNEL_SOURCES) $(NV_KERNEL_OUTPUT)
 
-____NV_CONFTEST_CFLAGS = $(c_flags) $(COMMON_CFLAGS)
+____NV_CONFTEST_CFLAGS = $(c_flags) $(filter-out -I%, $(COMMON_CFLAGS))
 ___NV_CONFTEST_CFLAGS = $(patsubst -I./%,-I$(abspath $(srctree))/%,$(____NV_CONFTEST_CFLAGS))
 __NV_CONFTEST_CFLAGS = $(patsubst ./%,$(abspath $(srctree))/%,$(___NV_CONFTEST_CFLAGS))
 _NV_CONFTEST_CFLAGS = $(patsubst -Wp$(comma)-MMD$(comma)%,-Wp$(comma)-MMD$(comma)$(abspath $(srctree))/%,$(__NV_CONFTEST_CFLAGS))
@@ -125,15 +122,14 @@ NV_CONFTEST_CFLAGS = $(patsubst -frandomize-layout-seed-file=./%,\
 
 NV_CONFTEST_CFLAGS += -Wno-error=implicit-function-declaration # relies to test args
 
-NV_CONFTEST_COMPILE_TEST_HEADERS := $(obj)/conftest/macros.h
-NV_CONFTEST_COMPILE_TEST_HEADERS += $(obj)/conftest/functions.h
+NV_CONFTEST_COMPILE_TEST_HEADERS := $(obj)/conftest/functions.h
+NV_CONFTEST_COMPILE_TEST_HEADERS += $(obj)/conftest/generic.h
+NV_CONFTEST_COMPILE_TEST_HEADERS += $(obj)/conftest/macros.h
 NV_CONFTEST_COMPILE_TEST_HEADERS += $(obj)/conftest/symbols.h
 NV_CONFTEST_COMPILE_TEST_HEADERS += $(obj)/conftest/types.h
-NV_CONFTEST_COMPILE_TEST_HEADERS += $(obj)/conftest/generic.h
 
 NV_CONFTEST_HEADERS := $(obj)/conftest/headers.h
 NV_CONFTEST_HEADERS += $(NV_CONFTEST_COMPILE_TEST_HEADERS)
-
 
 #
 # Generate a header file for a single conftest compile test. Each compile test
@@ -281,11 +277,32 @@ $(foreach header,$(NV_HEADER_PRESENCE_TESTS),$(eval $(call NV_HEADER_PRESENCE_CH
 $(obj)/conftest/headers.h: $(call NV_HEADER_PRESENCE_PART,$(NV_HEADER_PRESENCE_TESTS))
 	@cat $^ > $@
 
+define NV_CONFTEST_SYNC_CHECK
+$(obj)/conftest/.checked-$(1).h: $(obj)/conftest/$(1).h
+	@echo "  CHK     conftest/$(1).h"
+	@! diff -Naurp $(src)/common/inc/conftest/$(1).h $$< | grep -q . || ( \
+		echo >&2 "  ERROR: $(1).h is out of sync";		      \
+		/bin/false						      \
+	)
+	@touch $$@
+endef
+
+$(eval $(call NV_CONFTEST_SYNC_CHECK,functions))
+$(eval $(call NV_CONFTEST_SYNC_CHECK,generic))
+$(eval $(call NV_CONFTEST_SYNC_CHECK,headers))
+$(eval $(call NV_CONFTEST_SYNC_CHECK,macros))
+$(eval $(call NV_CONFTEST_SYNC_CHECK,symbols))
+$(eval $(call NV_CONFTEST_SYNC_CHECK,types))
+
+always-$(CONFIG_DRM_NVIDIA) += conftest/.checked-functions.h
+always-$(CONFIG_DRM_NVIDIA) += conftest/.checked-generic.h
+always-$(CONFIG_DRM_NVIDIA) += conftest/.checked-headers.h
+always-$(CONFIG_DRM_NVIDIA) += conftest/.checked-macros.h
+always-$(CONFIG_DRM_NVIDIA) += $(if $(wildcard $(objtree)/Module.symvers), \
+				 conftest/.checked-symbols.h)
+always-$(CONFIG_DRM_NVIDIA) += conftest/.checked-types.h
+
 clean-dirs := $(obj)/conftest
-
-
-# For any object files that depend on conftest, declare the dependency here.
-$(addprefix $(obj)/,$(NV_OBJECTS_DEPEND_ON_CONFTEST)): | $(NV_CONFTEST_HEADERS)
 
 # Sanity checks of the build environment and target system/kernel
 
@@ -296,7 +313,8 @@ BUILD_SANITY_CHECKS = \
  xen_sanity_check \
  preempt_rt_sanity_check \
  vgpu_kvm_sanity_check \
- module_symvers_sanity_check
+ $(if $(wildcard $(objtree)/Module.symvers), \
+   module_symvers_sanity_check)
 
 .PHONY: $(BUILD_SANITY_CHECKS)
 

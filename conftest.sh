@@ -4425,7 +4425,6 @@ compile_test() {
             #
             CODE="
             #include <drm/drm_gem.h>
-            #include <conftest/headers.h>
             int conftest_drm_gem_object_vmap_has_map_arg(
             #ifdef NV_LINUX_IOSYS_MAP_H_PRESENT
                     struct drm_gem_object *obj, struct iosys_map *map) {
