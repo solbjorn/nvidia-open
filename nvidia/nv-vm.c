@@ -505,7 +505,7 @@ NV_STATUS nv_alloc_system_pages(
     dma_addr_t bus_addr;
 
     nv_printf(NV_DBG_MEMINFO,
-            "NVRM: VM: %u: %u pages\n", __FUNCTION__, at->num_pages);
+            "NVRM: VM: %s: %u pages\n", __FUNCTION__, at->num_pages);
 
     gfp_mask = nv_compute_gfp_mask(nv, at);
 

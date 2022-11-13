@@ -757,7 +757,7 @@ NV_STATUS NV_API_CALL nv_acpi_ddc_method(
             case 0x0400:
             case 0xA420:
                 lcd_dev_handle = handle;
-                nv_printf(NV_DBG_INFO, "NVRM: %s Found LCD: %x\n",
+                nv_printf(NV_DBG_INFO, "NVRM: %s Found LCD: 0x%llx\n",
                           __FUNCTION__, device_id);
                 break;
             default:

@@ -111,7 +111,7 @@ nv_linux_state_t *nv_linux_devices;
 /*
  * And one for the control device
  */
-nv_linux_state_t nv_ctl_device = { { 0 } };
+nv_linux_state_t nv_ctl_device;
 extern NvU32 nv_dma_remap_peer_mmio;
 
 nv_kthread_q_t nv_kthread_q;
@@ -2692,12 +2692,10 @@ nvidia_ctl_close(
 
     if (nvlfp->num_attached_gpus != 0)
     {
-        size_t i;
-
-        for (i = 0; i < nvlfp->num_attached_gpus; i++)
+        for (size_t j = 0; j < nvlfp->num_attached_gpus; j++)
         {
-            if (nvlfp->attached_gpus[i] != 0)
-                nvidia_dev_put(nvlfp->attached_gpus[i], sp);
+            if (nvlfp->attached_gpus[j] != 0)
+                nvidia_dev_put(nvlfp->attached_gpus[j], sp);
         }
 
         NV_KFREE(nvlfp->attached_gpus, sizeof(NvU32) * nvlfp->num_attached_gpus);
@@ -2923,7 +2921,7 @@ NV_STATUS NV_API_CALL nv_register_user_pages(
     nv_linux_state_t *nvl;
     nvidia_pte_t *page_ptr;
 
-    nv_printf(NV_DBG_MEMINFO, "NVRM: VM: nv_register_user_pages: 0x%x\n", page_count);
+    nv_printf(NV_DBG_MEMINFO, "NVRM: VM: nv_register_user_pages: 0x%llx\n", page_count);
     user_pages = *priv_data;
     nvl = NV_GET_NVL_FROM_NV_STATE(nv);
 
@@ -2984,7 +2982,7 @@ void NV_API_CALL nv_unregister_user_pages(
 {
     nv_alloc_t *at = *priv_data;
 
-    nv_printf(NV_DBG_MEMINFO, "NVRM: VM: nv_unregister_user_pages: 0x%x\n", page_count);
+    nv_printf(NV_DBG_MEMINFO, "NVRM: VM: nv_unregister_user_pages: 0x%llx\n", page_count);
 
     NV_PRINT_AT(NV_DBG_MEMINFO, at);
 

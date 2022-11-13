@@ -3117,7 +3117,7 @@ NV_STATUS NV_API_CALL rm_is_supported_device(
                "NVRM: www.nvidia.com.\n",
                pNv->pci_info.domain, pNv->pci_info.bus, pNv->pci_info.slot,
                pNv->pci_info.function, pNv->pci_info.vendor_id,
-               pNv->pci_info.device_id, NV_VERSION_STRING);
+               pNv->pci_info.device_id);
             goto threadfree;
         }
         goto print_unsupported;

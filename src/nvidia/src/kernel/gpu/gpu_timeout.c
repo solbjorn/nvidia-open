@@ -308,7 +308,7 @@ _checkTimeout
 {
     NV_STATUS status = NV_OK;
     OBJTMR   *pTmr;
-    NvU64     current;
+    NvU64     currtime;
     NvU64     timeInNs;
 
     if (pTimeout->flags & GPU_TIMEOUT_FLAGS_OSTIMER)
@@ -361,14 +361,14 @@ _checkTimeout
         NV_ASSERT_OR_RETURN(pTmr != NULL, NV_ERR_INVALID_STATE);
 
         tmrDelay(pTmr, 5ULL * 1000ULL);
-        tmrGetCurrentTime(pTmr, &current);
+        tmrGetCurrentTime(pTmr, &currtime);
 
-        if (current >= pTimeout->timeout)
+        if (currtime >= pTimeout->timeout)
         {
             if (!(pTimeout->flags & GPU_TIMEOUT_FLAGS_BYPASS_JOURNAL_LOG))
             {
                 NV_PRINTF(LEVEL_ERROR, "ptmr elapsed %llx >= %llx\n",
-                          current, pTimeout->timeout);
+                          currtime, pTimeout->timeout);
             }
             status =  NV_ERR_TIMEOUT;
         }

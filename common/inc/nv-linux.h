@@ -852,13 +852,13 @@ static inline dma_addr_t nv_phys_to_dma(struct device *dev, NvU64 pa)
             "NVRM: VM: %s:%d: 0x%p, %d page(s), count = %d, flags = 0x%08x, "    \
             "page_table = 0x%p\n",  __FUNCTION__, __LINE__, at,                  \
             at->num_pages, NV_ATOMIC_READ(at->usage_count),                      \
-            at->flags, at->page_table);                                          \
+            at->fword, at->page_table);                                          \
     }
 
 #define NV_PRINT_VMA(nv_debug_level,vma)                                                 \
     {                                                                                    \
         nv_printf(nv_debug_level,                                                        \
-            "NVRM: VM: %s:%d: 0x%lx - 0x%lx, 0x%08x bytes @ 0x%016llx, 0x%p, 0x%p\n",    \
+            "NVRM: VM: %s:%d: 0x%lx - 0x%lx, 0x%lx bytes @ 0x%016llx, 0x%p, 0x%p\n",    \
             __FUNCTION__, __LINE__, vma->vm_start, vma->vm_end, NV_VMA_SIZE(vma),        \
             NV_VMA_OFFSET(vma), NV_VMA_PRIVATE(vma), NV_VMA_FILE(vma));                  \
     }
@@ -1193,18 +1193,21 @@ typedef struct nv_alloc_s {
     struct nv_alloc_s *next;
     struct device     *dev;
     atomic_t       usage_count;
+	union {
     struct {
-        NvBool contig      : 1;
-        NvBool guest       : 1;
-        NvBool zeroed      : 1;
-        NvBool aliased     : 1;
-        NvBool user        : 1;
-        NvBool node0       : 1;
-        NvBool peer_io     : 1;
-        NvBool physical    : 1;
-        NvBool unencrypted : 1;
-        NvBool coherent    : 1;
+        NvU32 contig      : 1;
+        NvU32 guest       : 1;
+        NvU32 zeroed      : 1;
+        NvU32 aliased     : 1;
+        NvU32 user        : 1;
+        NvU32 node0       : 1;
+        NvU32 peer_io     : 1;
+        NvU32 physical    : 1;
+        NvU32 unencrypted : 1;
+        NvU32 coherent    : 1;
     } flags;
+		NvU32 fword;
+	};
     unsigned int   cache_type;
     unsigned int   num_pages;
     unsigned int   order;

@@ -342,7 +342,7 @@ next_bar:
         // Invalid 32 or 64-bit BAR.
         nv_printf(NV_DBG_ERRORS,
             "NVRM: This PCI I/O region assigned to your NVIDIA device is invalid:\n"
-            "NVRM: BAR%d is %dM @ 0x%llx (PCI:%04x:%02x:%02x.%x)\n", i,
+            "NVRM: BAR%d is %lldM @ 0x%llx (PCI:%04x:%02x:%02x.%x)\n", i,
             (NV_PCI_RESOURCE_SIZE(pci_dev, i) >> 20),
             (NvU64)NV_PCI_RESOURCE_START(pci_dev, i),
             NV_PCI_DOMAIN_NUMBER(pci_dev), NV_PCI_BUS_NUMBER(pci_dev),
@@ -355,7 +355,7 @@ next_bar:
                             nv_device_name))
     {
         nv_printf(NV_DBG_ERRORS,
-            "NVRM: request_mem_region failed for %dM @ 0x%llx. This can\n"
+            "NVRM: request_mem_region failed for %lldM @ 0x%llx. This can\n"
             "NVRM: occur when a driver such as rivatv is loaded and claims\n"
             "NVRM: ownership of the device's registers.\n",
             (NV_PCI_RESOURCE_SIZE(pci_dev, NV_GPU_BAR_INDEX_REGS) >> 20),

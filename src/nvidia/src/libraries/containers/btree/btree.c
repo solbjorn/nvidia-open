@@ -388,7 +388,7 @@ btreeInsert
     PNODE *pRoot
 )
 {
-    NODE *current;
+    NODE *curr;
     NODE *parent;
 
     if (newNode == NULL || pRoot == NULL)
@@ -397,7 +397,7 @@ btreeInsert
     }
 
     // find future parent
-    current = *pRoot;
+    curr = *pRoot;
     parent = NULL;
 
     if (newNode->keyEnd < newNode->keyStart)
@@ -405,16 +405,16 @@ btreeInsert
         return NV_ERR_INVALID_ARGUMENT;
     }
 
-    while (current)
+    while (curr)
     {
-        parent = current;
-        if (newNode->keyEnd < current->keyStart)
+        parent = curr;
+        if (newNode->keyEnd < curr->keyStart)
         {
-            current = current->left;
+            curr = curr->left;
         }
-        else if (newNode->keyStart > current->keyEnd)
+        else if (newNode->keyStart > curr->keyEnd)
         {
-            current = current->right;
+            curr = curr->right;
         }
         else
         {
@@ -682,21 +682,21 @@ btreeSearch
 )
 {
     // uninitialized ?
-    NODE *current = root;
-    while(current)
+    NODE *curr = root;
+    while(curr)
     {
-        VALIDATE_NODE(current);
-        if (keyOffset < current->keyStart)
+        VALIDATE_NODE(curr);
+        if (keyOffset < curr->keyStart)
         {
-            current = current->left;
+            curr = curr->left;
         }
-        else if (keyOffset > current->keyEnd)
+        else if (keyOffset > curr->keyEnd)
         {
-            current = current->right;
+            curr = curr->right;
         }
         else
         {
-            *pNode = current;
+            *pNode = curr;
             return NV_OK;
         }
     }
@@ -720,22 +720,22 @@ btreeEnumStart
     // initialized ?
     if (root)
     {
-        NODE *current = root;
+        NODE *curr = root;
         VALIDATE_TREE(root);
-        while(current)
+        while(curr)
         {
-            if (keyOffset < current->keyStart)
+            if (keyOffset < curr->keyStart)
             {
-                *pNode = current;
-                current = current->left;
+                *pNode = curr;
+                curr = curr->left;
             }
-            else if (keyOffset > current->keyEnd)
+            else if (keyOffset > curr->keyEnd)
             {
-                current = current->right;
+                curr = curr->right;
             }
             else
             {
-                *pNode = current;
+                *pNode = curr;
                 break;
 
             }
@@ -757,36 +757,36 @@ btreeEnumNext
 )
 {
     // no nodes ?
-    NODE *current = NULL;
+    NODE *curr = NULL;
     VALIDATE_NODE(*pNode);
     VALIDATE_NODE(root);
     if (root && *pNode)
     {
         // if we don't have a right subtree return the parent
-        current = *pNode;
+        curr = *pNode;
 
         // pick the leftmost node of the right subtree ?
-        if (current->right)
+        if (curr->right)
         {
-            current = current->right;
-            for(;current->left;)
+            curr = curr->right;
+            for(;curr->left;)
             {
-                current = current->left;
+                curr = curr->left;
             }
         }
         else
         {
             // go up until we find the right inorder node
-            for(current = current->parent; current; current = current->parent)
+            for(curr = curr->parent; curr; curr = curr->parent)
             {
-                if (current->keyStart > (*pNode)->keyEnd)
+                if (curr->keyStart > (*pNode)->keyEnd)
                 {
                     break;
                 }
             }
         }
     }
-    *pNode = current;
+    *pNode = curr;
     if (*pNode)
     {
         VALIDATE_NODE(*pNode);
