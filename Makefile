@@ -17,7 +17,7 @@
 #
 NV_KERNEL_SOURCES = $(abspath $(srctree))
 NV_KERNEL_OUTPUT = $(abspath $(objtree))
-NV_KERNEL_MODULES = nvidia nvidia-drm nvidia-modeset nvidia-peermem nvidia-uvm
+NV_KERNEL_MODULES = nvidia nvidia-common nvidia-drm nvidia-modeset nvidia-peermem nvidia-uvm
 
 ifdef CONFIG_DRM_NVIDIA_DEBUG
 NV_BUILD_TYPE = debug

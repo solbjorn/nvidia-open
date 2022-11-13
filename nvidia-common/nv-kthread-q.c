@@ -146,6 +146,7 @@ void nv_kthread_q_stop(nv_kthread_q_t *q)
         q->q_kthread = NULL;
     }
 }
+EXPORT_SYMBOL(nv_kthread_q_stop);
 
 // When CONFIG_VMAP_STACK is defined, the kernel thread stack allocator used by
 // kthread_create_on_node relies on a 2 entry, per-core cache to minimize
@@ -228,7 +229,7 @@ int nv_kthread_q_init_on_node(nv_kthread_q_t *q, const char *q_name, int preferr
     sema_init(&q->q_sem, 0);
 
     if (preferred_node == NV_KTHREAD_NO_NODE) {
-        q->q_kthread = kthread_create(_main_loop, q, q_name);
+        q->q_kthread = kthread_create(_main_loop, q, "%s", q_name);
     }
     else {
 #if NV_KTHREAD_Q_SUPPORTS_AFFINITY() == 1
@@ -252,6 +253,7 @@ int nv_kthread_q_init_on_node(nv_kthread_q_t *q, const char *q_name, int preferr
 
     return 0;
 }
+EXPORT_SYMBOL(nv_kthread_q_init_on_node);
 
 // Returns true (non-zero) if the item was actually scheduled, and false if the
 // item was already pending in a queue.
@@ -283,6 +285,7 @@ void nv_kthread_q_item_init(nv_kthread_q_item_t *q_item,
     q_item->function_to_run = function_to_run;
     q_item->function_args   = function_args;
 }
+EXPORT_SYMBOL(nv_kthread_q_item_init);
 
 // Returns true (non-zero) if the q_item got scheduled, false otherwise.
 int nv_kthread_q_schedule_q_item(nv_kthread_q_t *q,
@@ -296,6 +299,7 @@ int nv_kthread_q_schedule_q_item(nv_kthread_q_t *q,
 
     return _raw_q_schedule(q, q_item);
 }
+EXPORT_SYMBOL(nv_kthread_q_schedule_q_item);
 
 static void _q_flush_function(void *args)
 {
@@ -333,3 +337,4 @@ void nv_kthread_q_flush(nv_kthread_q_t *q)
     _raw_q_flush(q);
     _raw_q_flush(q);
 }
+EXPORT_SYMBOL(nv_kthread_q_flush);

@@ -154,7 +154,6 @@ NVIDIA_API_SRCS += src/nvidia/generated/g_virt_mem_range_nvoc.c
 NVIDIA_API_SRCS += src/nvidia/generated/g_virtual_mem_nvoc.c
 NVIDIA_API_SRCS += src/nvidia/generated/g_zbc_api_nvoc.c
 NVIDIA_API_SRCS += src/common/shared/msgq/msgq.c
-NVIDIA_API_SRCS += src/common/shared/nvstatus/nvstatus.c
 NVIDIA_API_SRCS += src/common/src/nvSha256.c
 NVIDIA_API_SRCS += src/common/nvlink/kernel/nvlink/core/nvlink_conn_mgmt.c
 NVIDIA_API_SRCS += src/common/nvlink/kernel/nvlink/core/nvlink_discovery.c

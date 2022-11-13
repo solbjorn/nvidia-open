@@ -21,37 +21,22 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
+#include <linux/module.h>
 #include "nvstatus.h"
 
-#if !defined(NV_PRINTF_STRING_SECTION)
-#if defined(NVRM) && NVCPU_IS_RISCV64
-#define NV_PRINTF_STRING_SECTION         __attribute__ ((section (".logging")))
-#else // defined(NVRM) && NVCPU_IS_RISCV64
-#define NV_PRINTF_STRING_SECTION
-#endif // defined(NVRM) && NVCPU_IS_RISCV64
-#endif // !defined(NV_PRINTF_STRING_SECTION)
-
-/*
- * Include nvstatuscodes.h twice.  Once for creating constant strings in the
- * the NV_PRINTF_STRING_SECTION section of the ececutable, and once to build
- * the g_StatusCodeList table.
- */
-#undef NV_STATUS_CODE
-#undef SDK_NVSTATUSCODES_H
-#define NV_STATUS_CODE( name, code, string ) static NV_PRINTF_STRING_SECTION   \
-    const char rm_pvt_##name##_str[] = string " [" #name "]";
-#include "nvstatuscodes.h"
-
-#undef NV_STATUS_CODE
-#undef SDK_NVSTATUSCODES_H
-#define NV_STATUS_CODE( name, code, string ) { name, rm_pvt_##name##_str },
-static struct NvStatusCodeString
-{
-    NV_STATUS   statusCode;
-    const char *statusString;
+static const struct NvStatusCodeString {
+	const char		*statusString;
+	NV_STATUS		statusCode;
 } g_StatusCodeList[] = {
-   #include "nvstatuscodes.h"
-   { 0xffffffff, "Unknown error code!" } // Some compilers don't like the trailing ','
+#define NV_STATUS_CODE(name, code, string) {			\
+		.statusString	= string " [" #name "]",	\
+		.statusCode	= (name),			\
+	},
+#include "nvstatuscodes.h"
+	{
+		.statusString	= "Unknown error code!",
+		.statusCode	= 0xffffffff,
+	},
 };
 #undef NV_STATUS_CODE
 
@@ -61,22 +46,33 @@ static struct NvStatusCodeString
  * @param[in]   nvStatusIn                  NV_STATUS code for which the string is required
  *
  * @returns     Corresponding status string from the nvstatuscodes.h
- *
- * TODO: Bug 200025711: convert this to an array-indexed lookup, instead of a linear search
- *
 */
 const char *nvstatusToString(NV_STATUS nvStatusIn)
 {
-    static NV_PRINTF_STRING_SECTION const char rm_pvt_UNKNOWN_str[] = "Unknown error code!";
-    NvU32 i;
-    NvU32 n = ((NvU32)(sizeof(g_StatusCodeList))/(NvU32)(sizeof(g_StatusCodeList[0])));
-    for (i = 0; i < n; i++)
-    {
-        if (g_StatusCodeList[i].statusCode == nvStatusIn)
-        {
-            return g_StatusCodeList[i].statusString;
-        }
-    }
+	const struct NvStatusCodeString *ret;
 
-    return rm_pvt_UNKNOWN_str;
+	switch (nvStatusIn) {
+	case NV_OK:
+		ret = &g_StatusCodeList[0];
+		break;
+	case NV_ERR_GENERIC:
+		ret = &g_StatusCodeList[1];
+		break;
+	case NV_ERR_BROKEN_FB ... NV_ERR_RISCV_ERROR:
+		ret = &g_StatusCodeList[nvStatusIn + 1];
+		break;
+	case NV_WARN_HOT_SWITCH ... NV_WARN_OUT_OF_RANGE:
+		ret = &g_StatusCodeList[NV_ERR_RISCV_ERROR + 1 +
+					(nvStatusIn & U16_MAX)];
+		break;
+	default:
+		ret = &g_StatusCodeList[ARRAY_SIZE(g_StatusCodeList) - 1];
+		break;
+	}
+
+	return ret->statusString;
 }
+EXPORT_SYMBOL(nvstatusToString);
+
+MODULE_DESCRIPTION("NVIDIA Common Module");
+MODULE_LICENSE("Dual MIT/GPL");

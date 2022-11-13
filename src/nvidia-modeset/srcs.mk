@@ -1,7 +1,6 @@
 NVIDIA_MODESET_API_SRCS ?=
 NVIDIA_MODESET_API_SRCS_CXX ?=
 
-NVIDIA_MODESET_API_SRCS += src/common/shared/nvstatus/nvstatus.c
 NVIDIA_MODESET_API_SRCS += src/common/softfloat/source/8086-SSE/s_commonNaNToF16UI.c
 NVIDIA_MODESET_API_SRCS += src/common/softfloat/source/8086-SSE/s_commonNaNToF32UI.c
 NVIDIA_MODESET_API_SRCS += src/common/softfloat/source/8086-SSE/s_commonNaNToF64UI.c
