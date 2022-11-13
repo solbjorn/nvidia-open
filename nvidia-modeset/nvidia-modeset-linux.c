@@ -1030,6 +1030,7 @@ static void nvkms_kapi_event_kthread_q_callback(void *arg)
     nvKmsKapiHandleEventQueueChange(device);
 }
 
+static
 struct nvkms_per_open *nvkms_open_common(enum NvKmsClientType type,
                                          struct NvKmsKapiDevice *device,
                                          int *status)
@@ -1082,7 +1083,7 @@ failed:
     return NULL;
 }
 
-void nvkms_close_common(struct nvkms_per_open *popen)
+static void nvkms_close_common(struct nvkms_per_open *popen)
 {
     /*
      * Don't use down_interruptible(): we need to free resources
@@ -1145,7 +1146,7 @@ static void nvkms_close_popen(struct nvkms_per_open *popen)
     }
 }
 
-int nvkms_ioctl_common
+static int nvkms_ioctl_common
 (
     struct nvkms_per_open *popen,
     NvU32 cmd, NvU64 address, const size_t size
@@ -1529,7 +1530,7 @@ static unsigned int nvkms_poll(struct file *filp, poll_table *wait)
  * Module loading support code.
  *************************************************************************/
 
-static nvidia_module_t nvidia_modeset_module = {
+static const nvidia_module_t nvidia_modeset_module = {
     .owner       = THIS_MODULE,
     .module_name = "nvidia-modeset",
     .instance    = 1, /* minor number: 255-1=254 */

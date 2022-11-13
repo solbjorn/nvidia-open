@@ -63,10 +63,7 @@ static NvU32 nv_num_instances;
 struct semaphore nv_module_table_lock;
 
 // minor number table
-nvidia_module_t *nv_minor_num_table[NV_FRONTEND_CONTROL_DEVICE_MINOR_MAX + 1];
-
-int nvidia_init_module(void);
-void nvidia_exit_module(void);
+const nvidia_module_t *nv_minor_num_table[NV_FRONTEND_CONTROL_DEVICE_MINOR_MAX + 1];
 
 /* EXPORTS to Linux Kernel */
 
@@ -79,7 +76,7 @@ long         nvidia_frontend_compat_ioctl(struct file *, unsigned int, unsigned 
 int          nvidia_frontend_mmap(struct file *, struct vm_area_struct *);
 
 /* character driver entry points */
-static struct file_operations nv_frontend_fops = {
+static const struct file_operations nv_frontend_fops = {
     .owner     = THIS_MODULE,
     .poll      = nvidia_frontend_poll,
 #if defined(NV_FILE_OPERATIONS_HAS_IOCTL)
@@ -143,7 +140,7 @@ static int remove_device(nvidia_module_t *module, nv_linux_state_t *device)
 
 /* Export functions */
 
-int nvidia_register_module(nvidia_module_t *module)
+int nvidia_register_module(const nvidia_module_t *module)
 {
     int rc = 0;
     NvU32 ctrl_minor_num;
@@ -167,7 +164,7 @@ done:
 }
 EXPORT_SYMBOL(nvidia_register_module);
 
-int nvidia_unregister_module(nvidia_module_t *module)
+int nvidia_unregister_module(const nvidia_module_t *module)
 {
     int rc = 0;
     NvU32 ctrl_minor_num;
@@ -245,7 +242,7 @@ int nvidia_frontend_open(
 )
 {
     int rc = -ENODEV;
-    nvidia_module_t *module = NULL;
+    const nvidia_module_t *module = NULL;
 
     NvU32 minor_num = NV_FRONTEND_MINOR_NUMBER(inode);
 
@@ -279,7 +276,7 @@ int nvidia_frontend_close(
 )
 {
     int rc = -ENODEV;
-    nvidia_module_t *module = NULL;
+    const nvidia_module_t *module = NULL;
 
     NvU32 minor_num = NV_FRONTEND_MINOR_NUMBER(inode);
 
@@ -304,7 +301,7 @@ unsigned int nvidia_frontend_poll(
     unsigned int mask = 0;
     struct inode *inode = NV_FILE_INODE(file);
     NvU32 minor_num = NV_FRONTEND_MINOR_NUMBER(inode);
-    nvidia_module_t *module = nv_minor_num_table[minor_num];
+    const nvidia_module_t *module = nv_minor_num_table[minor_num];
 
     if ((module != NULL) && (module->poll != NULL))
         mask = module->poll(file, wait);
@@ -319,7 +316,7 @@ int nvidia_frontend_ioctl(
     unsigned long i_arg)
 {
     int rc = -ENODEV;
-    nvidia_module_t *module = NULL;
+    const nvidia_module_t *module = NULL;
 
     NvU32 minor_num = NV_FRONTEND_MINOR_NUMBER(inode);
     module = nv_minor_num_table[minor_num];
@@ -356,7 +353,7 @@ int nvidia_frontend_mmap(
     int rc = -ENODEV;
     struct inode *inode = NV_FILE_INODE(file);
     NvU32 minor_num = NV_FRONTEND_MINOR_NUMBER(inode);
-    nvidia_module_t *module = nv_minor_num_table[minor_num];
+    const nvidia_module_t *module = nv_minor_num_table[minor_num];
 
     if ((module != NULL) && (module->mmap != NULL))
         rc = module->mmap(file, vma);

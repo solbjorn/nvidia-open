@@ -449,7 +449,7 @@ static int nv_cap_procfs_release(struct inode *inode, struct file *file)
     return 0;
 }
 
-static nv_proc_ops_t g_nv_cap_procfs_fops = {
+static const nv_proc_ops_t g_nv_cap_procfs_fops = {
     NV_PROC_OPS_SET_OWNER()
     .NV_PROC_OPS_OPEN    = nv_cap_procfs_open,
     .NV_PROC_OPS_RELEASE = nv_cap_procfs_release,

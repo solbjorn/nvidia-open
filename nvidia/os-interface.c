@@ -1890,7 +1890,7 @@ NV_STATUS NV_API_CALL os_open_and_read_file
 
 NvBool NV_API_CALL os_is_nvswitch_present(void)
 {
-    struct pci_device_id nvswitch_pci_table[] = {
+    static const struct pci_device_id nvswitch_pci_table[] = {
         {
             PCI_DEVICE(PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID),
             .class      = PCI_CLASS_BRIDGE_OTHER << 8,

@@ -100,7 +100,7 @@ nvswitch_map_status
 static int nvswitch_probe(struct pci_dev *, const struct pci_device_id *);
 static void nvswitch_remove(struct pci_dev *);
 
-static struct pci_device_id nvswitch_pci_table[] =
+static const struct pci_device_id nvswitch_pci_table[] =
 {
     {
         .vendor      = PCI_VENDOR_ID_NVIDIA,
@@ -236,7 +236,7 @@ static long nvswitch_ctl_unlocked_ioctl(struct file *file,
                                         unsigned int cmd,
                                         unsigned long arg);
 
-struct file_operations device_fops =
+static const struct file_operations device_fops =
 {
     .owner = THIS_MODULE,
 #if defined(NV_FILE_OPERATIONS_HAS_IOCTL)
@@ -248,7 +248,7 @@ struct file_operations device_fops =
     .poll    = nvswitch_device_poll
 };
 
-struct file_operations ctl_fops =
+static const struct file_operations ctl_fops =
 {
     .owner = THIS_MODULE,
 #if defined(NV_FILE_OPERATIONS_HAS_IOCTL)

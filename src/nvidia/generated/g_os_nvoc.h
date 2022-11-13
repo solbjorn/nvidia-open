@@ -902,7 +902,9 @@ NV_STATUS osDereferenceObjectCount(void *pEvent);
 // osErrorLogV() call, create a copy of the va_list using va_copy().
 // The caller controls the lifetime of the va_list argument, and should free it using va_end.
 //
+__printf(3, 0)
 void osErrorLogV(OBJGPU *pGpu, NvU32 num, const char * pFormat, va_list arglist);
+__printf(3, 4)
 void osErrorLog(OBJGPU *pGpu, NvU32 num, const char* pFormat, ...);
 
 NV_STATUS osNvifInitialize(OBJGPU *pGpu);

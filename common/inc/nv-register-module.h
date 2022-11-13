@@ -49,7 +49,7 @@ typedef struct nvidia_module_s {
 
 } nvidia_module_t;
 
-int nvidia_register_module(nvidia_module_t *);
-int nvidia_unregister_module(nvidia_module_t *);
+int nvidia_register_module(const nvidia_module_t *);
+int nvidia_unregister_module(const nvidia_module_t *);
 
 #endif

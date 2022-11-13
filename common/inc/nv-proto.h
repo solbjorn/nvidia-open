@@ -28,7 +28,7 @@
 #include "nv-register-module.h"
 
 extern const char *nv_device_name;
-extern nvidia_module_t nv_fops;
+extern const nvidia_module_t nv_fops;
 
 void        nv_acpi_register_notifier   (nv_linux_state_t *);
 void        nv_acpi_unregister_notifier (nv_linux_state_t *);

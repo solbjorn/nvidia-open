@@ -185,7 +185,7 @@ static unsigned int  nvidia_poll           (struct file *, poll_table *);
 static int           nvidia_ioctl          (struct inode *, struct file *, unsigned int, unsigned long);
 
 /* character device entry points*/
-nvidia_module_t nv_fops = {
+const nvidia_module_t nv_fops = {
     .owner       = THIS_MODULE,
     .module_name = MODULE_NAME,
     .instance    = MODULE_INSTANCE_NUMBER,
@@ -3546,7 +3546,7 @@ NvBool NV_API_CALL nv_is_rm_firmware_active(
     return NV_FALSE;
 }
 
-const char *nv_firmware_path(
+static const char *nv_firmware_path(
     nv_firmware_t fw_type
 )
 {

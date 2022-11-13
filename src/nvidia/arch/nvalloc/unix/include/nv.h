@@ -779,6 +779,7 @@ NvBool     NV_API_CALL  nv_acpi_is_battery_present(void);
 
 NV_STATUS  NV_API_CALL  nv_acpi_mux_method       (nv_state_t *, NvU32 *, NvU32, const char *);
 
+__printf(3, 0)
 NV_STATUS  NV_API_CALL  nv_log_error             (nv_state_t *, NvU32, const char *, va_list);
 
 NvU64      NV_API_CALL  nv_get_dma_start_address (nv_state_t *);

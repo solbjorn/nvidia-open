@@ -534,7 +534,7 @@ done:
     return ((status < 0) ? status : (int)count);
 }
 
-static nv_proc_ops_t nv_procfs_registry_fops = {
+static const nv_proc_ops_t nv_procfs_registry_fops = {
      NV_PROC_OPS_SET_OWNER()
     .NV_PROC_OPS_OPEN    = nv_procfs_open_registry,
     .NV_PROC_OPS_READ    = seq_read,
@@ -613,7 +613,7 @@ nv_procfs_open_suspend_depth(
     return single_open(file, nv_procfs_show_suspend_depth, NULL);
 }
 
-static nv_proc_ops_t nv_procfs_suspend_depth_fops = {
+static const nv_proc_ops_t nv_procfs_suspend_depth_fops = {
      NV_PROC_OPS_SET_OWNER()
     .NV_PROC_OPS_OPEN    = nv_procfs_open_suspend_depth,
     .NV_PROC_OPS_READ    = seq_read,
@@ -695,7 +695,7 @@ nv_procfs_open_suspend(
     return single_open(file, nv_procfs_show_suspend, NULL);
 }
 
-static nv_proc_ops_t nv_procfs_suspend_fops = {
+static const nv_proc_ops_t nv_procfs_suspend_fops = {
      NV_PROC_OPS_SET_OWNER()
     .NV_PROC_OPS_OPEN    = nv_procfs_open_suspend,
     .NV_PROC_OPS_READ    = seq_read,
@@ -807,7 +807,7 @@ done:
     return status;
 }
 
-static nv_proc_ops_t nv_procfs_exercise_error_forwarding_fops = {
+static const nv_proc_ops_t nv_procfs_exercise_error_forwarding_fops = {
      NV_PROC_OPS_SET_OWNER()
     .NV_PROC_OPS_OPEN    = nv_procfs_open_exercise_error_forwarding,
     .NV_PROC_OPS_WRITE   = nv_procfs_write_file,
@@ -934,7 +934,7 @@ done:
     return rc;
 }
 
-static nv_proc_ops_t nv_procfs_unbind_lock_fops = {
+static const nv_proc_ops_t nv_procfs_unbind_lock_fops = {
     NV_PROC_OPS_SET_OWNER()
     .NV_PROC_OPS_OPEN    = nv_procfs_open_unbind_lock,
     .NV_PROC_OPS_READ    = seq_read,
@@ -1321,7 +1321,7 @@ void nv_procfs_add_warning(
 #endif
 }
 
-int nv_procfs_init(void)
+int __init nv_procfs_init(void)
 {
 #if defined(CONFIG_PROC_FS)
     NvU32 i = 0;

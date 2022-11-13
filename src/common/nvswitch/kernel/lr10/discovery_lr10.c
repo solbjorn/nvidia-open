@@ -424,7 +424,7 @@ _nvswitch_ptop_handle_data2_lr10
     }
 }
 
-void
+static void
 nvswitch_nvlw_parse_entry_lr10
 (
     nvswitch_device *device,
@@ -455,7 +455,7 @@ nvswitch_nvlw_parse_entry_lr10
     }
 }
 
-void
+static void
 nvswitch_nvlw_parse_enum_lr10
 (
     nvswitch_device *device,
@@ -482,7 +482,7 @@ nvswitch_nvlw_parse_enum_lr10
     }
 }
 
-void
+static void
 nvswitch_nvlw_handle_data1_lr10
 (
     nvswitch_device *device,
@@ -532,7 +532,7 @@ nvswitch_nvlw_handle_data1_lr10
     }
 }
 
-void
+static void
 nvswitch_nvlw_handle_data2_lr10
 (
     nvswitch_device *device,
@@ -739,7 +739,7 @@ _nvswitch_npg_handle_data2_lr10
     }
 }
 
-void
+static void
 nvswitch_nxbar_parse_entry_lr10
 (
     nvswitch_device *device,
@@ -770,7 +770,7 @@ nvswitch_nxbar_parse_entry_lr10
     }
 }
 
-void
+static void
 nvswitch_nxbar_parse_enum_lr10
 (
     nvswitch_device *device,
@@ -797,7 +797,7 @@ nvswitch_nxbar_parse_enum_lr10
     }
 }
 
-void
+static void
 nvswitch_nxbar_handle_data1_lr10
 (
     nvswitch_device *device,
@@ -826,7 +826,7 @@ nvswitch_nxbar_handle_data1_lr10
     }
 }
 
-void
+static void
 nvswitch_nxbar_handle_data2_lr10
 (
     nvswitch_device *device,

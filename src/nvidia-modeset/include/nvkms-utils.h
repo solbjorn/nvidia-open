@@ -158,8 +158,15 @@ typedef enum {
     EVO_LOG_INFO,
 } NVEvoLogType;
 
-void *nvInternalAlloc(size_t size, NvBool zero);
-void *nvInternalRealloc(void *ptr, size_t size);
+#ifndef __alloc_size
+#define __alloc_size(x, ...)
+#endif
+#ifndef __realloc_size
+#define __realloc_size(x, ...)
+#endif
+
+void *nvInternalAlloc(size_t size, NvBool zero) __alloc_size(1);
+void *nvInternalRealloc(void *ptr, size_t size) __realloc_size(2);
 void  nvInternalFree(void *ptr);
 char *nvInternalStrDup(const char *str);
 NvBool nvGetRegkeyValue(const NVDevEvoRec *pDevEvo,
@@ -191,6 +198,7 @@ char *nvDebugStrDup(const char *str, int line, const char *file);
 
 #endif
 
+__printf(3, 0)
 void nvVEvoLog(NVEvoLogType logType, NvU8 gpuLogIndex,
                const char *fmt, va_list ap);
 
