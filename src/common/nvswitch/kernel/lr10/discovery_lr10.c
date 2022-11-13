@@ -20,6 +20,9 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
+#include <linux/kernel.h>
+
 #include "common_nvswitch.h"
 #include "lr10/lr10.h"
 
@@ -30,20 +33,12 @@
 
 #define VERBOSE_MMIO_DISCOVERY      0
 
-#define MAKE_DISCOVERY_LR10(device, _chip, _engine) \
-    {                                               \
-        #_engine,                                   \
-        NUM_##_engine##_ENGINE_##_chip,             \
-        NV_SWPTOP_ENUM_DEVICE_##_engine,            \
-        chip_device->eng##_engine                   \
-    }
-
 typedef struct
 {
-    const char *engname;
-    NvU32 engcount_max;
-    NvU32 discovery_id;
-    ENGINE_DESCRIPTOR_TYPE_LR10    *engine;
+	const char	*engname;
+	u16		engcount_max;
+	u16		discovery_id;
+	u16		offset;
 }
 DISCOVERY_TABLE_TYPE_LR10;
 
@@ -136,7 +131,7 @@ _nvswitch_device_discovery_lr10
 (
     nvswitch_device *device,
     NvU32   discovery_offset,
-    DISCOVERY_TABLE_TYPE_LR10 *discovery_table,
+    const DISCOVERY_TABLE_TYPE_LR10 *discovery_table,
     NvU32 discovery_table_size,
     const NVSWITCH_DISCOVERY_HANDLERS_LR10 *discovery_handlers
 )
@@ -183,7 +178,7 @@ _nvswitch_device_discovery_lr10
                     {
                         if (entry_device == discovery_table[i].discovery_id)
                         {
-                            if (discovery_table[i].engine == NULL)
+                            if (!discovery_table[i].offset)
                             {
                                 NVSWITCH_PRINT(device, ERROR,
                                     "%s:_ENUM: ERROR: %s:device=%x id=%x version=%x not supported!\n",
@@ -196,7 +191,17 @@ _nvswitch_device_discovery_lr10
 
                             if (entry_id < discovery_table[i].engcount_max)
                             {
-                                engine = &(discovery_table[i].engine[entry_id]);
+				typeof(*engine) *engtbl;
+				lr10_device *cd;
+
+				cd = NVSWITCH_GET_CHIP_DEVICE_LR10(device);
+				if (!cd) {
+					engine = NULL;
+					break;
+				}
+
+				engtbl = (void *)cd + discovery_table[i].offset;
+                                engine = &engtbl[entry_id];
                                 break;
                             }
                             else
@@ -894,29 +899,33 @@ nvswitch_nxbar_handle_data2_lr10
     }
 }
 
-#define MAKE_DISCOVERY_NVLINK_LR10(_eng, _bcast)    \
-    {                                               \
-        #_eng#_bcast,                               \
-        NUM_##_eng##_bcast##_ENGINE_LR10,           \
-        NV_NVLINKIP_DISCOVERY_COMMON_DEVICE_##_eng, \
-        chip_device->eng##_eng##_bcast              \
-    }
+#define MAKE_DISCOVERY_LR10(_d, _c, _e) {				\
+	.engname	= #_e,						\
+	.engcount_max	= NUM_##_e##_ENGINE_##_c,			\
+	.discovery_id	= NV_SWPTOP_ENUM_DEVICE_##_e,			\
+	.offset		= offsetof(lr10_device, eng##_e),		\
+}
 
-#define MAKE_DISCOVERY_NPG_LR10(_eng, _bcast)       \
-    {                                               \
-        #_eng#_bcast,                               \
-        NUM_##_eng##_bcast##_ENGINE_LR10,           \
-        NV_NPG_DISCOVERY_ENUM_DEVICE_##_eng,        \
-        chip_device->eng##_eng##_bcast              \
-    }
+#define MAKE_DISCOVERY_NVLINK_LR10(_e, _bc) {				\
+	.engname	= #_e#_bc,					\
+	.engcount_max	= NUM_##_e##_bc##_ENGINE_LR10,			\
+	.discovery_id	= NV_NVLINKIP_DISCOVERY_COMMON_DEVICE_##_e,	\
+	.offset		= offsetof(lr10_device, eng##_e##_bc),		\
+}
 
-#define MAKE_DISCOVERY_NXBAR_LR10(_eng, _bcast)     \
-    {                                               \
-        #_eng#_bcast,                               \
-        NUM_##_eng##_bcast##_ENGINE_LR10,           \
-        NV_NXBAR_DISCOVERY_ENUM_DEVICE_##_eng,      \
-        chip_device->eng##_eng##_bcast              \
-    }
+#define MAKE_DISCOVERY_NPG_LR10(_e, _bc) {				\
+	.engname	= #_e#_bc,					\
+	.engcount_max	= NUM_##_e##_bc##_ENGINE_LR10,			\
+	.discovery_id	= NV_NPG_DISCOVERY_ENUM_DEVICE_##_e,		\
+	.offset		= offsetof(lr10_device, eng##_e##_bc),		\
+}
+
+#define MAKE_DISCOVERY_NXBAR_LR10(_e, _bc) {				\
+	.engname	= #_e#_bc,					\
+	.engcount_max	= NUM_##_e##_bc##_ENGINE_LR10,			\
+	.discovery_id	= NV_NXBAR_DISCOVERY_ENUM_DEVICE_##_e,		\
+	.offset		= offsetof(lr10_device, eng##_e##_bc),		\
+}
 
 #define NVSWITCH_BUILD_HANDLERS(name, a, b, c, d)	\
 static const NVSWITCH_DISCOVERY_HANDLERS_LR10		\
@@ -969,7 +978,7 @@ nvswitch_device_discovery_lr10
 {
     lr10_device *chip_device = NVSWITCH_GET_CHIP_DEVICE_LR10(device);
 
-    DISCOVERY_TABLE_TYPE_LR10 discovery_table_lr10[] =
+    static const DISCOVERY_TABLE_TYPE_LR10 discovery_table_lr10[] =
     {
         MAKE_DISCOVERY_LR10(device, LR10, PTOP),
         MAKE_DISCOVERY_LR10(device, LR10, NPG),
@@ -1046,7 +1055,7 @@ nvswitch_device_discovery_lr10
         if (NVSWITCH_ENG_VALID_LR10(device, NVLW, i) &&
             (chip_device->engNVLW[i].info.top.discovery != 0))
         {
-            DISCOVERY_TABLE_TYPE_LR10 discovery_table_nvlw[] =
+            static const DISCOVERY_TABLE_TYPE_LR10 discovery_table_nvlw[] =
             {
                 MAKE_DISCOVERY_NVLINK_LR10(MINION, ),
                 MAKE_DISCOVERY_NVLINK_LR10(NVLIPT, ),
@@ -1110,7 +1119,7 @@ nvswitch_device_discovery_lr10
         if (NVSWITCH_ENG_VALID_LR10(device, NVLW_BCAST, i) &&
             (chip_device->engNVLW_BCAST[i].info.top.discovery != 0))
         {
-            DISCOVERY_TABLE_TYPE_LR10 discovery_table_nvlw[] =
+            static const DISCOVERY_TABLE_TYPE_LR10 discovery_table_nvlw[] =
             {
                 MAKE_DISCOVERY_NVLINK_LR10(MINION, _BCAST),
                 MAKE_DISCOVERY_NVLINK_LR10(NVLIPT, _BCAST),
@@ -1174,7 +1183,7 @@ nvswitch_device_discovery_lr10
         if (NVSWITCH_ENG_VALID_LR10(device, NPG, i) &&
             (chip_device->engNPG[i].info.top.discovery != 0))
         {
-            DISCOVERY_TABLE_TYPE_LR10 discovery_table_npg[] =
+            static const DISCOVERY_TABLE_TYPE_LR10 discovery_table_npg[] =
             {
                 MAKE_DISCOVERY_NPG_LR10(NPG, ),
                 MAKE_DISCOVERY_NPG_LR10(NPORT, ),
@@ -1214,7 +1223,7 @@ nvswitch_device_discovery_lr10
         if (NVSWITCH_ENG_VALID_LR10(device, NPG_BCAST, i) &&
             (chip_device->engNPG_BCAST[i].info.top.discovery != 0))
         {
-            DISCOVERY_TABLE_TYPE_LR10 discovery_table_npg[] =
+            static const DISCOVERY_TABLE_TYPE_LR10 discovery_table_npg[] =
             {
                 MAKE_DISCOVERY_NPG_LR10(NPG, _BCAST),
                 MAKE_DISCOVERY_NPG_LR10(NPORT, _BCAST),
@@ -1254,7 +1263,7 @@ nvswitch_device_discovery_lr10
         if (NVSWITCH_ENG_VALID_LR10(device, NXBAR, i) &&
             (chip_device->engNXBAR[i].info.top.discovery != 0))
         {
-            DISCOVERY_TABLE_TYPE_LR10 discovery_table_nxbar[] =
+            static const DISCOVERY_TABLE_TYPE_LR10 discovery_table_nxbar[] =
             {
                 MAKE_DISCOVERY_NXBAR_LR10(NXBAR, ),
                 MAKE_DISCOVERY_NXBAR_LR10(TILE, ),
@@ -1295,7 +1304,7 @@ nvswitch_device_discovery_lr10
         if (NVSWITCH_ENG_VALID_LR10(device, NXBAR_BCAST, i) &&
             (chip_device->engNXBAR_BCAST[i].info.top.discovery != 0))
         {
-            DISCOVERY_TABLE_TYPE_LR10 discovery_table_nxbar[] =
+            static const DISCOVERY_TABLE_TYPE_LR10 discovery_table_nxbar[] =
             {
                 MAKE_DISCOVERY_NXBAR_LR10(NXBAR, _BCAST),
                 MAKE_DISCOVERY_NXBAR_LR10(TILE, _BCAST),
@@ -1354,41 +1363,57 @@ nvswitch_filter_discovery_lr10
     return;
 }
 
-#define NVSWITCH_PROCESS_DISCOVERY(_current, _engine, _multicast)           \
-    {                                                                       \
-        NvU32 i;                                                            \
-        ct_assert(NUM_##_engine##_ENGINE_LR10 <= NVSWITCH_ENGINE_DESCRIPTOR_UC_SIZE); \
-                                                                            \
-        _current->eng_name = #_engine;                                      \
-        _current->eng_id = NVSWITCH_ENGINE_ID_##_engine;                    \
-        _current->eng_count = NUM_##_engine##_ENGINE_LR10;                  \
-                                                                            \
-        for (i = 0; i < NUM_##_engine##_ENGINE_LR10; i++)                   \
-        {                                                                   \
-            if (chip_device->eng##_engine[i].valid)                         \
-            {                                                               \
-                _current->uc_addr[i] =                                      \
-                    chip_device->eng##_engine[i].info.uc.uc_addr;           \
-            }                                                               \
-        }                                                                   \
-                                                                            \
-        if (chip_device->eng##_engine##_multicast[0].valid)                 \
-        {                                                                   \
-            _current->bc_addr =                                             \
-                chip_device->eng##_engine##_multicast[0].info.bc.bc_addr;   \
-        }                                                                   \
-                                                                            \
-        _current->mc_addr_count = 0;                                        \
-    }                                                                       \
+struct lr10_disc_entry {
+	const char	*name;
+	u16		id;
+	u16		n;
+	u16		uc_off;
+	u16		mc_off;
+};
 
-#define NVSWITCH_PROCESS_COMMON(_engine, _multicast)                        \
-    {                                                                       \
-        NVSWITCH_ENGINE_DESCRIPTOR_TYPE *current;                           \
-        ct_assert(NVSWITCH_ENGINE_ID_##_engine < NVSWITCH_ENGINE_ID_SIZE);  \
-                                                                            \
-        current = &chip_device->io.common[NVSWITCH_ENGINE_ID_##_engine];    \
-        NVSWITCH_PROCESS_DISCOVERY(current, _engine, _multicast)            \
-    }
+#define LR10_DISC_ENTRY(_engine, _multicast) {				   \
+	.name		= #_engine,					   \
+	.id 		= NVSWITCH_ENGINE_ID_##_engine,			   \
+	.n		= NUM_##_engine##_ENGINE_LR10,			   \
+	.uc_off		= offsetof(lr10_device, eng##_engine),		   \
+	.mc_off		= offsetof(lr10_device, eng##_engine##_multicast), \
+},
+
+#define LR10_ASSERT_DISC_ENTRY(_engine, _multicast)			   \
+	static_assert(NVSWITCH_ENGINE_ID_##_engine <			   \
+		      NVSWITCH_ENGINE_ID_SIZE);				   \
+	static_assert(NUM_##_engine##_ENGINE_LR10 <=			   \
+		      NVSWITCH_ENGINE_DESCRIPTOR_UC_SIZE);
+
+static const struct lr10_disc_entry lr10_disc_arr[] = {
+	NVSWITCH_LIST_LR10_ENGINES(LR10_DISC_ENTRY)
+};
+NVSWITCH_LIST_LR10_ENGINES(LR10_ASSERT_DISC_ENTRY);
+
+static void nvswitch_process_common(lr10_device *chip_device,
+				    const struct lr10_disc_entry *entry)
+{
+	NVSWITCH_ENGINE_DESCRIPTOR_TYPE *current;
+	const ENGINE_DESCRIPTOR_TYPE_LR10 *eng;
+
+	current = &chip_device->io.common[entry->id];
+	current->eng_name = entry->name;
+	current->eng_id = entry->id;
+	current->eng_count = entry->n;
+
+	eng = (void *)chip_device + entry->uc_off;
+
+	for (u32 i = 0; i < entry->n; i++) {
+		if (eng[i].valid)
+			current->uc_addr[i] = eng[i].info.uc.uc_addr;
+	}
+
+	eng = (void *)chip_device + entry->mc_off;
+	if (eng[0].valid)
+		current->bc_addr = eng[0].info.bc.bc_addr;
+
+	current->mc_addr_count = 0;
+}
 
 //
 // Process engine discovery information to associate engines
@@ -1465,7 +1490,8 @@ nvswitch_process_discovery_lr10
         chip_device->io.common[i].mc_addr_count = 0;
     }
 
-    NVSWITCH_LIST_LR10_ENGINES(NVSWITCH_PROCESS_COMMON)
+	for (i = 0; i < ARRAY_SIZE(lr10_disc_arr); i++)
+		nvswitch_process_common(chip_device, &lr10_disc_arr[i]);
 
     return retval;
 }
