@@ -32,7 +32,6 @@
 
 #include "nv-procfs.h"
 #include "nv-reg.h"
-#include "conftest/patches.h"
 #include "nv-ibmnpu.h"
 
 #define NV_DEFINE_SINGLE_NVRM_PROCFS_FILE(name) \
@@ -1326,7 +1325,6 @@ void nv_procfs_add_warning(
 int __init nv_procfs_init(void)
 {
 #if defined(CONFIG_PROC_FS)
-    NvU32 i = 0;
     char nv_dir_name[20];
     struct proc_dir_entry *entry;
 
@@ -1365,12 +1363,6 @@ int __init nv_procfs_init(void)
     proc_nvidia_patches = NV_CREATE_PROC_DIR("patches", proc_nvidia);
     if (!proc_nvidia_patches)
         goto failed;
-
-    for (i = 0; __nv_patches[i].short_description; i++)
-    {
-        nv_procfs_add_text_file(proc_nvidia_patches,
-            __nv_patches[i].short_description, __nv_patches[i].description);
-    }
 
     nv_procfs_add_text_file(proc_nvidia_patches, "README", __README_patches);
 

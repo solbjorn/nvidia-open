@@ -5172,32 +5172,6 @@ compile_test() {
             compile_check_conftest "$CODE" "NV_DRM_HAS_HDR_OUTPUT_METADATA" "" "types"
         ;;
 
-        uts_release)
-            #
-            # print the kernel's UTS_RELEASE string.
-            #
-            echo "#include <generated/utsrelease.h>
-            UTS_RELEASE" > conftest$$.c
-
-            echo -n "#define NV_RELEASE"
-            $CC $CFLAGS -E -P -D__ASSEMBLY__ conftest$$.c
-            rm -f conftest$$.c
-
-            echo "#include <generated/compile.h>
-            UTS_MACHINE" > conftest$$.c
-
-            echo -n "#define NV_MACHINE"
-            $CC $CFLAGS -E -P -D__ASSEMBLY__ conftest$$.c
-            rm -f conftest$$.c
-
-            echo "#include <generated/compile.h>
-            LINUX_COMPILER" > conftest$$.c
-
-            echo -n "#define NV_COMPILER"
-            $CC $CFLAGS -E -P -D__ASSEMBLY__ conftest$$.c
-            rm -f conftest$$.c
-        ;;
-
         platform_irq_count)
             #
             # Determine if the platform_irq_count() function is present
@@ -5544,32 +5518,6 @@ case "$5" in
         else
             exit 0
         fi
-    ;;
-
-    patch_check)
-        #
-        # Check for any "official" patches that may have been applied and
-        # construct a description table for reporting purposes.
-        #
-        PATCHES=""
-
-        for PATCH in patch-*.h; do
-            if [ -f $PATCH ]; then
-                echo "#include \"$PATCH\""
-                PATCHES="$PATCHES "`echo $PATCH | sed -s 's/patch-\(.*\)\.h/\1/'`
-            fi
-        done
-
-        echo "static struct {
-                const char *short_description;
-                const char *description;
-              } __nv_patches[] = {"
-            for i in $PATCHES; do
-                echo "{ \"$i\", NV_PATCH_${i}_DESCRIPTION },"
-            done
-        echo "{ NULL, NULL } };"
-
-        exit 0
     ;;
 
     compile_tests)

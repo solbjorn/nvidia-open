@@ -74,8 +74,6 @@
 
 #include <linux/ioport.h>
 
-#include "conftest/patches.h"
-
 #define RM_THRESHOLD_TOTAL_IRQ_COUNT     100000
 #define RM_THRESHOLD_UNAHNDLED_IRQ_COUNT 99900
 #define RM_UNHANDLED_TIMEOUT_US          100000
@@ -561,23 +559,6 @@ nv_registry_keys_init(nv_stack_t *sp)
     }
 }
 
-static void __init
-nv_report_applied_patches(void)
-{
-    unsigned i;
-
-    for (i = 0; __nv_patches[i].short_description; i++)
-    {
-        if (i == 0)
-        {
-            nv_printf(NV_DBG_ERRORS, "NVRM: Applied patches:\n");
-        }
-
-        nv_printf(NV_DBG_ERRORS,
-            "NVRM:    Patch #%d: %s\n", i + 1, __nv_patches[i].short_description);
-    }
-}
-
 static void
 nv_drivers_exit(void)
 {
@@ -826,9 +807,7 @@ int __init nvidia_init_module(void)
      */
     nv_registry_keys_init(sp);
 
-    nv_report_applied_patches();
-
-    nv_printf(NV_DBG_ERRORS, "NVRM: loading %s\n", pNVRM_ID);
+    nv_printf(NV_DBG_INFO, "NVRM: loading %s\n", pNVRM_ID);
 
 #if defined(NV_UVM_ENABLE)
     rc = nv_uvm_init();

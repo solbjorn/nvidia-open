@@ -131,8 +131,7 @@ NV_CONFTEST_COMPILE_TEST_HEADERS += $(obj)/conftest/symbols.h
 NV_CONFTEST_COMPILE_TEST_HEADERS += $(obj)/conftest/types.h
 NV_CONFTEST_COMPILE_TEST_HEADERS += $(obj)/conftest/generic.h
 
-NV_CONFTEST_HEADERS := $(obj)/conftest/patches.h
-NV_CONFTEST_HEADERS += $(obj)/conftest/headers.h
+NV_CONFTEST_HEADERS := $(obj)/conftest/headers.h
 NV_CONFTEST_HEADERS += $(NV_CONFTEST_COMPILE_TEST_HEADERS)
 
 
@@ -178,10 +177,6 @@ $(eval $(call NV_GENERATE_COMPILE_TEST_HEADER,generic,$(NV_CONFTEST_GENERIC_COMP
 $(eval $(call NV_GENERATE_COMPILE_TEST_HEADER,macros,$(NV_CONFTEST_MACRO_COMPILE_TESTS)))
 $(eval $(call NV_GENERATE_COMPILE_TEST_HEADER,symbols,$(NV_CONFTEST_SYMBOL_COMPILE_TESTS)))
 $(eval $(call NV_GENERATE_COMPILE_TEST_HEADER,types,$(NV_CONFTEST_TYPE_COMPILE_TESTS)))
-
-$(obj)/conftest/patches.h: $(NV_CONFTEST_SCRIPT)
-	@mkdir -p $(obj)/conftest
-	@$(NV_CONFTEST_CMD) patch_check > $@
 
 # Each of these headers is checked for presence with a test #include; a
 # corresponding #define will be generated in conftest/headers.h.
@@ -273,7 +268,7 @@ NV_HEADER_PRESENCE_PART = $(addprefix $(obj)/conftest/header_presence/,$(addsuff
 
 # Define a rule to check the header $(1).
 define NV_HEADER_PRESENCE_CHECK
- $$(call NV_HEADER_PRESENCE_PART,$(1)): $$(NV_CONFTEST_SCRIPT) $(obj)/conftest/uts_release.h
+ $$(call NV_HEADER_PRESENCE_PART,$(1)): $$(NV_CONFTEST_SCRIPT)
 	@mkdir -p $$(dir $$@)
 	@echo "  HDRTEST $(1)"
 	@$$(NV_CONFTEST_CMD) test_kernel_header '$$(NV_CONFTEST_CFLAGS)' '$(1)' > $$@
@@ -311,15 +306,3 @@ $(BUILD_SANITY_CHECKS):
 # Perform all sanity checks before generating the conftest headers
 
 $(NV_CONFTEST_HEADERS): | $(BUILD_SANITY_CHECKS)
-
-# Make the conftest headers depend on the kernel version string
-
-targets += conftest/uts_release.h
-
-filechk_uts_release = $(NV_CONFTEST_CMD) compile_tests "$(NV_CONFTEST_CFLAGS)" uts_release
-
-$(obj)/conftest/uts_release.h: FORCE
-	@mkdir -p $(dir $@)
-	$(call filechk,uts_release)
-
-$(NV_CONFTEST_HEADERS): $(obj)/conftest/uts_release.h
