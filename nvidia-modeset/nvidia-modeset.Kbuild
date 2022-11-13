@@ -33,7 +33,7 @@ else
 CXX = $(CROSS_COMPILE)g++
 endif
 
-cxx_flags = $(patsubst %/linux/compiler_types.h,%/linux/compiler_attributes.h,$(c_flags))
+cxx_flags = $(patsubst %/include/linux/compiler_types.h,%/drivers/gpu/drm/nvidia/nvidia-modeset/cxx_types.h,$(c_flags))
 
 quiet_cmd_cxx_o_cpp = CXX $(quiet_modtag) $@
       cmd_cxx_o_cpp = $(CXX) $(cxx_flags) -c -o $@ $< $(cmd_objtool)
