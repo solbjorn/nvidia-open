@@ -1228,9 +1228,9 @@ void NV_API_CALL os_release_spinlock(void *pSpinlock, NvU64 oldIrql)
     NV_SPIN_UNLOCK_IRQRESTORE(&os_spinlock->lock, eflags);
 }
 
-#define NV_KERNEL_RELEASE    ((LINUX_VERSION_CODE >> 16) & 0x0ff)
-#define NV_KERNEL_VERSION    ((LINUX_VERSION_CODE >> 8)  & 0x0ff)
-#define NV_KERNEL_SUBVERSION ((LINUX_VERSION_CODE)       & 0x0ff)
+#define NV_KERNEL_RELEASE    LINUX_VERSION_MAJOR
+#define NV_KERNEL_VERSION    LINUX_VERSION_PATCHLEVEL
+#define NV_KERNEL_SUBVERSION LINUX_VERSION_SUBLEVEL
 
 NV_STATUS NV_API_CALL os_get_version_info(os_version_info * pOsVersionInfo)
 {

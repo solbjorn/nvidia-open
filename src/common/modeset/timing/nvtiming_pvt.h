@@ -110,30 +110,30 @@ NvU32 axb_div_c_old(NvU32 a, NvU32 b, NvU32 c);
 #define NVT_PVT_DOUBLE_SCAN_HEIGHT_VGA  600
 #define NVT_PVT_DOUBLE_SCAN_PCLK_MIN    1200     //in 10KHz
 
+#ifndef abs
 #define abs(a) ((a)>0?(a):-(a))
+#endif
 #define set_rrx1k(a,b,c) ((b)*(c)==0?(0):(NvU32)(((NvU64)(a)*10000*1000+(b)*(c)/2)/((b)*(c))))
 #define frame_height(a) ((NvU32)((a).VVisible * ((a).interlaced!=0?2:1)))
 #define nvt_is_wideaspect(width,height) ((width)*5 >= (height)*8)
 
 #ifndef MIN
-#define MIN(x, y) ((x)>(y) ? (y) : (x))
+#define MIN(x, y)			min(x, y)
 #endif
 #ifndef MAX
-#define MAX(x,y) ((x) > (y) ? (x) : (y))
+#define MAX(x,y)			max(x, y)
 #endif
-
-
 #ifndef COUNT
-#define COUNT(a) (sizeof(a)/sizeof(a[0]))
+#define COUNT(a)			ARRAY_SIZE(a)
 #endif
 #ifndef offsetof
 #define offsetof(st, m) ((size_t) ( (char *)&((st *)(0))->m - (char *)0 ))
 #endif
-#define nvt_nvu8_set_bits(d, s, m, shift) {(d)&=(NvU8)((NvU8)(m)^0xFFU);(d)|=((s)<<(shift))&(m);}
-#define nvt_get_bits(d, m, shift) (((d)&(m))>>shift)
+#define nvt_nvu8_set_bits(d, s, m, _s)	u8p_replace_bits(&(d), s, m)
+#define nvt_get_bits(d, m, _s)		FIELD_GET(m, d)
 #define nvt_lowest_bit(n) ((n)&(~((n)-1)))
-#define nvt_aspect_x(n) ((n)>>16)
-#define nvt_aspect_y(n) ((n)&0xFFFF)
+#define nvt_aspect_x(n)			upper_16_bits(n)
+#define nvt_aspect_y(n)			lower_16_bits(n)
 
 // Sentinel values for NVT_TIMING
 #define NVT_TIMINGEXT_SENTINEL {0,0,0,0,0,{0},{0},{0},{0},0,""}

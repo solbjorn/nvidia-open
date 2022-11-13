@@ -21,6 +21,7 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
+#include <generated/compile.h>
 #include <linux/module.h>
 #include <linux/kernel.h>
 #include <linux/slab.h>
@@ -59,7 +60,7 @@
 
 #define NVKMS_LOG_PREFIX "nvidia-modeset: "
 
-const char NV_KMS_ID[] = "nvidia id: NVIDIA UNIX Open Kernel Mode Setting Driver for " NV_MACHINE "  " NV_VERSION_STRING "  Release Build";
+const char NV_KMS_ID[] = "nvidia id: NVIDIA UNIX Open Kernel Mode Setting Driver for " UTS_MACHINE "  " NV_VERSION_STRING "  Release Build";
 const char * const pNV_KMS_ID = NV_KMS_ID + 11;
 
 static bool output_rounding_fix = true;

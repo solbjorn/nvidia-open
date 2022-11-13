@@ -28,6 +28,8 @@
 
 #if defined(CONFIG_PROC_FS)
 
+#include <generated/compile.h>
+
 #include "nv-procfs.h"
 #include "nv-reg.h"
 #include "conftest/patches.h"
@@ -247,7 +249,7 @@ nv_procfs_read_version(
 )
 {
     seq_printf(s, "NVRM version: %s\n", pNVRM_ID);
-    seq_printf(s, "GCC version:  %s\n", NV_COMPILER);
+    seq_printf(s, "GCC version:  %s\n", LINUX_COMPILER);
 
     return 0;
 }

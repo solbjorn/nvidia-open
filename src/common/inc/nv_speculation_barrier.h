@@ -37,6 +37,8 @@
 #ifndef _NV_SPECULATION_BARRIER_H_
 #define _NV_SPECULATION_BARRIER_H_
 
+#include <linux/nospec.h>
+
 #define NV_SPECULATION_BARRIER_VERSION 2
 
 /*
@@ -82,6 +84,10 @@
  /* aarch64(ARMv8) mode */
  #define NV_SPECULATION_BARRIER_ARM_COMMON
  #define NV_SPEC_BARRIER_CSDB "HINT #20\n"
+#elif (defined(_MSC_VER) && ( defined(_M_ARM64) || defined(_M_ARM)) )
+ /* Not currently implemented for MSVC/ARM64. See bug 3366890. */
+#   define nv_speculation_barrier()
+#   define speculation_barrier() nv_speculation_barrier()
 #elif defined(NVCPU_NVRISCV64) && NVOS_IS_LIBOS
 #   define nv_speculation_barrier()
 #else
@@ -118,6 +124,10 @@
 
 static inline void nv_speculation_barrier(void)
 {
+
+#if defined(_MSC_VER) && !defined(__clang__)
+    _mm_lfence();
+#endif
 
 #if defined(__GNUC__) || defined(__clang__)
     __asm__ __volatile__ ("lfence" : : : "memory");
@@ -180,40 +190,10 @@ static inline void nv_speculation_barrier(void)
  * (they will wait for the bounds check to complete).
  */
 
-static inline unsigned long nv_array_index_no_speculate(unsigned long index,
-                        unsigned long count)
+static __always_inline unsigned long
+nv_array_index_no_speculate(unsigned long index, unsigned long count)
 {
-#if defined(NV_SPECULATION_BARRIER_x86) && (defined(__GNUC__) || defined(__clang__))
-    unsigned long mask;
-
-    __asm__ __volatile__
-    (
-        "CMP     %2, %1          \n"
-        "SBB     %0, %0          \n"
-        : "=r"(mask) : "r"(index), "r"(count) : "cc"
-    );
-
-    return (index & mask);
-
-#elif defined(NV_SPECULATION_BARRIER_ARM_COMMON)
-    unsigned long mask;
-
-    asm volatile
-    (
-        "CMP %[ind], %[cnt] \n"
-        "SBC %[res], %[cnt], %[cnt] \n"
-        NV_SPEC_BARRIER_CSDB
-        : [res] "=r" (mask) : [ind] "r" (index), [cnt] "r" (count): "cc"
-    );
-
-    return (index & mask);
-
-/* Fallback to generic speculation barrier for unsupported platforms */
-#else
-    nv_speculation_barrier();
-
-    return index;
-#endif
+	return array_index_nospec(index, count);
 }
 
 #endif //_NV_SPECULATION_BARRIER_H_

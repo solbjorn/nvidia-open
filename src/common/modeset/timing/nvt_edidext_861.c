@@ -1116,8 +1116,8 @@ void parseCta861VsdbBlocks(NVT_EDID_CEA861_INFO *pExt861,
 
         // Pick updated TMDS clock rate
         pHdmiLlc->effective_tmds_clock = (pExt861->valid.H20_HF_VSDB) ?
-                                            MAX(pHdmiLlc->max_tmds_clock, pHfvs->max_TMDS_char_rate) : 
-                                            MIN(pHdmiLlc->max_tmds_clock, 0x44);
+                                            max_t(NvU8, pHdmiLlc->max_tmds_clock, pHfvs->max_TMDS_char_rate) :
+                                            min_t(NvU8, pHdmiLlc->max_tmds_clock, 0x44);
     }
 
 }
@@ -1484,7 +1484,7 @@ NVT_STATUS parseCta861DataBlockInfo(NvU8 *p,
                     {
                             p861info->hfscdb[j] = p[i];
                     }
-                    p861info->hfscdbSize = MIN(payload - 3, NVT_CTA861_EXT_SCDB_PAYLOAD_MAX_LENGTH);
+                    p861info->hfscdbSize = min_t(NvU32, payload - 3, NVT_CTA861_EXT_SCDB_PAYLOAD_MAX_LENGTH);
                     p861info->valid.SCDB = 1;
                 }
                 else if (ext_tag == NVT_CEA861_EXT_TAG_HF_EEODB && payload == 2)
@@ -2391,7 +2391,7 @@ void AddModeToSupportMap(HDMI3DSUPPORTMAP * pMap, NvU8 Vic, NvU8 StereoStructure
             // 1st 16 entries in the map are reserved for the vics from the EDID.
             // if we add this VIC to the 1st 16, & there are any optional modes listed,
             // the optional mode(s) will be improperly applied to this VIC as well
-            i = MAX(MAX_EDID_ADDRESSABLE_3D_VICS, pMap->total);
+            i = max_t(NvU32, MAX_EDID_ADDRESSABLE_3D_VICS, pMap->total);
             if (i < MAX_3D_VICS_SUPPORTED)
             {
                 pMap->map[i].Vic = Vic;
@@ -2630,7 +2630,7 @@ void parseEdidHDMILLCTiming(NVT_EDID_INFO *pInfo, VSDB_DATA *pVsdb, NvU32 *pMapS
                     AllVicDetail = 0 != (AllVicStructMask & NVT_HDMI_3D_SUPPORTED_SIDEBYSIDEHALF_MASK) ? NVT_HDMI_VS_BYTE_OPT1_HDMI_3DEX_SSH : 0;
 
                     // add the modes to the Support map for all the listed VICs.
-                    for (k = 0; k < MIN(MAX_EDID_ADDRESSABLE_3D_VICS, pM->total); ++k)
+                    for (k = 0; k < min_t(NvU32, MAX_EDID_ADDRESSABLE_3D_VICS, pM->total); ++k)
                     {
                         if ((0 != (AllVicIdxMask & (1 << k))) && (0 != pM->map[k].Vic))
                         {

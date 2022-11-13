@@ -31,6 +31,14 @@
 extern "C" {
 #endif //__cplusplus
 
+#ifndef __cplusplus
+#include <linux/bits.h>
+#else
+#include <vdso/const.h>
+#define BIT(nr)			(UL(1) << (nr))
+#define BIT_ULL(nr)		(ULL(1) << (nr))
+#endif
+
 #include "nvtypes.h"
 
 #if !defined(NVIDIA_UNDEF_LEGACY_BIT_MACROS)
@@ -38,14 +46,11 @@ extern "C" {
 // Miscellaneous macros useful for bit field manipulations
 //
 // STUPID HACK FOR CL 19434692.  Will revert when fix CL is delivered bfm -> chips_a.
-#ifndef BIT
-#define BIT(b)                  (1U<<(b))
-#endif
 #ifndef BIT32
 #define BIT32(b)                ((NvU32)1U<<(b))
 #endif
 #ifndef BIT64
-#define BIT64(b)                ((NvU64)1U<<(b))
+#define BIT64(b)                BIT_ULL(b)
 #endif
 
 #endif
@@ -55,7 +60,7 @@ extern "C" {
 // collisions with other src code bases.
 //
 #ifndef NVBIT
-#define NVBIT(b)                  (1U<<(b))
+#define NVBIT(b)                  NVBIT32(b)
 #endif
 #ifndef NVBIT_TYPE
 #define NVBIT_TYPE(b, t)          (((t)1U)<<(b))
@@ -64,7 +69,7 @@ extern "C" {
 #define NVBIT32(b)                NVBIT_TYPE(b, NvU32)
 #endif
 #ifndef NVBIT64
-#define NVBIT64(b)                NVBIT_TYPE(b, NvU64)
+#define NVBIT64(b)                BIT_ULL(b)
 #endif
 
 // Helper macro's for 32 bit bitmasks

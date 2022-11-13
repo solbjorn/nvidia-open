@@ -360,7 +360,7 @@ NVT_STATUS NvTiming_CalcCVT_RB2(NvU32 width, NvU32 height, NvU32 rr, NvBool is10
     // 10. Check Vertical Blanking is Sufficient :
     // RB_MIN_VBI = RB_V_FPORCH + V_SYNC_RND + MIN_V_BPORCH
     //   ACT_VBI_LINES = IF(VBI_LINES < RB_MIN_VBI, RB_MIN_VBI, VBI_LINES)
-    act_vbi_lines = MAX(vbi, NVT_CVT_RB2_MIN_VBI);
+    act_vbi_lines = max_t(NvU32, vbi, NVT_CVT_RB2_MIN_VBI);
 
     // 11. Find total number of vertical lines :
     // TOTAL_V_LINES = ACT_VBI_LINES + V_LINES_RND + TOP_MARGIN + BOT_MARGIN
@@ -482,7 +482,7 @@ NVT_STATUS NvTiming_CalcCVT_RB3(NvU32 width, NvU32 height, NvU32 rr, NvU32 delta
     // Parameters mapping:
     // - ACT_V_BLANK_TIME == "act_v_blank_time"
     // - I_VBLANK         == "vBlankMicroSec"
-    act_v_blank_time = MAX(vBlankMicroSec + 460, NVT_CVT_RB3_MIN_VBLANK_MICROSEC);
+    act_v_blank_time = max_t(NvU32, vBlankMicroSec + 460, NVT_CVT_RB3_MIN_VBLANK_MICROSEC);
 
     // 6 Calculate the number of idealized lines in the VBlank interval:
     // VBI_LINES = ROUNDUP(ACT_V_BLANK_TIME / H_PERIOD_EST, 0)
@@ -505,7 +505,7 @@ NVT_STATUS NvTiming_CalcCVT_RB3(NvU32 width, NvU32 height, NvU32 rr, NvU32 delta
     // - C_MIN_V_BPORCH == 6
     // - V_BLANK        == "act_v_blank_lines"
     // NVT_CVT_RB3_MIN_VBI ==  1 + 8 + 6 = 15
-    act_v_blank_lines = MAX(vbi, NVT_CVT_RB3_MIN_VBI);
+    act_v_blank_lines = max_t(NvU32, vbi, NVT_CVT_RB3_MIN_VBI);
 
     // 8 Calculate the total number of vertical lines:
     // TOTAL_V_LINES = V_BLANK + V_LINES_RND

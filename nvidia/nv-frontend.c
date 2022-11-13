@@ -21,12 +21,14 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
+#include <generated/compile.h>
+
 #include "os-interface.h"
 #include "nv-linux.h"
 #include "nv-reg.h"
 #include "nv-frontend.h"
 
-const char NVRM_ID[] = "nvidia id: NVIDIA UNIX Open Kernel Module for " NV_MACHINE "  " NV_VERSION_STRING "  Release Build";
+const char NVRM_ID[] = "nvidia id: NVIDIA UNIX Open Kernel Module for " UTS_MACHINE "  " NV_VERSION_STRING "  Release Build";
 const char * const pNVRM_ID = NVRM_ID + 11;
 
 #if defined(MODULE_LICENSE)
