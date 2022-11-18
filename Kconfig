@@ -3,7 +3,10 @@
 menuconfig DRM_NVIDIA
 	tristate "NVIDIA Linux GPU driver"
 	depends on DRM
+	select BACKLIGHT_CLASS_DEVICE
 	select DRM_KMS_HELPER
+	select FW_LOADER
+	select ZLIB_INFLATE
 	# This must have way more depends and selects, but Nvidia doesn't
 	# provide any Kconfig to rely on. For now, rely on that usual distro
 	# configs already have all that is needed.

@@ -37,7 +37,6 @@
  */
 const NvU32 P9_L1D_CACHE_DEFAULT_BLOCK_SIZE = 0x80;
 
-#if defined(NV_OF_GET_PROPERTY_PRESENT)
 static NvU32 nv_ibm_get_cpu_l1d_cache_block_size(void)
 {
     const __be32 *block_size_prop;
@@ -60,12 +59,6 @@ static NvU32 nv_ibm_get_cpu_l1d_cache_block_size(void)
 
     return be32_to_cpu(*block_size_prop);
 }
-#else
-static NvU32 nv_ibm_get_cpu_l1d_cache_block_size(void)
-{
-    return P9_L1D_CACHE_DEFAULT_BLOCK_SIZE;
-}
-#endif
 
 /*
  * GPU device memory can be exposed to the kernel as NUMA node memory via the
@@ -397,52 +390,4 @@ void NV_API_CALL nv_ibmnpu_cache_flush_range(nv_state_t *nv, NvU64 cpu_virtual, 
     CACHE_FLUSH();
 }
 
-#else
-
-void nv_init_ibmnpu_info(nv_state_t *nv)
-{
-}
-
-void nv_destroy_ibmnpu_info(nv_state_t *nv)
-{
-}
-
-int nv_init_ibmnpu_devices(nv_state_t *nv)
-{
-    return 0;
-}
-
-void nv_unregister_ibmnpu_devices(nv_state_t *nv)
-{
-}
-
-NV_STATUS NV_API_CALL nv_get_ibmnpu_genreg_info(nv_state_t *nv, NvU64 *addr,
-                                                NvU64 *size, void **device)
-{
-    return NV_ERR_NOT_SUPPORTED;
-}
-
-NV_STATUS NV_API_CALL nv_get_ibmnpu_relaxed_ordering_mode(nv_state_t *nv,
-                                                          NvBool *mode)
-{
-    return NV_ERR_NOT_SUPPORTED;
-}
-
-void NV_API_CALL nv_wait_for_ibmnpu_rsync(nv_state_t *nv)
-{
-}
-
-int nv_get_ibmnpu_chip_id(nv_state_t *nv)
-{
-    return -1;
-}
-
-void NV_API_CALL nv_ibmnpu_cache_flush_range(nv_state_t *nv, NvU64 virtual, NvU64 size)
-{
-}
-
-void nv_ibmnpu_cache_flush_numa_region(nv_state_t *nv)
-{
-}
-
-#endif
+#endif /* NVCPU_PPC64LE */

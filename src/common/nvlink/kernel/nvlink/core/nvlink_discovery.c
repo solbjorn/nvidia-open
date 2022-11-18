@@ -54,7 +54,14 @@ nvlink_core_discover_and_get_remote_end
     nvlink_device         *dev       = NULL;
     nvlink_link           *link      = NULL;
     NvU32                  linkCount = 0;
-    nvlink_link   **pLinks = (nvlink_link **)nvlink_malloc(
+    nvlink_link   **pLinks;
+
+    if ((end == NULL) || (remote_end == NULL))
+    {
+        return;
+    }
+
+    pLinks = (nvlink_link **)nvlink_malloc(
                             sizeof(nvlink_link *) * NVLINK_MAX_SYSTEM_LINK_NUM);
     if (pLinks == NULL)
     {
@@ -178,7 +185,7 @@ _nvlink_core_discover_topology(void)
             // Send the AN0 packet
             // For Nvlink3.0, token mechanism is handled by Minion.
             // SW gets Sids values and so write_disocvery_token is Stubbed for Nvlink 3.0
-            // We use the return value of write_discovery_token to shift between 
+            // We use the return value of write_discovery_token to shift between
             // Nvlink2.0 and NvLink3.0
             //
             if ((end0->version < NVLINK_DEVICE_VERSION_30) ||
@@ -224,12 +231,11 @@ _nvlink_core_discover_topology(void)
                         isTokenFound = NV_TRUE;
 
                         //
-                        // If a token is found mark bInitnegotiateConfigGood as
-                        // True since we can only finish off discovery if
-                        // INITNEGOTIATE has finished in order to get topology info from
-                        // MINION
+                        // If R4 tokens were used for NVLink3.0+, then mark initnegotiate
+                        // passed, since ALT training won't get kicked off without it.
                         //
-                        if ((end0->version >= NVLINK_DEVICE_VERSION_30))
+                        if ((end0->version >= NVLINK_DEVICE_VERSION_30) &&
+                            ((end0->localSid == 0) || (end0->remoteSid == 0)))
                         {
                             end0->bInitnegotiateConfigGood = NV_TRUE;
                             end1->bInitnegotiateConfigGood = NV_TRUE;

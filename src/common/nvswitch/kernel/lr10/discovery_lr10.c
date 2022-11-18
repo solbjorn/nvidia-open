@@ -1360,7 +1360,6 @@ nvswitch_filter_discovery_lr10
     nvswitch_device *device
 )
 {
-    return;
 }
 
 struct lr10_disc_entry {

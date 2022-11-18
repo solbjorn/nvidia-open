@@ -850,4 +850,5 @@ initializeHdmiPktInterface9171(NVHDMIPKT_CLASS* pClass)
     pClass->hdmiQueryFRLConfig          = hdmiQueryFRLConfigDummy;
     pClass->hdmiSetFRLConfig            = hdmiSetFRLConfigDummy;
     pClass->hdmiClearFRLConfig          = hdmiClearFRLConfigDummy;
+
 }

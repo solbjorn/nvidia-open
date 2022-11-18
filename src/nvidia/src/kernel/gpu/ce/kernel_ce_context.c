@@ -57,13 +57,15 @@ ENGDESCRIPTOR
 kceGetEngineDescFromAllocParams(OBJGPU *pGpu, NvU32 externalClassId, void *pAllocParams)
 {
     CALL_CONTEXT *pCallContext = resservGetTlsCallContext();
-    NvU32 engineInstance = 0;
+    NvU32 engineIndex = 0;
     NV_STATUS status;
 
     NV_ASSERT(pAllocParams);
 
     if (IsAMODEL(pGpu))
     {
+        RM_ENGINE_TYPE rmEngineType;
+
         // On AMODEL CopyEngine is allocated using OBJGR
         if (IS_MIG_IN_USE(pGpu))
         {
@@ -77,9 +79,9 @@ kceGetEngineDescFromAllocParams(OBJGPU *pGpu, NvU32 externalClassId, void *pAllo
 
             NV_ASSERT_OK(
                 kmigmgrGetLocalToGlobalEngineType(pGpu, pKernelMIGManager, ref,
-                                                  NV2080_ENGINE_TYPE_GR(0),
-                                                  &engineInstance));
-            return ENG_GR(NV2080_ENGINE_TYPE_GR_IDX(engineInstance));
+                                                  RM_ENGINE_TYPE_GR(0),
+                                                  &rmEngineType));
+            return ENG_GR(RM_ENGINE_TYPE_GR_IDX(rmEngineType));
         }
         return ENG_GR(0);
     }
@@ -105,7 +107,9 @@ kceGetEngineDescFromAllocParams(OBJGPU *pGpu, NvU32 externalClassId, void *pAllo
                     NV_PRINTF(LEVEL_INFO,
                               "Version = 0, using engineType (=%d) as CE instance\n",
                               pNvA0b5CreateParms->engineType);
-                    engineInstance = pNvA0b5CreateParms->engineType;
+
+                    // The engineType in VERSION_0 is actually an index
+                    engineIndex = pNvA0b5CreateParms->engineType;
                     break;
                 }
 
@@ -114,17 +118,17 @@ kceGetEngineDescFromAllocParams(OBJGPU *pGpu, NvU32 externalClassId, void *pAllo
                     NvU32 i;
 
                     // Loop over supported engines
-                    for (i = 0; i < NV2080_ENGINE_TYPE_COPY_SIZE; i++)
+                    for (i = 0; i < RM_ENGINE_TYPE_COPY_SIZE; i++)
                     {
-                        if (pNvA0b5CreateParms->engineType == NV2080_ENGINE_TYPE_COPY(i))
+                        if (gpuGetRmEngineType(pNvA0b5CreateParms->engineType) == RM_ENGINE_TYPE_COPY(i))
                         {
-                            engineInstance = i;
+                            engineIndex = i;
                             break;
                         }
                     }
 
                     // Make sure we found something we support
-                    if (i == NV2080_ENGINE_TYPE_COPY_SIZE)
+                    if (i == RM_ENGINE_TYPE_COPY_SIZE)
                     {
                         NV_PRINTF(LEVEL_ERROR,
                                   "Unknown engine type %d requested\n",
@@ -156,11 +160,11 @@ kceGetEngineDescFromAllocParams(OBJGPU *pGpu, NvU32 externalClassId, void *pAllo
     }
 
     status = ceIndexFromType(pGpu, pCallContext->pClient->hClient,
-                                       NV2080_ENGINE_TYPE_COPY(engineInstance), &engineInstance);
+                                       RM_ENGINE_TYPE_COPY(engineIndex), &engineIndex);
     if (status == NV_OK)
     {
-        NV_PRINTF(LEVEL_INFO, "Class %d, CE%d\n", externalClassId, engineInstance);
-        return ENG_CE(engineInstance);
+        NV_PRINTF(LEVEL_INFO, "Class %d, CE%d\n", externalClassId, engineIndex);
+        return ENG_CE(engineIndex);
     }
     else
         NV_PRINTF(LEVEL_ERROR, "Failed to determine CE number\n");

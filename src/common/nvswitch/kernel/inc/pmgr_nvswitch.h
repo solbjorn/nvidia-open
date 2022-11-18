@@ -1,5 +1,5 @@
 /*
- * SPDX-FileCopyrightText: Copyright (c) 2018-2021 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+ * SPDX-FileCopyrightText: Copyright (c) 2018-2022 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
  * SPDX-License-Identifier: MIT
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
@@ -169,7 +169,7 @@ typedef enum
 {
     NVSWITCH_I2C_ACQUIRER_NONE = 0,
     NVSWITCH_I2C_ACQUIRER_UNKNOWN,
-    NVSWITCH_I2C_ACQUIRER_IOCTL,          // e.g. MODS                  
+    NVSWITCH_I2C_ACQUIRER_IOCTL,          // e.g. MODS
     NVSWITCH_I2C_ACQUIRER_EXTERNAL,       // e.g. Linux Direct
 
 } NVSWITCH_I2C_ACQUIRER;
@@ -301,6 +301,12 @@ struct NVSWITCH_OBJI2C
     // I2C device allow list
     NVSWITCH_I2C_DEVICE_DESCRIPTOR_TYPE        *i2c_allow_list;
     NvU32                                  i2c_allow_list_size;
+
+    // For I2C via SOE support
+    NvBool      soeI2CSupported;
+    NvBool      kernelI2CSupported;
+    void        *pCpuAddr;
+    NvU64       dmaHandle;
 };
 
 //
@@ -323,5 +329,8 @@ typedef struct nvswitch_tdiode_info_type
 
 void nvswitch_i2c_destroy(nvswitch_device *device);
 void nvswitch_i2c_init(nvswitch_device *device);
+
+// Shared with LS10
+void _nvswitch_i2c_set_port_pmgr(nvswitch_device *device, NvU32 port);
 
 #endif //_PMGR_NVSWITCH_H_

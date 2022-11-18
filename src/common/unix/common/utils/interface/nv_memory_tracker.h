@@ -24,6 +24,8 @@
 #ifndef __NV_MEMORY_TRACKER_H__
 #define __NV_MEMORY_TRACKER_H__
 
+#include <linux/slab.h>
+
 #include "nv_list.h"
 
 #include <stddef.h>  /* size_t */
@@ -52,11 +54,29 @@ void nvMemoryTrackerPrintUnfreedAllocations(NVListPtr list);
  * Users of nv_memory_tracker must provide implementations of the
  * following helper functions.
  */
-void *nvMemoryTrackerAlloc(size_t size);
-void nvMemoryTrackerFree(void *ptr, size_t size);
+static __always_inline void __alloc_size(1) *
+nvMemoryTrackerAlloc(size_t size)
+{
+	return kvmalloc(size, in_task() ? GFP_KERNEL : GFP_ATOMIC);
+}
+
+static __always_inline void nvMemoryTrackerFree(void *ptr, size_t size)
+{
+	kvfree(ptr);
+}
+
 void nvMemoryTrackerPrintf(const char *format, ...)
     __attribute__((format (printf, 1, 2)));
-void nvMemoryTrackerMemset(void *s, int c, size_t n);
-void nvMemoryTrackerMemcpy(void *dest, const void *src, size_t n);
+
+static __always_inline void *nvMemoryTrackerMemset(void *s, int c, size_t n)
+{
+	return memset(s, c, n);
+}
+
+static __always_inline void *
+nvMemoryTrackerMemcpy(void *dest, const void *src, size_t n)
+{
+	return memcpy(dest, src, n);
+}
 
 #endif /* __NV_MEMORY_TRACKER_H__ */

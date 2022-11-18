@@ -4,6 +4,7 @@ NVIDIA_MODESET_API_CFLAGS += -I$(src)/src/common/inc/std
 NVIDIA_MODESET_API_CFLAGS += -include $(src)/src/common/sdk/nvidia/inc/cpuopsys.h
 
 NVIDIA_MODESET_API_CFLAGS += -I$(src)/src/common/sdk/nvidia/inc
+NVIDIA_MODESET_API_CFLAGS += -I$(src)/src/common/sdk/nvidia/inc/hw
 NVIDIA_MODESET_API_CFLAGS += -I$(src)/src/common/shared/inc
 NVIDIA_MODESET_API_CFLAGS += -I$(src)/src/common/inc
 NVIDIA_MODESET_API_CFLAGS += -I$(src)/src/common/softfloat/nvidia
@@ -37,7 +38,16 @@ NVIDIA_MODESET_API_CFLAGS += -DSOFTFLOAT_FAST_DIV64TO32
 # Tell nvtiming to use nvkms import functions
 NVIDIA_MODESET_API_CFLAGS += -DNVT_USE_NVKMS
 
-NVIDIA_MODESET_API_CFLAGS += -DNVKMS_INCLUDE_HEADSURFACE=0
+NVIDIA_MODESET_API_CFLAGS += -DNVKMS_INCLUDE_HEADSURFACE=1
+
+NVIDIA_MODESET_API_CFLAGS += -I$(src)/src/common/unix/nvidia-3d/interface
+NVIDIA_MODESET_API_CFLAGS += -I$(src)/src/common/unix/nvidia-push/interface
+NVIDIA_MODESET_API_CFLAGS += -I$(src)/src/common/unix/nvidia-3d/include
+NVIDIA_MODESET_API_CFLAGS += -I$(src)/src/common/unix/nvidia-push/include
+NVIDIA_MODESET_API_CFLAGS += -I$(src)/src/common/unix/nvidia-headsurface
+NVIDIA_MODESET_API_CFLAGS += -I$(src)/src/nvidia-modeset/src/shaders
+
+NVIDIA_MODESET_API_CFLAGS += -DNV_PUSH_IN_KERNEL
 
 NVIDIA_MODESET_API_CFLAGS += -Wformat
 NVIDIA_MODESET_API_CFLAGS += -Wreturn-type
@@ -65,7 +75,36 @@ NVIDIA_MODESET_API_CXXFLAGS += -fno-rtti
 NVIDIA_MODESET_API_CXXFLAGS += -fno-exceptions
 NVIDIA_MODESET_API_CXXFLAGS += -fcheck-new
 
-# pahole can't handle several C++ tags properly
+#
+# C++ sources compilation
+#
+
+ifneq ($(LLVM),)
+CXX = $(HOSTCXX)
+else
+CXX = $(CROSS_COMPILE)g++
+endif
+
+cxx_flags = $(patsubst %/include/linux/compiler_types.h,%/drivers/gpu/drm/nvidia/src/common/inc/std/cxx_types.h,$(c_flags))
+
+quiet_cmd_cxx_o_cpp = CXX $(quiet_modtag) $@
+      cmd_cxx_o_cpp = $(CXX) $(cxx_flags) -c -o $@ $< $(cmd_objtool)
+
+define rule_cxx_o_cpp
+	$(call cmd_and_fixdep,cxx_o_cpp)
+	$(call cmd,gen_ksymdeps)
+	$(call cmd,checksrc)
+	$(call cmd,checkdoc)
+	$(call cmd,gen_objtooldep)
+	$(call cmd,modversions_c)
+	$(call cmd,record_mcount)
+endef
+
+$(obj)/%.o: $(src)/%.cpp $(recordmcount_source) FORCE
+	$(call if_changed_rule,cxx_o_cpp)
+	$(call cmd,force_checksrc)
+
+# pahole can't handle some C++ tags properly, limit debuginfo to level 1
 ifneq ($(filter -g%,$(KBUILD_CFLAGS)),)
 NVIDIA_MODESET_API_CXXFLAGS += -g1
 endif

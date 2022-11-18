@@ -21,7 +21,7 @@
 
 *******************************************************************************/
 
-#include "uvm_hal_types.h"
+#include "uvm_hal.h"
 #include "hwref/hopper/gh100/dev_fault.h"
 
 // TODO: Bug  1835884: [uvm] Query the maximum number of subcontexts from RM

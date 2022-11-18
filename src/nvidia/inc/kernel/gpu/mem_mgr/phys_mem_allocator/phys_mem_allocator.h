@@ -156,11 +156,18 @@ typedef struct _RANGELISTTYPE
     struct _RANGELISTTYPE  *pNext;
 } RANGELISTTYPE, *PRANGELISTTYPE;
 
+#define MEMORY_PROTECTION		UVM_PMA_GPU_MEMORY_TYPE
+#define MEMORY_PROTECTION_UNPROTECTED	UVM_PMA_GPU_MEMORY_TYPE_UNPROTECTED
+#define MEMORY_PROTECTION_PROTECTED	UVM_PMA_GPU_MEMORY_TYPE_PROTECTED
+
 /*!
  * @brief Callbacks to UVM for eviction
  */
-typedef NV_STATUS (*pmaEvictPagesCb_t)(void *ctxPtr, NvU32 pageSize, NvU64 *pPages, NvU32 count, NvU64 physBegin, NvU64 physEnd);
-typedef NV_STATUS (*pmaEvictRangeCb_t)(void *ctxPtr, NvU64 physBegin, NvU64 physEnd);
+typedef NV_STATUS (*pmaEvictPagesCb_t)(void *ctxPtr, NvU32 pageSize, NvU64 *pPages,
+                                       NvU32 count, NvU64 physBegin, NvU64 physEnd,
+                                       MEMORY_PROTECTION prot);
+typedef NV_STATUS (*pmaEvictRangeCb_t)(void *ctxPtr, NvU64 physBegin, NvU64 physEnd,
+                                       MEMORY_PROTECTION prot);
 
 /*!
  * @brief Pluggable data structure management. Currently we have regmap and address tree.

@@ -25,7 +25,6 @@
 #define _BINDATA_PRIVATE_H
 
 #include "core/core.h"
-#include "lib/zlib/inflate.h"
 #include "core/bin_data.h"
 
 /**************************************************************************************************************
@@ -64,16 +63,6 @@ typedef struct
 } BINDATA_STORAGE_PVT, *PBINDATA_STORAGE_PVT;
 
 //
-// Binary data management runtime information
-//
-struct BINDATA_RUNTIME_INFO
-{
-    const BINDATA_STORAGE_PVT  *pBinStoragePvt;  // pointer to the static init struct
-    PGZ_INFLATE_STATE           pGzState;        // used by gzip
-    NvU32                       currDataPos;     // position where next chunk acquire should start at
-};
-
-//
 // This knob controls whether the data will be placed into .rodata section and
 // be considered constant for the lifetime of RM, or if it can be modified
 // during execution. Right now, we only need to modify it on GSP to reclaim
@@ -85,7 +74,5 @@ struct BINDATA_RUNTIME_INFO
 #else
 #define BINDATA_CONST const
 #endif
-
-void bindataMarkReferenced(const BINDATA_STORAGE *pBinStorage);
 
 #endif // _BINDATA_PRIVATE_H

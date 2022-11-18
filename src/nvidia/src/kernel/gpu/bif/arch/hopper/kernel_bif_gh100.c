@@ -102,35 +102,6 @@ kbifIsMSIXEnabledInHW_GH100
 }
 
 /*!
- * @brief Check if access to PCI config space is enabled or not
- *
- * @param[in] pGpu        GPU object pointer
- * @param[in] pKernelBif  Kernel BIF object pointer
- *
- * @return NV_TRUE Pci IO access is enabled
- */
-NvBool
-kbifIsPciIoAccessEnabled_GH100
-(
-    OBJGPU    *pGpu,
-    KernelBif *pKernelBif
-)
-{
-    NvU32   data = 0;
-
-    if (GPU_BUS_CFG_CYCLE_RD32(pGpu,
-                             NV_EP_PCFG_GPU_CTRL_CMD_AND_STATUS, &data) == NV_OK)
-    {
-        if (FLD_TEST_DRF(_EP_PCFG_GPU, _CTRL_CMD_AND_STATUS, _CMD_IO_SPACE, _ENABLE, data))
-        {
-            return NV_TRUE;
-        }
-    }
-
-    return NV_FALSE;
-}
-
-/*!
  * @brief Check if device is a 3D controller
  *
  * @param[in] pGpu        GPU object pointer
@@ -666,7 +637,7 @@ kbifProbePcieReqAtomicCaps_GH100
 /*!
  * @brief Enable PCIe atomics if PCIe hierarchy supports it
  *
- * @param[in] Gpu GPU object pointer
+ * @param[in] pGpu GPU object pointer
  */
 static void
 _kbifEnablePcieAtomics_GH100
@@ -735,4 +706,3 @@ kbifGetBusOptionsAddr_GH100
     }
     return status;
 }
-

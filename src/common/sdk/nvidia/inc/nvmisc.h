@@ -31,13 +31,30 @@
 extern "C" {
 #endif //__cplusplus
 
+#include <linux/align.h>
+#include <linux/minmax.h>
+
 #ifndef __cplusplus
+
+#include <linux/log2.h>
+#include <linux/math.h>
+#include <linux/string.h>
+
+#else /* __cplusplus */
+
+#define __ASM_GENERIC_RWONCE_H		/* kcsan, stddef */
+#include <asm-generic/int-ll64.h>
 #include <linux/bits.h>
-#else
-#include <vdso/const.h>
-#define BIT(nr)			(UL(1) << (nr))
-#define BIT_ULL(nr)		(ULL(1) << (nr))
-#endif
+
+#undef offsetof				/* arithm on void */
+#define offsetof(t, m)			(size_t)__builtin_offsetof(t, m)
+
+#undef __no_side_effects		/* typecheck fail */
+#define __no_side_effects(x, y)		0
+
+#undef swap				/* name collision */
+
+#endif /* __cplusplus */
 
 #include "nvtypes.h"
 
@@ -47,10 +64,10 @@ extern "C" {
 //
 // STUPID HACK FOR CL 19434692.  Will revert when fix CL is delivered bfm -> chips_a.
 #ifndef BIT32
-#define BIT32(b)                ((NvU32)1U<<(b))
+#define BIT32(b)			NVBIT32(b)
 #endif
 #ifndef BIT64
-#define BIT64(b)                BIT_ULL(b)
+#define BIT64(b)			BIT_ULL(b)
 #endif
 
 #endif
@@ -60,16 +77,16 @@ extern "C" {
 // collisions with other src code bases.
 //
 #ifndef NVBIT
-#define NVBIT(b)                  NVBIT32(b)
+#define NVBIT(b)			BIT(b)
 #endif
 #ifndef NVBIT_TYPE
-#define NVBIT_TYPE(b, t)          (((t)1U)<<(b))
+#define NVBIT_TYPE(b, t)		(((t)ULL(1)) << (b))
 #endif
 #ifndef NVBIT32
-#define NVBIT32(b)                NVBIT_TYPE(b, NvU32)
+#define NVBIT32(b)			NVBIT_TYPE(b, u32)
 #endif
 #ifndef NVBIT64
-#define NVBIT64(b)                BIT_ULL(b)
+#define NVBIT64(b)			BIT_ULL(b)
 #endif
 
 // Helper macro's for 32 bit bitmasks
@@ -239,12 +256,14 @@ extern "C" {
 #define DRF_EXTENT(drf)         (drf##_HIGH_FIELD)
 #define DRF_SHIFT(drf)          ((drf##_LOW_FIELD) % 32U)
 #define DRF_SHIFT_RT(drf)       ((drf##_HIGH_FIELD) % 32U)
+#define DRF_SIZE(drf)           ((drf##_HIGH_FIELD)-(drf##_LOW_FIELD)+1U)
 #define DRF_MASK(drf)           (0xFFFFFFFFU >> (31U - ((drf##_HIGH_FIELD) % 32U) + ((drf##_LOW_FIELD) % 32U)))
 #else
 #define DRF_BASE(drf)           (NV_FALSE?drf)  // much better
 #define DRF_EXTENT(drf)         (NV_TRUE?drf)  // much better
 #define DRF_SHIFT(drf)          (((NvU32)DRF_BASE(drf)) % 32U)
 #define DRF_SHIFT_RT(drf)       (((NvU32)DRF_EXTENT(drf)) % 32U)
+#define DRF_SIZE(drf)           (DRF_EXTENT(drf)-DRF_BASE(drf)+1U)
 #define DRF_MASK(drf)           (0xFFFFFFFFU>>(31U - DRF_SHIFT_RT(drf) + DRF_SHIFT(drf)))
 #endif
 #define DRF_DEF(d,r,f,c)        (((NvU32)(NV ## d ## r ## f ## c))<<DRF_SHIFT(NV ## d ## r ## f))
@@ -254,12 +273,12 @@ extern "C" {
 #define DRF_EXTENT(drf)         (1?drf)  // much better
 #define DRF_SHIFT(drf)          ((DRF_ISBIT(0,drf)) % 32)
 #define DRF_SHIFT_RT(drf)       ((DRF_ISBIT(1,drf)) % 32)
+#define DRF_SIZE(drf)           (DRF_EXTENT(drf)-DRF_BASE(drf)+1U)
 #define DRF_MASK(drf)           (0xFFFFFFFFU>>(31-((DRF_ISBIT(1,drf)) % 32)+((DRF_ISBIT(0,drf)) % 32)))
 #define DRF_DEF(d,r,f,c)        ((NV ## d ## r ## f ## c)<<DRF_SHIFT(NV ## d ## r ## f))
 #define DRF_NUM(d,r,f,n)        (((n)&DRF_MASK(NV ## d ## r ## f))<<DRF_SHIFT(NV ## d ## r ## f))
 #endif
 #define DRF_SHIFTMASK(drf)      (DRF_MASK(drf)<<(DRF_SHIFT(drf)))
-#define DRF_SIZE(drf)           (DRF_EXTENT(drf)-DRF_BASE(drf)+1U)
 
 #define DRF_VAL(d,r,f,v)        (((v)>>DRF_SHIFT(NV ## d ## r ## f))&DRF_MASK(NV ## d ## r ## f))
 #endif
@@ -600,6 +619,7 @@ nvMaskPos32(const NvU32 mask, const NvU32 bitIdx)
     n32++;                \
 }
 
+#ifndef __cplusplus
 /*!
  * Round up a 32-bit unsigned integer to the next power of 2.
  * Pure typesafe alternative to @ref ROUNDUP_POW2.
@@ -609,71 +629,39 @@ nvMaskPos32(const NvU32 mask, const NvU32 bitIdx)
 static NV_FORCEINLINE NvU32
 nvNextPow2_U32(const NvU32 x)
 {
-    NvU32 y = x;
-    y--;
-    y |= y >> 1;
-    y |= y >> 2;
-    y |= y >> 4;
-    y |= y >> 8;
-    y |= y >> 16;
-    y++;
-    return y;
+	return roundup_pow_of_two(x);
 }
 
 
 static NV_FORCEINLINE NvU32
 nvPrevPow2_U32(const NvU32 x )
 {
-    NvU32 y = x;
-    y |= (y >> 1);
-    y |= (y >> 2);
-    y |= (y >> 4);
-    y |= (y >> 8);
-    y |= (y >> 16);
-    return y - (y >> 1);
+	return rounddown_pow_of_two(x);
 }
 
 static NV_FORCEINLINE NvU64
 nvPrevPow2_U64(const NvU64 x )
 {
-    NvU64 y = x;
-    y |= (y >> 1);
-    y |= (y >> 2);
-    y |= (y >> 4);
-    y |= (y >> 8);
-    y |= (y >> 16);
-    y |= (y >> 32);
-    return y - (y >> 1);
+	return rounddown_pow_of_two(x);
 }
+#endif /* !__cplusplus */
 
 // Destructive operation on n64
-#define ROUNDUP_POW2_U64(n64) \
-{                         \
-    n64--;                \
-    n64 |= n64 >> 1;      \
-    n64 |= n64 >> 2;      \
-    n64 |= n64 >> 4;      \
-    n64 |= n64 >> 8;      \
-    n64 |= n64 >> 16;     \
-    n64 |= n64 >> 32;     \
-    n64++;                \
-}
+#define ROUNDUP_POW2_U64(n64)						\
+	__ROUNDUP_POW2_U64(n64,__UNIQUE_ID(x_),	__UNIQUE_ID(res_))
 
-#define NV_SWAP_U8(a,b) \
-{                       \
-    NvU8 temp;          \
-    temp = a;           \
-    a = b;              \
-    b = temp;           \
-}
+#define __ROUNDUP_POW2_U64(n64, __nn, __rn) ({	\
+	typeof(n64) __nn = (n64);		\
+	typeof(__nn) __rn;			\
+						\
+	__rn = roundup_pow_of_two(__nn);	\
+	(n64) = __rn;				\
+						\
+	__rn;					\
+})
 
-#define NV_SWAP_U32(a,b)    \
-{                           \
-    NvU32 temp;             \
-    temp = a;               \
-    a = b;                  \
-    b = temp;               \
-}
+#define NV_SWAP_U8(a,b)		swap(a, b)
+#define NV_SWAP_U32(a,b)	swap(a, b)
 
 /*!
  * @brief   Macros allowing simple iteration over bits set in a given mask.
@@ -705,25 +693,25 @@ nvPrevPow2_U64(const NvU64 x )
 //
 // Returns ceil(a/b)
 //
-#define NV_CEIL(a,b) (((a)+(b)-1)/(b))
+#define NV_CEIL(a, b)		DIV_ROUND_UP(a, b)
 
 // Clearer name for NV_CEIL
 #ifndef NV_DIV_AND_CEIL
-#define NV_DIV_AND_CEIL(a, b) NV_CEIL(a,b)
+#define NV_DIV_AND_CEIL(a, b)	NV_CEIL(a, b)
 #endif
 
 #ifndef NV_MIN
-#define NV_MIN(a, b)        (((a) < (b)) ? (a) : (b))
+#define NV_MIN(a, b)		min(a, b)
 #endif
 
 #ifndef NV_MAX
-#define NV_MAX(a, b)        (((a) > (b)) ? (a) : (b))
+#define NV_MAX(a, b)		max(a, b)
 #endif
 
 //
 // Returns absolute value of provided integer expression
 //
-#define NV_ABS(a) ((a)>=0?(a):(-(a)))
+#define NV_ABS(a)		abs(a)
 
 //
 // Returns 1 if input number is positive, 0 if 0 and -1 if negative. Avoid
@@ -739,18 +727,14 @@ nvPrevPow2_U64(const NvU64 x )
 
 // Returns the offset (in bytes) of 'member' in struct 'type'.
 #ifndef NV_OFFSETOF
-    #if defined(__GNUC__) && (__GNUC__ > 3)
-        #define NV_OFFSETOF(type, member)   ((NvU32)__builtin_offsetof(type, member))
-    #else
-        #define NV_OFFSETOF(type, member)    ((NvU32)(NvU64)&(((type *)0)->member)) // shouldn't we use PtrToUlong? But will need to include windows header.
-    #endif
+        #define NV_OFFSETOF(type, member)	offsetof(type, member)
 #endif
 
 //
 // Performs a rounded division of b into a (unsigned). For SIGNED version of
 // NV_ROUNDED_DIV() macro check the comments in bug 769777.
 //
-#define NV_UNSIGNED_ROUNDED_DIV(a,b)    (((a) + ((b) / 2U)) / (b))
+#define NV_UNSIGNED_ROUNDED_DIV(a,b)		DIV_ROUND_CLOSEST(a, b)
 
 /*!
  * Performs a ceiling division of b into a (unsigned).  A "ceiling" division is
@@ -761,7 +745,7 @@ nvPrevPow2_U64(const NvU64 x )
  *
  * @return a / b + a % b != 0 ? 1 : 0.
  */
-#define NV_UNSIGNED_DIV_CEIL(a, b)      (((a) + (b - 1)) / (b))
+#define NV_UNSIGNED_DIV_CEIL(a, b)		DIV_ROUND_UP(a, b)
 
 /*!
  * Performs subtraction where a negative difference is raised to zero.
@@ -795,7 +779,7 @@ nvPrevPow2_U64(const NvU64 x )
 // Notably using v - v + gran ensures gran gets promoted to the same type as v if gran has a smaller type.
 // Otherwise, if aligning a NVU64 with NVU32 granularity, the top 4 bytes get zeroed.
 //
-#define NV_ALIGN_DOWN(v, gran)      ((v) & ~((v) - (v) + (gran) - 1))
+#define NV_ALIGN_DOWN(v, gran)		ALIGN_DOWN(v, gran)
 #endif
 
 #ifndef NV_ALIGN_UP
@@ -803,76 +787,59 @@ nvPrevPow2_U64(const NvU64 x )
 // Notably using v - v + gran ensures gran gets promoted to the same type as v if gran has a smaller type.
 // Otherwise, if aligning a NVU64 with NVU32 granularity, the top 4 bytes get zeroed.
 //
-#define NV_ALIGN_UP(v, gran)        (((v) + ((gran) - 1)) & ~((v) - (v) + (gran) - 1))
+#define NV_ALIGN_UP(v, gran)		ALIGN(v, gran)
 #endif
 
 #ifndef NV_ALIGN_DOWN64
-#define NV_ALIGN_DOWN64(v, gran)      ((v) & ~(((NvU64)gran) - 1))
+#define NV_ALIGN_DOWN64(v, gran)	ALIGN_DOWN(v, gran)
 #endif
 
 #ifndef NV_ALIGN_UP64
-#define NV_ALIGN_UP64(v, gran)        (((v) + ((gran) - 1)) & ~(((NvU64)gran)-1))
+#define NV_ALIGN_UP64(v, gran)		ALIGN(v, gran)
 #endif
 
 #ifndef NV_IS_ALIGNED
-#define NV_IS_ALIGNED(v, gran)      (0U == ((v) & ((gran) - 1U)))
+#define NV_IS_ALIGNED(v, gran)		IS_ALIGNED(v, gran)
 #endif
 
 #ifndef NV_IS_ALIGNED64
-#define NV_IS_ALIGNED64(v, gran)      (0U == ((v) & (((NvU64)gran) - 1U)))
+#define NV_IS_ALIGNED64(v, gran)	IS_ALIGNED(v, gran)
 #endif
 
+#ifndef __cplusplus
+
 #ifndef NVMISC_MEMSET
-static NV_FORCEINLINE void *NVMISC_MEMSET(void *s, NvU8 c, NvLength n)
+static __always_inline void *NVMISC_MEMSET(void *s, int c, size_t n)
 {
-    NvU8 *b = (NvU8 *) s;
-    NvLength i;
-
-    for (i = 0; i < n; i++)
-    {
-        b[i] = c;
-    }
-
-    return s;
+	return memset(s, c, n);
 }
 #endif
 
 #ifndef NVMISC_MEMCPY
-static NV_FORCEINLINE void *NVMISC_MEMCPY(void *dest, const void *src, NvLength n)
+static __always_inline void *
+NVMISC_MEMCPY(void *dest, const void *src, size_t n)
 {
-    NvU8 *destByte = (NvU8 *) dest;
-    const NvU8 *srcByte = (const NvU8 *) src;
-    NvLength i;
-
-    for (i = 0; i < n; i++)
-    {
-        destByte[i] = srcByte[i];
-    }
-
-    return dest;
+	return memcpy(dest, src, n);
 }
 #endif
 
-static NV_FORCEINLINE char *NVMISC_STRNCPY(char *dest, const char *src, NvLength n)
+static __always_inline char *
+NVMISC_STRNCPY(char *dest, const char *src, size_t n)
 {
-    NvLength i;
-
-    for (i = 0; i < n; i++)
-    {
-        dest[i] = src[i];
-        if (src[i] == '\0')
-        {
-            break;
-        }
-    }
-
-    for (; i < n; i++)
-    {
-        dest[i] = '\0';
-    }
-
-    return dest;
+	return strncpy(dest, src, n);
 }
+
+#else /* __cplusplus */
+
+void *__nvkms_memset(void *ptr, NvU8 c, size_t size);
+void *__nvkms_memcpy(void *dest, const void *src, size_t n);
+char *__nvkms_strncpy(char *dest, const char *src, size_t n);
+
+#define NVMISC_MEMSET			__nvkms_memset
+#define NVMISC_MEMCPY			__nvkms_memcpy
+#define NVMISC_STRNCPY			__nvkms_strncpy
+
+#endif /* __cplusplus */
 
 /*!
  * Convert a void* to an NvUPtr. This is used when MISRA forbids us from doing a direct cast.
@@ -911,6 +878,16 @@ static NV_FORCEINLINE void *NV_NVUPTR_TO_PTR(NvUPtr address)
     uAddr.v = address;
     return uAddr.p;
 }
+
+// Get bit at pos (k) from x
+#define NV_BIT_GET(k, x)                       (((x) >> (k)) & 1)
+// Get bit at pos (n) from (hi) if >= 64, otherwise from (lo). This is paired with NV_BIT_SET_128 which sets the bit.
+#define NV_BIT_GET_128(n, lo, hi)              (((n) < 64) ? NV_BIT_GET((n), (lo)) : NV_BIT_GET((n) - 64, (hi)))
+//
+// Set the bit at pos (b) for U64 which is < 128. Since the (b) can be >= 64, we need 2 U64 to store this.
+// Use (lo) if (b) is less than 64, and (hi) if >= 64.
+//
+#define NV_BIT_SET_128(b, lo, hi)              { nvAssert( (b) < 128 ); if ( (b) < 64 ) (lo) |= NVBIT64(b); else (hi) |= NVBIT64( b & 0x3F ); }
 
 #ifdef __cplusplus
 }

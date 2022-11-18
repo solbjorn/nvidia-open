@@ -164,12 +164,9 @@ _vidmemPmaAllocate
 
     // Get the page size returned by RM.
     pageSize = stdmemQueryPageSize(pMemoryManager, pAllocRequest->hClient, pAllocData);
+    NV_ASSERT_OR_RETURN(pageSize != 0, NV_ERR_INVALID_STATE);
 
-    if (pageSize == 0)
-    {
-        status = NV_ERR_INVALID_STATE;
-    }
-    else if (pageSize == RM_PAGE_SIZE)
+    if (pageSize == RM_PAGE_SIZE)
     {
         //
         // TODO Remove this after the suballocator is in place
@@ -216,7 +213,7 @@ _vidmemPmaAllocate
     // Fixed address allocations.
     if (pAllocData->flags & NVOS32_ALLOC_FLAGS_FIXED_ADDRESS_ALLOCATE)
     {
-        NvU64 offsetAlign = NV_MAX(sizeAlign, pageSize);
+        NvU64 offsetAlign = max_t(u64, sizeAlign, pageSize);
 
         allocOptions.flags |= PMA_ALLOCATE_SPECIFY_ADDRESS_RANGE;
         allocOptions.physBegin = NV_ALIGN_DOWN(pAllocData->offset, offsetAlign);
@@ -244,7 +241,7 @@ _vidmemPmaAllocate
 
     // Pass along client requested alignment
     allocOptions.flags |= PMA_ALLOCATE_FORCE_ALIGNMENT;
-    allocOptions.alignment = NV_MAX(sizeAlign, pageSize);
+    allocOptions.alignment = max_t(u64, sizeAlign, pageSize);
 
 
     // Get the number of pages to be allocated by PMA
@@ -547,7 +544,7 @@ vidmemConstruct_IMPL
 
     // Scrub-on-free is not supported by heap. Make sure clients don't get unscrubbed allocations
     NV_CHECK_OR_RETURN(LEVEL_WARNING,
-        !memmgrIsScrubOnFreeEnabled(pMemoryManager) || RMCFG_FEATURE_PLATFORM_MODS || bIsPmaAlloc || bSubheap,
+        !memmgrIsScrubOnFreeEnabled(pMemoryManager) || bIsPmaAlloc || bSubheap,
         NV_ERR_INVALID_STATE);
 
     // Get the allocation from PMA if enabled.
@@ -1095,6 +1092,15 @@ vidmemAllocResources
     if (bIsPmaOwned)
     {
         pFbAllocInfo->offset = pMemDesc->_pteArray[0];
+
+        if (pMemoryManager->bEnableDynamicGranularityPageArrays == NV_TRUE)
+        {
+            //
+            // set pagearray granularity if dynamic memdesc pagesize is enabled
+            // this ensures consistency in calculation of page count
+            //
+            pMemDesc->pageArrayGranularity = pAllocRequest->pPmaAllocInfo[subdeviceInst]->pageSize;
+        }
 
         if (bContig)
         {

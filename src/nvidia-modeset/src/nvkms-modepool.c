@@ -31,7 +31,6 @@
 #include "nvkms-ioctl.h"
 
 #include "nv_mode_timings_utils.h"
-#include "nv_vasprintf.h"
 
 #include "nvkms-prealloc.h"
 
@@ -922,7 +921,6 @@ static void LogModeValidationBegin(NVEvoInfoStringPtr pInfoString,
     nvEvoLogModeValidationModeTimings(pInfoString, pModeTimings);
 }
 
-
 /*!
  * Append to pInfoString with any mode validation failure.
  */
@@ -930,16 +928,19 @@ static void LogModeValidationEnd(const NVDispEvoRec *pDispEvo,
                                  NVEvoInfoStringPtr pInfoString,
                                  const char *failureReasonFormat, ...)
 {
-    /* expand any varargs, and print the mode validation result */
+	const char *buf;
+	va_list args;
 
-    if (failureReasonFormat) {
-        char *buf;
-        NV_VSNPRINTF(buf, failureReasonFormat);
-        nvEvoLogInfoString(pInfoString,
-                           "Mode is rejected: %s.",
-                           buf ? buf : "Unknown failure");
-        nvFree(buf);
-    }
+	if (!failureReasonFormat)
+		return;
+
+	va_start(args, failureReasonFormat);
+	buf = kvasprintf_const(GFP_KERNEL, failureReasonFormat, args);
+	va_end(args);
+
+	nvEvoLogInfoString(pInfoString, "Mode is rejected: %s.",
+			   buf ? buf : "Unknown failure");
+	kfree_const(buf);
 }
 
 
@@ -1923,7 +1924,8 @@ NvBool nvValidateModeForModeset(NVDpyEvoRec *pDpyEvo,
                                 const struct NvKmsMode *pKmsMode,
                                 const struct NvKmsSize *pViewPortSizeIn,
                                 const struct NvKmsRect *pViewPortOut,
-                                NVHwModeTimingsEvo *pTimingsEvo)
+                                NVHwModeTimingsEvo *pTimingsEvo,
+                                NVT_VIDEO_INFOFRAME_CTRL *pInfoFrameCtrl)
 {
     EvoValidateModeFlags flags;
     struct NvKmsMode kmsMode = *pKmsMode;
@@ -1959,7 +1961,9 @@ NvBool nvValidateModeForModeset(NVDpyEvoRec *pDpyEvo,
         return FALSE;
     }
 
-    pTimingsEvo->infoFrameCtrl = infoFrameCtrl;
+    if (pInfoFrameCtrl != NULL) {
+        *pInfoFrameCtrl = infoFrameCtrl;
+    }
 
     return TRUE;
 }

@@ -49,8 +49,9 @@ uvm_va_policy_t *uvm_va_policy_get(uvm_va_block_t *va_block, NvU64 addr)
 
         return node ? &node->policy : &uvm_va_policy_default;
     }
-    else
+    else {
         return uvm_va_range_get_policy(va_block->va_range);
+    }
 }
 
 #if UVM_IS_CONFIG_HMM()
@@ -61,16 +62,6 @@ static uvm_va_policy_node_t *uvm_va_policy_node_container(uvm_range_tree_node_t 
 {
     return container_of(tree_node, uvm_va_policy_node_t, node);
 }
-
-#if 0
-static uvm_va_policy_t *uvm_va_policy_container(uvm_range_tree_node_t *tree_node)
-{
-    if (!tree_node)
-        return NULL;
-
-    return &uvm_va_policy_node_container(tree_node)->policy;
-}
-#endif
 
 NV_STATUS uvm_va_policy_init(void)
 {

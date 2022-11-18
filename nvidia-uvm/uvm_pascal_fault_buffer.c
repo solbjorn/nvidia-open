@@ -201,7 +201,6 @@ void uvm_hal_pascal_fault_buffer_parse_entry(uvm_parent_gpu_t *parent_gpu,
                                              NvU32 index,
                                              uvm_fault_buffer_entry_t *buffer_entry)
 {
-    NV_STATUS status;
     NvU32 *fault_entry;
     NvU64 addr_hi, addr_lo;
     NvU64 timestamp_hi, timestamp_lo;
@@ -209,7 +208,6 @@ void uvm_hal_pascal_fault_buffer_parse_entry(uvm_parent_gpu_t *parent_gpu,
     NvU32 utlb_id;
 
     BUILD_BUG_ON(NVB069_FAULT_BUF_SIZE > UVM_GPU_MMU_MAX_FAULT_PACKET_SIZE);
-    status = NV_OK;
 
     fault_entry = get_fault_buffer_entry(parent_gpu, index);
 
@@ -291,11 +289,4 @@ void uvm_hal_pascal_fault_buffer_entry_clear_valid(uvm_parent_gpu_t *parent_gpu,
 NvU32 uvm_hal_pascal_fault_buffer_entry_size(uvm_parent_gpu_t *parent_gpu)
 {
     return NVB069_FAULT_BUF_SIZE;
-}
-
-void uvm_hal_pascal_fault_buffer_parse_non_replayable_entry_unsupported(uvm_parent_gpu_t *parent_gpu,
-                                                                        void *fault_packet,
-                                                                        uvm_fault_buffer_entry_t *buffer_entry)
-{
-    UVM_ASSERT_MSG(false, "fault_buffer_parse_non_replayable_entry called on Pascal GPU\n");
 }

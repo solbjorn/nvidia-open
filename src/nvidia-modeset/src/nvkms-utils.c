@@ -24,15 +24,15 @@
 #include "nvkms-utils.h"
 #include "nvkms-types.h"
 #include "nv_mode_timings_utils.h"
-#include "nv_vasprintf.h"
 
 #include "nv_list.h" /* for nv_container_of() */
 
 void nvVEvoLog(NVEvoLogType logType, NvU8 gpuLogIndex,
                const char *fmt, va_list ap)
 {
-    char *msg, prefix[10];
     const char *gpuPrefix = "";
+    const char *msg;
+    char prefix[10];
     int level;
 
     switch (logType) {
@@ -42,7 +42,7 @@ void nvVEvoLog(NVEvoLogType logType, NvU8 gpuLogIndex,
     case EVO_LOG_ERROR: level = NVKMS_LOG_LEVEL_ERROR; break;
     }
 
-    msg = nv_vasprintf(fmt, ap);
+    msg = kvasprintf_const(in_task() ? GFP_KERNEL : GFP_ATOMIC, fmt, ap);
     if (msg == NULL) {
         return;
     }
@@ -53,8 +53,7 @@ void nvVEvoLog(NVEvoLogType logType, NvU8 gpuLogIndex,
     }
 
     nvkms_log(level, gpuPrefix, msg);
-
-    nvFree(msg);
+    kfree_const(msg);
 }
 
 void nvEvoLogDev(const NVDevEvoRec *pDevEvo, NVEvoLogType logType,
@@ -515,24 +514,6 @@ int nvBuildModeNameSnprintf(char *str, size_t size, const char *format, ...)
     return ret;
 }
 
-/* Import functions required by nv_vasprintf() */
-
-void *nv_vasprintf_alloc(size_t size)
-{
-    return nvAlloc(size);
-}
-
-void nv_vasprintf_free(void *ptr)
-{
-    nvFree(ptr);
-}
-
-int nv_vasprintf_vsnprintf(char *str, size_t size,
-                           const char *format, va_list ap)
-{
-    return nvkms_vsnprintf(str, size, format, ap);
-}
-
 /*
  * Track the size of each allocation, so that it can be passed to
  * nvkms_free().
@@ -708,26 +689,6 @@ void nvMemoryTrackerPrintf(const char *format, ...)
     va_start(ap, format);
     nvVEvoLog(EVO_LOG_WARN, NV_INVALID_GPU_LOG_INDEX, format, ap);
     va_end(ap);
-}
-
-void *nvMemoryTrackerAlloc(size_t size)
-{
-    return nvkms_alloc(size, FALSE);
-}
-
-void nvMemoryTrackerFree(void *ptr, size_t size)
-{
-    nvkms_free(ptr, size);
-}
-
-void nvMemoryTrackerMemset(void *s, int c, size_t n)
-{
-    nvkms_memset(s, c, n);
-}
-
-void nvMemoryTrackerMemcpy(void *dest, const void *src, size_t n)
-{
-    nvkms_memcpy(dest, src, n);
 }
 
 #endif /* DEBUG */

@@ -37,7 +37,7 @@
 // DATA SIZE (bytes): 768
 // COMPRESSED SIZE (bytes): 303
 //
-static BINDATA_CONST NvU8 ksec2BinArchiveBlUcode_TU102_ucode_image_data[] = 
+static BINDATA_CONST NvU8 ksec2BinArchiveBlUcode_TU102_ucode_image_data[] =
 {
     0xed, 0x8f, 0xbf, 0x4e, 0xc2, 0x50, 0x14, 0xc6, 0x3f, 0x4a, 0x8b, 0xb7, 0x52, 0xa1, 0xad, 0x0e,
     0x24, 0x4c, 0x3e, 0x42, 0x77, 0xd3, 0xb8, 0xfa, 0x06, 0xba, 0xf9, 0x0e, 0xee, 0xee, 0x2c, 0x5a,
@@ -89,13 +89,13 @@ BINDATA_STORAGE_PVT ksec2BinArchiveBlUcode_TU102_ucode_image_storage_pvt;
 // COMPRESSED SIZE (bytes): N/A
 //
 static const RM_FLCN_BL_DESC ksec2BinArchiveBlUcode_TU102_ucode_desc_data = {
-    0xfd, 
-    0, 
+    0xfd,
+    0,
     {
-        0x0, 
-        0x200, 
-        0x200, 
-        0x100  
+        0x0,
+        0x200,
+        0x200,
+        0x100
     }
 };
 #endif // defined(BINDATA_INCLUDE_DATA)
@@ -135,13 +135,16 @@ static const BINDATA_ARCHIVE __ksec2GetBinArchiveBlUcode_TU102 =
 
 
 #if defined(BINDATA_INCLUDE_FUNCTION)
-const BINDATA_ARCHIVE *ksec2GetBinArchiveBlUcode_TU102(struct KernelSec2 *pKernelSec2)
+const BINDATA_ARCHIVE *ksec2GetBinArchiveBlUcode_TU102(struct OBJGPU *pGpu, struct KernelSec2 *pKernelSec2)
 {
     return &__ksec2GetBinArchiveBlUcode_TU102;
 }
 #endif // defined(BINDATA_INCLUDE_FUNCTION)
 
 
-
-
-
+#if defined(BINDATA_INCLUDE_FUNCTION_STUB)
+const BINDATA_ARCHIVE *ksec2GetBinArchiveBlUcode_TU102(struct OBJGPU *pGpu, struct KernelSec2 *pKernelSec2)
+{
+    return NULL;
+}
+#endif // defined(BINDATA_INCLUDE_FUNCTION_STUB)

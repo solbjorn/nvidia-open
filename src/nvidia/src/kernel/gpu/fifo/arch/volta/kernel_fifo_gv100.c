@@ -116,8 +116,6 @@ kfifoEngineInfoXlate_GV100
     NvU32           *pOutVal
 )
 {
-    extern NV_STATUS kfifoEngineInfoXlate_GM107(OBJGPU *pGpu, KernelFifo *pKernelFifo, ENGINE_INFO_TYPE inType, NvU32 inVal, ENGINE_INFO_TYPE outType, NvU32 *pOutVal);
-
     // GR supports a range of faults ids
     if (inType == ENGINE_INFO_TYPE_MMU_FAULT_ID)
     {

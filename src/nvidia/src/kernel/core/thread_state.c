@@ -42,6 +42,7 @@
 #include "gpu/gpu.h"
 #include "gpu/gpu_timeout.h"
 
+#include "virtualization/hypervisor/hypervisor.h"
 #include "diagnostics/journal.h"
 
 THREAD_STATE_DB threadStateDatabase;
@@ -284,6 +285,7 @@ static NV_STATUS _threadNodeInitTime(THREAD_STATE_NODE *pThreadNode)
                             (THREAD_STATE_FLAGS_IS_ISR |
                              THREAD_STATE_FLAGS_DEFERRED_INT_HANDLER_RUNNING |
                              THREAD_STATE_FLAGS_IS_ISR_LOCKLESS));
+    NvBool deviceInit;
 
     //
     // _threadNodeInitTime() is used both for the first init and
@@ -324,6 +326,25 @@ static NV_STATUS _threadNodeInitTime(THREAD_STATE_NODE *pThreadNode)
     {
         nonComputeTimeoutMsecs = pThreadNode->timeout.overrideTimeoutMsecs;
         computeTimeoutMsecs = pThreadNode->timeout.overrideTimeoutMsecs;
+    }
+
+    deviceInit = ((pThreadNode->flags & THREAD_STATE_FLAGS_DEVICE_INIT) != 0);
+    if (deviceInit && hypervisorIsType(OS_HYPERVISOR_HYPERV))
+    {
+        //
+        // Hyper-V intercepts MMIO accesses to the GPU adding a lot of extra
+        // latency. This causes RM device init that is very heavy in MMIO
+        // accesses to take much longer than on baremetal. To WAR this, use a
+        // long 60 secs timeout for threads performing device init. This should
+        // leave us with a comfortable buffer as the longest init observed so
+        // far was 20 seconds on K80.
+        //
+        // See bug 1900927 for more details.
+        //
+        const NvU32 HYPER_V_INIT_TIMEOUT_MS = 60 * 1000;
+
+        computeTimeoutMsecs = HYPER_V_INIT_TIMEOUT_MS;
+        nonComputeTimeoutMsecs = HYPER_V_INIT_TIMEOUT_MS;
     }
 
     _threadStateSetNextCpuYieldTime(pThreadNode);
@@ -423,7 +444,7 @@ static NV_STATUS _threadNodeCheckTimeout(OBJGPU *pGpu, THREAD_STATE_NODE *pThrea
     else if (threadStateDatabase.timeout.flags & GPU_TIMEOUT_FLAGS_OSDELAY)
     {
         osDelayUs(100);
-        *pThreadNodeTime -= NV_MIN(100, *pThreadNodeTime);
+        *pThreadNodeTime -= NV_MIN(100ULL, *pThreadNodeTime);
         if (*pThreadNodeTime == 0)
         {
             rmStatus = NV_ERR_TIMEOUT;
@@ -1118,7 +1139,7 @@ void threadStateLogTimeout(OBJGPU *pGpu, NvU64 funcAddr, NvU32 lineNum)
         OBJSYS *pSys;
 #endif
 
-        rcdbAddAssertJournalRecWithLine(pGpu, lineNum, (void**)&pRec, 
+        rcdbAddAssertJournalRecWithLine(pGpu, lineNum, (void**)&pRec,
                                 RmGroup, RmRC2GpuTimeout_V3,
                                 sizeof(RmRC2GpuTimeout3_RECORD),
                                 DRF_DEF(_RM, _ASSERT, _TYPE, _INFO),
@@ -1210,12 +1231,12 @@ NV_STATUS threadStateEnqueueCallbackOnFree
 {
     THREAD_STATE_FREE_CALLBACK *pCbListNode;
 
-    if (!(pThreadNode->flags & THREAD_STATE_FLAGS_STATE_FREE_CB_ENABLED))
-        return NV_ERR_INVALID_OPERATION;
-
     if ((pThreadNode == NULL) || (pCallback == NULL) ||
         (pCallback->pCb == NULL))
         return NV_ERR_INVALID_ARGUMENT;
+
+    if (!(pThreadNode->flags & THREAD_STATE_FLAGS_STATE_FREE_CB_ENABLED))
+        return NV_ERR_INVALID_OPERATION;
 
     // Add from tail to maintain FIFO semantics.
     pCbListNode = listAppendNew(&pThreadNode->cbList);

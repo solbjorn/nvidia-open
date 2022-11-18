@@ -24,6 +24,8 @@
 #ifndef _NV_IBMNPU_H_
 #define _NV_IBMNPU_H_
 
+#include <nv.h>
+
 #if defined(NVCPU_PPC64LE)
 
 #include "ibmnpu_linux.h"
@@ -70,6 +72,8 @@ static const NvU32 nv_volta_dma_addr_size = 47;
 
 #endif
 
+#ifdef NVCPU_PPC64LE
+
 void nv_init_ibmnpu_info(nv_state_t *nv);
 void nv_destroy_ibmnpu_info(nv_state_t *nv);
 int nv_init_ibmnpu_devices(nv_state_t *nv);
@@ -77,4 +81,40 @@ void nv_unregister_ibmnpu_devices(nv_state_t *nv);
 int nv_get_ibmnpu_chip_id(nv_state_t *nv);
 void nv_ibmnpu_cache_flush_numa_region(nv_state_t *nv);
 
-#endif
+#else /* !NVCPU_PPC64LE */
+
+static inline
+void nv_init_ibmnpu_info(nv_state_t *nv)
+{
+}
+
+static inline
+void nv_destroy_ibmnpu_info(nv_state_t *nv)
+{
+}
+
+static inline
+int nv_init_ibmnpu_devices(nv_state_t *nv)
+{
+    return 0;
+}
+
+static inline
+void nv_unregister_ibmnpu_devices(nv_state_t *nv)
+{
+}
+
+static inline
+int nv_get_ibmnpu_chip_id(nv_state_t *nv)
+{
+    return -1;
+}
+
+static inline
+void nv_ibmnpu_cache_flush_numa_region(nv_state_t *nv)
+{
+}
+
+#endif /* !NVCPU_PPC64LE */
+
+#endif /* _NV_IBMNPU_H_ */

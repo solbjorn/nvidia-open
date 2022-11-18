@@ -42,7 +42,6 @@ kgraphicsAllocGrGlobalCtxBuffers_TU102
     KernelGraphicsContext *pKernelGraphicsContext
 )
 {
-    extern NV_STATUS kgraphicsAllocGrGlobalCtxBuffers_GP100(OBJGPU *pGpu, KernelGraphics *pKernelGraphics, NvU32 gfid, KernelGraphicsContext *pKernelGraphicsContext);
     MEMORY_DESCRIPTOR           **ppMemDesc;
     GR_GLOBALCTX_BUFFERS         *pCtxBuffers;
     GR_BUFFER_ATTR               *pCtxAttr;

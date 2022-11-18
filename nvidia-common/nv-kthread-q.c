@@ -170,7 +170,6 @@ EXPORT_SYMBOL(nv_kthread_q_stop);
 //
 // This function is never invoked when there is no NUMA preference (preferred
 // node is NUMA_NO_NODE).
-#if NV_KTHREAD_Q_SUPPORTS_AFFINITY() == 1
 static struct task_struct *thread_create_on_node(int (*threadfn)(void *data),
                                                  nv_kthread_q_t *q,
                                                  int preferred_node,
@@ -218,7 +217,6 @@ static struct task_struct *thread_create_on_node(int (*threadfn)(void *data),
 
     return thread[i];
 }
-#endif
 
 int nv_kthread_q_init_on_node(nv_kthread_q_t *q, const char *q_name, int preferred_node)
 {
@@ -232,11 +230,7 @@ int nv_kthread_q_init_on_node(nv_kthread_q_t *q, const char *q_name, int preferr
         q->q_kthread = kthread_create(_main_loop, q, "%s", q_name);
     }
     else {
-#if NV_KTHREAD_Q_SUPPORTS_AFFINITY() == 1
         q->q_kthread = thread_create_on_node(_main_loop, q, preferred_node, q_name);
-#else
-        return -ENOTSUPP;
-#endif
     }
 
     if (IS_ERR(q->q_kthread)) {

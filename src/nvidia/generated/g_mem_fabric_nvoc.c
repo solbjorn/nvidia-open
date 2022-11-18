@@ -148,8 +148,12 @@ static NV_STATUS __nvoc_thunk_RmResource_memoryfabricControl_Prologue(struct Mem
     return rmresControl_Prologue((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_MemoryFabric_RmResource.offset), pCallContext, pParams);
 }
 
-static NV_STATUS __nvoc_thunk_Memory_memoryfabricIsReady(struct MemoryFabric *pMemory) {
-    return memIsReady((struct Memory *)(((unsigned char *)pMemory) + __nvoc_rtti_MemoryFabric_Memory.offset));
+static NvBool __nvoc_thunk_Memory_memoryfabricIsGpuMapAllowed(struct MemoryFabric *pMemory, struct OBJGPU *pGpu) {
+    return memIsGpuMapAllowed((struct Memory *)(((unsigned char *)pMemory) + __nvoc_rtti_MemoryFabric_Memory.offset), pGpu);
+}
+
+static NV_STATUS __nvoc_thunk_Memory_memoryfabricIsReady(struct MemoryFabric *pMemory, NvBool bCopyConstructorContext) {
+    return memIsReady((struct Memory *)(((unsigned char *)pMemory) + __nvoc_rtti_MemoryFabric_Memory.offset), bCopyConstructorContext);
 }
 
 static NV_STATUS __nvoc_thunk_Memory_memoryfabricCheckCopyPermissions(struct MemoryFabric *pMemory, struct OBJGPU *pDstGpu, NvHandle hDstClientNvBool) {
@@ -158,6 +162,10 @@ static NV_STATUS __nvoc_thunk_Memory_memoryfabricCheckCopyPermissions(struct Mem
 
 static void __nvoc_thunk_RsResource_memoryfabricPreDestruct(struct MemoryFabric *pResource) {
     resPreDestruct((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_MemoryFabric_RsResource.offset));
+}
+
+static NV_STATUS __nvoc_thunk_Memory_memoryfabricIsDuplicate(struct MemoryFabric *pMemory, NvHandle hMemory, NvBool *pDuplicate) {
+    return memIsDuplicate((struct Memory *)(((unsigned char *)pMemory) + __nvoc_rtti_MemoryFabric_Memory.offset), hMemory, pDuplicate);
 }
 
 static NV_STATUS __nvoc_thunk_RsResource_memoryfabricUnmapFrom(struct MemoryFabric *pResource, RS_RES_UNMAP_FROM_PARAMS *pParams) {
@@ -182,6 +190,8 @@ static NvBool __nvoc_thunk_RmResource_memoryfabricAccessCallback(struct MemoryFa
 
 NVOC_BUILD_CALLBACK(memoryfabricCtrlGetInfo_IMPL);
 NVOC_BUILD_CALLBACK(memoryfabricCtrlCmdDescribe_IMPL);
+NVOC_BUILD_CALLBACK(memoryfabricCtrlAttachMem_IMPL);
+NVOC_BUILD_CALLBACK(memoryfabricCtrlDetachMem_IMPL);
 
 #if !defined(NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG)
 #define NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(x)      (0)
@@ -205,12 +215,12 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_MemoryFa
 #endif
     },
     {               /*  [1] */
-#if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2840u)
+#if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2844u)
         /*pFunc=*/      NULL,
 #else
         /*pFunc=*/      memoryfabricCtrlCmdDescribe_IMPL_cb,
-#endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2840u)
-        /*flags=*/      0x2840u,
+#endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2844u)
+        /*flags=*/      0x2844u,
         /*accessRight=*/0x0u,
         /*methodId=*/   0xf80102u,
         /*paramSize=*/  sizeof(NV00F8_CTRL_DESCRIBE_PARAMS),
@@ -219,12 +229,42 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_MemoryFa
         /*func=*/       "memoryfabricCtrlCmdDescribe"
 #endif
     },
+    {               /*  [2] */
+#if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x8810u)
+        /*pFunc=*/      NULL,
+#else
+        /*pFunc=*/      memoryfabricCtrlAttachMem_IMPL_cb,
+#endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x8810u)
+        /*flags=*/      0x8810u,
+        /*accessRight=*/0x0u,
+        /*methodId=*/   0xf80103u,
+        /*paramSize=*/  sizeof(NV00F8_CTRL_ATTACH_MEM_PARAMS),
+        /*pClassInfo=*/ &(__nvoc_class_def_MemoryFabric.classInfo),
+#if NV_PRINTF_STRINGS_ALLOWED
+        /*func=*/       "memoryfabricCtrlAttachMem"
+#endif
+    },
+    {               /*  [3] */
+#if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x8810u)
+        /*pFunc=*/      NULL,
+#else
+        /*pFunc=*/      memoryfabricCtrlDetachMem_IMPL_cb,
+#endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x8810u)
+        /*flags=*/      0x8810u,
+        /*accessRight=*/0x0u,
+        /*methodId=*/   0xf80104u,
+        /*paramSize=*/  sizeof(NV00F8_CTRL_DETACH_MEM_PARAMS),
+        /*pClassInfo=*/ &(__nvoc_class_def_MemoryFabric.classInfo),
+#if NV_PRINTF_STRINGS_ALLOWED
+        /*func=*/       "memoryfabricCtrlDetachMem"
+#endif
+    },
 
 };
 
 const struct NVOC_EXPORT_INFO __nvoc_export_info_MemoryFabric =
 {
-    /*numEntries=*/     2,
+    /*numEntries=*/     4,
     /*pExportEntries=*/ __nvoc_exported_method_def_MemoryFabric
 };
 
@@ -271,8 +311,16 @@ static void __nvoc_init_funcTable_MemoryFabric_1(MemoryFabric *pThis) {
     pThis->__memoryfabricCtrlGetInfo__ = &memoryfabricCtrlGetInfo_IMPL;
 #endif
 
-#if !NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2840u)
+#if !NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x2844u)
     pThis->__memoryfabricCtrlCmdDescribe__ = &memoryfabricCtrlCmdDescribe_IMPL;
+#endif
+
+#if !NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x8810u)
+    pThis->__memoryfabricCtrlAttachMem__ = &memoryfabricCtrlAttachMem_IMPL;
+#endif
+
+#if !NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x8810u)
+    pThis->__memoryfabricCtrlDetachMem__ = &memoryfabricCtrlDetachMem_IMPL;
 #endif
 
     pThis->__nvoc_base_Memory.__nvoc_base_RmResource.__nvoc_base_RsResource.__resCanCopy__ = &__nvoc_thunk_MemoryFabric_resCanCopy;
@@ -301,11 +349,15 @@ static void __nvoc_init_funcTable_MemoryFabric_1(MemoryFabric *pThis) {
 
     pThis->__memoryfabricControl_Prologue__ = &__nvoc_thunk_RmResource_memoryfabricControl_Prologue;
 
+    pThis->__memoryfabricIsGpuMapAllowed__ = &__nvoc_thunk_Memory_memoryfabricIsGpuMapAllowed;
+
     pThis->__memoryfabricIsReady__ = &__nvoc_thunk_Memory_memoryfabricIsReady;
 
     pThis->__memoryfabricCheckCopyPermissions__ = &__nvoc_thunk_Memory_memoryfabricCheckCopyPermissions;
 
     pThis->__memoryfabricPreDestruct__ = &__nvoc_thunk_RsResource_memoryfabricPreDestruct;
+
+    pThis->__memoryfabricIsDuplicate__ = &__nvoc_thunk_Memory_memoryfabricIsDuplicate;
 
     pThis->__memoryfabricUnmapFrom__ = &__nvoc_thunk_RsResource_memoryfabricUnmapFrom;
 

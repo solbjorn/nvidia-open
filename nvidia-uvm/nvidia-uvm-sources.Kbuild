@@ -11,7 +11,6 @@ NVIDIA_UVM_SOURCES += nvidia-uvm/uvm_common.c
 NVIDIA_UVM_SOURCES += nvidia-uvm/uvm_linux.c
 NVIDIA_UVM_SOURCES += nvidia-uvm/uvm_debug_optimized.c
 NVIDIA_UVM_SOURCES += nvidia-uvm/nvCpuUuid.c
-NVIDIA_UVM_SOURCES += nvidia-uvm/nv-kthread-q-selftest.c
 NVIDIA_UVM_SOURCES += nvidia-uvm/uvm.c
 NVIDIA_UVM_SOURCES += nvidia-uvm/uvm_tools.c
 NVIDIA_UVM_SOURCES += nvidia-uvm/uvm_global.c

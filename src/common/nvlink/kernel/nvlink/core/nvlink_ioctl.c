@@ -209,7 +209,7 @@ _nvlink_core_map_rx_sublink_state
  * Note: A link is initialized if it is in SWCFG or ACTIVE state
  *
  * @param[in]  linkMode   Link state
- * 
+ *
  * NvBool
  */
 static NvBool
@@ -233,7 +233,7 @@ _nvlink_core_is_link_initialized
  * Get the mask of enabled links for the device
  *
  * @param[in]  dev   nvlink_device pointer
- * 
+ *
  * NvU64
  */
 static NvU64
@@ -257,7 +257,7 @@ _nvlink_core_get_enabled_link_mask
  * Check if the device type is supported
  *
  * @param[in]  devType   Device type
- * 
+ *
  * NvBool
  */
 NvBool
@@ -297,6 +297,11 @@ nvlink_core_get_endpoint_state
     NvU64     state = NVLINK_LINKSTATE_INVALID;
     NvU64     dlState = NVLINK_LINKSTATE_INVALID;
     NvU64     tlState = NVLINK_LINKSTATE_INVALID;
+
+    if ((link == NULL) || (linkState == NULL))
+    {
+        return;
+    }
 
     //
     // This is a best case effort to return the current state of the link
@@ -343,6 +348,11 @@ nvlink_core_get_device_by_devinfo
 {
     nvlink_device *tmpDev = NULL;
 
+    if ((devInfo == NULL) || (devInfo == NULL))
+    {
+        return;
+    }
+
     FOR_EACH_DEVICE_REGISTERED(tmpDev, nvlinkLibCtx.nv_devicelist_head, node)
     {
         if ( (tmpDev->nodeId           == devInfo->nodeId)         &&
@@ -376,6 +386,11 @@ nvlink_core_get_link_by_endpoint
     nvlink_device *tmpDev  = NULL;
     nvlink_link   *tmpLink = NULL;
 
+    if ((endPoint == NULL) || (link == NULL))
+    {
+        return;
+    }
+
     FOR_EACH_DEVICE_REGISTERED(tmpDev, nvlinkLibCtx.nv_devicelist_head, node)
     {
         if ((tmpDev->nodeId           == endPoint->nodeId)         &&
@@ -408,11 +423,18 @@ nvlink_core_get_link_by_endpoint
 void
 nvlink_core_copy_endpoint_info
 (
-    nvlink_link     *connLink, 
+    nvlink_link     *connLink,
     nvlink_endpoint *endPointInfo
 )
 {
-    nvlink_device *dev = connLink->dev;
+    nvlink_device *dev;
+
+    if ((connLink == NULL) || (endPointInfo == NULL))
+    {
+        return;
+    }
+
+    dev = connLink->dev;
 
     endPointInfo->pciInfo.domain   = dev->pciInfo.domain;
     endPointInfo->pciInfo.bus      = dev->pciInfo.bus;
@@ -431,10 +453,15 @@ nvlink_core_copy_endpoint_info
 void
 nvlink_core_copy_device_info
 (
-    nvlink_device            *tmpDev, 
+    nvlink_device            *tmpDev,
     nvlink_detailed_dev_info *devInfo
 )
 {
+    if ((tmpDev == NULL) || (devInfo == NULL))
+    {
+        return;
+    }
+
     devInfo->pciInfo.domain   = tmpDev->pciInfo.domain;
     devInfo->pciInfo.bus      = tmpDev->pciInfo.bus;
     devInfo->pciInfo.device   = tmpDev->pciInfo.device;
@@ -478,12 +505,19 @@ nvlink_core_link_init_async
     NvU32 i;
 
     // Sanity check the links array for non-zero links
-    nvlink_assert((links != NULL) && (numLinks > 0));
+    if ((links == NULL) || (numLinks == 0))
+    {
+        nvlink_assert(0);
+        return NVL_BAD_ARGS;
+    }
 
     for (i = 0; i < numLinks; i++)
     {
         NvlStatus status   = NVL_SUCCESS;
         NvU64     linkMode = NVLINK_LINKSTATE_OFF;
+
+        if (links[i] == NULL)
+            continue;
 
         if (!links[i]->bRxDetected || links[i]->bTxCommonModeFail)
         {
@@ -540,6 +574,9 @@ nvlink_core_get_link_discovery_token
 {
     NvU64 token = 0;
 
+    if (link == NULL)
+        return token;
+
     //
     // generate a unique token value for discovering connections.
     // link->token is the memory address of the allocated link object,
@@ -569,6 +606,11 @@ nvlink_core_write_link_discovery_token
 {
     NvlStatus status   = NVL_SUCCESS;
     NvU64     linkMode = NVLINK_LINKSTATE_OFF;
+
+    if (link == NULL)
+    {
+        return NVL_BAD_ARGS;
+    }
 
     // Packet injection can only happen if link is in SWCFG/ACTIVE
     status = link->link_handlers->get_dl_link_mode(link, &linkMode);
@@ -608,10 +650,15 @@ nvlink_core_read_link_discovery_token
 (
     nvlink_link *link
 )
-{ 
+{
     NvU64     token    = 0;
     NvlStatus status   = NVL_SUCCESS;
     NvU64     linkMode = NVLINK_LINKSTATE_OFF;
+
+    if (link == NULL)
+    {
+        return 0;
+    }
 
     status = link->link_handlers->get_dl_link_mode(link, &linkMode);
     if (status != NVL_SUCCESS)
@@ -653,6 +700,11 @@ nvlink_core_correlate_conn_by_token
     nvlink_device *dev       = NULL;
     nvlink_link   *dstLink   = NULL;
     NvU64          readToken = 0;
+
+    if (srcLink == NULL)
+    {
+        return;
+    }
 
     FOR_EACH_DEVICE_REGISTERED(dev, nvlinkLibCtx.nv_devicelist_head, node)
     {

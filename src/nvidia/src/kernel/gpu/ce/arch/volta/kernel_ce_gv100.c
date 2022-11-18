@@ -49,6 +49,7 @@ NV_STATUS kceGetP2PCes_GV100(KernelCE *pKCe, OBJGPU *pGpu, NvU32 gpuMask, NvU32 
     else
     {
         KernelNvlink *pKernelNvlink = GPU_GET_KERNEL_NVLINK(pGpu);
+        NV2080_CTRL_CE_GET_CE_PCE_MASK_PARAMS params = {0};
         KernelCE *pKCeMatch    = NULL;
         KernelCE *pKCeSubMatch = NULL;
         KernelCE *pKCeMaxPces  = NULL;
@@ -58,6 +59,8 @@ NV_STATUS kceGetP2PCes_GV100(KernelCE *pKCe, OBJGPU *pGpu, NvU32 gpuMask, NvU32 
         NvU32     gpuInstance   = 0;
         OBJGPU    *pRemoteGpu = NULL;
         NvBool bSwitchConfig = NV_FALSE;
+        NV_STATUS rmStatus;
+        NvU32 numPces;
 
         if (pKernelNvlink != NULL)
         {
@@ -89,14 +92,9 @@ NV_STATUS kceGetP2PCes_GV100(KernelCE *pKCe, OBJGPU *pGpu, NvU32 gpuMask, NvU32 
             return NV_OK;
         }
 
-        for (NvU32 i = NVLINK_MIN_P2P_LCE; i < gpuGetNumCEs(pGpu); i++)
-        {
-            NV2080_CTRL_CE_GET_CE_PCE_MASK_PARAMS params = {0};
-            NV_STATUS rmStatus;
-            NvU32 numPces;
 
-            pKCeLoop = GPU_GET_KCE(pGpu, i);
-            if (pKCeLoop == NULL || pKCeLoop->bStubbed)
+        KCE_ITER_ALL_BEGIN(pGpu, pKCeLoop, NVLINK_MIN_P2P_LCE)
+            if (pKCeLoop->bStubbed)
             {
                 continue;
             }
@@ -147,7 +145,7 @@ NV_STATUS kceGetP2PCes_GV100(KernelCE *pKCe, OBJGPU *pGpu, NvU32 gpuMask, NvU32 
                     pKCeSubMatch = (pKCeSubMatch == NULL) ? pKCeLoop : pKCeSubMatch;
                 }
             }
-        }
+        KCE_ITER_END
 
         //
         // Prioritize an unused LCE with numPce to numLink match
@@ -253,14 +251,9 @@ kceClearAssignedNvlinkPeerMasks_GV100
     KernelCE  *pKCe
 )
 {
-    KernelCE *pCeLoop = NULL;
-    NvU32 i;
+    KernelCE *pKCeLoop = NULL;
 
-    for (i = NVLINK_MIN_P2P_LCE; i < gpuGetNumCEs(pGpu); i++)
-    {
-        pCeLoop = GPU_GET_KCE(pGpu, i);
-
-        if (pCeLoop)
-            pCeLoop->nvlinkPeerMask = 0;
-    }
+    KCE_ITER_ALL_BEGIN(pGpu, pKCeLoop, NVLINK_MIN_P2P_LCE)
+        pKCeLoop->nvlinkPeerMask = 0;
+    KCE_ITER_END
 }

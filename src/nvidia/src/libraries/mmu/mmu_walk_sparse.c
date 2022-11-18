@@ -119,13 +119,9 @@ static const MMU_FILL_TARGET g_fillTargetSparse =
     MMU_WALK_FILL_SPARSE,
 };
 
-const MMU_WALK_OP_PARAMS g_opParamsSparsify =
-{
-    &g_fillTargetSparse,
-    mmuWalkFill,
-    mmuWalkFillSelectSubLevel,
-    NV_TRUE,  // bFill
-    NV_FALSE, // bRelease
-    NV_FALSE, // bIgnoreSubLevelConflicts
+const MMU_WALK_OP_PARAMS g_opParamsSparsify = {
+	.pOpCtx			= &g_fillTargetSparse,
+	.opFunc			= mmuWalkFill,
+	.selectSubLevel		= mmuWalkFillSelectSubLevel,
+	.bFill			= NV_TRUE,
 };
-

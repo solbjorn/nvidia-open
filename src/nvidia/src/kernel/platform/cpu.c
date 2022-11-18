@@ -159,9 +159,6 @@ void RmInitCpuInfo(void)
         case AARCH64_VENDOR_PART(NVIDIA, DENVER_2):
             pSys->cpuInfo.type = NV0000_CTRL_SYSTEM_CPU_TYPE_NV_DENVER_2_0;
             break;
-        case AARCH64_VENDOR_PART(NVIDIA, ESTES_1):
-            pSys->cpuInfo.type = NV0000_CTRL_SYSTEM_CPU_TYPE_ARMV8A_GENERIC;
-            break;
 
         case AARCH64_VENDOR_PART(NVIDIA, CARMEL):
             pSys->cpuInfo.type = NV0000_CTRL_SYSTEM_CPU_TYPE_ARMV8A_GENERIC;
@@ -538,9 +535,11 @@ void RmInitCpuInfo(
  */
 #define IS_INTEL(fndry)     (((fndry).StrID[0]==0x756E6547)&&((fndry).StrID[1]==0x49656E69)&&((fndry).StrID[2]==0x6C65746E))
 #define IS_AMD(fndry)       (((fndry).StrID[0]==0x68747541)&&((fndry).StrID[1]==0x69746E65)&&((fndry).StrID[2]==0x444D4163))
+#if defined(_M_IX86) || defined(NVCPU_X86)
 #define IS_WINCHIP(fndry)   (((fndry).StrID[0]==0x746E6543)&&((fndry).StrID[1]==0x48727561)&&((fndry).StrID[2]==0x736C7561))
 #define IS_CYRIX(fndry)     (((fndry).StrID[0]==0x69727943)&&((fndry).StrID[1]==0x736E4978)&&((fndry).StrID[2]==0x64616574))
 #define IS_TRANSM(fndry)    (((fndry).StrID[0]==0x756E6547)&&((fndry).StrID[1]==0x54656E69)&&((fndry).StrID[2]==0x3638784D))
+#endif
 
 // CPUID Info
 // Used internally in this source.
@@ -918,7 +917,7 @@ getCpuCounts(OBJSYS *pSys, PCPUIDINFO pCpuidInfo)
     // bug1974464: Ryzen physical CPU count is getting misreported
     if (IS_AMD(pCpuidInfo->Foundry) && (pCpuidInfo->DisplayedFamily == 0x17))
     {
-        numPhysicalCpus = NV_MAX(maxLogicalCpus/2, 1);
+        numPhysicalCpus = NV_MAX(maxLogicalCpus/2, 1U);
     }
 #endif
 

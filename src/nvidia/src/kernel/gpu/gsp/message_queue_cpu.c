@@ -50,6 +50,7 @@
 #include "gpu/gsp/message_queue_priv.h"
 #include "msgq/msgq_priv.h"
 #include "gpu/gsp/kernel_gsp.h"
+#include "nvrm_registry.h"
 
 ct_assert(GSP_MSG_QUEUE_HEADER_SIZE > sizeof(msgqTxHeader) + sizeof(msgqRxHeader));
 
@@ -64,11 +65,11 @@ _getMsgQueueParams
     NvU32 numPtes;
     const NvLength defaultCommandQueueSize = 0x40000; // 256 KB
     const NvLength defaultStatusQueueSize  = 0x40000; // 256 KB
+    NvU32 regStatusQueueSize;
 
     if (IS_SILICON(pGpu))
     {
         pMQI->commandQueueSize = defaultCommandQueueSize;
-        pMQI->statusQueueSize = defaultStatusQueueSize;
     }
     else
     {
@@ -77,6 +78,18 @@ _getMsgQueueParams
         // the VBIOS image via RPC.
         //
         pMQI->commandQueueSize = defaultCommandQueueSize * 6;
+    }
+
+    // Check for status queue size overried
+    if (osReadRegistryDword(pGpu, NV_REG_STR_RM_GSP_STATUS_QUEUE_SIZE, &regStatusQueueSize) == NV_OK)
+    {
+        regStatusQueueSize *= 1024; // to bytes
+        regStatusQueueSize = max_t(u32, GSP_MSG_QUEUE_ELEMENT_SIZE_MAX, regStatusQueueSize);
+        regStatusQueueSize = NV_ALIGN_UP(regStatusQueueSize, 1 << GSP_MSG_QUEUE_ALIGN);
+        pMQI->statusQueueSize = regStatusQueueSize;
+    }
+    else
+    {
         pMQI->statusQueueSize = defaultStatusQueueSize;
     }
 
@@ -410,7 +423,6 @@ NV_STATUS GspMsgQueueSendCommand(MESSAGE_QUEUE_INFO *pMQI, OBJGPU *pGpu)
     NvU8      *pNextElement     = NULL;
     int        nRet;
     int        i;
-    int        nRetries;
     int        nElements;
     RMTIMEOUT  timeout;
     NV_STATUS  nvStatus         = NV_OK;
@@ -442,7 +454,7 @@ NV_STATUS GspMsgQueueSendCommand(MESSAGE_QUEUE_INFO *pMQI, OBJGPU *pGpu)
         gpuSetTimeout(pGpu, 1000000, &timeout, 0);
 
         // Wait for space to put the next element. Retry for up to 10 ms.
-        for (nRetries = 0; ; nRetries++)
+        for ( ; ; )
         {
             // Must get the buffers one at a time, since they could wrap.
             pNextElement = (NvU8 *)msgqTxGetWriteBuffer(pMQI->hQueue, i);
@@ -649,4 +661,3 @@ NV_STATUS GspMsgQueueReceiveStatus(MESSAGE_QUEUE_INFO *pMQI)
 
     return nvStatus;
 }
-

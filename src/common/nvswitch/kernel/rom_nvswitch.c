@@ -104,7 +104,7 @@ _nvswitch_read_rom_bytes
         i2cIndexed.index[1] = (offset & 0x000FF);
     }
 
-    i2cIndexed.messageLength = NV_MIN(buffer_size, NVSWITCH_CTRL_I2C_MESSAGE_LENGTH_MAX);
+    i2cIndexed.messageLength = min_t(u32, buffer_size, NVSWITCH_CTRL_I2C_MESSAGE_LENGTH_MAX);
 
     retval = nvswitch_ctrl_i2c_indexed(device, &i2cIndexed);
     if (retval != NVL_SUCCESS)
@@ -199,7 +199,7 @@ _nvswitch_rom_parse_bit_bridge_fw_data
             (NvU32) sizeof(bit_bridge_fw), bit_token->data_size);
     }
 
-    bridge_fw_size = NV_MIN(bit_token->data_size, sizeof(bit_bridge_fw));
+    bridge_fw_size = min_t(u32, bit_token->data_size, sizeof(bit_bridge_fw));
 
     // Get basic bridge-specific firmware info
     retval = _nvswitch_read_rom_bytes(device, eeprom, bit_token->data_offset,
@@ -285,7 +285,7 @@ _nvswitch_rom_parse_bit_clock_ptrs
             (NvU32) sizeof(bit_clock_ptrs), bit_token->data_size);
     }
 
-    clock_ptrs_size = NV_MIN(bit_token->data_size, sizeof(bit_clock_ptrs));
+    clock_ptrs_size = min_t(u32, bit_token->data_size, sizeof(bit_clock_ptrs));
 
      // Get PLL limits
     retval = _nvswitch_read_rom_bytes(device, eeprom, bit_token->data_offset,
@@ -425,7 +425,7 @@ _nvswitch_rom_parse_bit_nvinit_ptrs
             (NvU32) sizeof(bit_nvinit_ptrs), bit_token->data_size);
     }
 
-    nvinit_ptrs_size = NV_MIN(bit_token->data_size, sizeof(bit_nvinit_ptrs));
+    nvinit_ptrs_size = min_t(u32, bit_token->data_size, sizeof(bit_nvinit_ptrs));
 
     // Get basic NVLink settings
     retval = _nvswitch_read_rom_bytes(device, eeprom, bit_token->data_offset,
@@ -456,7 +456,7 @@ _nvswitch_rom_parse_bit_nvinit_ptrs
         return -NVL_ERR_NOT_SUPPORTED;
     }
 
-    nvlink_config_size = NV_MIN(nvlink_config.size, sizeof(nvlink_config));
+    nvlink_config_size = min_t(u32, nvlink_config.size, sizeof(nvlink_config));
 
     if (0x01 != NVSWITCH_ELEMENT_READ(&nvlink_config, version, nvlink_config_size, 0))
     {
@@ -791,10 +791,10 @@ _nvswitch_rom_parse_bit_dcb_ptrs
             (NvU32) sizeof(dcb_ptrs), bit_token->data_size);
     }
 
-    dcb_ptrs_size = NV_MIN(bit_token->data_size, sizeof(dcb_ptrs));
+    dcb_ptrs_size = min_t(u32, bit_token->data_size, sizeof(dcb_ptrs));
 
     // Get I2C & GPIO tables
-    retval = _nvswitch_read_rom_bytes(device, eeprom, bit_token->data_offset, 
+    retval = _nvswitch_read_rom_bytes(device, eeprom, bit_token->data_offset,
         (NvU8 *) &dcb_ptrs, dcb_ptrs_size);
     if (retval != NVL_SUCCESS)
     {
@@ -1082,4 +1082,3 @@ nvswitch_read_rom_tables
 
     return;
 }
-

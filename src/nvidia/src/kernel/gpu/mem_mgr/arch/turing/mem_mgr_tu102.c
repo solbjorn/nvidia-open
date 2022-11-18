@@ -548,8 +548,6 @@ memmgrGetMaxContextSize_TU102
     MemoryManager *pMemoryManager
 )
 {
-    extern NvU64 memmgrGetMaxContextSize_GV100(OBJGPU *pGpu, MemoryManager *pMemoryManager);
-
     NvU64  size = memmgrGetMaxContextSize_GV100(pGpu, pMemoryManager);
 
     if (RMCFG_FEATURE_PLATFORM_MODS)

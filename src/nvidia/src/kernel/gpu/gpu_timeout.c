@@ -383,7 +383,7 @@ _checkTimeout
         NV_ASSERT_OR_RETURN(pTmr != NULL, NV_ERR_INVALID_STATE);
 
         tmrDelay(pTmr, 5ULL * 1000ULL);
-        pTimeout->timeout -= NV_MIN(5, pTimeout->timeout);
+        pTimeout->timeout -= NV_MIN(5ULL, pTimeout->timeout);
 
         if (pTimeout->timeout == 0)
         {

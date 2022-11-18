@@ -25,6 +25,8 @@
  * @brief Bindata APIs implememtation
  */
 
+#include <linux/zlib.h>
+
 #include "core/bin_data.h"
 #include "bin_data_pvt.h"
 #include "os/os.h"
@@ -33,176 +35,7 @@
 /*
  * Private helper functions
  */
-static NV_STATUS   _bindataWriteStorageToBuffer(const BINDATA_STORAGE *pBinStorage, NvU8 *pBuffer);
-
-
-/*!
- * Initialize a BINDATA_RUNTIME_INFO structure for use, this function does not allocate any
- * memory for data storage, only the data structure itself.
- *
- * @param[in]   pBinStorage      The BINDATA_STORAGE structure related to this
- *                               binary resource.
- *
- * @param[out]  ppBinInfo        Location where the prepared BINDATA_RUNTIME_INFO data structure
- *                               will be stored to.
- *
- * @return      'NV_OK'          If all initialization operations were successful.
- *
- */
-NV_STATUS
-bindataAcquire
-(
-    const BINDATA_STORAGE *pBinStorage,
-    PBINDATA_RUNTIME_INFO *ppBinInfo
-)
-{
-    NV_STATUS              status         = NV_OK;
-    PBINDATA_RUNTIME_INFO  pBinInfo       = NULL;
-
-    // paged memory access check
-    osPagedSegmentAccessCheck();
-
-    NV_ASSERT_OR_RETURN(ppBinInfo != NULL, NV_ERR_INVALID_ARGUMENT);
-    NV_ASSERT_OR_RETURN(pBinStorage != NULL, NV_ERR_INVALID_ARGUMENT);
-
-    // resource data should never be NULL
-    NV_ASSERT_OR_RETURN(((const BINDATA_STORAGE_PVT *) pBinStorage)->pData != NULL, NV_ERR_INVALID_ARGUMENT);
-
-
-    // allocate memory for the internal structure
-    pBinInfo = portMemAllocNonPaged(sizeof(BINDATA_RUNTIME_INFO));
-    if (pBinInfo == NULL)
-    {
-        status = NV_ERR_NO_MEMORY;
-        NV_PRINTF(LEVEL_ERROR,
-                  "Memory allocation of %u bytes failed, return code %u\n",
-                  (NvU32)sizeof(BINDATA_RUNTIME_INFO), status);
-        DBG_BREAKPOINT();
-        goto FAIL;
-    }
-
-    portMemSet(pBinInfo, 0, sizeof(BINDATA_RUNTIME_INFO));
-
-    pBinInfo->pBinStoragePvt = (const BINDATA_STORAGE_PVT *) pBinStorage;
-
-    // if resource is compressed, also initialize the GZ state struct
-    if (pBinInfo->pBinStoragePvt->bCompressed)
-    {
-        if ((status = utilGzAllocate((NvU8*)(pBinInfo->pBinStoragePvt->pData),
-                                     pBinInfo->pBinStoragePvt->actualSize,
-                                     &(pBinInfo->pGzState))) != NV_OK)
-        {
-            NV_PRINTF(LEVEL_ERROR,
-                      "gz state allocation faileded, return code %u\n",
-                      status);
-            DBG_BREAKPOINT();
-            goto FAIL;
-        }
-        NV_ASSERT(pBinInfo->pGzState);
-    }
-
-    *ppBinInfo = pBinInfo;
-
-    return status;
-
-FAIL:
-    portMemFree(pBinInfo);
-
-    return status;
-}
-
-/*!
- * Acquire helper function to implement data decompression. This function
- * inflates the amount of bytes given by nBytes and write to buffer.
- *
- * This helper does NOT allocate any memory, so buffer is assumed to have
- * at least nBytes in size.
- *
- * Being exposed to public interface, this function, however, is only designed
- * for special uses.
- *
- * @param[in]   pBinInfo    Bindata runtime information
- * @param[out]  pBuffer     Buffer area for writing the acquired data
- * @param[in]   nBytes      Number of bytes to acquire (chunk size)
- *
- * @return      'NV_OK'     If the chunk acquire was successful.
- *
- */
-NV_STATUS
-bindataGetNextChunk
-(
-    PBINDATA_RUNTIME_INFO pBinInfo,
-    NvU8                 *pBuffer,
-    NvU32                 nBytes
-)
-{
-    NvU32               nBytesInflated;
-
-    // paged memory access check
-    osPagedSegmentAccessCheck();
-
-    NV_ASSERT_OR_RETURN(pBinInfo != NULL, NV_ERR_INVALID_ARGUMENT);
-    NV_ASSERT_OR_RETURN(pBuffer != NULL, NV_ERR_INVALID_ARGUMENT);
-    NV_ASSERT_OR_RETURN(nBytes + pBinInfo->currDataPos <= pBinInfo->pBinStoragePvt->actualSize,
-                      NV_ERR_INVALID_ARGUMENT);
-
-    // if the resource is compressed, the pGzState structure must be initialized
-    if (pBinInfo->pBinStoragePvt->bCompressed == NV_TRUE && pBinInfo->pGzState == NULL)
-    {
-        NV_PRINTF(LEVEL_ERROR, "must call bindataAcquire() first!\n");
-        DBG_BREAKPOINT();
-        return NV_ERR_INVALID_DATA;
-    }
-
-    if (pBinInfo->pBinStoragePvt->bCompressed)
-    {
-        if ((nBytesInflated = utilGzGetData(pBinInfo->pGzState,
-                                            pBinInfo->currDataPos,
-                                            nBytes,
-                                            pBuffer)) != nBytes)
-        {
-            NV_PRINTF(LEVEL_ERROR,
-                      "failed to get inflated data, got %u bytes, expecting %u\n",
-                      nBytesInflated, nBytes);
-            DBG_BREAKPOINT();
-            return NV_ERR_INFLATE_COMPRESSED_DATA_FAILED;
-        }
-    }
-    else
-    {
-        portMemCopy(pBuffer, nBytes, (NvU8*)(pBinInfo->pBinStoragePvt->pData) + pBinInfo->currDataPos, nBytes);
-    }
-
-    pBinInfo->currDataPos += nBytes;
-
-    return NV_OK;
-}
-
-/*!
- * Release the previously acquired binary resource.
- *
- * @param[in]   pBinInfo     Bindata runtime information
- *
- * @return      void
- */
-void
-bindataRelease
-(
-    PBINDATA_RUNTIME_INFO pBinInfo
-)
-{
-    if (pBinInfo == NULL)
-    {
-        return;
-    }
-
-    if (pBinInfo->pGzState != NULL)
-    {
-        utilGzDestroy(pBinInfo->pGzState);
-    }
-
-    portMemFree(pBinInfo);
-}
+static void bindataMarkReferenced(const BINDATA_STORAGE *pBinStorage);
 
 /*!
  * Retrieve data from Bindata storage and write it to the given memory buffer.  When
@@ -222,56 +55,35 @@ bindataWriteToBuffer
     NvU32                  bufferSize
 )
 {
-    // paged memory access check
-    osPagedSegmentAccessCheck();
+	const BINDATA_STORAGE_PVT *pvt = (typeof(pvt))pBinStorage;
+	int ret;
 
-    NV_ASSERT_OR_RETURN(bufferSize >= bindataGetBufferSize(pBinStorage), NV_ERR_BUFFER_TOO_SMALL);
+	// paged memory access check
+	osPagedSegmentAccessCheck();
 
-    return _bindataWriteStorageToBuffer(pBinStorage, pBuffer);
+	NV_ASSERT_OR_RETURN(pBinStorage != NULL, NV_ERR_INVALID_ARGUMENT);
+	NV_ASSERT_OR_RETURN(pBuffer != NULL, NV_ERR_INVALID_ARGUMENT);
+	NV_ASSERT_OR_RETURN(bufferSize >= bindataGetBufferSize(pBinStorage),
+			    NV_ERR_BUFFER_TOO_SMALL);
+
+	if (!pvt->bCompressed) {
+		memcpy(pBuffer, pvt->pData, pvt->actualSize);
+		return NV_OK;
+	}
+
+	ret = zlib_inflate_blob(pBuffer, bufferSize, pvt->pData,
+				pvt->compressedSize);
+	if (ret != pvt->actualSize) {
+		NV_PRINTF(LEVEL_ERROR,
+			  "failed to get inflated data, got %u bytes, expecting %u\n",
+			  max(ret, 0), pvt->actualSize);
+		DBG_BREAKPOINT();
+
+		return NV_ERR_INFLATE_COMPRESSED_DATA_FAILED;
+	}
+
+	return NV_OK;
 }
-
-
-/*!
- * Retrieve data from Bindata storage and write it to the given memory buffer.
- *
- * @param[in]   pBinStorage     Bindata storage
- * @param[in]   pBuffer         Pointer of given buffer
- *
- * @return      'NV_OK'         If the ucode was written to memory buffer successfully
- */
-NV_STATUS
-_bindataWriteStorageToBuffer
-(
-    const BINDATA_STORAGE *pBinStorage,
-    NvU8                  *pBuffer
-)
-{
-    NV_STATUS             status  = NV_OK;
-    PBINDATA_RUNTIME_INFO pBinInfo = NULL;
-
-    NV_ASSERT_OR_RETURN(pBinStorage != NULL, NV_ERR_INVALID_ARGUMENT);
-    NV_ASSERT_OR_RETURN(pBuffer != NULL, NV_ERR_INVALID_ARGUMENT);
-
-    if ((status = bindataAcquire(pBinStorage, &pBinInfo)) != NV_OK)
-    {
-        DBG_BREAKPOINT();
-        goto EXIT;
-    }
-
-    if ((status = bindataGetNextChunk(pBinInfo,
-                                      pBuffer,
-                                      pBinInfo->pBinStoragePvt->actualSize)) != NV_OK)
-    {
-        DBG_BREAKPOINT();
-        goto EXIT;
-    }
-
-EXIT:
-
-    bindataRelease(pBinInfo);
-    return status;
-}
-
 
 NvU32
 bindataGetBufferSize
@@ -316,7 +128,7 @@ bindataArchiveGetStorage(
     {
         return NULL;
     }
-    
+
     len = portStringLength(binName) + 1;
     for (i = 0 ; i < pBinArchive->entryNum; i++)
     {
@@ -332,7 +144,7 @@ bindataArchiveGetStorage(
 
 // File Overriding Feature is only enabled under MODS
 
-void bindataMarkReferenced(const BINDATA_STORAGE *pBinStorage)
+static void bindataMarkReferenced(const BINDATA_STORAGE *pBinStorage)
 {
     if (BINDATA_IS_MUTABLE)
     {
@@ -341,45 +153,4 @@ void bindataMarkReferenced(const BINDATA_STORAGE *pBinStorage)
         NV_ASSERT(pMutablePvt->pData != NULL || pMutablePvt->actualSize != 0);
         pMutablePvt->bReferenced = NV_TRUE;
     }
-}
-
-void* bindataGetNextUnreferencedStorage(const BINDATA_STORAGE **iter, NvU32 *pDataSize)
-{
-    extern BINDATA_STORAGE_PVT g_bindata_pvt;
-    extern const NvU32 g_bindata_pvt_count;
-
-    const BINDATA_STORAGE_PVT *iterPvt  = *(const BINDATA_STORAGE_PVT **)iter;
-    const BINDATA_STORAGE_PVT *firstPvt = &g_bindata_pvt;
-    const BINDATA_STORAGE_PVT *lastPvt  = firstPvt + g_bindata_pvt_count - 1;
-
-    // This API makes no sense if the data is const, so just bail out early.
-    NV_ASSERT_OR_RETURN(BINDATA_IS_MUTABLE, NULL);
-
-    if (iterPvt == NULL || (iterPvt >= firstPvt && iterPvt < lastPvt))
-    {
-        // Passing in NULL means start iterating.
-        iterPvt = (iterPvt == NULL) ? firstPvt : (iterPvt + 1);
-        while (iterPvt <= lastPvt)
-        {
-            if (!iterPvt->bReferenced && iterPvt->pData != NULL)
-            {
-                *iter = (const BINDATA_STORAGE *)iterPvt;
-                *pDataSize = iterPvt->compressedSize;
-                return (void*)iterPvt->pData;
-            }
-            iterPvt++;
-        }
-    }
-
-    *iter = NULL;
-    *pDataSize = 0;
-    return NULL;
-}
-
-void bindataDestroyStorage(BINDATA_STORAGE *storage)
-{
-    BINDATA_STORAGE_PVT *pBindataPvt = (BINDATA_STORAGE_PVT *)storage;
-    pBindataPvt->pData = NULL;
-    pBindataPvt->actualSize = 0;
-    pBindataPvt->compressedSize = 0;
 }

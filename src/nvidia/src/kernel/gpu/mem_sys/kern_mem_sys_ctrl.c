@@ -705,7 +705,7 @@ subdeviceCtrlCmdFbGetInfo_IMPL
     NvHandle hClient = RES_GET_CLIENT_HANDLE(pSubdevice);
     NvHandle hObject = RES_GET_HANDLE(pSubdevice);
 
-    LOCK_ASSERT_AND_RETURN(rmApiLockIsOwner() && rmDeviceGpuLockIsOwner(pGpu->gpuInstance));
+    LOCK_ASSERT_AND_RETURN(rmapiLockIsOwner() && rmDeviceGpuLockIsOwner(pGpu->gpuInstance));
 
     if ((pFbInfoParams->fbInfoListSize == 0) ||
         (NvP64_VALUE(pFbInfoParams->fbInfoList) == NULL))
@@ -733,7 +733,7 @@ subdeviceCtrlCmdFbGetInfoV2_IMPL
     NvHandle hClient = RES_GET_CLIENT_HANDLE(pSubdevice);
     NvHandle hObject = RES_GET_HANDLE(pSubdevice);
 
-    LOCK_ASSERT_AND_RETURN(rmApiLockIsOwner() && rmDeviceGpuLockIsOwner(pGpu->gpuInstance));
+    LOCK_ASSERT_AND_RETURN(rmapiLockIsOwner() && rmDeviceGpuLockIsOwner(pGpu->gpuInstance));
 
     if ((pFbInfoParams->fbInfoListSize > NV2080_CTRL_FB_INFO_MAX_LIST_SIZE) ||
         (pFbInfoParams->fbInfoListSize == 0))
@@ -758,7 +758,7 @@ subdeviceCtrlCmdFbGetCarveoutAddressInfo_IMPL
 )
 {
 
-    LOCK_ASSERT_AND_RETURN(rmApiLockIsOwner() && rmGpuLockIsOwner());
+    LOCK_ASSERT_AND_RETURN(rmapiLockIsOwner() && rmGpuLockIsOwner());
 
     pParams->StartAddr = 0x0;
     pParams->SpaceSize = 0x0;
@@ -801,7 +801,7 @@ subdeviceCtrlCmdFbGetGpuCacheAllocPolicy_IMPL
 {
 
     NV_STATUS status = NV_ERR_NOT_SUPPORTED;
-    LOCK_ASSERT_AND_RETURN(rmApiLockIsOwner() && rmGpuLockIsOwner());
+    LOCK_ASSERT_AND_RETURN(rmapiLockIsOwner() && rmGpuLockIsOwner());
 
     pGpuCacheAllocPolicyParams->allocPolicy = 0;
 
@@ -849,7 +849,7 @@ subdeviceCtrlCmdFbGetGpuCacheAllocPolicyV2_IMPL
 {
     NV_STATUS status = NV_ERR_NOT_SUPPORTED;
 
-    NV_ASSERT_OR_RETURN(rmApiLockIsOwner() && rmGpuLockIsOwner(), NV_ERR_INVALID_LOCK_STATE);
+    NV_ASSERT_OR_RETURN(rmapiLockIsOwner() && rmGpuLockIsOwner(), NV_ERR_INVALID_LOCK_STATE);
 
     NV_PRINTF(LEVEL_ERROR, "Failed to get alloc policy.\n");
     return status;
@@ -881,7 +881,7 @@ subdeviceCtrlCmdFbGetCliManagedOfflinedPages_IMPL
     NvU32               pageSize;
     NvU32               numChunks           = 0;
 
-    LOCK_ASSERT_AND_RETURN(rmApiLockIsOwner() && rmGpuLockIsOwner());
+    LOCK_ASSERT_AND_RETURN(rmapiLockIsOwner() && rmGpuLockIsOwner());
     if (!IsSLIEnabled(pGpu))
     {
         if (memmgrIsPmaInitialized(pMemoryManager))
@@ -948,7 +948,7 @@ subdeviceCtrlCmdFbUpdateNumaStatus_IMPL
     if (!RMCFG_FEATURE_PMA)
         return NV_ERR_NOT_SUPPORTED;
 
-    LOCK_ASSERT_AND_RETURN(rmApiLockIsOwner() && rmGpuLockIsOwner());
+    LOCK_ASSERT_AND_RETURN(rmapiLockIsOwner() && rmGpuLockIsOwner());
 
     if (pParams->bOnline)
     {
@@ -994,7 +994,7 @@ subdeviceCtrlCmdFbGetNumaInfo_IMPL
     const MEMORY_SYSTEM_STATIC_CONFIG *pMemorySystemConfig =
         kmemsysGetStaticConfig(pGpu, pKernelMemorySystem);
 
-    LOCK_ASSERT_AND_RETURN(rmApiLockIsOwner() && rmGpuLockIsOwner());
+    LOCK_ASSERT_AND_RETURN(rmapiLockIsOwner() && rmGpuLockIsOwner());
 
     if (pParams->numaOfflineAddressesCount >
         NV_ARRAY_ELEMENTS(pParams->numaOfflineAddresses))
@@ -1137,7 +1137,7 @@ subdeviceCtrlCmdFbFlushGpuCache_IMPL
     NvBool              bWriteback = NV_FALSE;
     NvBool              bInvalidate = NV_FALSE;
 
-    LOCK_ASSERT_AND_RETURN(rmApiLockIsOwner() && rmGpuLockIsOwner());
+    LOCK_ASSERT_AND_RETURN(rmapiLockIsOwner() && rmGpuLockIsOwner());
 
     // Either WriteBack or Invalidate are required for Cache Ops
     if (FLD_TEST_DRF(2080, _CTRL_FB_FLUSH_GPU_CACHE_FLAGS, _WRITE_BACK,

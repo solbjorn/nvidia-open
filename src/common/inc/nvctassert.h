@@ -23,6 +23,11 @@
 #ifndef __NV_CTASSERT_H
 #define __NV_CTASSERT_H
 
+#ifdef __cplusplus
+#define __ASM_GENERIC_RWONCE_H	/* kcsan, stddef */
+#endif
+#include <linux/build_bug.h>
+
 /*****************************************************************************/
 
 /* Compile Time assert
@@ -83,7 +88,7 @@
  * e.g. msvc compiler:
  *      error C2118: negative subscript or subscript is too large
  * e.g. gcc 2.95.3:
- *      size of array `_compile_time_assertion_failed_in_line_555' is negative
+ *      size of array '_compile_time_assertion_failed_in_line_555' is negative
  *
  * In case the condition 'b' is not constant, the msvc compiler throws
  * an error:
@@ -127,63 +132,6 @@
  *       compile_time_assertion_failed_in_line___LINE__
  */
 
-#if defined(__clang__)
-# ifndef __has_extension
-#  define __has_extension __has_feature // Compatibility with Clang pre-3.0 compilers.
-# endif
-# define CLANG_C_STATIC_ASSERT __has_extension(c_static_assert)
-#else
-# define CLANG_C_STATIC_ASSERT 0
-#endif
-
-// Adding this macro to fix MISRA 2012 rule 20.12
-#define NV_CTASSERT_STRINGIFY_MACRO(b) #b
-
-#if !defined(NVOC) && ((defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L) || CLANG_C_STATIC_ASSERT)
- // ISO C11 defines the _Static_assert keyword
-# define ct_assert(b)  _Static_assert((b), "Compile time assertion failed: " NV_CTASSERT_STRINGIFY_MACRO(b))
-# define ct_assert_i(b,line)  _Static_assert((b), "Compile time assertion failed: " NV_CTASSERT_STRINGIFY_MACRO(b)NV_CTASSERT_STRINGIFY_MACRO(line))
-#elif (defined(__cplusplus) && __cplusplus >= 201103L) || (defined(_MSVC_LANG) && _MSVC_LANG >= 201103L)
- // ISO C++11 defines the static_assert keyword
-# define ct_assert(b)  static_assert((b), "Compile time assertion failed: " NV_CTASSERT_STRINGIFY_MACRO(b))
-# define ct_assert_i(b,line)  static_assert((b), "Compile time assertion failed: " NV_CTASSERT_STRINGIFY_MACRO(b)NV_CTASSERT_STRINGIFY_MACRO(line))
-#else
- // For compilers which don't support ISO C11 or C++11, we fall back to an
- // array (type) declaration
-# define ct_assert(b)         ct_assert_i(b,__LINE__)
-# define ct_assert_i(b,line)  ct_assert_ii(b,line)
-# ifdef __cplusplus
-#  define ct_assert_ii(b,line) typedef char compile_time_assertion_failed_in_line_##line[(b)?1:-1]
-# else
- /*
-  * The use of a function prototype "void compile_time_assertion_failed_in_line_##line(..)
-  * above violates MISRA-C 2012 Rule 8.6 since the rule disallows a function
-  * declaration without a definition. To fix the MISRA rule, the cplusplus style
-  * 'typdef char compile_time_assertion_failed_in_line_##line'
-  * is acceptable, but doesn't work for typical C code since there can be duplicate
-  * line numbers leading to duplicate typedefs which C doesn't allow.
-  *
-  * The following macro uses the predefined macro __COUNTER__ to create unique
-  * typedefs that fixes the MISRA violations. However, not all C compilers support
-  * that macro and even for compilers that support it, the underlying code makes
-  * use of variably modified identifiers in ct_assert that makes the use of this
-  * unviable.
-  *
-  * For now restrict the use of MACRO only on
-  * i)  GCC 4.3.0 and above that supports __COUNTER__ macro
-  * ii) Specifically the Falcon port of the compiler since the use of variably
-  * modified identifiers have been removed on those projects
-  *
-  * TBD: Enable the macro on MSVC and CLANG pending
-  */
-#  if defined(__GNUC__) && ((__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__) >= 40300) && defined(GCC_FALCON)
-#   define ct_assert_ii(b,line)        ct_assert_iii(b,line,__COUNTER__)
-#   define ct_assert_iii(b,line,cntr)  ct_assert_cntr(b,line,cntr)
-#   define ct_assert_cntr(b,line,cntr) typedef char cnt##cntr##_compile_time_assertion_failed_in_line_##line[(b)?1:-1] __attribute__((unused))
-#  else
-#   define ct_assert_ii(b,line) void compile_time_assertion_failed_in_line_##line(int _compile_time_assertion_failed_in_line_##line[(b) ? 1 : -1])
-#  endif
-# endif
-#endif
+#define ct_assert	static_assert
 
 #endif // __NV_CTASSERT_H

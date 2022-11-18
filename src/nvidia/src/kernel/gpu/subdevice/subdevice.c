@@ -135,7 +135,7 @@ subdevicePreDestruct_IMPL
     Subdevice *pSubdevice
 )
 {
-    subdeviceResetTGP(pSubdevice);
+    subdeviceUnsetDynamicBoostLimit(pSubdevice);
 }
 
 void
@@ -159,13 +159,6 @@ subdeviceDestruct_IMPL
 
     // TODO - Call context lookup in dtor can likely be phased out now that we have RES_GET_CLIENT
     resGetFreeParams(staticCast(pSubdevice, RsResource), &pCallContext, NULL);
-
-    // free P2P objects associated with this subDevice
-    // can't rely on resource server to clean up since object exists in both lists
-    if (NULL != pSubdevice->pP2PMappingList)
-    {
-        CliFreeSubDeviceP2PList(pSubdevice, pCallContext);
-    }
 
     // check for any pending client's timer notification for this subdevice
     if (pSubdevice->notifyActions[NV2080_NOTIFIERS_TIMER] != NV2080_CTRL_EVENT_SET_NOTIFICATION_ACTION_DISABLE)
@@ -229,119 +222,6 @@ subdeviceControlFilter_IMPL(Subdevice *pSubdevice,
                             CALL_CONTEXT *pCallContext,
                             RS_RES_CONTROL_PARAMS_INTERNAL *pParams)
 {
-    return NV_OK;
-}
-
-NV_STATUS
-subdeviceAddP2PApi_IMPL
-(
-    Subdevice    *pSubdevice,
-    P2PApi       *pP2PApi
-)
-{
-    PNODE               pNode;
-    NvHandle            hPeerSubDevice;
-    NV_STATUS           status;
-    PCLI_P2P_INFO_LIST *pP2PInfoList;
-    NvHandle          hSubDevice = RES_GET_HANDLE(pSubdevice);
-
-    if (NULL == pP2PApi || NULL == pP2PApi->peer1 || NULL == pP2PApi->peer2)
-    {
-        return NV_ERR_INVALID_ARGUMENT;
-    }
-
-    //
-    // in case of loopback, both handles are the same and this will not matter
-    // otherwise we need the peer subdevice handle
-    //
-    hPeerSubDevice = (RES_GET_HANDLE(pP2PApi->peer1) == hSubDevice) ?
-                      RES_GET_HANDLE(pP2PApi->peer2) :
-                      RES_GET_HANDLE(pP2PApi->peer1);
-
-    if (NV_OK != btreeSearch(hPeerSubDevice, &pNode,
-                             pSubdevice->pP2PMappingList))
-    {
-        pP2PInfoList = portMemAllocNonPaged(sizeof(PCLI_P2P_INFO_LIST));
-        if (pP2PInfoList == NULL)
-        {
-            status = NV_ERR_INSUFFICIENT_RESOURCES;
-            goto failed;
-        }
-
-        listInit(pP2PInfoList, portMemAllocatorGetGlobalNonPaged());
-
-        pNode = portMemAllocNonPaged(sizeof(NODE));
-        if (pNode == NULL)
-        {
-            status = NV_ERR_INSUFFICIENT_RESOURCES;
-            goto failed;
-        }
-
-        portMemSet(pNode, 0, sizeof(NODE));
-        pNode->keyStart = hPeerSubDevice;
-        pNode->keyEnd = hPeerSubDevice;
-        pNode->Data = pP2PInfoList;
-
-        status = btreeInsert(pNode, &pSubdevice->pP2PMappingList);
-failed:
-        if (NV_OK != status)
-        {
-            portMemFree(pNode);
-            portMemFree(pP2PInfoList);
-            return status;
-        }
-    }
-    else
-    {
-        pP2PInfoList = pNode->Data;
-    }
-
-    listAppendValue(pP2PInfoList, &pP2PApi);
-
-    return NV_OK;
-}
-
-NV_STATUS
-subdeviceDelP2PApi_IMPL
-(
-    Subdevice    *pSubdevice,
-    P2PApi       *pP2PApi
-)
-{
-    PCLI_P2P_INFO_LIST *pP2PInfoList;
-    PNODE               pNode;
-    NV_STATUS           status;
-    NvHandle            hPeerSubDevice;
-    NvHandle            hSubDevice = RES_GET_HANDLE(pSubdevice);
-
-    //
-    // in case of loopback, both handles are the same and this will not matter
-    // otherwise we need the peer subdevice handle
-    //
-    hPeerSubDevice = (RES_GET_HANDLE(pP2PApi->peer1) == hSubDevice) ?
-                      RES_GET_HANDLE(pP2PApi->peer2) :
-                      RES_GET_HANDLE(pP2PApi->peer1);
-
-    if (NV_OK != (status = btreeSearch(hPeerSubDevice, &pNode, pSubdevice->pP2PMappingList)))
-        return status;
-
-    pP2PInfoList = pNode->Data;
-
-    listRemoveFirstByValue(pP2PInfoList, &pP2PApi);
-    if (listCount(pP2PInfoList) == 0)
-    {
-        if (NV_OK != (status = btreeUnlink(pNode, &pSubdevice->pP2PMappingList)))
-        {
-            return status;
-        }
-
-        pNode->Data = NULL;
-        portMemFree(pNode);
-        pNode = NULL;
-        portMemFree(pP2PInfoList);
-        pP2PInfoList = NULL;
-    }
-
     return NV_OK;
 }
 

@@ -41,19 +41,6 @@ void rpcObjIfacesSetup(OBJRPC *pRpc)
  //     pRpcMethods->__rpcRecvPollUvm__           = rpcRecvPollUvm_IMPL; # ONLY_IF => VIRTUALIZATION
 }
 
-void
-rpcSetPropertiesSpecial
-(
-    POBJRPC    pRpc
-)
-{
-
-}
-
-
-
-
-
 //
 // RPC's run-time type information
 //
@@ -81,62 +68,22 @@ static const struct NVOC_CASTINFO __iom_castinfo_OBJRPC =
 };
 
 extern const NVOC_RTTI_PROVIDER __iom_rtti_provider;
-const struct NVOC_CLASS_DEF __iom_class_def_OBJRPC =
-{
-    {
-        sizeof(OBJRPC),
-        classId(OBJRPC),
-        &__iom_rtti_provider,
+const struct NVOC_CLASS_DEF __iom_class_def_OBJRPC = {
+	.classInfo	= {
+		.size		= sizeof(OBJRPC),
+		.classId	= classId(OBJRPC),
+		.providerId	= &__iom_rtti_provider,
 #if NV_PRINTF_STRINGS_ALLOWED
-        "OBJRPC",
+		.name		= "OBJRPC",
 #endif
-    },
-    NULL,
-    &__iom_castinfo_OBJRPC,
+	},
+	.pCastInfo	= &__iom_castinfo_OBJRPC,
 };
-
-
-
 
 //
 // RPC's object infrastructure boilerplate
 //
 
-// initializers, constructors, and destructors for RPC's base classes
-
-NV_STATUS __iom_ctor_OBJRPC(POBJRPC pRpc)
-{
-    RMCFG_MODULE_ENABLED_OR_ASSERT_AND_BAIL(RPC);
-    return NV_OK;
-}
-
-NV_STATUS __iom_vctor_OBJRPC(Dynamic *pDynamic, va_list args)
-{
-    NV_STATUS status;
-    POBJRPC pThis = dynamicCast(pDynamic, OBJRPC);
-    if (pThis != NULL)
-    {
-        status = __iom_ctor_OBJRPC(pThis);
-    }
-    else
-    {
-        status = NV_ERR_INVALID_OBJECT;
-    }
-    return status;
-}
-
 void __iom_dtor_OBJRPC(POBJRPC pRpc)
 {
 }
-
-// RPC's object initializer function to set up vtables and RTTI
-void __iom_init_OBJRPC(POBJRPC pRpc)
-{
-    rpcObjIfacesSetup(pRpc);
-    rpcSetPropertiesSpecial(pRpc);
-}
-
-
-//
-// RPC's object creation routine
-//

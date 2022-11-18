@@ -50,15 +50,6 @@ typedef struct BINDATA_RUNTIME_INFO BINDATA_RUNTIME_INFO, *PBINDATA_RUNTIME_INFO
 struct BINDATA_STORAGE;         // currently no public data fields
 typedef struct BINDATA_STORAGE BINDATA_STORAGE, *PBINDATA_STORAGE;
 
-
-//
-// Primitives
-//
-NV_STATUS bindataAcquire(const BINDATA_STORAGE *pBinStorage, PBINDATA_RUNTIME_INFO *ppBinInfo);
-NV_STATUS bindataGetNextChunk(PBINDATA_RUNTIME_INFO pBinInfo, NvU8 *pBuffer, NvU32 nBytes);
-void      bindataRelease(PBINDATA_RUNTIME_INFO pBinInfo);
-
-
 //
 // Utilities
 //
@@ -84,23 +75,5 @@ typedef struct
 
 // Bindata Archive API - get Bindata storage from a Bindata Archive
 const BINDATA_STORAGE * bindataArchiveGetStorage(const BINDATA_ARCHIVE *pBinArchive, const char *bindataName);
-
-//
-// Iterate over all BINDATA_STORAGE entries that have not been referenced so far
-// Returns the pointer to unreferenced data or NULL if no more are available.
-// Example usage:
-//    const BINDATA_STORAGE *iter = NULL;
-//    void *datablock;
-//    NvU32 size;
-//    while ((datablock = bindataGetNextUnreferencedStorage(&iter, &size))) {
-//        do_stuff(datablock, size);
-//    }
-//
-void* bindataGetNextUnreferencedStorage(const BINDATA_STORAGE **iter, NvU32 *pDataSize);
-//
-// Marks a given BINDATA_STORAGE as destroyed, making all subsequent attempts
-// to access it fail and return NULL/0
-//
-void bindataDestroyStorage(BINDATA_STORAGE *storage);
 
 #endif // _BINDATA_H

@@ -182,23 +182,31 @@ struct __rtti_marker {
  * The purpose of this expression is to force a compile-time error if
  * pObj does not contain RTTI information
  */
-#define nvoc_to_dynamic(ptr, type) ({			\
-	const type *__dptr = (ptr);			\
-	const struct __rtti_marker *__base =		\
-		&__dptr->__nvoc_rtti;			\
-							\
-	container_of(__base, Dynamic, __nvoc_rtti);	\
+#define nvoc_to_dynamic(ptr, type)				\
+	___nvoc_to_dynamic(ptr, type, __UNIQUE_ID(ptr_),	\
+			   __UNIQUE_ID(base_))
+
+#define ___nvoc_to_dynamic(ptr, type, __dptr, __base) ({	\
+	const type *__dptr = (ptr);				\
+	const struct __rtti_marker *__base =			\
+		&__dptr->__nvoc_rtti;				\
+								\
+	container_of(__base, Dynamic, __nvoc_rtti);		\
 })
 
-#define __staticCast_Dynamic(ptr)			\
+#define __staticCast_Dynamic(ptr)				\
 	nvoc_to_dynamic(ptr, typeof(*(ptr)))
 
-#define nvoc_from_dynamic(ptr, type) ({			\
-	const Dynamic *__dptr = (ptr);			\
-	const struct __rtti_marker *__base =		\
-		&__dptr->__nvoc_rtti;			\
-							\
-	container_of(__base, type, __nvoc_rtti);	\
+#define nvoc_from_dynamic(ptr, type)				\
+	___nvoc_from_dynamic(ptr, type, __UNIQUE_ID(ptr_),	\
+			     __UNIQUE_ID(base_))
+
+#define ___nvoc_from_dynamic(ptr, type, __dptr, __base) ({	\
+	const Dynamic *__dptr = (ptr);				\
+	const struct __rtti_marker *__base =			\
+		&__dptr->__nvoc_rtti;				\
+								\
+	container_of(__base, type, __nvoc_rtti);		\
 })
 
 /*

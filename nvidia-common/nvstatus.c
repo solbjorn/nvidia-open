@@ -24,21 +24,12 @@
 #include <linux/module.h>
 #include "nvstatus.h"
 
-static const struct NvStatusCodeString {
-	const char		*statusString;
-	NV_STATUS		statusCode;
-} g_StatusCodeList[] = {
-#define NV_STATUS_CODE(name, code, string) {			\
-		.statusString	= string " [" #name "]",	\
-		.statusCode	= (name),			\
-	},
+static const char * const g_StatusCodeList[] = {
+#define NV_STATUS_CODE(name, code, string)	string " [" #name "]",
 #include "nvstatuscodes.h"
-	{
-		.statusString	= "Unknown error code!",
-		.statusCode	= 0xffffffff,
-	},
-};
+	"Unknown error code!",
 #undef NV_STATUS_CODE
+};
 
 /*!
  * @brief Given an NV_STATUS code, returns the corresponding status string.
@@ -49,28 +40,28 @@ static const struct NvStatusCodeString {
 */
 const char *nvstatusToString(NV_STATUS nvStatusIn)
 {
-	const struct NvStatusCodeString *ret;
+	const char *ret;
 
 	switch (nvStatusIn) {
 	case NV_OK:
-		ret = &g_StatusCodeList[0];
+		ret = g_StatusCodeList[0];
 		break;
 	case NV_ERR_GENERIC:
-		ret = &g_StatusCodeList[1];
+		ret = g_StatusCodeList[1];
 		break;
-	case NV_ERR_BROKEN_FB ... NV_ERR_RISCV_ERROR:
-		ret = &g_StatusCodeList[nvStatusIn + 1];
+	case NV_ERR_BROKEN_FB ... NV_ERR_FABRIC_MANAGER_NOT_PRESENT:
+		ret = g_StatusCodeList[nvStatusIn + 1];
 		break;
 	case NV_WARN_HOT_SWITCH ... NV_WARN_OUT_OF_RANGE:
-		ret = &g_StatusCodeList[NV_ERR_RISCV_ERROR + 1 +
-					(nvStatusIn & U16_MAX)];
+		ret = g_StatusCodeList[NV_ERR_FABRIC_MANAGER_NOT_PRESENT + 1 +
+				       (nvStatusIn & U16_MAX)];
 		break;
 	default:
-		ret = &g_StatusCodeList[ARRAY_SIZE(g_StatusCodeList) - 1];
+		ret = g_StatusCodeList[ARRAY_SIZE(g_StatusCodeList) - 1];
 		break;
 	}
 
-	return ret->statusString;
+	return ret;
 }
 EXPORT_SYMBOL(nvstatusToString);
 

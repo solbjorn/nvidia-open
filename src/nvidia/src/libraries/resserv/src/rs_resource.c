@@ -310,6 +310,17 @@ resCanCopy_IMPL
     return NV_FALSE;
 }
 
+NV_STATUS
+resIsDuplicate_IMPL
+(
+    RsResource *pResource,
+    NvHandle    hMemory,
+    NvBool     *pDuplicate
+)
+{
+    return NV_ERR_NOT_SUPPORTED;
+}
+
 NvBool
 resAccessCallback_IMPL
 (

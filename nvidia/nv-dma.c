@@ -107,8 +107,7 @@ static void nv_dma_unmap_contig(nv_dma_map_t *dma_map)
 #endif
 }
 
-#if !defined(NV_SG_ALLOC_TABLE_FROM_PAGES_PRESENT) || \
-    defined(NV_DOM0_KERNEL_PRESENT)
+#ifdef NV_DOM0_KERNEL_PRESENT
 static void nv_fill_scatterlist
 (
     struct scatterlist *sgl,
@@ -188,8 +187,8 @@ NV_STATUS nv_create_dma_map_scatterlist(nv_dma_map_t *dma_map)
 
     NV_FOR_EACH_DMA_SUBMAP(dma_map, submap, i)
     {
-        NvU64 submap_size = NV_MIN(NV_DMA_SUBMAP_MAX_PAGES << PAGE_SHIFT,
-                                   total_size - allocated_size);
+        NvU64 submap_size = min_t(u64, NV_DMA_SUBMAP_MAX_PAGES << PAGE_SHIFT,
+                                  total_size - allocated_size);
 
         submap->page_count = (NvU32)(submap_size >> PAGE_SHIFT);
 
@@ -200,8 +199,7 @@ NV_STATUS nv_create_dma_map_scatterlist(nv_dma_map_t *dma_map)
             break;
         }
 
-#if !defined(NV_SG_ALLOC_TABLE_FROM_PAGES_PRESENT) || \
-    defined(NV_DOM0_KERNEL_PRESENT)
+#if defined(NV_DOM0_KERNEL_PRESENT)
         {
             NvU64 page_idx = NV_DMA_SUBMAP_IDX_TO_PAGE_IDX(i);
             nv_fill_scatterlist(submap->sgt.sgl,
@@ -294,7 +292,7 @@ void nv_destroy_dma_map_scatterlist(nv_dma_map_t *dma_map)
     os_free_mem(dma_map->mapping.discontig.submaps);
 }
 
-void nv_load_dma_map_scatterlist(
+static void nv_load_dma_map_scatterlist(
     nv_dma_map_t *dma_map,
     NvU64 *va_array
 )
@@ -490,7 +488,7 @@ NV_STATUS NV_API_CALL nv_dma_map_sgt(
     return status;
 }
 
-NV_STATUS NV_API_CALL nv_dma_unmap_sgt(
+static NV_STATUS NV_API_CALL nv_dma_unmap_sgt(
     nv_dma_device_t *dma_dev,
     void           **priv
 )
@@ -777,8 +775,8 @@ static NvBool nv_dma_use_map_resource
     nv_dma_device_t *dma_dev
 )
 {
-#ifdef NV_DMA_MAP_RESOURCE_PRESENT
-    const struct dma_map_ops *ops;
+#if defined(NV_DMA_MAP_RESOURCE_PRESENT)
+    const struct dma_map_ops *ops = get_dma_ops(dma_dev->dev);
 #endif
 
     if (nv_dma_remap_peer_mmio == NV_DMA_REMAP_PEER_MMIO_DISABLE)
@@ -787,8 +785,6 @@ static NvBool nv_dma_use_map_resource
     }
 
 #if defined(NV_DMA_MAP_RESOURCE_PRESENT)
-    ops = get_dma_ops(dma_dev->dev);
-
     if (ops == NULL)
     {
         /* On pre-5.0 kernels, if dma_map_resource() is present, then we

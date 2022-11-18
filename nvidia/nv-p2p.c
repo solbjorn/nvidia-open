@@ -167,7 +167,7 @@ static void nv_p2p_free_dma_mapping(
     struct nvidia_p2p_dma_mapping *dma_mapping
 )
 {
-    nv_dma_device_t peer_dma_dev = {{ 0 }};
+    nv_dma_device_t peer_dma_dev = { };
     NvU32 page_size;
     NV_STATUS status;
     NvU32 i;
@@ -606,7 +606,7 @@ int nvidia_p2p_dma_map_pages(
 )
 {
     NV_STATUS status;
-    nv_dma_device_t peer_dma_dev = {{ 0 }};
+    nv_dma_device_t peer_dma_dev = { };
     nvidia_stack_t *sp = NULL;
     NvU64 *dma_addresses = NULL;
     NvU32 page_count;

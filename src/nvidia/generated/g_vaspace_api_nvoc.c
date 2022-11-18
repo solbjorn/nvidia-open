@@ -168,6 +168,10 @@ static NV_STATUS __nvoc_thunk_RsResource_vaspaceapiUnmapFrom(struct VaSpaceApi *
     return resUnmapFrom((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_VaSpaceApi_RsResource.offset), pParams);
 }
 
+static NV_STATUS __nvoc_thunk_RsResource_vaspaceapiIsDuplicate(struct VaSpaceApi *pResource, NvHandle hMemory, NvBool *pDuplicate) {
+    return resIsDuplicate((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_VaSpaceApi_RsResource.offset), hMemory, pDuplicate);
+}
+
 static void __nvoc_thunk_RmResource_vaspaceapiControl_Epilogue(struct VaSpaceApi *pResource, struct CALL_CONTEXT *pCallContext, struct RS_RES_CONTROL_PARAMS_INTERNAL *pParams) {
     rmresControl_Epilogue((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_VaSpaceApi_RmResource.offset), pCallContext, pParams);
 }
@@ -212,12 +216,12 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_VaSpaceA
 #endif
     },
     {               /*  [1] */
-#if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x0u)
+#if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x80000u)
         /*pFunc=*/      NULL,
 #else
         /*pFunc=*/      vaspaceapiCtrlCmdVaspaceGetPageLevelInfo_IMPL_cb,
-#endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x0u)
-        /*flags=*/      0x0u,
+#endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x80000u)
+        /*flags=*/      0x80000u,
         /*accessRight=*/0x0u,
         /*methodId=*/   0x90f10102u,
         /*paramSize=*/  sizeof(NV90F1_CTRL_VASPACE_GET_PAGE_LEVEL_INFO_PARAMS),
@@ -227,12 +231,12 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_VaSpaceA
 #endif
     },
     {               /*  [2] */
-#if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x0u)
+#if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x80000u)
         /*pFunc=*/      NULL,
 #else
         /*pFunc=*/      vaspaceapiCtrlCmdVaspaceReserveEntries_IMPL_cb,
-#endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x0u)
-        /*flags=*/      0x0u,
+#endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x80000u)
+        /*flags=*/      0x80000u,
         /*accessRight=*/0x0u,
         /*methodId=*/   0x90f10103u,
         /*paramSize=*/  sizeof(NV90F1_CTRL_VASPACE_RESERVE_ENTRIES_PARAMS),
@@ -242,12 +246,12 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_VaSpaceA
 #endif
     },
     {               /*  [3] */
-#if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x0u)
+#if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x80000u)
         /*pFunc=*/      NULL,
 #else
         /*pFunc=*/      vaspaceapiCtrlCmdVaspaceReleaseEntries_IMPL_cb,
-#endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x0u)
-        /*flags=*/      0x0u,
+#endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x80000u)
+        /*flags=*/      0x80000u,
         /*accessRight=*/0x0u,
         /*methodId=*/   0x90f10104u,
         /*paramSize=*/  sizeof(NV90F1_CTRL_VASPACE_RELEASE_ENTRIES_PARAMS),
@@ -257,12 +261,12 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_VaSpaceA
 #endif
     },
     {               /*  [4] */
-#if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x4u)
+#if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x140004u)
         /*pFunc=*/      NULL,
 #else
         /*pFunc=*/      vaspaceapiCtrlCmdVaspaceCopyServerReservedPdes_IMPL_cb,
-#endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x4u)
-        /*flags=*/      0x4u,
+#endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x140004u)
+        /*flags=*/      0x140004u,
         /*accessRight=*/0x0u,
         /*methodId=*/   0x90f10106u,
         /*paramSize=*/  sizeof(NV90F1_CTRL_VASPACE_COPY_SERVER_RESERVED_PDES_PARAMS),
@@ -319,19 +323,19 @@ static void __nvoc_init_funcTable_VaSpaceApi_1(VaSpaceApi *pThis) {
     pThis->__vaspaceapiCtrlCmdVaspaceGetGmmuFormat__ = &vaspaceapiCtrlCmdVaspaceGetGmmuFormat_IMPL;
 #endif
 
-#if !NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x0u)
+#if !NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x80000u)
     pThis->__vaspaceapiCtrlCmdVaspaceGetPageLevelInfo__ = &vaspaceapiCtrlCmdVaspaceGetPageLevelInfo_IMPL;
 #endif
 
-#if !NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x0u)
+#if !NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x80000u)
     pThis->__vaspaceapiCtrlCmdVaspaceReserveEntries__ = &vaspaceapiCtrlCmdVaspaceReserveEntries_IMPL;
 #endif
 
-#if !NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x0u)
+#if !NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x80000u)
     pThis->__vaspaceapiCtrlCmdVaspaceReleaseEntries__ = &vaspaceapiCtrlCmdVaspaceReleaseEntries_IMPL;
 #endif
 
-#if !NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x4u)
+#if !NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x140004u)
     pThis->__vaspaceapiCtrlCmdVaspaceCopyServerReservedPdes__ = &vaspaceapiCtrlCmdVaspaceCopyServerReservedPdes_IMPL;
 #endif
 
@@ -370,6 +374,8 @@ static void __nvoc_init_funcTable_VaSpaceApi_1(VaSpaceApi *pThis) {
     pThis->__vaspaceapiPreDestruct__ = &__nvoc_thunk_RsResource_vaspaceapiPreDestruct;
 
     pThis->__vaspaceapiUnmapFrom__ = &__nvoc_thunk_RsResource_vaspaceapiUnmapFrom;
+
+    pThis->__vaspaceapiIsDuplicate__ = &__nvoc_thunk_RsResource_vaspaceapiIsDuplicate;
 
     pThis->__vaspaceapiControl_Epilogue__ = &__nvoc_thunk_RmResource_vaspaceapiControl_Epilogue;
 

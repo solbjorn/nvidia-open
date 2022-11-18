@@ -470,11 +470,6 @@ typedef struct
     _op(NPORT_PERFMON, _MULTICAST_BCAST)        \
                                                 \
     _op(NVLW_PERFMON, _BCAST)                   \
-    _op(RX_PERFMON, _MULTICAST_BCAST)           \
-    _op(TX_PERFMON, _MULTICAST_BCAST)           \
-                                                \
-    _op(NXBAR_PERFMON, _BCAST)                  \
-    _op(TILE_PERFMON, _MULTICAST_BCAST)         \
 
 typedef struct
 {
@@ -635,9 +630,15 @@ void      nvswitch_init_buffer_ready_lr10(nvswitch_device *device, nvlink_link *
 NvlStatus nvswitch_service_nvldl_fatal_link_lr10(nvswitch_device *device, NvU32 nvliptInstance, NvU32 link);
 NvlStatus nvswitch_ctrl_inband_send_data_lr10(nvswitch_device *device, NVSWITCH_INBAND_SEND_DATA_PARAMS *p);
 NvlStatus nvswitch_ctrl_inband_read_data_lr10(nvswitch_device *device, NVSWITCH_INBAND_READ_DATA_PARAMS *p);
-NvlStatus nvswitch_launch_ALI_link_training_lr10(nvswitch_device *device, nvlink_link *link);
+void      nvswitch_send_inband_nack_lr10(nvswitch_device *device, NvU32 *msghdr, NvU32  linkId);
+NvU32     nvswitch_get_max_persistent_message_count_lr10(nvswitch_device *device);
+NvlStatus nvswitch_launch_ALI_link_training_lr10(nvswitch_device *device, nvlink_link *link, NvBool bSync);
 NvlStatus nvswitch_service_minion_link_lr10(nvswitch_device *device, NvU32 nvliptInstance);
 void      nvswitch_apply_recal_settings_lr10(nvswitch_device *device, nvlink_link *link);
+void      nvswitch_setup_link_system_registers_lr10(nvswitch_device *device, nvlink_link *link);
+void      nvswitch_load_link_disable_settings_lr10(nvswitch_device *device, nvlink_link *link);
+NvBool    nvswitch_is_smbpbi_supported_lr10(nvswitch_device *device);
 
+NvlStatus nvswitch_ctrl_get_bios_info_lr10(nvswitch_device *device, NVSWITCH_GET_BIOS_INFO_PARAMS *p);
 
 #endif //_LR10_H_

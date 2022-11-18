@@ -21,13 +21,14 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
+#include <linux/zlib.h>
 
 #include "core/core.h"
 #include "gpu/gpu.h"
 #include "os/os.h"
 #include "lib/base_utils.h"
-#include "lib/zlib/inflate.h"
 #include "nvRmReg.h"
+#include "virtualization/hypervisor/hypervisor.h"
 
 /**
  * @brief Changes the user-space permissions for a given register address range
@@ -175,10 +176,21 @@ gpuGetUserRegisterAccessPermissions_IMPL(OBJGPU *pGpu, NvU32 offset)
 
 static NvBool _getIsProfilingPrivileged(OBJGPU *pGpu)
 {
+    NvU32 data32;
+
+    // On a vGPU Host, RmProfilingAdminOnly is always set to 1
+    if (hypervisorIsVgxHyper())
+    {
+        //
+        // Setting the value at this point to make the behavior same for
+        // debug/develop/release drivers on vGPU host.
+        //
+        return NV_TRUE;
+    }
 #if defined(DEBUG) || defined(DEVELOP)
     return NV_FALSE;
 #else
-    NvU32 data32;
+
     if (NV_OK == osReadRegistryDword(pGpu, NV_REG_STR_RM_PROFILING_ADMIN_ONLY, &data32))
     {
         return (data32 == NV_REG_STR_RM_PROFILING_ADMIN_ONLY_TRUE);
@@ -321,7 +333,6 @@ done:
 NV_STATUS
 gpuInitRegisterAccessMap_IMPL(OBJGPU *pGpu, NvU8 *pAccessMap, NvU32 accessMapSize, const NvU8 *pComprData, const NvU32 comprDataSize)
 {
-    PGZ_INFLATE_STATE pGzState = NULL;
     NvU32 inflatedBytes        = 0;
 
     NV_ASSERT_OR_RETURN(pAccessMap != NULL, NV_ERR_INVALID_STATE);
@@ -335,14 +346,8 @@ gpuInitRegisterAccessMap_IMPL(OBJGPU *pGpu, NvU8 *pAccessMap, NvU32 accessMapSiz
     //
     pComprData += 10;
 
-    NV_ASSERT_OK_OR_RETURN(utilGzAllocate((NvU8*)pComprData, accessMapSize, &pGzState));
-
-    NV_ASSERT(pGzState);
-
-    inflatedBytes = utilGzGetData(pGzState, 0, accessMapSize, pAccessMap);
-
-    utilGzDestroy(pGzState);
-
+	inflatedBytes = zlib_inflate_blob(pAccessMap, accessMapSize,
+					  pComprData, comprDataSize);
     if (inflatedBytes != accessMapSize)
     {
         NV_PRINTF(LEVEL_ERROR,

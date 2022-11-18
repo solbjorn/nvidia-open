@@ -39,13 +39,13 @@ namespace DisplayPort
     {
     public:
         NvU8        *data;         // Data buffer
-        unsigned    length;        // bytes used 
+        unsigned    length;        // bytes used
         unsigned    capacity;      // size of allocation
         bool        errorState;    // did we lose a malloc in there?
-    public: 
+    public:
         //
         //  Write will only fail if we're unable to reallocate the buffer.  In this case
-        //  the buffer will be reset to its empty state. 
+        //  the buffer will be reset to its empty state.
         //
         const NvU8 * getData() const { return data; }
         NvU8 * getData() { return data; }
@@ -53,8 +53,8 @@ namespace DisplayPort
         void memZero();
         void reset();
         unsigned getLength() const { return length; }
-        
-        // Is in error state? This happens if malloc fails.  Error state is 
+
+        // Is in error state? This happens if malloc fails.  Error state is
         // held until reset is called.
         bool isError() const;
 
@@ -70,27 +70,27 @@ namespace DisplayPort
             swap_args(other.capacity, capacity);
             swap_args(other.errorState, errorState);
         }
-        
+
         bool operator== (const Buffer  & other) const;
     };
 
     class Stream
     {
     protected:
-        Buffer * parent; 
+        Buffer * parent;
         unsigned  byteOffset;
     public:
         Stream(Buffer * buffer);
         bool seek(unsigned where);
         bool read(NvU8 * buffer, unsigned size);
         bool write(NvU8 * buffer, unsigned size);
-        
+
         // returns error state of buffer
         bool isError() const;
         unsigned  remaining();
         unsigned  offset();
     };
-    
+
     void swapBuffers(Buffer & left, Buffer & right);
 }
 

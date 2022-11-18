@@ -181,7 +181,7 @@ kflcnSecureReset_TU102
     kflcnSwitchToFalcon_HAL(pGpu, pKernelFlcn);
 }
 
-void
+static void
 _kflcnClearInterrupts(OBJGPU *pGpu, KernelFalcon *pKernelFlcn)
 {
     // Delay 1us in case engine is still resetting.

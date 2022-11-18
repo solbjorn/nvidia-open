@@ -1,5 +1,5 @@
 /*
- * SPDX-FileCopyrightText: Copyright (c) 2015-2019 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+ * SPDX-FileCopyrightText: Copyright (c) 2015-2022 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
  * SPDX-License-Identifier: MIT
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
@@ -25,6 +25,7 @@
 
 #include "nvlink_os.h"
 #include "nvlink_linux.h"
+#include "nvlink_proto.h"
 #include "nvlink_errors.h"
 #include "nvlink_export.h"
 #include "nv-linux.h"
@@ -101,7 +102,7 @@ static void nvlink_permissions_exit(void)
         return;
     }
 
-    NV_REMOVE_PROC_ENTRY(nvlink_permissions);
+    proc_remove(nvlink_permissions);
     nvlink_permissions = NULL;
 }
 
@@ -133,7 +134,7 @@ static void nvlink_procfs_exit(void)
         return;
     }
 
-    NV_REMOVE_PROC_ENTRY(nvlink_procfs_dir);
+    proc_remove(nvlink_procfs_dir);
     nvlink_procfs_dir = NULL;
 }
 
@@ -207,8 +208,6 @@ static int nvlink_fops_release(struct inode *inode, struct file *filp)
 
     nvlink_print(NVLINK_DBG_INFO, "nvlink driver close\n");
 
-    WARN_ON(private == NULL);
-
     mutex_lock(&nvlink_drvctx.lock);
 
     if (private->capability_fds.fabric_mgmt > 0)
@@ -244,7 +243,7 @@ static int nvlink_fops_ioctl(struct inode *inode,
     {
         // allocate a buffer to hold user input
         param_buf = kzalloc(param_size, GFP_KERNEL);
-        if (NULL == param_buf) 
+        if (NULL == param_buf)
         {
             rc = -ENOMEM;
             goto nvlink_ioctl_fail;
@@ -285,7 +284,7 @@ static int nvlink_fops_ioctl(struct inode *inode,
     }
 
 nvlink_ioctl_fail:
-    if (param_buf) 
+    if (param_buf)
     {
         kfree(param_buf);
     }
@@ -306,9 +305,6 @@ static const struct file_operations nvlink_fops = {
     .owner           = THIS_MODULE,
     .open            = nvlink_fops_open,
     .release         = nvlink_fops_release,
-#if defined(NV_FILE_OPERATIONS_HAS_IOCTL)
-    .ioctl           = nvlink_fops_ioctl,   
-#endif    
     .unlocked_ioctl  = nvlink_fops_unlocked_ioctl,
 };
 

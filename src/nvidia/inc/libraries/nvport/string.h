@@ -33,6 +33,8 @@
 #ifndef _NVPORT_STRING_H_
 #define _NVPORT_STRING_H_
 
+#include <linux/string.h>
+
 /**
  * @defgroup NVPORT_STRING String module
  *
@@ -46,71 +48,34 @@
  * @{
  */
 
-/**
- * @brief Compare two strings, character by character.
- * 
- * Will only compare lengthBytes bytes. Strings are assumed to be at least that
- * long.
- *
- * Strings are allowed to overlap, but in .
- *
- * @returns:
- * - 0 if all bytes are equal
- * - <0 if str1 is less than str2 for the first unequal byte.
- * - >0 if str1 is greater than str2 for the first unequal byte.
- * @par Undefined:
- * Behavior is undefined if str1, str2 is NULL. <br>
- */
-NvS32 portStringCompare(const char *str1, const char *str2, NvLength length);
-/**
- * @brief Copy a string.
- * 
- * Will copy at most destSize bytes, stopping early if a null-terminator is found
- * or if srcSize bytes are read from the source.
- *
- * Null character is always written at the end of the string.
- *
- * @param dest     destination buffer, of at least destSize bytes (including null terminator).
- * @param src      source buffer, of at least srcSize bytes (including null terminator).
- *
- * @return size    bytes copied successfully including null terminator, min(destSize, srcSize)
- *
- * @par Undefined:
- * Number of  allocated bytes in destination buffer are smaller than destSize. <br>
- * Behavior is undefined if destination and source overlaps. <br>
- */
-NvLength portStringCopy(char *dest, NvLength destSize, const char *src, NvLength srcSize);
-/**
- * @brief Concatenate two strings
- * 
- * Will copy cat string after the end of str. Will copy only until str buffer is
- * filled. str is assumed to point to a buffer of at least strSize bytes.
- *
- * Null character is always written at the end of the string.
- *
- * @return str if concatenation is succeeded. 
- *
- * @par Undefined:
- * Number of  allocated bytes in destination buffer are smaller than destSize. <br>
- * Behavior is undefined if destination and source overlaps. <br>
- */
-char *portStringCat(char *str, NvLength strSize, const char *cat, NvLength catSize);
+static __always_inline int
+portStringCompare(const char *str1, const char *str2, size_t length)
+{
+	return strncmp(str1, str2, length);
+}
 
+static __always_inline ssize_t
+portStringCopy(char *dest, size_t destSize, const char *src, size_t srcSize)
+{
+	return strscpy(dest, src, destSize);
+}
 
-/**
- * @brief Returns the index of the first NULL byte in the given string
- *
- */
- NvLength portStringLength(const char *str);
+static __always_inline char *
+portStringCat(char *str, size_t strSize, const char *cat, size_t catSize)
+{
+	return strncat(str, cat, catSize);
+}
 
+static __always_inline size_t portStringLength(const char *str)
+{
+	return strlen(str);
+}
 
- /**
- * @brief Returns the index of the first NULL byte in the given string, it searches maxLength
- * chars. If NULL byte is not found it returns maxLength.
- *
- */
- NvLength portStringLengthSafe(const char *str, NvLength maxLength);
-
+static __always_inline size_t
+portStringLengthSafe(const char *str, size_t maxLength)
+{
+	return strnlen(str, maxLength);
+}
 
 /**
  * @brief Converts a string from ASCII (8-bit) to UTF16 (16 bit)

@@ -62,7 +62,6 @@ memmgrChooseKindCompressC_GM107
     NvU32  attrdepth    = DRF_VAL(OS32, _ATTR, _DEPTH, pFbAllocPageFormat->attr);
     NvU32  aasamples    = DRF_VAL(OS32, _ATTR, _AA_SAMPLES, pFbAllocPageFormat->attr);
     NvBool prefer_zbc   = !FLD_TEST_DRF(OS32, _ATTR2, _ZBC, _PREFER_NO_ZBC, pFbAllocPageFormat->attr2);
-    NvU32  ssampling    = 0; // TODO
 
     switch (attrdepth)
     {
@@ -84,7 +83,7 @@ memmgrChooseKindCompressC_GM107
                 case NVOS32_ATTR_AA_SAMPLES_4_ROTATED:
                 case NVOS32_ATTR_AA_SAMPLES_4_VIRTUAL_8:
                 case NVOS32_ATTR_AA_SAMPLES_4_VIRTUAL_16:
-                    kind = prefer_zbc? (ssampling? NV_MMU_PTE_KIND_C32_MS4_2CBA : NV_MMU_PTE_KIND_C32_MS4_2CBR) : NV_MMU_PTE_KIND_C32_MS4_2BRA;
+                    kind = prefer_zbc? NV_MMU_PTE_KIND_C32_MS4_2CBR : NV_MMU_PTE_KIND_C32_MS4_2BRA;
                     break;
                 case NVOS32_ATTR_AA_SAMPLES_8:
                 case NVOS32_ATTR_AA_SAMPLES_16:
@@ -107,7 +106,7 @@ memmgrChooseKindCompressC_GM107
                 case NVOS32_ATTR_AA_SAMPLES_4_ROTATED:
                 case NVOS32_ATTR_AA_SAMPLES_4_VIRTUAL_8:
                 case NVOS32_ATTR_AA_SAMPLES_4_VIRTUAL_16:
-                    kind = prefer_zbc? (ssampling? NV_MMU_PTE_KIND_C64_MS4_2CBA : NV_MMU_PTE_KIND_C64_MS4_2CBR) : NV_MMU_PTE_KIND_C64_MS4_2BRA;
+                    kind = prefer_zbc? NV_MMU_PTE_KIND_C64_MS4_2CBR : NV_MMU_PTE_KIND_C64_MS4_2BRA;
                     break;
                 case NVOS32_ATTR_AA_SAMPLES_8:
                 case NVOS32_ATTR_AA_SAMPLES_16:
@@ -166,21 +165,21 @@ memmgrAllocDetermineAlignment_GM107
     switch (dmaNvos32ToPageSizeAttr(retAttr, retAttr2))
     {
         case RM_ATTR_PAGE_SIZE_4KB:
-            hwAlignment = NV_MAX(hwAlignment, RM_PAGE_SIZE - 1);
+            hwAlignment = max_t(u64, hwAlignment, RM_PAGE_SIZE - 1);
             break;
         case RM_ATTR_PAGE_SIZE_BIG:
             // we will always align to the biggest page size
-            hwAlignment = NV_MAX(hwAlignment, kgmmuGetMaxBigPageSize_HAL(pKernelGmmu) - 1);
+            hwAlignment = max_t(u64, hwAlignment, kgmmuGetMaxBigPageSize_HAL(pKernelGmmu) - 1);
             break;
         case RM_ATTR_PAGE_SIZE_HUGE:
             NV_ASSERT_OR_RETURN(kgmmuIsHugePageSupported(pKernelGmmu),
                               NV_ERR_INVALID_ARGUMENT);
-            hwAlignment = NV_MAX(hwAlignment, RM_PAGE_SIZE_HUGE - 1);
+            hwAlignment = max_t(u64, hwAlignment, RM_PAGE_SIZE_HUGE - 1);
             break;
         case RM_ATTR_PAGE_SIZE_512MB:
             NV_ASSERT_OR_RETURN(kgmmuIsPageSize512mbSupported(pKernelGmmu),
                               NV_ERR_INVALID_ARGUMENT);
-            hwAlignment = NV_MAX(hwAlignment, RM_PAGE_SIZE_512M - 1);
+            hwAlignment = max_t(u64, hwAlignment, RM_PAGE_SIZE_512M - 1);
             break;
         case RM_ATTR_PAGE_SIZE_DEFAULT:
         case RM_ATTR_PAGE_SIZE_INVALID:
@@ -204,7 +203,7 @@ memmgrAllocDetermineAlignment_GM107
         else
         {
             // Both size and  offset should be aligned to compression pagesize.
-            hwAlignment = NV_MAX(hwAlignment, pMemorySystemConfig->comprPageSize - 1);
+            hwAlignment = max_t(u64, hwAlignment, pMemorySystemConfig->comprPageSize - 1);
 
             if (FLD_TEST_DRF(OS32, _ATTR, _PAGE_SIZE, _4KB, retAttr) &&
                 !pMemoryManager->bSmallPageCompression)
@@ -324,7 +323,7 @@ memmgrAllocHal_GM107
     if (
         // Tiling is not supported in nv50+
         (tiledAttr == NVOS32_ATTR_TILED_REQUIRED) ||
-        (tiledAttr == 0x3) ||
+        (tiledAttr == NVOS32_ATTR_TILED_DEFERRED) ||
         // check the value of compression attribute
         // attributes verification for compressed surfaces
         !(memmgrVerifyComprAttrs_HAL(pMemoryManager, type, format, comprAttr)) ||
@@ -806,6 +805,7 @@ memmgrInitReservedMemory_GM107
     NvU32                  rsvdRegion       = 0;
     NvU64                  rsvdTopOfMem     = 0;
     NvU64                  rsvdAlignment    = 0;
+    NvBool                 bMemoryProtectionEnabled = NV_FALSE;
     const MEMORY_SYSTEM_STATIC_CONFIG *pMemorySystemConfig =
         kmemsysGetStaticConfig(pGpu, GPU_GET_KERNEL_MEMORY_SYSTEM(pGpu));
 
@@ -852,8 +852,11 @@ memmgrInitReservedMemory_GM107
         for (i = 0; i < pMemoryManager->Ram.numFBRegions; i++)
         {
             if (pMemoryManager->Ram.fbRegion[i].bRsvdRegion ||
-                pMemoryManager->Ram.fbRegion[i].bProtected)
+                (bMemoryProtectionEnabled && !pMemoryManager->Ram.fbRegion[i].bProtected) ||
+                (!bMemoryProtectionEnabled && pMemoryManager->Ram.fbRegion[i].bProtected))
+            {
                 continue;
+            }
 
             bRsvdRegionIsValid = NV_TRUE;
             rsvdRegion = i;
@@ -942,7 +945,7 @@ memmgrInitReservedMemory_GM107
         rsvdFbRegion.bSupportCompressed = NV_FALSE;
         rsvdFbRegion.bSupportISO = NV_FALSE;
         rsvdFbRegion.rsvdSize = pMemoryManager->rsvdMemorySize;
-        rsvdFbRegion.bProtected = NV_FALSE;
+        rsvdFbRegion.bProtected = bMemoryProtectionEnabled;
         rsvdFbRegion.bInternalHeap = NV_TRUE;
 
         memmgrInsertFbRegion(pGpu, pMemoryManager, &rsvdFbRegion);
@@ -1405,8 +1408,6 @@ memmgrGetUsableMemSizeMB_GM107
     NV_ASSERT(0 == NvU64_HI32(pMemoryManager->Ram.fbUsableMemSize >> 20));
     return NvU64_LO32(pMemoryManager->Ram.fbUsableMemSize >> 20);
 }
-
-#define _MAX_COVG (100*NVOS32_ALLOC_COMPR_COVG_SCALE)
 
 //
 // memmgrGetBankPlacementData

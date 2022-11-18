@@ -44,6 +44,7 @@
 #include "gpu/bus/kern_bus.h"
 #include "gpu/mem_mgr/mem_mgr.h"
 #include "nvdevid.h"
+#include "nvop.h"
 
 
 
@@ -204,6 +205,12 @@ rcdbConstruct_IMPL(Journal *pRcDB)
     NvU32 i;
     void *pBuffer;
 
+    // Time parameters
+    NvU32 sec, usec;
+    NvU64 timeStamp;
+    NvU64 systemTime;
+    NvU64 timeStampFreq;
+
     _initJournal(pJournal, JOURNAL_BUFFER_SIZE_DEFAULT);
 
     portMemSet(pRingBufferColl, 0x00, sizeof(pRcDB->RingBufferColl));
@@ -261,6 +268,15 @@ rcdbConstruct_IMPL(Journal *pRcDB)
      {
          NV_PRINTF(LEVEL_ERROR, "failed to allocate NOCAT Ring Buffer\n");
      }
+
+     // Save params for timestamp conversion
+     timeStampFreq = osGetTimestampFreq();
+     timeStamp = osGetTimestamp();
+     osGetCurrentTime(&sec, &usec);
+     systemTime = ((NvU64)sec * 1000000) + (NvU64)usec;
+
+     pRcDB->systemTimeReference = systemTime - ((timeStamp * 1000000) / timeStampFreq);
+     pRcDB->timeStampFreq = timeStampFreq;
 
      return NV_OK;
 }
@@ -725,7 +741,7 @@ rcdbAddRcDiagRec_IMPL
     return NV_OK;
 }
 
-NV_STATUS
+static NV_STATUS
 _rcdbInternalGetRcDiagRec
 (
     Journal                    *pRcDB,
@@ -1065,7 +1081,7 @@ rcdbDumpComponent_IMPL
     pNvDumpState->bDumpInProcess    = NV_TRUE;
     pNvDumpState->bugCheckCode      = 0;
     pNvDumpState->internalCode      = NVD_ERROR_CODE(NVD_EXTERNALLY_GENERATED, 0);
-    pNvDumpState->bRMLock           = rmApiLockIsOwner();
+    pNvDumpState->bRMLock           = rmapiLockIsOwner();
     pNvDumpState->bGpuAccessible    = NV_FALSE;
     pNvDumpState->initialbufferSize = pBuffer->size;
     pNvDumpState->nvDumpType        = NVD_DUMP_TYPE_API;
@@ -2049,7 +2065,7 @@ _rcdbAddRmGpuDumpCallback
     if (status == NV_OK)
     {
         // LOCK: acquire API lock
-        status = rmApiLockAcquire(API_LOCK_FLAGS_NONE, RM_LOCK_MODULES_DIAG);
+        status = rmapiLockAcquire(API_LOCK_FLAGS_NONE, RM_LOCK_MODULES_DIAG);
         if (status == NV_OK)
         {
             // LOCK: acquire GPUs lock
@@ -2079,7 +2095,7 @@ _rcdbAddRmGpuDumpCallback
                 NV_PRINTF(LEVEL_ERROR, "failed to acquire the GPU locks!\n");
             }
             // UNLOCK: release API lock
-            rmApiLockRelease();
+            rmapiLockRelease();
         }
         else
         {
@@ -2261,53 +2277,6 @@ void rcdbRmAssert(NvU32 LineNum, NvU64 ip) {  _rcdbRmAssert(0, LineNum, ip); }
 void rcdbRmAssertStatus(NvU32 status, NvU32 LineNum, NvU64 ip) { _rcdbRmAssert(status, LineNum, ip); }
 
 #endif // (defined(_WIN32) || defined(_WIN64) || defined(NV_UNIX) || RMCFG_FEATURE_PLATFORM_GSP) && !defined(NV_MODS)
-
-#if (defined(_WIN32) || defined(_WIN64) || defined(NV_UNIX)) && !defined(NV_MODS)
-
-/*!
- * @brief   Release Build DBGBREAKPOINT() function
- *
- * @details Called by DBGBREAKPOINT when the assertion fails.
- *          By putting this logic in its own function, we save on binary size.
- */
-static void _rcdbDbgBreakEx(void *pGpu, NvU32 lineNum, NvU32 level, NvU64 ip)
-{
-    RmRC2SwRmAssert3_RECORD* pRec = NULL;
-    if (rcdbAddAssertJournalRecWithLine(pGpu, lineNum, (void**)&pRec, RmGroup,
-         RmRC2SwDbgBreakpoint_V3, sizeof(RmRC2SwRmAssert3_RECORD), level, ip) == NV_OK)
-    {
-        pRec->level = level;
-    }
-
-#if !defined(DEBUG) && !defined(QA_BUILD)
-    {
-        OBJSYS *pSys = SYS_GET_INSTANCE();
-
-        // Add assert to NvLog.  But skip when nvLog asserts to avoid stack overflow.
-        if (portAtomicIncrementS32(&nvLogRecursion) == 1)
-        {
-            NV_PRINTF(LEVEL_ERROR, "Breakpoint at 0x%llx.\n", ip);
-        }
-        portAtomicDecrementS32(&nvLogRecursion);
-
-        if ((pSys != NULL) && ((NV_DEBUG_BREAK_ATTRIBUTES_DBG_BREAK) &
-            DRF_VAL(_DEBUG, _BREAK, _ATTRIBUTES, pSys->debugFlags)))
-        {
-            REL_DBG_BREAKPOINT_MSG("NVRM-RC: Nvidia Release Debug Break\n");
-        }
-    }
-#endif
-
-    // If enabled bugcheck on assert
-    osDbgBugCheckOnAssert();
-}
-
-void rcdbDbgBreak(NvU64 ip)                             { _rcdbDbgBreakEx(NULL, NV_RM_ASSERT_UNKNOWN_LINE_NUM, 0,      ip); }
-void rcdbDbgBreakGpu(void *pGpu, NvU64 ip)              { _rcdbDbgBreakEx(pGpu, NV_RM_ASSERT_UNKNOWN_LINE_NUM, 0,      ip); }
-void rcdbDbgBreakStatus(NvU32 status, NvU64 ip)         { _rcdbDbgBreakEx(NULL, NV_RM_ASSERT_UNKNOWN_LINE_NUM, status, ip); }
-void rcdbDbgBreakEx(void *pGpu, NvU32 status, NvU64 ip) { _rcdbDbgBreakEx(pGpu, NV_RM_ASSERT_UNKNOWN_LINE_NUM, status, ip); }
-
-#endif
 
 NV_STATUS
 rcdbAddRmEngDump
@@ -2597,7 +2566,7 @@ rcdbDestroyRingBuffer_IMPL
 **      it is assumed the caller has successfully acquired the concurrentRingBufferAccess lock.
 **      failure to do so can result in concurrency issues.
 */
-RmRCCommonJournal_RECORD*
+static RmRCCommonJournal_RECORD*
 _rcdbAllocRecFromRingBuffer
 (
     OBJGPU             *pGpu,
@@ -2757,7 +2726,7 @@ rcdbAddRmGpuDump
     prbEnc.depth = 0;
     pNvDumpState->bDumpInProcess    = NV_TRUE;
     pNvDumpState->nvDumpType        = NVD_DUMP_TYPE_OCA;
-    pNvDumpState->bRMLock           = rmApiLockIsOwner();
+    pNvDumpState->bRMLock           = rmapiLockIsOwner();
 
     rcdbDumpInitGpuAccessibleFlag(pGpu, pRcDB);
 
@@ -3007,7 +2976,7 @@ rcdbAddCrashedFalcon
 **   returns:
 **      NV_ERR_INVALID_ARGUMENT -- pContext is NULL
 */
-NV_STATUS
+static NV_STATUS
 _rcdbNocatCollectContext(OBJGPU *pGpu, Journal* pRcdb, NV2080_NOCAT_JOURNAL_GPU_STATE* pContext)
 {
     NV2080_NOCAT_JOURNAL_GPU_STATE* pContextCache = NULL;
@@ -3066,6 +3035,13 @@ _rcdbNocatCollectContext(OBJGPU *pGpu, Journal* pRcdb, NV2080_NOCAT_JOURNAL_GPU_
 
         if (!osIsRaisedIRQL())
         {
+            NV_STATUS status = pGpu->acpiMethodData.capsMethodData.status;
+            if (status == NV_OK)
+            {
+                pContextCache->bOptimus =
+                    FLD_TEST_DRF(OP_FUNC, _OPTIMUSCAPS, _OPTIMUS_CAPABILITIES,
+                        _DYNAMIC_POWER_CONTROL, pGpu->acpiMethodData.capsMethodData.optimusCaps);
+            }
 
             pContextCache->bValid = NV_TRUE;
         }
@@ -3094,7 +3070,7 @@ _rcdbNocatCollectContext(OBJGPU *pGpu, Journal* pRcdb, NV2080_NOCAT_JOURNAL_GPU_
 **      maxLen          the size of the buffer pointed to in pTdrReasonStr.
 **
 */
-void _rcdbSetTdrReason
+static void _rcdbSetTdrReason
 (
     Journal            *pRcdb,
     NvU32               tdrReason,
@@ -3165,7 +3141,7 @@ void _rcdbSetTdrReason
 **
 **      if successful, the buffer that is returned is cleared & an id assigned.
 */
-RM_NOCAT_JOURNAL_ENTRY* _rcdbAllocNocatJournalRecord
+static RM_NOCAT_JOURNAL_ENTRY* _rcdbAllocNocatJournalRecord
 (
     OBJGPU     *pGpu,
     OBJRCDB    *pRcdb,
@@ -3355,7 +3331,7 @@ _rcdbGetNocatJournalRecord
 **      the lock should be held until access the buffer is completed.
 **      failure to do so can result in concurrency issues.
 */
-NV_STATUS
+static NV_STATUS
 _rcdbGetNewestNocatJournalRecordForType
 (
     OBJRCDB            *pRcdb,
@@ -3526,7 +3502,7 @@ rcdbGetNocatOutstandingCount(Journal *pRcdb)
 **      NV_ERR_INVALID_ARGUMENT -- one of the required pointers is NULL
 **
 */
-NV_STATUS
+static NV_STATUS
 _rcdbSendNocatJournalNotification
 (
     OBJGPU *pGpu,
@@ -3754,7 +3730,9 @@ rcdbNocatInsertNocatError(
 #if(NOCAT_PROBE_FB_MEMORY)
                 if ((bCheckFBState)
                     && (pGpu != NULL)
-                    && (pGpu->nocatGpuCache.pCpuPtr != NULL))
+                    && (pGpu->nocatGpuCache.pCpuPtr != NULL)
+                    // If using Coherent CPU mapping instead of BAR2 do not call VerifyBar2
+                    && !pGpu->getProperty(pGpu, PDB_PROP_GPU_COHERENT_CPU_MAPPING))
                 {
                     switch (kbusVerifyBar2_HAL(pGpu, GPU_GET_KERNEL_BUS(pGpu),
                         &pGpu->nocatGpuCache.fbTestMemDesc, pGpu->nocatGpuCache.pCpuPtr, 0, NOCAT_FBSIZETESTED))

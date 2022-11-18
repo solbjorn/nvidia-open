@@ -28,6 +28,9 @@
 #include "gpu/mem_sys/kern_mem_sys.h"
 #include "os/os.h"
 
+// @ref busMigrateBarMapping_GV100 to see how FB region is organized
+#define COHERENT_CPU_MAPPING_WPR            COHERENT_CPU_MAPPING_REGION_0
+
 /*!
  * @brief Sets up a memdesc and a CPU pointer to the bottom
  *        of FB that will be used for issuing reads in order
@@ -71,9 +74,9 @@ kbusSetupCpuPointerForBusFlush_GV100
     // Please note this is a long-lived BAR2 mapping by design.
     // The mapping is used for flushing all future vidmem writes on BAR2.
     //
-    pKernelBus->pReadToFlush = memmgrMemDescBeginTransfer(GPU_GET_MEMORY_MANAGER(pGpu),
-                                                    pKernelBus->pFlushMemDesc,
-                                                    TRANSFER_FLAGS_PERSISTENT_CPU_MAPPING);
+    pKernelBus->pReadToFlush = memdescMapInternal(pGpu,
+                                                  pKernelBus->pFlushMemDesc,
+                                                  TRANSFER_FLAGS_PERSISTENT_CPU_MAPPING);
     if (pKernelBus->pReadToFlush == NULL)
     {
         status = NV_ERR_INSUFFICIENT_RESOURCES;
@@ -104,9 +107,9 @@ kbusDestroyCpuPointerForBusFlush_GV100
 {
     if (pKernelBus->pReadToFlush != NULL)
     {
-        memmgrMemDescEndTransfer(GPU_GET_MEMORY_MANAGER(pGpu),
-                                 pKernelBus->pFlushMemDesc,
-                                 TRANSFER_FLAGS_DEFER_FLUSH);
+        memdescUnmapInternal(pGpu,
+                             pKernelBus->pFlushMemDesc,
+                             TRANSFER_FLAGS_DEFER_FLUSH);
         pKernelBus->pReadToFlush = NULL;
     }
 
@@ -141,7 +144,7 @@ kbusMapCoherentCpuMapping_GV100
     RmPhysAddr offset = 0;
     NvU32 i = 0;
 
-    for (i = COHERENT_CPU_MAPPING_WPR; i < pKernelBus->coherentCpuMapping.nrMapping; ++i)
+    for (i = COHERENT_CPU_MAPPING_REGION_0; i < pKernelBus->coherentCpuMapping.nrMapping; ++i)
     {
         // Check if requested mem in the mappings.
         rangeStart = pKernelBus->coherentCpuMapping.physAddr[i];
@@ -190,7 +193,7 @@ kbusUnmapCoherentCpuMapping_GV100
 
     NV_ASSERT(pMemDesc->_flags & MEMDESC_FLAGS_PHYSICALLY_CONTIGUOUS);
 
-    for (i = COHERENT_CPU_MAPPING_WPR; i < pKernelBus->coherentCpuMapping.nrMapping; ++i)
+    for (i = COHERENT_CPU_MAPPING_REGION_0; i < pKernelBus->coherentCpuMapping.nrMapping; ++i)
     {
         RmPhysAddr rangeStart = pKernelBus->coherentCpuMapping.physAddr[i];
         RmPhysAddr rangeEnd = pKernelBus->coherentCpuMapping.physAddr[i] +
@@ -212,38 +215,6 @@ kbusUnmapCoherentCpuMapping_GV100
     kbusFlush_HAL(pGpu, GPU_GET_KERNEL_BUS(pGpu), BUS_FLUSH_VIDEO_MEMORY);
 
     return;
-}
-/**
- * Destroy coherent cpu mapping to ACR region.
- *
- * This needs to be done only for P9 and not SHH. In SHH, CPU prefetches
- * to WPR region because of the CPU mapping doesn't result in SW visible error
- * unlike P9.
- *
- * @param[in] pGpu       Pointer to Gpu
- * @param[in] pKernelBus Kernel bus pointer
- *
- * @return void
- */
-void kbusTeardownCoherentCpuMappingAcr_GV100
-(
-    OBJGPU    *pGpu,
-    KernelBus *pKernelBus
-)
-{
-    if (pKernelBus->coherentCpuMapping.bCoherentCpuMapping)
-    {
-        NV_ASSERT_OR_RETURN_VOID(pGpu->getProperty(pGpu, PDB_PROP_GPU_COHERENT_CPU_MAPPING));
-        NV_ASSERT_OR_RETURN_VOID( pKernelBus->coherentCpuMapping.refcnt[COHERENT_CPU_MAPPING_WPR] == 0);
-
-        osFlushGpuCoherentCpuCacheRange(pGpu->pOsGpuInfo,
-             (NvUPtr)pKernelBus->coherentCpuMapping.pCpuMapping[COHERENT_CPU_MAPPING_WPR],
-             pKernelBus->coherentCpuMapping.size[COHERENT_CPU_MAPPING_WPR]);
-
-        osUnmapPciMemoryKernel64(pGpu,
-            pKernelBus->coherentCpuMapping.pCpuMapping[COHERENT_CPU_MAPPING_WPR]);
-        pKernelBus->coherentCpuMapping.pCpuMapping[COHERENT_CPU_MAPPING_WPR] = NvP64_NULL;
-    }
 }
 
 /*!
@@ -268,7 +239,7 @@ kbusTeardownCoherentCpuMapping_GV100
     if (!pKernelBus->coherentCpuMapping.bCoherentCpuMapping)
         return;
 
-    for (i = COHERENT_CPU_MAPPING_WPR; i < pKernelBus->coherentCpuMapping.nrMapping; ++i)
+    for (i = COHERENT_CPU_MAPPING_REGION_0; i < pKernelBus->coherentCpuMapping.nrMapping; ++i)
     {
         NV_ASSERT_OR_RETURN_VOID(pKernelBus->coherentCpuMapping.refcnt[i] == 0);
 

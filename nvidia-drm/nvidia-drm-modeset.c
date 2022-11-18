@@ -271,6 +271,9 @@ nv_drm_atomic_apply_modeset_config(struct drm_device *dev,
 
                 nv_new_crtc_state->nv_flip = NULL;
             }
+#if defined(NV_DRM_CRTC_STATE_HAS_VRR_ENABLED)
+            requested_config->headRequestedConfig[nv_crtc->head].modeSetConfig.vrrEnabled = new_crtc_state->vrr_enabled;
+#endif
         }
     }
 

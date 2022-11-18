@@ -164,7 +164,7 @@ static void nv_acpi_powersource_hotplug_event(acpi_handle handle, u32 event_type
         if (nv_acpi_get_powersource(&ac_plugged) != NV_OK)
             return;
 
-        rm_system_event(pNvAcpiObject->sp, NV_SYSTEM_ACPI_BATTERY_POWER_EVENT, !ac_plugged);
+        rm_power_source_change_event(pNvAcpiObject->sp, !ac_plugged);
     }
 }
 /*
@@ -1021,7 +1021,7 @@ static NV_STATUS  nv_acpi_wmmx_method(
         {
             if (mmx->buffer.length <= *outDataSize)
             {
-                *outDataSize = NV_MIN(*outDataSize, mmx->buffer.length);
+                *outDataSize = min_t(u32, *outDataSize, mmx->buffer.length);
                 memcpy(outData, mmx->buffer.pointer, *outDataSize);
             }
             else

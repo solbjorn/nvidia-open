@@ -44,7 +44,6 @@ memmgrChooseKindCompressC_GP100
     FB_ALLOC_PAGE_FORMAT   *pFbAllocPageFormat
 )
 {
-    extern NvU32 memmgrChooseKindCompressC_GM107(OBJGPU *pGpu, MemoryManager *pMemoryManager, FB_ALLOC_PAGE_FORMAT *pFbAllocPageFormat);
     NvU32  kind         = NV_MMU_PTE_KIND_PITCH;
     NvU32  attrdepth    = DRF_VAL(OS32, _ATTR, _DEPTH, pFbAllocPageFormat->attr);
     NvU32  aasamples    = DRF_VAL(OS32, _ATTR, _AA_SAMPLES, pFbAllocPageFormat->attr);

@@ -37,6 +37,23 @@
 extern "C" {
 #endif //__cplusplus
 
+#ifndef __cplusplus
+
+#include <linux/container_of.h>
+
+#else /* __cplusplus */
+
+/* C++ can't arithm on void *, needs casting to char * */
+#define container_of(ptr, type, member)				\
+	__container_of(ptr, type, member, __UNIQUE_ID(ptr_))
+
+#define __container_of(ptr, type, member, __mptr) ({		\
+	char *__mptr = (char *)(ptr);				\
+	((type *)(__mptr - offsetof(type, member)));		\
+})
+
+#endif /* __cplusplus */
+
 #include "nvmisc.h"
 
     #define HAVE_TYPEOF 1
@@ -293,8 +310,7 @@ nvListPresent(const NVListRec *entry, const NVListRec *head)
  * @return A pointer to the data struct containing the list head.
  */
 #ifndef nv_container_of
-#define nv_container_of(ptr, type, member) \
-    (type *)((char *)(ptr) - NV_OFFSETOF(type, member))
+#define nv_container_of(ptr, type, member)	container_of(ptr, type, member)
 #endif
 
 /**

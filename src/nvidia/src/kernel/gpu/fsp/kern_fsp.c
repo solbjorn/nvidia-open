@@ -110,29 +110,6 @@ kfspInitRegistryOverrides
     }
 }
 
-
-/*!
- * @brief FSP State Initialization.
- *
- * Initializes all software states including allocating the dbg memory surface
- * and the initialization of FSP HAL layer.
- *
- * @param[in]  pGpu       GPU object pointer
- * @param[in]  pKernelFsp FSP object pointer
- *
- * @return 'NV_OK' if state-initialization was successful.
- * @return other   bubbles up errors from @ref kfspStateInitHal_HAL on failure
- */
-NV_STATUS
-kfspStateInitUnlocked_IMPL
-(
-    OBJGPU    *pGpu,
-    KernelFsp *pKernelFsp
-)
-{
-    return NV_OK;
-}
-
 /*!
  * @brief Destroy FSP state
  *
@@ -148,11 +125,8 @@ kfspStateDestroy_IMPL
     KernelFsp *pKernelFsp
 )
 {
-    if (pKernelFsp->pCotPayload != NULL)
-    {
-        portMemFree(pKernelFsp->pCotPayload);
-        pKernelFsp->pCotPayload = NULL;
-    }
+    portMemFree(pKernelFsp->pCotPayload);
+    pKernelFsp->pCotPayload = NULL;
 
     if (pKernelFsp->pSysmemFrtsMemdesc != NULL)
     {
@@ -249,7 +223,7 @@ kfspPollForQueueEmpty_IMPL
 {
     RMTIMEOUT timeout;
 
-    gpuSetTimeout(pGpu, GPU_TIMEOUT_DEFAULT, &timeout, 0);
+    gpuSetTimeout(pGpu, GPU_TIMEOUT_DEFAULT, &timeout, GPU_TIMEOUT_FLAGS_OSTIMER | GPU_TIMEOUT_FLAGS_BYPASS_THREAD_STATE);
 
     while (!kfspIsQueueEmpty(pGpu, pKernelFsp))
     {
@@ -315,7 +289,7 @@ kfspPollForResponse_IMPL
     NV_STATUS status = NV_OK;
 
     // Poll for message queue to wait for FSP's reply
-    gpuSetTimeout(pGpu, GPU_TIMEOUT_DEFAULT, &timeout, 0);
+    gpuSetTimeout(pGpu, GPU_TIMEOUT_DEFAULT, &timeout, GPU_TIMEOUT_FLAGS_OSTIMER | GPU_TIMEOUT_FLAGS_BYPASS_THREAD_STATE);
     while (kfspIsMsgQueueEmpty(pGpu, pKernelFsp))
     {
         if (gpuCheckTimeout(pGpu, &timeout) == NV_ERR_TIMEOUT)

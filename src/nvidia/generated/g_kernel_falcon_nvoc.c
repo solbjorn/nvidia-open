@@ -107,22 +107,16 @@ static void __nvoc_init_funcTable_KernelFalcon_1(KernelFalcon *pThis, RmHalspecO
         {
             pThis->__kflcnIsRiscvActive__ = &kflcnIsRiscvActive_TU102;
         }
-        else if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x0870f800UL) )) /* ChipHal: GA102 | GA103 | GA104 | GA106 | GA107 | AD102 | AD103 | AD104 | GH100 */
+        else if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x11f0f800UL) )) /* ChipHal: GA102 | GA103 | GA104 | GA106 | GA107 | AD102 | AD103 | AD104 | AD106 | AD107 | GH100 */
         {
             pThis->__kflcnIsRiscvActive__ = &kflcnIsRiscvActive_GA10X;
         }
-        else if (0)
-        {
-        }
-    }
-    else if (0)
-    {
     }
 
     // Hal function -- kflcnRiscvProgramBcr
     if (( ((rmVariantHal_HalVarIdx >> 5) == 0UL) && ((1UL << (rmVariantHal_HalVarIdx & 0x1f)) & 0x00000002UL) )) /* RmVariantHal: PF_KERNEL_ONLY */
     {
-        if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x0870f800UL) )) /* ChipHal: GA102 | GA103 | GA104 | GA106 | GA107 | AD102 | AD103 | AD104 | GH100 */
+        if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x11f0f800UL) )) /* ChipHal: GA102 | GA103 | GA104 | GA106 | GA107 | AD102 | AD103 | AD104 | AD106 | AD107 | GH100 */
         {
             pThis->__kflcnRiscvProgramBcr__ = &kflcnRiscvProgramBcr_GA102;
         }
@@ -131,14 +125,11 @@ static void __nvoc_init_funcTable_KernelFalcon_1(KernelFalcon *pThis, RmHalspecO
             pThis->__kflcnRiscvProgramBcr__ = &kflcnRiscvProgramBcr_f2d351;
         }
     }
-    else if (0)
-    {
-    }
 
     // Hal function -- kflcnSwitchToFalcon
     if (( ((rmVariantHal_HalVarIdx >> 5) == 0UL) && ((1UL << (rmVariantHal_HalVarIdx & 0x1f)) & 0x00000002UL) )) /* RmVariantHal: PF_KERNEL_ONLY */
     {
-        if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x0870f800UL) )) /* ChipHal: GA102 | GA103 | GA104 | GA106 | GA107 | AD102 | AD103 | AD104 | GH100 */
+        if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x11f0f800UL) )) /* ChipHal: GA102 | GA103 | GA104 | GA106 | GA107 | AD102 | AD103 | AD104 | AD106 | AD107 | GH100 */
         {
             pThis->__kflcnSwitchToFalcon__ = &kflcnSwitchToFalcon_GA10X;
         }
@@ -146,9 +137,6 @@ static void __nvoc_init_funcTable_KernelFalcon_1(KernelFalcon *pThis, RmHalspecO
         {
             pThis->__kflcnSwitchToFalcon__ = &kflcnSwitchToFalcon_b3696a;
         }
-    }
-    else if (0)
-    {
     }
 
     pThis->__kflcnResetHw__ = NULL;
@@ -166,14 +154,11 @@ static void __nvoc_init_funcTable_KernelFalcon_1(KernelFalcon *pThis, RmHalspecO
             pThis->__kflcnPreResetWait__ = &kflcnPreResetWait_56cd7a;
         }
     }
-    else if (0)
-    {
-    }
 
     // Hal function -- kflcnWaitForResetToFinish
     if (( ((rmVariantHal_HalVarIdx >> 5) == 0UL) && ((1UL << (rmVariantHal_HalVarIdx & 0x1f)) & 0x00000002UL) )) /* RmVariantHal: PF_KERNEL_ONLY */
     {
-        if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x0870f800UL) )) /* ChipHal: GA102 | GA103 | GA104 | GA106 | GA107 | AD102 | AD103 | AD104 | GH100 */
+        if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x11f0f800UL) )) /* ChipHal: GA102 | GA103 | GA104 | GA106 | GA107 | AD102 | AD103 | AD104 | AD106 | AD107 | GH100 */
         {
             pThis->__kflcnWaitForResetToFinish__ = &kflcnWaitForResetToFinish_GA102;
         }
@@ -181,12 +166,6 @@ static void __nvoc_init_funcTable_KernelFalcon_1(KernelFalcon *pThis, RmHalspecO
         {
             pThis->__kflcnWaitForResetToFinish__ = &kflcnWaitForResetToFinish_TU102;
         }
-        else if (0)
-        {
-        }
-    }
-    else if (0)
-    {
     }
 
     pThis->__kflcnIsEngineInReset__ = NULL;
@@ -198,22 +177,16 @@ static void __nvoc_init_funcTable_KernelFalcon_1(KernelFalcon *pThis, RmHalspecO
         {
             pThis->__kflcnReadIntrStatus__ = &kflcnReadIntrStatus_TU102;
         }
-        else if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x0870f800UL) )) /* ChipHal: GA102 | GA103 | GA104 | GA106 | GA107 | AD102 | AD103 | AD104 | GH100 */
+        else if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x11f0f800UL) )) /* ChipHal: GA102 | GA103 | GA104 | GA106 | GA107 | AD102 | AD103 | AD104 | AD106 | AD107 | GH100 */
         {
             pThis->__kflcnReadIntrStatus__ = &kflcnReadIntrStatus_GA102;
         }
-        else if (0)
-        {
-        }
-    }
-    else if (0)
-    {
     }
 
     // Hal function -- kflcnIntrRetrigger
     if (( ((rmVariantHal_HalVarIdx >> 5) == 0UL) && ((1UL << (rmVariantHal_HalVarIdx & 0x1f)) & 0x00000002UL) )) /* RmVariantHal: PF_KERNEL_ONLY */
     {
-        if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x0870fc00UL) )) /* ChipHal: GA100 | GA102 | GA103 | GA104 | GA106 | GA107 | AD102 | AD103 | AD104 | GH100 */
+        if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x11f0fc00UL) )) /* ChipHal: GA100 | GA102 | GA103 | GA104 | GA106 | GA107 | AD102 | AD103 | AD104 | AD106 | AD107 | GH100 */
         {
             pThis->__kflcnIntrRetrigger__ = &kflcnIntrRetrigger_GA100;
         }
@@ -221,9 +194,6 @@ static void __nvoc_init_funcTable_KernelFalcon_1(KernelFalcon *pThis, RmHalspecO
         {
             pThis->__kflcnIntrRetrigger__ = &kflcnIntrRetrigger_b3696a;
         }
-    }
-    else if (0)
-    {
     }
 
     // Hal function -- kflcnMaskImemAddr
@@ -233,16 +203,10 @@ static void __nvoc_init_funcTable_KernelFalcon_1(KernelFalcon *pThis, RmHalspecO
         {
             pThis->__kflcnMaskImemAddr__ = &kflcnMaskImemAddr_TU102;
         }
-        else if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x0870fc00UL) )) /* ChipHal: GA100 | GA102 | GA103 | GA104 | GA106 | GA107 | AD102 | AD103 | AD104 | GH100 */
+        else if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x11f0fc00UL) )) /* ChipHal: GA100 | GA102 | GA103 | GA104 | GA106 | GA107 | AD102 | AD103 | AD104 | AD106 | AD107 | GH100 */
         {
             pThis->__kflcnMaskImemAddr__ = &kflcnMaskImemAddr_GA100;
         }
-        else if (0)
-        {
-        }
-    }
-    else if (0)
-    {
     }
 
     // Hal function -- kflcnMaskDmemAddr
@@ -252,16 +216,10 @@ static void __nvoc_init_funcTable_KernelFalcon_1(KernelFalcon *pThis, RmHalspecO
         {
             pThis->__kflcnMaskDmemAddr__ = &kflcnMaskDmemAddr_TU102;
         }
-        else if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x0870fc00UL) )) /* ChipHal: GA100 | GA102 | GA103 | GA104 | GA106 | GA107 | AD102 | AD103 | AD104 | GH100 */
+        else if (( ((chipHal_HalVarIdx >> 5) == 1UL) && ((1UL << (chipHal_HalVarIdx & 0x1f)) & 0x11f0fc00UL) )) /* ChipHal: GA100 | GA102 | GA103 | GA104 | GA106 | GA107 | AD102 | AD103 | AD104 | AD106 | AD107 | GH100 */
         {
             pThis->__kflcnMaskDmemAddr__ = &kflcnMaskDmemAddr_GA100;
         }
-        else if (0)
-        {
-        }
-    }
-    else if (0)
-    {
     }
 }
 
@@ -354,7 +312,7 @@ static NvBool __nvoc_thunk_GenericKernelFalcon_kflcnIsEngineInReset(struct OBJGP
     return gkflcnIsEngineInReset(pGpu, (struct GenericKernelFalcon *)(((unsigned char *)pGenKernFlcn) - __nvoc_rtti_GenericKernelFalcon_KernelFalcon.offset));
 }
 
-static void __nvoc_thunk_GenericKernelFalcon_intrservRegisterIntrService(struct OBJGPU *arg0, struct IntrService *arg1, IntrServiceRecord arg2[155]) {
+static void __nvoc_thunk_GenericKernelFalcon_intrservRegisterIntrService(struct OBJGPU *arg0, struct IntrService *arg1, IntrServiceRecord arg2[163]) {
     gkflcnRegisterIntrService(arg0, (struct GenericKernelFalcon *)(((unsigned char *)arg1) - __nvoc_rtti_GenericKernelFalcon_IntrService.offset), arg2);
 }
 
@@ -391,15 +349,15 @@ void __nvoc_init_dataField_GenericKernelFalcon(GenericKernelFalcon *pThis) {
 }
 
 NV_STATUS __nvoc_ctor_KernelFalcon(KernelFalcon* , RmHalspecOwner* );
-NV_STATUS __nvoc_ctor_IntrService(IntrService* , RmHalspecOwner* );
-NV_STATUS __nvoc_ctor_Object(Object* , RmHalspecOwner* );
+NV_STATUS __nvoc_ctor_IntrService(IntrService* );
+NV_STATUS __nvoc_ctor_Object(Object* );
 NV_STATUS __nvoc_ctor_GenericKernelFalcon(GenericKernelFalcon *pThis, RmHalspecOwner *pRmhalspecowner, struct OBJGPU * arg_pGpu, KernelFalconEngineConfig * arg_pFalconConfig) {
     NV_STATUS status = NV_OK;
     status = __nvoc_ctor_KernelFalcon(&pThis->__nvoc_base_KernelFalcon, pRmhalspecowner);
     if (status != NV_OK) goto __nvoc_ctor_GenericKernelFalcon_fail_KernelFalcon;
-    status = __nvoc_ctor_IntrService(&pThis->__nvoc_base_IntrService, pRmhalspecowner);
+    status = __nvoc_ctor_IntrService(&pThis->__nvoc_base_IntrService);
     if (status != NV_OK) goto __nvoc_ctor_GenericKernelFalcon_fail_IntrService;
-    status = __nvoc_ctor_Object(&pThis->__nvoc_base_Object, pRmhalspecowner);
+    status = __nvoc_ctor_Object(&pThis->__nvoc_base_Object);
     if (status != NV_OK) goto __nvoc_ctor_GenericKernelFalcon_fail_Object;
     __nvoc_init_dataField_GenericKernelFalcon(pThis);
 
@@ -448,16 +406,16 @@ void __nvoc_init_funcTable_GenericKernelFalcon(GenericKernelFalcon *pThis) {
 }
 
 void __nvoc_init_KernelFalcon(KernelFalcon*, RmHalspecOwner* );
-void __nvoc_init_IntrService(IntrService*, RmHalspecOwner* );
-void __nvoc_init_Object(Object*, RmHalspecOwner* );
+void __nvoc_init_IntrService(IntrService*);
+void __nvoc_init_Object(Object*);
 void __nvoc_init_GenericKernelFalcon(GenericKernelFalcon *pThis, RmHalspecOwner *pRmhalspecowner) {
     pThis->__nvoc_pbase_GenericKernelFalcon = pThis;
     pThis->__nvoc_pbase_KernelFalcon = &pThis->__nvoc_base_KernelFalcon;
     pThis->__nvoc_pbase_IntrService = &pThis->__nvoc_base_IntrService;
     pThis->__nvoc_pbase_Object = &pThis->__nvoc_base_Object;
     __nvoc_init_KernelFalcon(&pThis->__nvoc_base_KernelFalcon, pRmhalspecowner);
-    __nvoc_init_IntrService(&pThis->__nvoc_base_IntrService, pRmhalspecowner);
-    __nvoc_init_Object(&pThis->__nvoc_base_Object, pRmhalspecowner);
+    __nvoc_init_IntrService(&pThis->__nvoc_base_IntrService);
+    __nvoc_init_Object(&pThis->__nvoc_base_Object);
     __nvoc_init_funcTable_GenericKernelFalcon(pThis);
 }
 

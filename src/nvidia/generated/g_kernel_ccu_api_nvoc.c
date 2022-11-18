@@ -81,7 +81,7 @@ static const struct NVOC_CASTINFO __nvoc_castinfo_KernelCcuApi = {
     },
 };
 
-const struct NVOC_CLASS_DEF __nvoc_class_def_KernelCcuApi = 
+const struct NVOC_CLASS_DEF __nvoc_class_def_KernelCcuApi =
 {
     /*classInfo=*/ {
         /*size=*/               sizeof(KernelCcuApi),
@@ -172,6 +172,10 @@ static NV_STATUS __nvoc_thunk_RsResource_kccuapiUnmapFrom(struct KernelCcuApi *p
     return resUnmapFrom((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_KernelCcuApi_RsResource.offset), pParams);
 }
 
+static NV_STATUS __nvoc_thunk_RsResource_kccuapiIsDuplicate(struct KernelCcuApi *pResource, NvHandle hMemory, NvBool *pDuplicate) {
+    return resIsDuplicate((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_KernelCcuApi_RsResource.offset), hMemory, pDuplicate);
+}
+
 static void __nvoc_thunk_RmResource_kccuapiControl_Epilogue(struct KernelCcuApi *pResource, struct CALL_CONTEXT *pCallContext, struct RS_RES_CONTROL_PARAMS_INTERNAL *pParams) {
     rmresControl_Epilogue((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_KernelCcuApi_RmResource.offset), pCallContext, pParams);
 }
@@ -186,12 +190,14 @@ static NvBool __nvoc_thunk_RmResource_kccuapiAccessCallback(struct KernelCcuApi 
 
 NVOC_BUILD_CALLBACK(kccuapiCtrlCmdSubscribe_IMPL);
 NVOC_BUILD_CALLBACK_1(kccuapiCtrlCmdUnsubscribe_IMPL);
+NVOC_BUILD_CALLBACK(kccuapiCtrlCmdSetStreamState_IMPL);
+NVOC_BUILD_CALLBACK(kccuapiCtrlCmdGetStreamState_IMPL);
 
 #if !defined(NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG)
 #define NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(x)      (0)
 #endif
 
-static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_KernelCcuApi[] = 
+static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_KernelCcuApi[] =
 {
     {               /*  [0] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
@@ -223,12 +229,42 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_KernelCc
         /*func=*/       "kccuapiCtrlCmdUnsubscribe"
 #endif
     },
+    {               /*  [2] */
+#if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
+        /*pFunc=*/      NULL,
+#else
+        /*pFunc=*/      kccuapiCtrlCmdSetStreamState_IMPL_cb,
+#endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
+        /*flags=*/      0x10u,
+        /*accessRight=*/0x0u,
+        /*methodId=*/   0xcbca0103u,
+        /*paramSize=*/  sizeof(NV_COUNTER_COLLECTION_UNIT_STREAM_STATE_PARAMS),
+        /*pClassInfo=*/ &(__nvoc_class_def_KernelCcuApi.classInfo),
+#if NV_PRINTF_STRINGS_ALLOWED
+        /*func=*/       "kccuapiCtrlCmdSetStreamState"
+#endif
+    },
+    {               /*  [3] */
+#if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
+        /*pFunc=*/      NULL,
+#else
+        /*pFunc=*/      kccuapiCtrlCmdGetStreamState_IMPL_cb,
+#endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
+        /*flags=*/      0x10u,
+        /*accessRight=*/0x0u,
+        /*methodId=*/   0xcbca0104u,
+        /*paramSize=*/  sizeof(NV_COUNTER_COLLECTION_UNIT_STREAM_STATE_PARAMS),
+        /*pClassInfo=*/ &(__nvoc_class_def_KernelCcuApi.classInfo),
+#if NV_PRINTF_STRINGS_ALLOWED
+        /*func=*/       "kccuapiCtrlCmdGetStreamState"
+#endif
+    },
 
 };
 
-const struct NVOC_EXPORT_INFO __nvoc_export_info_KernelCcuApi = 
+const struct NVOC_EXPORT_INFO __nvoc_export_info_KernelCcuApi =
 {
-    /*numEntries=*/     2,
+    /*numEntries=*/     4,
     /*pExportEntries=*/ __nvoc_exported_method_def_KernelCcuApi
 };
 
@@ -281,6 +317,14 @@ static void __nvoc_init_funcTable_KernelCcuApi_1(KernelCcuApi *pThis) {
     pThis->__kccuapiCtrlCmdUnsubscribe__ = &kccuapiCtrlCmdUnsubscribe_IMPL;
 #endif
 
+#if !NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
+    pThis->__kccuapiCtrlCmdSetStreamState__ = &kccuapiCtrlCmdSetStreamState_IMPL;
+#endif
+
+#if !NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
+    pThis->__kccuapiCtrlCmdGetStreamState__ = &kccuapiCtrlCmdGetStreamState_IMPL;
+#endif
+
     pThis->__nvoc_base_GpuResource.__gpuresMap__ = &__nvoc_thunk_KernelCcuApi_gpuresMap;
 
     pThis->__nvoc_base_GpuResource.__gpuresUnmap__ = &__nvoc_thunk_KernelCcuApi_gpuresUnmap;
@@ -318,6 +362,8 @@ static void __nvoc_init_funcTable_KernelCcuApi_1(KernelCcuApi *pThis) {
     pThis->__kccuapiPreDestruct__ = &__nvoc_thunk_RsResource_kccuapiPreDestruct;
 
     pThis->__kccuapiUnmapFrom__ = &__nvoc_thunk_RsResource_kccuapiUnmapFrom;
+
+    pThis->__kccuapiIsDuplicate__ = &__nvoc_thunk_RsResource_kccuapiIsDuplicate;
 
     pThis->__kccuapiControl_Epilogue__ = &__nvoc_thunk_RmResource_kccuapiControl_Epilogue;
 
@@ -386,4 +432,3 @@ NV_STATUS __nvoc_objCreateDynamic_KernelCcuApi(KernelCcuApi **ppThis, Dynamic *p
 
     return status;
 }
-

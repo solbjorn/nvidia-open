@@ -125,7 +125,9 @@ void   nvkms_call_rm    (void *ops);
 static __always_inline void __alloc_size(1) *
 nvkms_alloc(size_t size, NvBool zero)
 {
-	return zero ? kvzalloc(size, GFP_KERNEL) : kvmalloc(size, GFP_KERNEL);
+	const gfp_t gfp = in_task() ? GFP_KERNEL : GFP_ATOMIC;
+
+	return zero ? kvzalloc(size, gfp) : kvmalloc(size, gfp);
 }
 
 static __always_inline void nvkms_free(const void *ptr, size_t size)

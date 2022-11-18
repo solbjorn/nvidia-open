@@ -618,6 +618,16 @@ typedef struct
         #define NV_FORMAT_PRINTF(_f, _a)
     #endif
 
+//
+// When modifying this enum, make sure they are compatible with the mirrored
+// MEMORY_PROTECTION enum in phys_mem_allocator.h.
+//
+typedef enum UvmPmaGpuMemoryType_tag
+{
+    UVM_PMA_GPU_MEMORY_TYPE_UNPROTECTED = 0,
+    UVM_PMA_GPU_MEMORY_TYPE_PROTECTED   = 1
+} UVM_PMA_GPU_MEMORY_TYPE;
+
 #ifdef __cplusplus
 }
 #endif

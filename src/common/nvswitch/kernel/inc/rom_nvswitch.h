@@ -32,8 +32,8 @@
 // fields that may not be present in the ROM image by checking the offset against
 // the structure size.
 //
-#define NV_OFFSETOF_MEMBER(_basePtr, _member)                                  \
-    ((NvUPtr)(((NvU8 *)(&((_basePtr)->_member))) - ((NvU8 *)(_basePtr))))
+#define NV_OFFSETOF_MEMBER(_basePtr, _member)	\
+	offsetof(typeof(*(_basePtr)), _member)
 
 #define NVSWITCH_ELEMENT_PRESENT(_ptr, _element, _size)          \
     (NV_OFFSETOF_MEMBER((_ptr), _element) + sizeof((_ptr)->_element) <= (_size))
@@ -58,7 +58,7 @@
     NVSWITCH_ELEMENT_VALIDATE(_ptr, _element, _size, _default, _default)
 
 #define NVSWITCH_STRUCT_PACKED_ALIGNED(typeName, bytes)                        \
-    typedef struct __attribute__((packed, aligned(bytes))) 
+    typedef struct __attribute__((packed, aligned(bytes)))
 
 #define NVSWITCH_STRUCT_PACKED_ALIGNED_SUFFIX
 
@@ -474,7 +474,7 @@ typedef struct
     } clocks;
 
     // NVLink init
-    struct 
+    struct
     {
         NvBool link_config_found;
         NvU64 link_enable_mask;             // 1 = enabled
@@ -514,7 +514,7 @@ nvswitch_read_rom_tables
   (byte & 0x08 ? '1' : '0'), \
   (byte & 0x04 ? '1' : '0'), \
   (byte & 0x02 ? '1' : '0'), \
-  (byte & 0x01 ? '1' : '0') 
+  (byte & 0x01 ? '1' : '0')
 
 #if !defined(BIOSTYPES_H_FILE)
 #define bios_U008  NvU32
@@ -882,4 +882,3 @@ typedef struct _nvswitch_vbios_i2c_entry
 #define NVSWITCH_I2C_ENTRY_FMT "1d"
 
 #endif //_ROM_NVSWITCH_H_
-

@@ -25,7 +25,7 @@
 #include "gpu/disp/head/kernel_head.h"
 #include "objtmr.h"
 
-NV_STATUS 
+NV_STATUS
 kheadConstruct_IMPL(KernelHead *pKernelHead)
 {
     return NV_OK;
@@ -67,25 +67,6 @@ kheadSetVblankLowLatencyCounter_IMPL
 )
 {
     pKernelHead->Vblank.Counters.LowLatency = counter;
-}
-
-NvU32
-kheadGetVblankNormLatencyCounter_IMPL
-(
-    KernelHead *pKernelHead
-)
-{
-    return pKernelHead->Vblank.Counters.NormLatency;
-}
-
-void
-kheadSetVblankNormLatencyCounter_IMPL
-(
-    KernelHead *pKernelHead,
-    NvU32    counter
-)
-{
-    pKernelHead->Vblank.Counters.NormLatency = counter;
 }
 
 static NvBool
@@ -215,7 +196,7 @@ kheadCheckVblankCallbacksQueued_IMPL
             {
                 if (kheadIsVblankCallbackDue(pCallback, state, time, vblankCount))
                 {
-                    *expiring |= VBLANK_STATE_PROCESS_NORMAL_LATENCY; 
+                    *expiring |= VBLANK_STATE_PROCESS_NORMAL_LATENCY;
                 }
 
                 pCallback = pCallback->Next;
@@ -416,4 +397,3 @@ kheadWriteVblankIntrState_IMPL
         kheadWriteVblankIntrEnable_HAL(pGpu, pKernelHead, enablehw);
     }
 }
-

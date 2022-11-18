@@ -30,9 +30,6 @@
 #include "lr10/pmgr_lr10.h"
 #include "nvswitch/lr10/dev_pmgr.h"
 
-// Shared with LS10
-void _nvswitch_i2c_set_port_pmgr(nvswitch_device *device, NvU32 port);
-
 /*! The number of nanoseconds we will wait for slave clock stretching.
  *  Previously, this was set to 100us, but proved too
  *  short (see bug 630691) so was increased to 2ms.

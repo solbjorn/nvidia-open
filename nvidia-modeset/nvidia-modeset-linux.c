@@ -36,6 +36,8 @@
 #include <linux/list.h>
 #include <linux/rwsem.h>
 
+#include <acpi/video.h>
+
 #include "nvstatus.h"
 
 #include "nv-register-module.h"
@@ -525,11 +527,13 @@ inline static void nvkms_timer_callback_typed_data(struct timer_list *timer)
     _nvkms_timer_callback_internal(nvkms_timer);
 }
 
+#ifndef NV_TIMER_SETUP_PRESENT
 inline static void nvkms_timer_callback_anon_data(unsigned long arg)
 {
     struct nvkms_timer_t *nvkms_timer = (struct nvkms_timer_t *) arg;
     _nvkms_timer_callback_internal(nvkms_timer);
 }
+#endif
 
 static void
 nvkms_init_timer(struct nvkms_timer_t *timer, nvkms_timer_proc_t *proc,
@@ -807,6 +811,12 @@ nvkms_register_backlight(NvU32 gpu_id, NvU32 display_id, void *drv_priv,
     NvU32 gpu_count = 0;
     struct nvkms_backlight_device *nvkms_bd = NULL;
     int i;
+
+#if defined(NV_ACPI_VIDEO_BACKLIGHT_USE_NATIVE)
+    if (!acpi_video_backlight_use_native()) {
+        return NULL;
+    }
+#endif
 
     gpu_info = nvkms_alloc(NV_MAX_GPUS * sizeof(*gpu_info), NV_TRUE);
     if (gpu_info == NULL) {
@@ -1194,29 +1204,7 @@ static void nvkms_proc_exit(void)
         return;
     }
 
-#if defined(NV_PROC_REMOVE_PRESENT)
     proc_remove(nvkms_proc_dir);
-#else
-    /*
-     * On kernel versions without proc_remove(), we need to explicitly
-     * remove each proc file beneath nvkms_proc_dir.
-     * nvkms_proc_init() only creates files directly under
-     * nvkms_proc_dir, so those are the only files we need to remove
-     * here: warn if there is any deeper directory nesting.
-     */
-    {
-        struct proc_dir_entry *entry = nvkms_proc_dir->subdir;
-
-        while (entry != NULL) {
-            struct proc_dir_entry *next = entry->next;
-            WARN_ON(entry->subdir != NULL);
-            remove_proc_entry(entry->name, entry->parent);
-            entry = next;
-        }
-    }
-
-    remove_proc_entry(nvkms_proc_dir->name, nvkms_proc_dir->parent);
-#endif /* NV_PROC_REMOVE_PRESENT */
 #endif /* CONFIG_PROC_FS */
 }
 
@@ -1238,6 +1226,8 @@ EXPORT_SYMBOL(NvKmsAllocateDevice);
 EXPORT_SYMBOL(NvKmsFreeDevice);
 EXPORT_SYMBOL(NvKmsGrabOwnership);
 EXPORT_SYMBOL(NvKmsReleaseOwnership);
+EXPORT_SYMBOL(NvKmsGrantPermissions);
+EXPORT_SYMBOL(NvKmsRevokePermissions);
 EXPORT_SYMBOL(NvKmsDeclareEventInterest);
 EXPORT_SYMBOL(NvKmsGetDeviceResourcesInfo);
 EXPORT_SYMBOL(NvKmsGetDisplays);
@@ -1504,12 +1494,7 @@ restart:
 module_init(nvkms_init);
 module_exit(nvkms_exit);
 
-#if defined(MODULE_LICENSE)
   MODULE_LICENSE("Dual MIT/GPL");
-#endif
-#if defined(MODULE_INFO)
-  MODULE_INFO(supported, "external");
-#endif
-#if defined(MODULE_VERSION)
-  MODULE_VERSION(NV_VERSION_STRING);
-#endif
+
+MODULE_INFO(supported, "external");
+MODULE_VERSION(NV_VERSION_STRING);

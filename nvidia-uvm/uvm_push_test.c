@@ -703,7 +703,7 @@ static NV_STATUS sync_memcopy(uvm_channel_type_t type, uvm_mem_t *dst, uvm_mem_t
 
     if (type == UVM_CHANNEL_TYPE_CPU_TO_GPU || type == UVM_CHANNEL_TYPE_GPU_TO_CPU) {
         gpu = (type == UVM_CHANNEL_TYPE_CPU_TO_GPU) ? dst->backing_gpu : src->backing_gpu;
-        status = uvm_push_begin(gpu->channel_manager, type, &push, uvm_channel_type_to_string(type));
+        status = uvm_push_begin(gpu->channel_manager, type, &push, "%s", uvm_channel_type_to_string(type));
         if (status != NV_OK)
             return status;
 
@@ -720,7 +720,7 @@ static NV_STATUS sync_memcopy(uvm_channel_type_t type, uvm_mem_t *dst, uvm_mem_t
         gpu = src->backing_gpu;
         status = uvm_push_begin_gpu_to_gpu(gpu->channel_manager,
                                            dst->backing_gpu,
-                                           &push,
+                                           &push, "%s",
                                            uvm_channel_type_to_string(type));
 
         for (i = 0; i < src->size / chunk_size; i++) {

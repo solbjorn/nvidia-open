@@ -24,51 +24,50 @@
 #ifndef __NV_COMMON_UTILS_H__
 #define __NV_COMMON_UTILS_H__
 
+#ifndef __cplusplus
+#include <linux/kernel.h>
+#else
+#include <linux/minmax.h>	/* __is_array() fails */
+#define ARRAY_SIZE(arr)		(sizeof(arr) / sizeof((arr)[0]))
+#endif
+
 #include "nvtypes.h"
 
 #if !defined(TRUE)
-#define TRUE NV_TRUE
+#define TRUE			true
 #endif
 
 #if !defined(FALSE)
-#define FALSE NV_FALSE
+#define FALSE			false
 #endif
 
 #define NV_IS_UNSIGNED(x) ((__typeof__(x))-1 > 0)
 
 /* Get the length of a statically-sized array. */
-#define ARRAY_LEN(_arr) (sizeof(_arr) / sizeof(_arr[0]))
+#define ARRAY_LEN(_arr)		ARRAY_SIZE(_arr)
 
 #define NV_INVALID_HEAD         0xFFFFFFFF
 
 #define NV_INVALID_CONNECTOR_PHYSICAL_INFORMATION (~0)
 
 #if !defined(NV_MIN)
-# define NV_MIN(a,b) (((a)<(b))?(a):(b))
+# define NV_MIN(a,b)		min(a, b)
 #endif
 
-#define NV_MIN3(a,b,c) NV_MIN(NV_MIN(a, b), c)
+#define NV_MIN3(a,b,c)		min3(a, b)
 #define NV_MIN4(a,b,c,d) NV_MIN3(NV_MIN(a,b),c,d)
 
 #if !defined(NV_MAX)
-# define NV_MAX(a,b) (((a)>(b))?(a):(b))
+# define NV_MAX(a,b)		max(a, b)
 #endif
 
-#define NV_MAX3(a,b,c) NV_MAX(NV_MAX(a, b), c)
+#define NV_MAX3(a,b,c)		max3(a, b)
 #define NV_MAX4(a,b,c,d) NV_MAX3(NV_MAX(a,b),c,d)
 
-static inline int NV_LIMIT_VAL_TO_MIN_MAX(int val, int min, int max)
-{
-    if (val < min) {
-        return min;
-    }
-    if (val > max) {
-        return max;
-    }
-    return val;
-}
+#define NV_LIMIT_VAL_TO_MIN_MAX(val, min, max)	\
+	clamp(val, min, max)
 
-#define NV_ROUNDUP_DIV(x,y) ((x) / (y) + (((x) % (y)) ? 1 : 0))
+#define NV_ROUNDUP_DIV(x,y)	DIV_ROUND_UP(x, y)
 
 /*
  * Macros used for computing palette entries:

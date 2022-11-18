@@ -856,6 +856,8 @@ _pmaAddrtreeScanContiguous
     // This requirement is ensured in PMA
     NV_ASSERT(alignment >= pageSize && portUtilIsPowerOfTwo(alignment));
 
+    *numPagesAlloc = 0;
+
     // Only focus on the level above the pageSize level. Children are ignored.
     level = addrtreeGetTreeLevel(pageSize);
     if (level == 0)
@@ -892,8 +894,6 @@ _pmaAddrtreeScanContiguous
         *numPagesAlloc = numPages;
         return NV_OK;
     }
-
-    *numPagesAlloc = 0;
 
     if (bSkipEvict)
     {
@@ -1951,4 +1951,3 @@ void pmaAddrtreeSetEvictingFrames(void *pMap, NvU64 frameEvictionsInProcess)
 {
     ((PMA_ADDRTREE *)pMap)->frameEvictionsInProcess = frameEvictionsInProcess;
 }
-

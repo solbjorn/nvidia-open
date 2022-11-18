@@ -237,6 +237,20 @@ gpuWriteFunctionConfigRegEx_GM107
     return NV_OK;
 }
 
+void
+gpuReadDeviceId_GM107
+(
+    OBJGPU *pGpu,
+    NvU32  *devId,
+    NvU32  *ssId
+)
+{
+    if (devId == NULL || ssId == NULL) return;
+
+    *devId = GPU_REG_RD32(pGpu, DEVICE_BASE(NV_PCFG) + NV_XVE_ID);
+    *ssId  = GPU_REG_RD32(pGpu, DEVICE_BASE(NV_PCFG) + NV_XVE_SUBSYSTEM);
+}
+
 /*!
  * @brief Perform gpu-dependent error handling for error during register read sanity check
  *
@@ -357,7 +371,7 @@ gpuChildOrderList_GM200[] =
     {classId(OBJTMR),             GCO_ALL},
     {classId(Therm),              GCO_ALL},
     {classId(OBJHSHUBMANAGER),    GCO_ALL},
-    {classId(OBJHSHUB),           GCO_ALL},
+    {classId(Hshub),              GCO_ALL},
     {classId(MemorySystem),       GCO_ALL},
     {classId(KernelMemorySystem), GCO_ALL},
     {classId(MemoryManager),      GCO_ALL},
@@ -385,12 +399,12 @@ gpuChildOrderList_GM200[] =
     {classId(OBJDISP),            GCO_LIST_DESTROY},
     {classId(KernelDisplay),      GCO_LIST_DESTROY},
     {classId(OBJHDA),             GCO_LIST_DESTROY},
-    {classId(OBJFAN),             GCO_LIST_DESTROY},
+    {classId(Fan),             GCO_LIST_DESTROY},
     {classId(VirtMemAllocator),   GCO_ALL},
     {classId(OBJDISP),            GCO_LIST_INIT},
     {classId(KernelDisplay),      GCO_LIST_INIT},
     {classId(OBJHDA),             GCO_LIST_INIT},
-    {classId(OBJFAN),             GCO_LIST_INIT},
+    {classId(Fan),             GCO_LIST_INIT},
     {classId(GraphicsManager),    GCO_ALL},
     {classId(MIGManager),         GCO_ALL},
     {classId(KernelMIGManager),   GCO_ALL},
@@ -412,7 +426,7 @@ gpuChildOrderList_GM200[] =
     {classId(OBJDISP),            GCO_LIST_LOAD | GCO_LIST_UNLOAD},    // LOAD Display is *after* cipher so that hdcp keys can be loaded .
     {classId(KernelDisplay),      GCO_LIST_LOAD | GCO_LIST_UNLOAD},    // LOAD Display is *after* cipher so that hdcp keys can be loaded .
     {classId(OBJHDA),             GCO_LIST_LOAD | GCO_LIST_UNLOAD},
-    {classId(OBJFAN),             GCO_LIST_LOAD | GCO_LIST_UNLOAD},
+    {classId(Fan),             GCO_LIST_LOAD | GCO_LIST_UNLOAD},
     {classId(OBJCE),              GCO_ALL},
     {classId(KernelCE),           GCO_ALL},
     {classId(OBJMSENC),           GCO_ALL},
@@ -439,83 +453,3 @@ gpuGetChildrenOrder_GM200(OBJGPU *pGpu, NvU32 *pNumEntries)
     *pNumEntries = NV_ARRAY_ELEMENTS32(gpuChildOrderList_GM200);
     return gpuChildOrderList_GM200;
 }
-
-//
-// List of GPU children that present for the chip. List entries contain
-// {CLASS-ID, # of instances} pairs, e.g.: {CE, 2} is 2 instance of OBJCE. This
-// list controls only engine presence. Order is defined by
-// gpuGetChildrenOrder_HAL.
-//
-// IMPORTANT: This function is to be deleted. Engine removal should instead be
-// handled by <eng>ConstructEngine returning NV_ERR_NOT_SUPPORTED. PLEASE DO NOT
-// FORK THIS LIST!
-//
-// List entries contain {CLASS-ID, # of instances} pairs.
-//
-static const GPUCHILDPRESENT gpuChildrenPresent_GM200[] =
-{
-    {classId(OBJSWENG), 1},
-    {classId(OBJACR), 1},
-    {classId(OBJBIF), 1},
-    {classId(KernelBif), 1},
-    {classId(OBJBSP), 1},
-    {classId(OBJBUS), 1},
-    {classId(KernelBus), 1},
-    {classId(OBJCE), 3},
-    {classId(KernelCE), 3},
-    {classId(OBJCIPHER), 1},
-    {classId(ClockManager), 1},
-    {classId(OBJDISP), 1},
-    {classId(KernelDisplay), 1},
-    {classId(VirtMemAllocator), 1},
-    {classId(OBJDPAUX), 1},
-    {classId(OBJFAN), 1},
-    {classId(OBJHSHUBMANAGER), 1},
-    {classId(OBJHSHUB), 1},
-    {classId(MemorySystem), 1},
-    {classId(KernelMemorySystem), 1},
-    {classId(MemoryManager), 1},
-    {classId(KernelFifo), 1},
-    {classId(OBJFIFO), 1},
-    {classId(OBJGMMU), 1},
-    {classId(KernelGmmu), 1},
-    {classId(OBJGPULOG), 1},
-    {classId(OBJGPUMON), 1},
-    {classId(GraphicsManager), 1},
-    {classId(MIGManager), 1},
-    {classId(KernelMIGManager), 1},
-    {classId(KernelGraphicsManager), 1},
-    {classId(Graphics), 1},
-    {classId(KernelGraphics), 1},
-    {classId(OBJHDA), 1},
-    {classId(OBJHDACODEC), 1},
-    {classId(OBJHWPM), 1},
-    {classId(OBJINFOROM), 1},
-    {classId(Intr), 1},
-    {classId(Lpwr   ), 1},
-    {classId(OBJLSFM), 1},
-    {classId(OBJMC), 1},
-    {classId(KernelMc), 1},
-    {classId(PrivRing), 1},
-    {classId(SwIntr), 1},
-    {classId(OBJMSENC), 2},
-    {classId(NvDebugDump), 1},
-    {classId(Perf), 1},
-    {classId(KernelPerf), 1},
-    {classId(Pmgr), 1},
-    {classId(Pmu), 1},
-    {classId(KernelPmu), 1},
-    {classId(OBJSEC2), 1},
-    {classId(Therm), 1},
-    {classId(OBJTMR), 1},
-    {classId(OBJVOLT), 1},
-    {classId(OBJGRIDDISPLAYLESS), 1},
-};
-
-const GPUCHILDPRESENT *
-gpuGetChildrenPresent_GM200(OBJGPU *pGpu, NvU32 *pNumEntries)
-{
-    *pNumEntries = NV_ARRAY_ELEMENTS32(gpuChildrenPresent_GM200);
-    return gpuChildrenPresent_GM200;
-}
-

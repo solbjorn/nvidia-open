@@ -148,8 +148,12 @@ static NV_STATUS __nvoc_thunk_RmResource_stdmemControl_Prologue(struct StandardM
     return rmresControl_Prologue((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_StandardMemory_RmResource.offset), pCallContext, pParams);
 }
 
-static NV_STATUS __nvoc_thunk_Memory_stdmemIsReady(struct StandardMemory *pMemory) {
-    return memIsReady((struct Memory *)(((unsigned char *)pMemory) + __nvoc_rtti_StandardMemory_Memory.offset));
+static NvBool __nvoc_thunk_Memory_stdmemIsGpuMapAllowed(struct StandardMemory *pMemory, struct OBJGPU *pGpu) {
+    return memIsGpuMapAllowed((struct Memory *)(((unsigned char *)pMemory) + __nvoc_rtti_StandardMemory_Memory.offset), pGpu);
+}
+
+static NV_STATUS __nvoc_thunk_Memory_stdmemIsReady(struct StandardMemory *pMemory, NvBool bCopyConstructorContext) {
+    return memIsReady((struct Memory *)(((unsigned char *)pMemory) + __nvoc_rtti_StandardMemory_Memory.offset), bCopyConstructorContext);
 }
 
 static NV_STATUS __nvoc_thunk_Memory_stdmemCheckCopyPermissions(struct StandardMemory *pMemory, struct OBJGPU *pDstGpu, NvHandle hDstClientNvBool) {
@@ -158,6 +162,10 @@ static NV_STATUS __nvoc_thunk_Memory_stdmemCheckCopyPermissions(struct StandardM
 
 static void __nvoc_thunk_RsResource_stdmemPreDestruct(struct StandardMemory *pResource) {
     resPreDestruct((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_StandardMemory_RsResource.offset));
+}
+
+static NV_STATUS __nvoc_thunk_Memory_stdmemIsDuplicate(struct StandardMemory *pMemory, NvHandle hMemory, NvBool *pDuplicate) {
+    return memIsDuplicate((struct Memory *)(((unsigned char *)pMemory) + __nvoc_rtti_StandardMemory_Memory.offset), hMemory, pDuplicate);
 }
 
 static NV_STATUS __nvoc_thunk_RsResource_stdmemUnmapFrom(struct StandardMemory *pResource, RS_RES_UNMAP_FROM_PARAMS *pParams) {
@@ -246,11 +254,15 @@ static void __nvoc_init_funcTable_StandardMemory_1(StandardMemory *pThis) {
 
     pThis->__stdmemControl_Prologue__ = &__nvoc_thunk_RmResource_stdmemControl_Prologue;
 
+    pThis->__stdmemIsGpuMapAllowed__ = &__nvoc_thunk_Memory_stdmemIsGpuMapAllowed;
+
     pThis->__stdmemIsReady__ = &__nvoc_thunk_Memory_stdmemIsReady;
 
     pThis->__stdmemCheckCopyPermissions__ = &__nvoc_thunk_Memory_stdmemCheckCopyPermissions;
 
     pThis->__stdmemPreDestruct__ = &__nvoc_thunk_RsResource_stdmemPreDestruct;
+
+    pThis->__stdmemIsDuplicate__ = &__nvoc_thunk_Memory_stdmemIsDuplicate;
 
     pThis->__stdmemUnmapFrom__ = &__nvoc_thunk_RsResource_stdmemUnmapFrom;
 

@@ -455,7 +455,7 @@ static NvBool evaluateIsDSCPossible(NVHDMIPKT_CLASS             *pThis,
 
         NVMISC_MEMSET(pGetHdmiFrlCapacityComputationParams, 0, sizeof(*pGetHdmiFrlCapacityComputationParams));
         pGetHdmiFrlCapacityComputationParams->input = *pFRLParams;
-        pGetHdmiFrlCapacityComputationParams->dsc.maxSliceCount = NV_MIN(pSrcCaps->dscCaps.maxNumHztSlices * numHeadsDrivingSink, pSinkCaps->pHdmiForumInfo->dsc_MaxSlices);
+        pGetHdmiFrlCapacityComputationParams->dsc.maxSliceCount = min_t(u32, pSrcCaps->dscCaps.maxNumHztSlices * numHeadsDrivingSink, pSinkCaps->pHdmiForumInfo->dsc_MaxSlices);
         pGetHdmiFrlCapacityComputationParams->dsc.maxSliceWidth = pSrcCaps->dscCaps.maxWidthPerSlice;
         pGetHdmiFrlCapacityComputationParams->cmd = NV0073_CTRL_SPECIFIC_GET_HDMI_FRL_CAPACITY_COMPUTATION_CMD_IS_FRL_DSC_POSSIBLE;
 #if NVHDMIPKT_RM_CALLS_INTERNAL
@@ -808,8 +808,8 @@ hdmiQueryFRLConfigC671(NVHDMIPKT_CLASS                         *pThis,
     // Input validation
     if ((pClientCtrl->forceFRLRate    && (pClientCtrl->frlRate > pSinkCaps->linkMaxFRLRate)) ||
         (pClientCtrl->enableDSC       && !bCanUseDSC) ||
-        (pClientCtrl->forceSliceCount && (pClientCtrl->sliceCount > (NvU32)(NV_MIN(pSrcCaps->dscCaps.maxNumHztSlices, pSinkCaps->pHdmiForumInfo->dsc_MaxSlices)))) ||
-        (pClientCtrl->forceSliceWidth && (pClientCtrl->sliceWidth > NV_MIN(pSrcCaps->dscCaps.maxWidthPerSlice, MAX_RECONSTRUCTED_HACTIVE_PIXELS))) ||
+        (pClientCtrl->forceSliceCount && (pClientCtrl->sliceCount > min_t(u32, pSrcCaps->dscCaps.maxNumHztSlices, pSinkCaps->pHdmiForumInfo->dsc_MaxSlices))) ||
+        (pClientCtrl->forceSliceWidth && (pClientCtrl->sliceWidth > min_t(u32, pSrcCaps->dscCaps.maxWidthPerSlice, MAX_RECONSTRUCTED_HACTIVE_PIXELS))) ||
         (pClientCtrl->forceBppx16     && ((pClientCtrl->bitsPerPixelX16 < bppMinX16) || (pClientCtrl->bitsPerPixelX16 > bppMaxX16)))  ||
         (pClientCtrl->forceBppx16     && !pSinkCaps->pHdmiForumInfo->dsc_All_bpp))
     {
@@ -1015,10 +1015,6 @@ hdmiQueryFRLConfigC671(NVHDMIPKT_CLASS                         *pThis,
 
             if (pGetHdmiFrlCapacityComputationParams)
             {
-#if !NVHDMIPKT_RM_CALLS_INTERNAL
-                NvBool bSuccess;
-#endif
-
                 pGetHdmiFrlCapacityComputationParams->preCalc.packing = pVidTransInfo->packing;
                 pGetHdmiFrlCapacityComputationParams->cmd = NV0073_CTRL_SPECIFIC_GET_HDMI_FRL_CAPACITY_COMPUTATION_CMD_GET_PRECAL_COMPRESSED_FRL_CONFIG;
 #if NVHDMIPKT_RM_CALLS_INTERNAL
@@ -1117,7 +1113,7 @@ hdmiQueryFRLConfigC671(NVHDMIPKT_CLASS                         *pThis,
 
             if (pClientCtrl->option == HDMI_QUERY_FRL_HIGHEST_BANDWIDTH)
             {
-                NvBool bHasPreCalcFRLData = NV_TRUE;
+                bHasPreCalcFRLData = NV_TRUE;
 
                 if (bHasPreCalcFRLData)
                 {

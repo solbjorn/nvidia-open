@@ -85,13 +85,9 @@ static const MMU_FILL_TARGET g_fillTargetUnmap =
     MMU_WALK_FILL_INVALID,
 };
 
-const MMU_WALK_OP_PARAMS g_opParamsUnmap =
-{
-    &g_fillTargetUnmap,
-    mmuWalkFill,
-    mmuWalkFillSelectSubLevel,
-    NV_TRUE,  // bFill
-    NV_FALSE, // bRelease
-    NV_FALSE, // bIgnoreSubLevelConflicts
+const MMU_WALK_OP_PARAMS g_opParamsUnmap = {
+	.pOpCtx			= &g_fillTargetUnmap,
+	.opFunc			= mmuWalkFill,
+	.selectSubLevel		= mmuWalkFillSelectSubLevel,
+	.bFill			= NV_TRUE,
 };
-

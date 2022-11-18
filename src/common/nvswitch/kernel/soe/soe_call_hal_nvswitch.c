@@ -28,40 +28,6 @@
 
 #include "export_nvswitch.h"
 
-NV_STATUS
-soeProcessMessages
-(
-    nvswitch_device *device,
-    PSOE             pSoe
-)
-{
-    if (pSoe->base.pHal->processMessages == NULL)
-    {
-        NVSWITCH_ASSERT(0);
-        return NV_ERR_INVALID_ARGUMENT;
-    }
-
-    return pSoe->base.pHal->processMessages(device, pSoe);
-}
-
-NV_STATUS
-soeWaitForInitAck
-(
-    nvswitch_device *device,
-    PSOE             pSoe
-)
-{
-    if (pSoe->base.pHal->waitForInitAck == NULL)
-    {
-        NVSWITCH_ASSERT(0);
-        return NV_ERR_INVALID_ARGUMENT;
-    }
-
-    return pSoe->base.pHal->waitForInitAck(device, pSoe);
-}
-
-
-
 NvU32
 soeService_HAL
 (
@@ -374,4 +340,21 @@ soeWaitForInitAck_HAL
     }
 
     return pSoe->base.pHal->waitForInitAck(device, pSoe);
+}
+
+NvlStatus
+soeI2CAccess_HAL
+(
+    nvswitch_device *device,
+    NVSWITCH_CTRL_I2C_INDEXED_PARAMS *pParams
+)
+{
+    PSOE pSoe = (PSOE)device->pSoe;
+    if (pSoe->base.pHal->i2cAccess == NULL)
+    {
+        NVSWITCH_ASSERT(0);
+        return 0;
+    }
+
+    return pSoe->base.pHal->i2cAccess(device, pParams);
 }

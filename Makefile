@@ -75,8 +75,10 @@ endif
 # $(EXTRA_CFLAGS) to ccflags-y for compatibility.
 #
 
+subdir-ccflags-y += -DNV_VERSION_STRING=$(call stringify,525.53)
+
 COMMON_CFLAGS += -I$(src)/common/inc
-COMMON_CFLAGS += -DNVRM -DNV_VERSION_STRING=$(call stringify,520.56.06)
+COMMON_CFLAGS += -DNVRM
 
 COMMON_CFLAGS += -Wuninitialized
 
@@ -176,7 +178,7 @@ $(eval $(call NV_GENERATE_COMPILE_TEST_HEADER,types,$(NV_CONFTEST_TYPE_COMPILE_T
 
 # Each of these headers is checked for presence with a test #include; a
 # corresponding #define will be generated in conftest/headers.h.
-NV_HEADER_PRESENCE_TESTS = \
+NV_HEADER_PRESENCE_TESTS = $(sort \
  asm/system.h \
  drm/drmP.h \
  drm/drm_auth.h \
@@ -199,6 +201,7 @@ NV_HEADER_PRESENCE_TESTS = \
  drm/drm_ioctl.h \
  drm/drm_device.h \
  drm/drm_mode_config.h \
+ drm/drm_modeset_lock.h \
  dt-bindings/interconnect/tegra_icc_id.h \
  generated/autoconf.h \
  generated/compile.h \
@@ -213,6 +216,8 @@ NV_HEADER_PRESENCE_TESTS = \
  linux/log2.h \
  linux/of.h \
  linux/bug.h \
+ linux/sched.h \
+ linux/sched/mm.h \
  linux/sched/signal.h \
  linux/sched/task.h \
  linux/sched/task_stack.h \
@@ -256,7 +261,11 @@ NV_HEADER_PRESENCE_TESTS = \
  linux/ioasid.h \
  linux/stdarg.h \
  linux/iosys-map.h \
- asm/coco.h
+ asm/coco.h \
+ linux/vfio_pci_core.h \
+ soc/tegra/bpmp-abi.h \
+ soc/tegra/bpmp.h \
+)
 
 # Filename to store the define for the header in $(1); this is only consumed by
 # the rule below that concatenates all of these together.

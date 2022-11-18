@@ -4,10 +4,10 @@
 #include <linux/const.h>
 #include <linux/types.h>
 
-typedef char			int_fast8_t;
+typedef s8			int_fast8_t;
 
-typedef unsigned char		uint_fast8_t;
-typedef unsigned char		uint_least8_t;
+typedef u8			uint_fast8_t;
+typedef u8			uint_least8_t;
 
 #if BITS_PER_LONG == 64
 

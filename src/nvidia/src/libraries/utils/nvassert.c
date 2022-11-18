@@ -27,6 +27,7 @@
  *
  */
 
+#include "g_journal_nvoc.h"
 #include "nvport/nvport.h"
 #include "utils/nvassert.h"
 
@@ -43,8 +44,6 @@
 
 // Hook NV_ASSERT into RCDB.
 #if NV_JOURNAL_ASSERT_ENABLE
-void rcdbRmAssert(NvU32 lineNum, NvU64 ip);
-void rcdbRmAssertStatus(NvU32 status, NvU32 lineNum, NvU64 ip);
 #define NV_JOURNAL_ASSERT_FAILURE(lineNum, ip)                  rcdbRmAssert(lineNum, (NvU64)(ip))
 #define NV_JOURNAL_ASSERT_FAILURE_STATUS(lineNum, ip, status)   rcdbRmAssertStatus((status), lineNum, (NvU64)(ip))
 #else

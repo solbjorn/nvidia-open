@@ -17,5 +17,4 @@
 #define NV_IS_EXPORT_SYMBOL_PRESENT_tegra_dram_types 0
 #define NV_IS_EXPORT_SYMBOL_PRESENT_pxm_to_node 0
 #define NV_IS_EXPORT_SYMBOL_PRESENT_screen_info 1
-#define NV_IS_EXPORT_SYMBOL_PRESENT_kthread_create_on_node 1
 #define NV_IS_EXPORT_SYMBOL_PRESENT_int_active_memcg 0

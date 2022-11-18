@@ -70,7 +70,7 @@ kceGetPce2lceConfigSize1_GH100
  * of PCE connections required. This is decided based on a round up approach
  * where each PCE can handle 1.5 links.
  */
-NvU32
+static NvU32
 kceGetNumPceRequired
 (
     NvU32 numLinks
@@ -133,7 +133,7 @@ _ceGetAlgorithmPceIndex
                 }
 
                 *pceIndex = CE_GET_LOWEST_AVAILABLE_IDX(pceAvailableMaskPerHshub[i]);
-                if (NVBIT32(*pceIndex) & pceAvailableMaskPerHshub[*pHshubId]) {
+                if (NVBIT32(*pceIndex) & pceAvailableMaskPerHshub[i]) {
                     break;
                 }
             }
@@ -368,7 +368,6 @@ kceMapPceLceForGRCE_GH100
             for (i = 0; i < NV_CE_MAX_PCE_PER_GRCE; i++)
             {
                 pceIndex = grceMappings[grceIdx * 2 + i];
-                fbPceMask &= (~(NVBIT32(pceIndex)));
 
                 // floorswept PCE
                 if (pceIndex == 0 || (!gen5OrHigher && (i % 2 == 1)))
@@ -442,6 +441,11 @@ kceMapPceLceForNvlinkPeers_GH100
 
     NV2080_CTRL_INTERNAL_HSHUB_GET_HSHUB_ID_FOR_LINKS_PARAMS params;
 
+    if (pKernelNvlink == NULL)
+    {
+        return NV_WARN_NOTHING_TO_DO;
+    }
+
     peerAvailableLceMask = kceGetNvlinkPeerSupportedLceMask_HAL(pGpu, pKCe, peerAvailableLceMask);
     pKCe->nvlinkNumPeers = 0;
 
@@ -498,6 +502,11 @@ kceMapPceLceForNvlinkPeers_GH100
         peerAvailableLceMask &= (~(NVBIT32(lceIndex)));
 
         peerLinkMask = knvlinkGetLinkMaskToPeer(pGpu, pKernelNvlink, pRemoteGpu);
+        if (peerLinkMask == 0)
+        {
+            NV_PRINTF(LEVEL_INFO, "GPU%d has nvlink disabled. Skip programming\n", pRemoteGpu->gpuInstance);
+            continue;
+        }
 
         portMemSet(&params, 0, sizeof(params));
         params.linkMask = peerLinkMask;

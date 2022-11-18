@@ -48,7 +48,6 @@ _nvswitch_core_bios_read
     RM_SOE_CORE_CMD_BIOS *pParams = &cmd.cmd.core.bios;
     NvU64 dmaHandle = 0;
     NvU8 *pReadBuffer = NULL;
-    NvU32 spiReadCnt = 0;
     NvU32 offset = 0;
     NvU32 bufferSize = (reqSize < SOE_DMA_MAX_SIZE) ? SOE_DMA_MAX_SIZE : MAX_READ_SIZE;
 
@@ -81,11 +80,11 @@ _nvswitch_core_bios_read
         nvswitch_os_memset(&cmd, 0, sizeof(cmd));
 
         cmd.hdr.unitId = RM_SOE_UNIT_CORE;
-        cmd.hdr.size   = sizeof(cmd);
+        cmd.hdr.size   = RM_SOE_CMD_SIZE(CORE, BIOS);
         cmd.cmd.core.bios.cmdType = readType;
         RM_FLCN_U64_PACK(&pParams->dmaHandle, &dmaHandle);
         pParams->offset = offset;
-        pParams->sizeInBytes = NV_MIN((reqSize - offset), MAX_READ_SIZE);
+        pParams->sizeInBytes = min_t(u32, (reqSize - offset), MAX_READ_SIZE);
         cmdSeqDesc = 0;
 
         status = nvswitch_os_sync_dma_region_for_device(device->os_handle, dmaHandle,
@@ -134,7 +133,6 @@ _nvswitch_core_bios_read
         }
 
         offset += pParams->sizeInBytes;
-        spiReadCnt++;
     }
 
     nvswitch_os_unmap_dma_region(device->os_handle, pReadBuffer, dmaHandle,

@@ -385,6 +385,10 @@ static void __nvoc_thunk_RsResource_ksmdbgssnPreDestruct(struct KernelSMDebugger
     resPreDestruct((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_KernelSMDebuggerSession_RsResource.offset));
 }
 
+static NV_STATUS __nvoc_thunk_RsResource_ksmdbgssnIsDuplicate(struct KernelSMDebuggerSession *pResource, NvHandle hMemory, NvBool *pDuplicate) {
+    return resIsDuplicate((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_KernelSMDebuggerSession_RsResource.offset), hMemory, pDuplicate);
+}
+
 static PEVENTNOTIFICATION *__nvoc_thunk_Notifier_ksmdbgssnGetNotificationListPtr(struct KernelSMDebuggerSession *pNotifier) {
     return notifyGetNotificationListPtr((struct Notifier *)(((unsigned char *)pNotifier) + __nvoc_rtti_KernelSMDebuggerSession_Notifier.offset));
 }
@@ -427,6 +431,7 @@ NVOC_BUILD_CALLBACK(ksmdbgssnCtrlCmdDebugSetSingleSmSkipIdleWarpDetect_fcf1ac);
 NVOC_BUILD_CALLBACK(ksmdbgssnCtrlCmdDebugGetSingleSmDebuggerStatus_fcf1ac);
 NVOC_BUILD_CALLBACK(ksmdbgssnCtrlCmdDebugReadBatchMemory_IMPL);
 NVOC_BUILD_CALLBACK(ksmdbgssnCtrlCmdDebugWriteBatchMemory_IMPL);
+NVOC_BUILD_CALLBACK(ksmdbgssnCtrlCmdDebugReadMMUFaultInfo_IMPL);
 
 #if !defined(NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG)
 #define NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(x)      (0)
@@ -824,12 +829,27 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_KernelSM
         /*func=*/       "ksmdbgssnCtrlCmdDebugWriteBatchMemory"
 #endif
     },
+    {               /*  [26] */
+#if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
+        /*pFunc=*/      NULL,
+#else
+        /*pFunc=*/      ksmdbgssnCtrlCmdDebugReadMMUFaultInfo_IMPL_cb,
+#endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
+        /*flags=*/      0x10u,
+        /*accessRight=*/0x0u,
+        /*methodId=*/   0x83de0328u,
+        /*paramSize=*/  sizeof(NV83DE_CTRL_DEBUG_READ_MMU_FAULT_INFO_PARAMS),
+        /*pClassInfo=*/ &(__nvoc_class_def_KernelSMDebuggerSession.classInfo),
+#if NV_PRINTF_STRINGS_ALLOWED
+        /*func=*/       "ksmdbgssnCtrlCmdDebugReadMMUFaultInfo"
+#endif
+    },
 
 };
 
 const struct NVOC_EXPORT_INFO __nvoc_export_info_KernelSMDebuggerSession =
 {
-    /*numEntries=*/     26,
+    /*numEntries=*/     27,
     /*pExportEntries=*/ __nvoc_exported_method_def_KernelSMDebuggerSession
 };
 
@@ -981,6 +1001,10 @@ static void __nvoc_init_funcTable_KernelSMDebuggerSession_1(KernelSMDebuggerSess
     pThis->__ksmdbgssnCtrlCmdDebugWriteBatchMemory__ = &ksmdbgssnCtrlCmdDebugWriteBatchMemory_IMPL;
 #endif
 
+#if !NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
+    pThis->__ksmdbgssnCtrlCmdDebugReadMMUFaultInfo__ = &ksmdbgssnCtrlCmdDebugReadMMUFaultInfo_IMPL;
+#endif
+
     pThis->__nvoc_base_GpuResource.__gpuresInternalControlForward__ = &__nvoc_thunk_KernelSMDebuggerSession_gpuresInternalControlForward;
 
     pThis->__nvoc_base_GpuResource.__gpuresGetInternalObjectHandle__ = &__nvoc_thunk_KernelSMDebuggerSession_gpuresGetInternalObjectHandle;
@@ -1026,6 +1050,8 @@ static void __nvoc_init_funcTable_KernelSMDebuggerSession_1(KernelSMDebuggerSess
     pThis->__ksmdbgssnCanCopy__ = &__nvoc_thunk_RsResource_ksmdbgssnCanCopy;
 
     pThis->__ksmdbgssnPreDestruct__ = &__nvoc_thunk_RsResource_ksmdbgssnPreDestruct;
+
+    pThis->__ksmdbgssnIsDuplicate__ = &__nvoc_thunk_RsResource_ksmdbgssnIsDuplicate;
 
     pThis->__ksmdbgssnGetNotificationListPtr__ = &__nvoc_thunk_Notifier_ksmdbgssnGetNotificationListPtr;
 

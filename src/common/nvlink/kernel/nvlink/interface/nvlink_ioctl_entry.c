@@ -21,6 +21,7 @@
 *******************************************************************************/
 
 #include "nvlink.h"
+#include "nvlink_export.h"
 #include "nvVer.h"
 #include "nvlink_os.h"
 #include "nvlink_lib_ctrl.h"
@@ -456,7 +457,7 @@ nvlink_lib_ioctl_ctrl_helper
  *
  * return NvlStatus
  */
-static NvlStatus 
+static NvlStatus
 nvlink_lib_ctrl_prologue
 (
     nvlink_ioctrl_params *ctrlParams
@@ -628,7 +629,7 @@ nvlink_lib_ctrl_all_links
     {
         return NVL_NO_MEM;
     }
-    
+
     // Acquire the top-level lock
     status = nvlink_lib_top_lock_acquire();
     if (status != NVL_SUCCESS)
@@ -1037,7 +1038,7 @@ nvlink_lib_ctrl_device_link_init_status
     if (dev == NULL)
     {
         //
-        // Couldn't find the device ptr in the core library. Release the 
+        // Couldn't find the device ptr in the core library. Release the
         // top-level lock and return
         //
         nvlink_lib_top_lock_release();
@@ -1179,7 +1180,7 @@ nvlink_lib_ctrl_device_write_discovery_tokens
     if (dev == NULL)
     {
         //
-        // Couldn't find the device ptr in the core library. Release the 
+        // Couldn't find the device ptr in the core library. Release the
         // top-level lock and return
         //
         nvlink_lib_top_lock_release();
@@ -1337,7 +1338,7 @@ nvlink_lib_ctrl_device_read_discovery_tokens
     if (dev == NULL)
     {
         //
-        // Couldn't find the device ptr in the core library. Release the 
+        // Couldn't find the device ptr in the core library. Release the
         // top-level lock and return
         //
         nvlink_lib_top_lock_release();
@@ -1496,7 +1497,7 @@ nvlink_lib_ctrl_device_read_sids
     if (dev == NULL)
     {
         //
-        // Couldn't find the device ptr in the core library. Release the 
+        // Couldn't find the device ptr in the core library. Release the
         // top-level lock and return
         //
         nvlink_lib_top_lock_release();
@@ -1758,7 +1759,7 @@ nvlink_lib_ctrl_device_get_intranode_conns
     if (dev == NULL)
     {
         //
-        // Couldn't find the device ptr in the core library. Release the 
+        // Couldn't find the device ptr in the core library. Release the
         // top-level lock and return
         //
         nvlink_lib_top_lock_release();
@@ -2129,7 +2130,7 @@ nvlink_lib_ctrl_train_intranode_conn
                 // ALT training for NVLink3.0+
                 nvlink_core_init_links_from_off_to_swcfg(
                                             initLinks, count, NVLINK_STATE_CHANGE_SYNC);
-            } 
+            }
             break;
         }
         case nvlink_train_conn_swcfg_to_active:
@@ -2142,7 +2143,7 @@ nvlink_lib_ctrl_train_intranode_conn
                     status = nvlink_core_train_intranode_conns_from_swcfg_to_active_non_ALI(
                                                      &conn, 1, NVLINK_STATE_CHANGE_SYNC);
                 }
-            } 
+            }
             else if (srcLink->version >= NVLINK_DEVICE_VERSION_30)
             {
                 // ALT training for NVLink3.0+
@@ -2437,7 +2438,7 @@ nvlink_lib_ctrl_train_intranode_conns_parallel
                 // ALT training for NVLink3.0+
                 nvlink_core_init_links_from_off_to_swcfg(
                                             initLinks, count, NVLINK_STATE_CHANGE_SYNC);
-            } 
+            }
             break;
         }
         case nvlink_train_conn_swcfg_to_active:
@@ -2456,7 +2457,7 @@ nvlink_lib_ctrl_train_intranode_conns_parallel
                 // ALT training for NVLink3.0+
                 status = nvlink_core_train_intranode_conns_from_swcfg_to_active_ALT(
                                                         conns, numConns, NVLINK_STATE_CHANGE_SYNC);
-            } 
+            }
             break;
         }
         case nvlink_train_conn_active_to_swcfg:
@@ -3558,7 +3559,7 @@ nvlink_lib_ctrl_get_device_link_states
     if (dev == NULL)
     {
         //
-        // Couldn't find the device ptr in the core library. Release the 
+        // Couldn't find the device ptr in the core library. Release the
         // top-level lock and return
         //
         nvlink_lib_top_lock_release();
@@ -3573,10 +3574,10 @@ nvlink_lib_ctrl_get_device_link_states
     //
     FOR_EACH_LINK_REGISTERED(endpoint, dev, node)
     {
-        if (numLinks >= NVLINK_MAX_NVLINK_ENDPOINTS)
+        if (numLinks >= NVLINK_MAX_SYSTEM_LINK_NUM)
         {
             NVLINK_PRINT((DBG_MODULE_NVLINK_CORE, NVLINK_DBG_LEVEL_ERRORS,
-                "%s: numLinks >= NVLINK_MAX_NVLINK_ENDPOINTS",
+                "%s: numLinks >= NVLINK_MAX_SYSTEM_LINK_NUM",
                 __FUNCTION__));
 
             nvlink_assert(0);

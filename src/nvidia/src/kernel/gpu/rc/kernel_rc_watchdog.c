@@ -460,7 +460,7 @@ krcWatchdogInit_IMPL
     {
         NV0080_ALLOC_PARAMETERS                nv0080;
         NV2080_ALLOC_PARAMETERS                nv2080;
-        NV_CHANNELGPFIFO_ALLOCATION_PARAMETERS channelGPFifo;
+        NV_CHANNEL_ALLOC_PARAMS channelGPFifo;
         NV_CONTEXT_DMA_ALLOCATION_PARAMS       ctxDma;
         NV_MEMORY_VIRTUAL_ALLOCATION_PARAMS    virtual;
         NV_MEMORY_ALLOCATION_PARAMS            mem;
@@ -860,7 +860,7 @@ krcWatchdogInit_IMPL
     }
 
     {
-        NV_CHANNELGPFIFO_ALLOCATION_PARAMETERS *pChannelGPFifo =
+        NV_CHANNEL_ALLOC_PARAMS *pChannelGPFifo =
             &pParams->channelGPFifo;
 
         //
@@ -877,7 +877,7 @@ krcWatchdogInit_IMPL
         pChannelGPFifo->gpFifoEntries = WATCHDOG_GPFIFO_ENTRIES;
 
         // 2d object is only suppported on GR0
-        pChannelGPFifo->engineType = NV2080_ENGINE_TYPE_GR0;
+        pChannelGPFifo->engineType = RM_ENGINE_TYPE_GR0;
 
         if (bClientUserd)
             pChannelGPFifo->hUserdMemory[0] = WATCHDOG_USERD_PHYS_MEM_ID;
@@ -997,7 +997,7 @@ krcWatchdogInit_IMPL
 
     {
         NvU32 classID;
-        NvU32 engineID;
+        RM_ENGINE_TYPE engineID;
 
         status = kchannelGetClassEngineID_HAL(pGpu, pKernelChannel,
             WATCHDOG_GROBJ_ID,

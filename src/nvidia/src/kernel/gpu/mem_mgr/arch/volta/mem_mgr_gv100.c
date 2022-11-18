@@ -92,8 +92,6 @@ memmgrGetMaxContextSize_GV100
     MemoryManager *pMemoryManager
 )
 {
-    extern NvU64 memmgrGetMaxContextSize_GP100(OBJGPU *pGpu, MemoryManager *pMemoryManager);
-
     NvU64 size = memmgrGetMaxContextSize_GP100(pGpu, pMemoryManager);
 
     // In Volta, the GR context buffer size increased by about 847 KB (doubled from Pascal)
@@ -128,28 +126,4 @@ memmgrGetMaxContextSize_GV100
     }
 
     return size;
-}
-
-/**
- *  This will return NV_TRUE if surface is BL. otherwise it returns NV_FALSE.
- */
-NvBool
-memmgrIsSurfaceBlockLinear_GV100
-(
-    MemoryManager     *pMemoryManager,
-    Memory            *pMemory,
-    NvU32              kind,
-    NvU32              dmaFlags
-)
-{
-    if (FLD_TEST_DRF(OS03, _FLAGS, _PTE_KIND, _BL, dmaFlags))
-    {
-        return NV_TRUE;
-    }
-    else if (FLD_TEST_DRF(OS03, _FLAGS, _PTE_KIND, _PITCH, dmaFlags))
-    {
-        return NV_FALSE;
-    }
-
-    return (kind != NV_MMU_PTE_KIND_PITCH) ? NV_TRUE: NV_FALSE;
 }
