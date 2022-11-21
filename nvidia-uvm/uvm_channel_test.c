@@ -671,7 +671,7 @@ done:
     return status;
 }
 
-NV_STATUS test_write_ctrl_gpfifo_noop(uvm_va_space_t *va_space)
+static NV_STATUS test_write_ctrl_gpfifo_noop(uvm_va_space_t *va_space)
 {
     uvm_gpu_t *gpu;
 
@@ -702,7 +702,7 @@ NV_STATUS test_write_ctrl_gpfifo_noop(uvm_va_space_t *va_space)
     return NV_OK;
 }
 
-NV_STATUS test_write_ctrl_gpfifo_and_pushes(uvm_va_space_t *va_space)
+static NV_STATUS test_write_ctrl_gpfifo_and_pushes(uvm_va_space_t *va_space)
 {
     uvm_gpu_t *gpu;
 
@@ -758,7 +758,7 @@ static NvU32 get_available_gpfifo_entries(uvm_channel_t *channel)
     return channel->num_gpfifo_entries - pending_entries - 1;
 }
 
-NV_STATUS test_write_ctrl_gpfifo_tight(uvm_va_space_t *va_space)
+static NV_STATUS test_write_ctrl_gpfifo_tight(uvm_va_space_t *va_space)
 {
     NV_STATUS status = NV_OK;
     uvm_gpu_t *gpu;

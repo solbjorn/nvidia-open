@@ -36,12 +36,6 @@
 
 #include <dp_connector.h>
 
-// Loop over all display devices attached to a connector.
-// Connector::enumDevices(NULL) returns the first device, and then
-// enumDevices(previous) returns each subsequent device.
-#define for_each_device(connector, dev) \
-    for (DisplayPort::Device *(dev) = NULL; ((dev) = (connector)->enumDevices(dev)); )
-
 NVDPLibConnectorPtr nvDPCreateConnector(NVConnectorEvoPtr pConnectorEvo)
 {
     NVDevEvoPtr pDevEvo = pConnectorEvo->pDispEvo->pDevEvo;
@@ -110,7 +104,7 @@ void nvDPNotifyLongPulse(NVConnectorEvoPtr pConnectorEvo,
     pNVDpLibConnector->plugged = connected;
 
     if (connected && !nvAssignSOREvo(pConnectorEvo, 0 /* sorExcludeMask */)) {
-        // DPLib takes care of skipping LT on unassigned SOR Display. 
+        // DPLib takes care of skipping LT on unassigned SOR Display.
     }
 
     c->notifyLongPulse(connected);

@@ -35,9 +35,9 @@
 #include "ctrl/ctrl0073/ctrl0073dp.h" // NV0073_CTRL_CMD_DP_SET_MSA_PROPERTIES
 
 //
-// TODO - deprecation shim shouldn't depend on RM internals 
+// TODO - deprecation shim shouldn't depend on RM internals
 // Bug 3188307
-// 
+//
 #include "core/core.h"
 #include "gpu/gpu.h"
 #include "rmapi/rs_utils.h"
@@ -53,7 +53,6 @@
  */
 
 #define V2_CONVERTER(cmd) NV_CONCATENATE(_ctrl_convert_v2, cmd)
-#define V3_CONVERTER(cmd) NV_CONCATENATE(_ctrl_convert_v3, cmd)
 
 // Need to declare them first to add to table below.
 // Maybe reshuffle this file around so that we don't need separate decl+def for these?
@@ -479,7 +478,7 @@ static NV_STATUS V2_CONVERTER(_NV0000_CTRL_CMD_SYSTEM_GET_BUILD_VERSION)
 
             maxSizeOfStrings = NV_MAX(driverVersionBufferLen,
                                       NV_MAX(versionBufferLen, titleBufferLen));
-            
+
             //
             // In the case that one or more of the embedded pointers is NULL, the user
             // simply wants to know the maximum size of each of these strings so they know
@@ -587,7 +586,7 @@ static NV_STATUS V2_CONVERTER(_NV2080_CTRL_CMD_BUS_GET_INFO)
 }
 
 // Note: see check "listItemCount == 0" in ctrlparamAcquire(). For capsTblSize
-// of 0, it will let it fall thru to here. So we need to explicitly check for 
+// of 0, it will let it fall thru to here. So we need to explicitly check for
 // capsTblSize here to not cause regression.
 static NV_STATUS V2_CONVERTER(_NV0080_CTRL_CMD_BSP_GET_CAPS)
 (
@@ -618,7 +617,7 @@ static NV_STATUS V2_CONVERTER(_NV0080_CTRL_CMD_BSP_GET_CAPS)
                          pParams2->instanceId = pParams->instanceId;
                      },
                      // Custom data out back to user
-                     {}   // array has been filled. 
+                     {}   // array has been filled.
                     );
 }
 
@@ -740,4 +739,3 @@ done:
 
     return status;
 }
-

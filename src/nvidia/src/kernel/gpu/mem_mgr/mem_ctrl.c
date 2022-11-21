@@ -134,7 +134,7 @@ memCtrlCmdGetSurfaceInfoLvm_IMPL
                 // gets allocated only when ATTR is set to COMPR_REQUIRED
                 //
                 if ((pMemory->pHwResource != NULL) &&
-                     pMemory->pHwResource->attr & 
+                     pMemory->pHwResource->attr &
                     DRF_DEF(OS32, _ATTR, _COMPR, _REQUIRED))
                 {
                     zero = 0;
@@ -350,33 +350,6 @@ memCtrlCmdGetMemPageSize_IMPL
 }
 
 NV_STATUS
-memCtrlCmdUpdateSurfaceCompression_IMPL
-(
-    Memory *pMemory,
-    NV0041_CTRL_UPDATE_SURFACE_COMPRESSION_PARAMS *pUpdateParams
-)
-{
-    OBJGPU     *pGpu = pMemory->pGpu;
-    NV_STATUS   status = NV_OK;
-
-    NV_ASSERT_OR_RETURN(pMemory->pHwResource, NV_ERR_INVALID_ARGUMENT);
-
-    SLI_LOOP_START(SLI_LOOP_FLAGS_BC_ONLY)
-    {
-        MemoryManager *pMemoryManager = GPU_GET_MEMORY_MANAGER(pGpu);
-
-        NV_STATUS tmpStatus = memmgrUpdateSurfaceCompression_HAL(pGpu, pMemoryManager, pMemory, pUpdateParams->bRelease);
-        if (tmpStatus != NV_OK)
-        {
-            status = tmpStatus;
-        }
-    }
-    SLI_LOOP_END
-
-    return status;
-}
-
-NV_STATUS
 memCtrlCmdSetTag_IMPL
 (
     Memory *pMemory,
@@ -396,6 +369,6 @@ memCtrlCmdGetTag_IMPL
 )
 {
     pParams->tag = pMemory->tag;
-    
+
     return NV_OK;
 }

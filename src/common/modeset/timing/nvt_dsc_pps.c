@@ -48,14 +48,12 @@
 #define DSC_Print(...) do { } while(0)
 #endif
 
-#define MIN_CHECK(s,a,b)     { if((a)<(b)) { DSC_Print("%s (=%u) needs to be larger than %u",s,a,b); return (NVT_STATUS_ERR);} }
 #define RANGE_CHECK(s,a,b,c) { if((((NvS32)(a))<(NvS32)(b))||(((NvS32)(a))>(NvS32)(c))) { DSC_Print("%s (=%u) needs to be between %u and %u",s,a,b,c); return (NVT_STATUS_ERR);} }
 #define ENUM2_CHECK(s,a,b,c) { if(((a)!=(b))&&((a)!=(c))) { DSC_Print("%s (=%u) needs to be %u or %u",s,a,b,c); return (NVT_STATUS_ERR);} }
 #define ENUM3_CHECK(s,a,b,c,d) { if(((a)!=(b))&&((a)!=(c))&&((a)!=(d))) { DSC_Print("%s (=%u) needs to be %u, %u or %u",s,a,b,c,d); return (NVT_STATUS_ERR);} }
 #define MAX(a,b)    (((a)>=(b) || (b == 0xffffffff))?(a):(b))
 #define MIN(a,b)    ((a)>=(b)?(b):(a))
 #define CLAMP(a,b,c) ((a)<=(b)?(b):((a)>(c)?(c):(a)))
-#define ADJUST_SLICE_NUM(n)  ((n)>4?8:((n)>2?4:(n)))
 #define MSB(a) (((a)>>8)&0xFF)
 #define LSB(a) ((a)&0xFF)
 
@@ -71,11 +69,6 @@
 //The max slice_width used in slice_width calculation
 //this is not HW limitation(which is 5120 per head), just a recommendation
 #define MAX_WIDTH_PER_SLICE          5120
-//RC algorithm will get better performance if slice size is bigger.
-//This requires slice size be much greater than rc_model_size(8K bits)
-//but bigger slice will increase the error rate of DSC slices.
-//256KB is a moderate value (about 1280x200 @8bpp)
-#define MIN_SLICE_SIZE          (256*1024)
 // Per DP 1.4 spec, sink should support slice width of up to at least 2560 (it is allowed to support more).
 #define SINK_MAX_SLICE_WIDTH_DEFAULT 2560
 // Min bits per pixel supported
@@ -111,7 +104,7 @@ typedef struct
     NvU32  native_420;            // 420 native mode
     NvU32  native_422;            // 422 native mode
     NvU32  drop_mode;             // 0 - normal mode, 1 - drop mode.
-    NvU32  peak_throughput_mode0; // peak throughput supported by the sink for 444 and simple 422 modes. 
+    NvU32  peak_throughput_mode0; // peak throughput supported by the sink for 444 and simple 422 modes.
     NvU32  peak_throughput_mode1; // peak throughput supported by the sink for native 422 and 420 modes.
 } DSC_INPUT_PARAMS;
 
@@ -401,9 +394,9 @@ static void DSC_Free(void * ptr);
 static NvU32
 DSC_GetHigherSliceCount
 (
-    NvU32 common_slice_count_mask, 
-    NvU32 desired_slice_num, 
-    NvU32 dual_mode, 
+    NvU32 common_slice_count_mask,
+    NvU32 desired_slice_num,
+    NvU32 dual_mode,
     NvU32 *new_slice_num
 );
 static NvU32 DSC_AlignDownForBppPrecision(NvU32 bitsPerPixelX16, NvU32 bitsPerPixelPrecision);
@@ -411,7 +404,7 @@ static NvU32 DSC_AlignDownForBppPrecision(NvU32 bitsPerPixelX16, NvU32 bitsPerPi
 static NvU32
 DSC_GetPeakThroughputMps(NvU32 peak_throughput);
 
-static NvU32 
+static NvU32
 DSC_SliceCountMaskforSliceNum (NvU32 slice_num);
 
 /* ------------------------ Private Functions ------------------------------ */
@@ -1116,7 +1109,7 @@ DSC_PpsConstruct
  * @returns     out_slice_count_mask  if successful
  *              0                     if not successful
  */
-static NvU32 
+static NvU32
 DSC_SliceCountMaskforSliceNum (NvU32 slice_num)
 {
     switch (slice_num)
@@ -1149,9 +1142,9 @@ DSC_SliceCountMaskforSliceNum (NvU32 slice_num)
 /*
  * @brief       Convert peak throughput placeholders into numeric values.
  *
- * @param[in]   peak_throughput_mode0   peak throughput sink cap placeholder.      
+ * @param[in]   peak_throughput_mode0   peak throughput sink cap placeholder.
  *
- * @returns     peak_throughput_mps     actual throughput in MegaPixels/second. 
+ * @returns     peak_throughput_mps     actual throughput in MegaPixels/second.
  */
 static NvU32
 DSC_GetPeakThroughputMps(NvU32 peak_throughput)
@@ -1216,7 +1209,7 @@ DSC_GetPeakThroughputMps(NvU32 peak_throughput)
  * @param[in]   common_slice_count_mask   Includes slice counts supported by both.
  * @param[in]   desired_slice_num         desired slice count
  * @param[in]   dual_mode                 if dual mode or not
- * @param[in]   new_slice_num             new slice count if one was found. 
+ * @param[in]   new_slice_num             new slice count if one was found.
  *
  * @returns NVT_STATUS_SUCCESS if successful;
  *          NVT_STATUS_ERR if unsuccessful;
@@ -1224,14 +1217,14 @@ DSC_GetPeakThroughputMps(NvU32 peak_throughput)
 static NvU32
 DSC_GetHigherSliceCount
 (
-    NvU32 common_slice_count_mask, 
-    NvU32 desired_slice_num, 
-    NvU32 dual_mode, 
+    NvU32 common_slice_count_mask,
+    NvU32 desired_slice_num,
+    NvU32 dual_mode,
     NvU32 *new_slice_num
 )
 {
     //
-    // slice num = 6 won't exist in common_slice_count_mask, but 
+    // slice num = 6 won't exist in common_slice_count_mask, but
     // still keeping it to align mask bits and valid_slice_num index.
     //
     NvU32 valid_slice_num[6] = {1,2,0,4,6,8};
@@ -1259,22 +1252,22 @@ DSC_GetHigherSliceCount
 /*
  * @brief Function validates and calculates, if required, the slice parameters like
  * slice_width, slice_num for the DSC mode requested.
- * 
- * If slice width, slice num is not forced, fn calculates them by trying to minimize 
- * slice num used. 
- * 
+ *
+ * If slice width, slice num is not forced, fn calculates them by trying to minimize
+ * slice num used.
+ *
  * If slice width/slice num is forced, it validates the forced parameter and calculates
  *  corresponding parameter and makes sure it can be supported.
- * 
- * If both slice num and slice width are forced, it validates both. 
+ *
+ * If both slice num and slice width are forced, it validates both.
  *
  * @param[in]   pixel_clkMHz       Pixel clock
  * @param[in]   dual_mode          Specify if Dual Mode is enabled or not
  * @param[in]   max_slice_num      max slice number supported by sink
  * @param[in]   max_slice_width    max slice width supported by sink
  * @param[in]   slice_count_mask   Mask of slice counts supported by sink
- * @param[in]   peak_throughput    Peak throughput supported by DSC sink 
- *                                     decoder in Mega Pixels Per Second 
+ * @param[in]   peak_throughput    Peak throughput supported by DSC sink
+ *                                     decoder in Mega Pixels Per Second
  * @param[out]  out                DSC output parameter
  *
  * @returns NVT_STATUS_SUCCESS if successful;
@@ -1296,16 +1289,16 @@ DSC_PpsCalcSliceParams
     NvU32  slicew;
     NvU32  peak_throughput_mps;
     //
-    // Bits 0,1,3,4,5 represents slice counts 1,2,4,6,8. 
-    // Bit 2 is reserved and Slice count = 6 is not supported 
-    // by GPU, so that is not required to be set. 
-    // 
-    NvU32 gpu_slice_count_mask      = DSC_DECODER_SLICES_PER_SINK_1 | 
-                                      DSC_DECODER_SLICES_PER_SINK_2 | 
+    // Bits 0,1,3,4,5 represents slice counts 1,2,4,6,8.
+    // Bit 2 is reserved and Slice count = 6 is not supported
+    // by GPU, so that is not required to be set.
+    //
+    NvU32 gpu_slice_count_mask      = DSC_DECODER_SLICES_PER_SINK_1 |
+                                      DSC_DECODER_SLICES_PER_SINK_2 |
                                       DSC_DECODER_SLICES_PER_SINK_4;
 
-    NvU32 gpu_slice_count_mask_dual = DSC_DECODER_SLICES_PER_SINK_2 | 
-                                      DSC_DECODER_SLICES_PER_SINK_4 | 
+    NvU32 gpu_slice_count_mask_dual = DSC_DECODER_SLICES_PER_SINK_2 |
+                                      DSC_DECODER_SLICES_PER_SINK_4 |
                                       DSC_DECODER_SLICES_PER_SINK_8;
 
     NvU32 common_slice_count_mask = dual_mode? gpu_slice_count_mask_dual & slice_count_mask :
@@ -1469,7 +1462,7 @@ DSC_PpsCheckSliceHeight(DSC_OUTPUT_PARAMS *out)
         return NVT_STATUS_ERR;
     }
 
-    if (DSC_PpsCalcBpg(out) != NVT_STATUS_SUCCESS) 
+    if (DSC_PpsCalcBpg(out) != NVT_STATUS_SUCCESS)
     {
         return NVT_STATUS_ERR;
     }
@@ -1558,8 +1551,8 @@ DSC_PpsCalc
         peak_throughput = in->peak_throughput_mode0;
     }
 
-    ret = DSC_PpsCalcSliceParams(in->pixel_clkMHz, in->dual_mode, 
-            in->max_slice_num, in->max_slice_width, in->slice_count_mask, 
+    ret = DSC_PpsCalcSliceParams(in->pixel_clkMHz, in->dual_mode,
+            in->max_slice_num, in->max_slice_width, in->slice_count_mask,
             peak_throughput, out);
     if (ret != NVT_STATUS_SUCCESS) return ret;
     ret = DSC_PpsCalcRcInitValue(out);
@@ -1572,7 +1565,7 @@ DSC_PpsCalc
 
 /*
  * @brief Calculate DSC_OUTPUT_PARAMS from DSC_INPUT_PARAMS internally,
- *        then pack pps parameters into 32bit data array. 
+ *        then pack pps parameters into 32bit data array.
  *
  * @param[in]   in   DSC input parameter
  * @param[out]  out  DSC output parameter
@@ -1635,7 +1628,7 @@ DSC_Malloc(NvLength size)
 }
 
 /*
- * @brief Frees dynamically allocated memory 
+ * @brief Frees dynamically allocated memory
  *
  * @param[in]   ptr   Pointer to a memory to be deallocated
  *
@@ -1789,7 +1782,7 @@ _validateInput
         return NVT_STATUS_INVALID_PARAMETER;
     }
 
-    if (pDscInfo->forcedDscParams.dscRevision.versionMinor > 
+    if (pDscInfo->forcedDscParams.dscRevision.versionMinor >
         pDscInfo->sinkCaps.algorithmRevision.versionMinor)
     {
         DSC_Print("ERROR - Forced DSC Algorithm Revision is greater than Sink Supported value.");
@@ -1808,7 +1801,7 @@ _validateInput
         return NVT_STATUS_INVALID_PARAMETER;
     }
 
-    if ((pDscInfo->branchCaps.overallThroughputMode0 != 0) && 
+    if ((pDscInfo->branchCaps.overallThroughputMode0 != 0) &&
         (pModesetInfo->pixelClockHz > pDscInfo->branchCaps.overallThroughputMode0 * MHZ_TO_HZ))
     {
         DSC_Print("ERROR - Pixel clock cannot be greater than Branch DSC Overall Throughput Mode 0");
@@ -1853,7 +1846,7 @@ _validateInput
         //      1> Sink supports Simple422
         //      2> GPU and Sink supports Native 422
         //
-        if ((!(pDscInfo->sinkCaps.decoderColorFormatMask & DSC_DECODER_COLOR_FORMAT_Y_CB_CR_SIMPLE_422)) && 
+        if ((!(pDscInfo->sinkCaps.decoderColorFormatMask & DSC_DECODER_COLOR_FORMAT_Y_CB_CR_SIMPLE_422)) &&
             (!((pDscInfo->gpuCaps.encoderColorFormatMask & DSC_ENCODER_COLOR_FORMAT_Y_CB_CR_NATIVE_422) &&
                 (pDscInfo->sinkCaps.decoderColorFormatMask & DSC_DECODER_COLOR_FORMAT_Y_CB_CR_NATIVE_422))))
         {
@@ -2083,7 +2076,7 @@ DSC_GeneratePPS
     if (pWARData && (pWARData->connectorType == DSC_DP))
     {
         //
-        // In DP case, being too close to the available bandwidth caused HW to hang. 
+        // In DP case, being too close to the available bandwidth caused HW to hang.
         // 2 is subtracted based on issues seen in DP CTS testing. Refer to bug 200406501, comment 76
         // This limitation is only on DP, not needed for HDMI DSC HW
         //
@@ -2108,7 +2101,7 @@ DSC_GeneratePPS
 
             NvU32 protocolOverhead;
             NvU32 dscOverhead;
-            NvU32 minSliceCount = (NvU32)NV_CEIL(pModesetInfo->pixelClockHz, (MAX_PCLK_PER_SLICE_KHZ * 1000U)); 
+            NvU32 minSliceCount = (NvU32)NV_CEIL(pModesetInfo->pixelClockHz, (MAX_PCLK_PER_SLICE_KHZ * 1000U));
             NvU32 sliceWidth;
             NvU32 i;
 
@@ -2120,7 +2113,7 @@ DSC_GeneratePPS
             {
                 minSliceCount = 8U;
             }
-            
+
             sliceWidth = (NvU32)NV_CEIL(pModesetInfo->activeWidth, minSliceCount);
 
             if (pWARData->dpData.laneCount == 1U)
@@ -2157,7 +2150,7 @@ DSC_GeneratePPS
         }
     }
 
-    // 
+    //
     // bits per pixel upper limit is minimum of 3 times bits per component or 32
     //
     if (in->bits_per_pixel > MIN((3 * in->bits_per_component * BPP_UNIT), (MAX_BITS_PER_PIXEL * BPP_UNIT)))
@@ -2172,9 +2165,9 @@ DSC_GeneratePPS
     {
         *pBitsPerPixelX16 = DSC_AlignDownForBppPrecision(*pBitsPerPixelX16, pDscInfo->sinkCaps.bitsPerPixelPrecision);
 
-        // The calculation of in->bits_per_pixel here in PPSlib, which is the maximum bpp that is allowed by available bandwidth, 
-        // which is applicable to DP alone and not to HDMI FRL. 
-        // Before calling PPS lib to generate PPS data, HDMI library has done calculation according to HDMI2.1 spec 
+        // The calculation of in->bits_per_pixel here in PPSlib, which is the maximum bpp that is allowed by available bandwidth,
+        // which is applicable to DP alone and not to HDMI FRL.
+        // Before calling PPS lib to generate PPS data, HDMI library has done calculation according to HDMI2.1 spec
         // to determine if FRL rate is sufficient for the requested bpp. So restricting the condition to DP alone.
         if ((pWARData && (pWARData->connectorType == DSC_DP)) &&
             (*pBitsPerPixelX16 > in->bits_per_pixel))
@@ -2246,7 +2239,7 @@ DSC_GeneratePPS
     in->slice_count_mask = pDscInfo->sinkCaps.sliceCountSupportedMask;
     in->peak_throughput_mode0 = pDscInfo->sinkCaps.peakThroughputMode0;
     in->peak_throughput_mode1 = pDscInfo->sinkCaps.peakThroughputMode1;
-    
+
     if (in->native_422)
     {
         if (in->dsc_version_minor == 1)

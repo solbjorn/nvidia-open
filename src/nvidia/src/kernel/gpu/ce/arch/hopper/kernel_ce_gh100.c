@@ -34,11 +34,7 @@
 // Defines for PCE-LCE mapping algorithm
 #define NV_CE_MAX_HSHUBS                  5
 #define NV_CE_LCE_MASK_INIT               0xFFFFFFFF
-#define NV_CE_GRCE_ALLOWED_LCE_MASK       0x03
 #define NV_CE_MAX_GRCE                    2
-#define NV_CE_EVEN_ASYNC_LCE_MASK         0x55555550
-#define NV_CE_ODD_ASYNC_LCE_MASK          0xAAAAAAA0
-#define NV_CE_MAX_LCE_MASK                0x3FF
 #define NV_CE_PCE_PER_HSHUB               4
 #define NV_CE_NUM_FBPCE                   4
 #define NV_CE_NUM_PCES_NO_LINK_CASE       12

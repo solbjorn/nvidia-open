@@ -57,9 +57,6 @@ static void _rmapiInitInterface(RM_API *pRmApi, API_SECURITY_INFO *pDefaultSecur
 static NV_STATUS _rmapiLockAlloc(void);
 static void _rmapiLockFree(void);
 
-// from rmapi_stubs.c
-void rmapiInitStubInterface(RM_API *pRmApi);
-
 NV_STATUS
 rmapiInitialize
 (
@@ -705,4 +702,3 @@ rmapiGetClientHandlesFromOSInfo
 
     return NV_OK;
 }
-

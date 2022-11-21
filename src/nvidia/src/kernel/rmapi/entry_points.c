@@ -21,6 +21,7 @@
  * DEALINGS IN THE SOFTWARE.
  */
 #include "rmapi/rmapi.h"
+#include <rmapi/exports.h>
 #include "entry_points.h"
 #include "deprecated_context.h"
 #include "os/os.h"
@@ -32,9 +33,6 @@
         rmapiInitDeprecatedContext(&context, NULL, bUserModeArgs, NV_FALSE); \
         pFunc(&context.parent, pArgs); \
     } while (0)
-
-#define RMAPI_NOT_SUPPORTED(pArgs) \
-    pArgs->status = NV_ERR_NOT_SUPPORTED;
 
 // Primary APIs
 static void _nv04Alloc(NVOS21_PARAMETERS*, NvBool);

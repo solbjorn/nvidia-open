@@ -160,8 +160,6 @@ kgmmuSetPdbToInvalidate_TU102
 NV_STATUS
 kgmmuFmtFamiliesInit_TU102(OBJGPU *pGpu, KernelGmmu *pKernelGmmu)
 {
-    extern NV_STATUS kgmmuFmtFamiliesInit_GV100(OBJGPU *pGpu, KernelGmmu *pKernelGmmu);
-
     NvU32            v;
     NV_STATUS        result;
     GMMU_FMT_FAMILY *pFam;

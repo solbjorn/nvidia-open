@@ -40,7 +40,6 @@
 #include "ctrl/ctrl0073/ctrl0073specific.h"
 
 #define MULTIPLIER_1G                           1000000000
-#define PCLK_VARIANCE_10MHZ                     1000
 
 // In HDMI case, for PPS set, HDMI2.1 spec expects source to set this field to 13, decoder capability is assumed
 // Note, in DP case, DSC decoder is allowed to report line buffer depth capability through DPCD registers

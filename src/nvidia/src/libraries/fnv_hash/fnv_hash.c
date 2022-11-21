@@ -354,8 +354,7 @@ void fnv1Hash20ArrayUnicode
 
 #define FNV1_64_INIT ((NvU64) 0xCBF29CE484222325ULL)
                             // ((u_int64_t)14695981039346656037)
-#define FNV1_64_PRIME ((NvU64) 0x100000001B3)
-                             // ((u_int64_t)1099511628211)
+
 /*
  * fnv_64_buf - perform a 64 bit Fowler/Noll/Vo hash on a buffer
  *
@@ -419,5 +418,3 @@ NvU64 fnv1Hash64(const NvU8 * data, NvU32 dataLen)
     hash = fnv64buf(data, dataLen, FNV1_64_INIT);
     return hash;
 }
-
-

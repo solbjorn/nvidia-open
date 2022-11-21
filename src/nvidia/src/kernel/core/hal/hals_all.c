@@ -50,11 +50,9 @@
 #  define RMCFG_ENGINE_SETUP      1   // pull in per-gpu engine interface's
 
 #  define RMCFG_HAL_SETUP_ALL     1   // monolithic - ALL configured gpus' support in this file
-#  define RMCFG_HAL_SUPPORT_ALL   1   // not required, but keeps us honest
 
 #endif  // ! defined RMCFG_ENGINE_SETUP
 
 // Pull in generated code to setup each engine's hal interfaces for each gpu
 #include "g_hal_register.h"
 #include "g_hal_private.h"
-

@@ -40,8 +40,6 @@
 #include "published/ampere/ga102/dev_gc6_island_addendum.h"
 #include "gpu/sec2/kernel_sec2.h"
 
-#define RISCV_BR_ADDR_ALIGNMENT                 (8)
-
 void
 kgspConfigureFalcon_GA102
 (
@@ -336,7 +334,7 @@ kgspExecuteSequencerCommand_GA102
                 // Wait for reload to be completed.
                 status = gpuTimeoutCondWait(pGpu, _kgspIsReloadCompleted, NULL, NULL);
 
-                // Check SEC mailbox. 
+                // Check SEC mailbox.
                 secMailbox0 = kflcnRegRead_HAL(pGpu, pKernelSec2Falcon, NV_PFALCON_FALCON_MAILBOX0);
 
                 if ((status != NV_OK) || (secMailbox0 != NV_OK))

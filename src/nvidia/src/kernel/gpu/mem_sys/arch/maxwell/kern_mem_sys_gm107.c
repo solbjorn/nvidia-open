@@ -143,48 +143,6 @@ kmemsysDoCacheOp_GM107
     return rmStatus;
 }
 
-void
-kmemsysWriteL2SysmemInvalidateReg_GM107
-(
-    OBJGPU             *pGpu,
-    KernelMemorySystem *pKernelMemorySystem,
-    NvU32               value
-)
-{
-    GPU_REG_WR32(pGpu, NV_UFLUSH_L2_SYSMEM_INVALIDATE, value);
-}
-
-NvU32
-kmemsysReadL2SysmemInvalidateReg_GM107
-(
-    OBJGPU             *pGpu,
-    KernelMemorySystem *pKernelMemorySystem
-)
-{
-    return GPU_REG_RD32(pGpu, NV_UFLUSH_L2_SYSMEM_INVALIDATE);
-}
-
-void
-kmemsysWriteL2PeermemInvalidateReg_GM107
-(
-    OBJGPU             *pGpu,
-    KernelMemorySystem *pKernelMemorySystem,
-    NvU32               value
-)
-{
-    GPU_REG_WR32(pGpu, NV_UFLUSH_L2_PEERMEM_INVALIDATE, value);
-}
-
-NvU32
-kmemsysReadL2PeermemInvalidateReg_GM107
-(
-    OBJGPU             *pGpu,
-    KernelMemorySystem *pKernelMemorySystem
-)
-{
-    return GPU_REG_RD32(pGpu, NV_UFLUSH_L2_PEERMEM_INVALIDATE);
-}
-
 /*!
  * @brief Initialize the sysmem flush buffer
  *

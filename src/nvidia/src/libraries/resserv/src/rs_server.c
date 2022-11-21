@@ -20,7 +20,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
- 
+
 #define NVOC_RS_SERVER_H_PRIVATE_ACCESS_ALLOWED
 #include "nvlog_inc.h"
 #include "resserv/resserv.h"
@@ -203,7 +203,9 @@ NV_STATUS serverFreeResourceRpcUnderLock(RsServer *pServer, RS_RES_FREE_PARAMS *
 //
 
 #define RS_CLIENT_HANDLE_DECODE_MASK (RS_CLIENT_HANDLE_MAX - 1)
+#if !RS_COMPATABILITY_MODE
 #define CLIENT_DECODEHANDLE(handle)                 (handle & RS_CLIENT_HANDLE_DECODE_MASK)
+#endif
 
 #define CLIENT_ENCODEHANDLE(handleBase, index)        (handleBase | index)
 
@@ -2861,7 +2863,7 @@ serverAllocShareWithHalspecParent
     status = objCreateDynamicWithFlags(&pDynamic,
                                        pHalspecParent,
                                        (const NVOC_CLASS_INFO*)(const void*)pClassInfo,
-                                       flags); 
+                                       flags);
     if (status != NV_OK)
         return status;
 

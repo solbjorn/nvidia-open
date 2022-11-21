@@ -21,8 +21,6 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#define  __NO_VERSION__
-
 #include "os-interface.h"
 #include "nv-linux.h"
 
@@ -867,7 +865,7 @@ nv_procfs_close_unbind_lock(
     nvidia_stack_t *sp = nvpp->sp;
     int rc = 0;
     nv_linux_state_t * nvl;
-    int value;
+    u32 value;
 
     if (0 != nvpp->off)
     {

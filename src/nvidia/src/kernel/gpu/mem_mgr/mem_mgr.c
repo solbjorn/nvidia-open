@@ -2109,25 +2109,6 @@ memmgrGetMIGPartitionableBAR1Range_IMPL
     return pMemoryManager->MIGMemoryPartitioningInfo.partitionableBar1Range;
 }
 
-NV_STATUS
-memmgrAllocMIGGPUInstanceMemory_VF
-(
-    OBJGPU        *pGpu,
-    MemoryManager *pMemoryManager,
-    NvU32          swizzId,
-    NvHandle      *phMemory,
-    NV_RANGE      *pAddrRange,
-    Heap         **ppMemoryPartitionHeap
-)
-{
-    // For vGpu we have a static memory allocation
-    *phMemory = NV01_NULL_OBJECT;
-    *pAddrRange = pMemoryManager->MIGMemoryPartitioningInfo.partitionableMemoryRange;
-    *ppMemoryPartitionHeap = GPU_GET_HEAP(pGpu);
-
-    return NV_OK;
-}
-
 // Function to allocate memory for a GPU instance
 NV_STATUS
 memmgrAllocMIGGPUInstanceMemory_PF
@@ -2932,101 +2913,6 @@ memmgrInitSavedTopLevelScrubber_IMPL
         return NV_OK;
 
     NV_ASSERT_OK_OR_RETURN(memmgrScrubHandlePostSchedulingEnable_HAL(pGpu, pMemoryManager));
-
-    return NV_OK;
-}
-
-/*!
- * @brief       Return the full address range for the partition assigend for the vGPU.
- *
- * @param[in]   pGpu
- * @param[in]   pMemoryManager
- * @param[out]  base           reference to the base address of the partition
- * @param[out]  size           reference to the overall size of the partition
- */
-static void
-_memmgrGetFullMIGAddrRange
-(
-    OBJGPU *pGpu,
-    MemoryManager *pMemoryManager,
-    NvU64 *base,
-    NvU64 *size
-)
-{
-    NvU32 i;
-    NvU64 lo, hi;
-
-    *base = 0;
-    *size = 0;
-    if (pMemoryManager->Ram.numFBRegions == 0)
-    {
-        return;
-    }
-
-    lo = pMemoryManager->Ram.fbRegion[0].base;
-    hi = pMemoryManager->Ram.fbRegion[0].limit;
-
-    for (i = 1; i < pMemoryManager->Ram.numFBRegions; i++)
-    {
-        if (pMemoryManager->Ram.fbRegion[i].base < lo)
-        {
-            lo = pMemoryManager->Ram.fbRegion[i].base;
-        }
-
-        if (pMemoryManager->Ram.fbRegion[i].limit > hi)
-        {
-            hi = pMemoryManager->Ram.fbRegion[i].limit;
-        }
-    }
-
-    *base = lo;
-    *size = hi - lo + 1;
-}
-
-/*!
- * @brief Discover MIG partitionable memory range based on PMA status
- */
-NV_STATUS
-memmgrDiscoverMIGPartitionableMemoryRange_VF
-(
-    OBJGPU *pGpu,
-    MemoryManager *pMemoryManager,
-    NV_RANGE *pMemoryRange
-)
-{
-    NvU64 size;
-    NvU64 base;
-
-    // Set memory information
-    if (!memmgrIsPmaInitialized(pMemoryManager))
-    {
-        Heap *pHeap = GPU_GET_HEAP(pGpu);
-        NvU64 freeMem;
-        NvU64 bytesTotal;
-        NvU64 offset;
-
-        NV_ASSERT_OK_OR_RETURN(heapInfo(pHeap, &freeMem, &bytesTotal, &base,
-                                        &offset, &size));
-
-        //
-        // offset is the starting address of biggest empty block whose size is
-        // returned and we care about the base of largest empty block
-        //
-        base = offset;
-    }
-    else
-    {
-        //
-        // In the case of vGPU, pmaGetLargestFree only returns the user-visible
-        // PMA region and not the reserved/internal regions that constitute the
-        // overall partition size assigned to the vGPU.
-        // This is misleading as pMemoryManager->partitionableMemoryRange is expected to
-        // represent the actual partition size.
-        //
-        _memmgrGetFullMIGAddrRange(pGpu, pMemoryManager, &base, &size);
-    }
-
-    *pMemoryRange = rangeMake(base, base + size - 1);
 
     return NV_OK;
 }

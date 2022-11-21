@@ -33,6 +33,7 @@
 #include "gpu/gpu.h"
 #include "gpu_mgr/gpu_mgr.h"
 #include "gpu/mem_mgr/virt_mem_allocator_common.h"
+#include "g_subdevice_nvoc.h"
 
 #include "ctrl/ctrl2080/ctrl2080bus.h"
 
@@ -46,32 +47,13 @@
 // These BR04 registers/bits/values are not properly defined in the headers
 //
 
-#define NV_BR04_XVU_ROM_REVISION_ID_UPPER_16BITS_P390               0x0390
 #define NV_BR04_XVU_ROM_REVISION_ID_UPPER_16BITS_P535               0x0535
-#define NV_BR04_XVU_ROM_REVISION_ID_UPPER_16BITS_P710               0x0710
-#define NV_BR04_XVU_ROM_REVISION_ID_UPPER_16BITS_P711               0x0711
-#define NV_BR04_XVU_ROM_REVISION_ID_UPPER_16BITS_P712               0x0712
-#define NV_BR04_XVU_ROM_REVISION_ID_UPPER_16BITS_P713               0x0713
 #define NV_BR04_XVU_ROM_REVISION_ID_UPPER_16BITS_P737               0x0737
-#define NV_BR04_XVU_ROM_REVISION_ID_UPPER_16BITS_P790               0x0790
-#define NV_BR04_XVU_ROM_REVISION_ID_UPPER_16BITS_P797               0x0797
-#define NV_BR04_XVU_ROM_REVISION_ID_UPPER_16BITS_P838               0x0838
-#define NV_BR04_XVU_ROM_REVISION_ID_UPPER_16BITS_P881               0x0881
-#define NV_BR04_XVU_ROM_REVISION_ID_UPPER_16BITS_P883               0x0883
-#define NV_BR04_XVU_ROM_REVISION_ID_UPPER_16BITS_P884               0x0884
-#define NV_BR04_XVU_ROM_REVISION_ID_UPPER_16BITS_P885               0x0885
-#define NV_BR04_XVU_ROM_REVISION_ID_UPPER_16BITS_P894               0x0894
-#define NV_BR04_XVU_ROM_REVISION_ID_UPPER_16BITS_P984               0x0984
 #define NV_BR04_XVU_ROM_REVISION_ID_UPPER_16BITS                    31:16
-
-#ifndef NV_BR04_XVD_G2_PRIV_XP_LCTRL_2_REV2P0_COMPLIANCE_DIS_ONE
-#define NV_BR04_XVD_G2_PRIV_XP_LCTRL_2_REV2P0_COMPLIANCE_DIS_ONE    1
-#endif
 
 #ifndef NV_XPU_PEX_PLL_CTL2
 #define NV_XPU_PEX_PLL_CTL2                                         0x00000E2C
 #define NV_XPU_PEX_PLL_CTL2_PLL_CP_CNTL                             22:20
-#define NV_XPU_PEX_PLL_CTL2_PLL_CP_CNTL_22P5UA                      0x00000004
 #define NV_XPU_PEX_PLL_CTL2_PLL_CP_CNTL_30UA                        0x00000007
 #endif
 
@@ -95,7 +77,6 @@
 #define NV_XPU_PEX_PAD_CTL_3_TX_PEAK_R2_1C                          23:20
 #define NV_XPU_PEX_PAD_CTL_3_TX_PEAK_R2_1C_22DB                     0x00000007
 #define NV_XPU_PEX_PAD_CTL_3_TX_PEAK_R2_1C_36DB                     0x0000000A
-#define NV_XPU_PEX_PAD_CTL_3_TX_PEAK_R2_1C_6DB                      0x0000000F
 #endif
 
 #ifndef NV_BR04_XVU_CYA_BIT0_RSVD_28_DP0_DE_EMP_NEG_3P5_DB
@@ -114,13 +95,6 @@
 #define NV_BR04_XVD_G2_PRIV_XP_LCTRL_2_ADVERTISED_RATE_CHANGE_ONE   1
 #endif
 
-#ifndef NV_PES_XVU_ROM_ACCESS
-#define NV_PES_XVU_ROM_ACCESS(i)                            (0x00001000+(i)*4)
-#endif
-
-#define NV_BR04_FIRMWARE_SIGNATURE                                  0x42523034
-#define NV_PLX_FIRMWARE_SIGNATURE                                   0x0000005a
-
 //
 // PLX PEX8747 definitions
 // PLX PEX 8747 data book has info about the header definitions.
@@ -129,38 +103,13 @@
 #define PCI_VENDOR_ID_PLX                                   0x10B5
 #define PLX_DEVICE_ID_PEX8747                               0x8747
 
-#define NV_PLX_PEX8747_TRANSACTION_STATUS_BIT                   0x00000004
-
-#define NV_PLX_PEX8747_ROM_REVISION_ADDR                        0x00000008
-#define NV_PLX_PEX8747_ROM_REVISION_ADDR_ID                     7:0
-
-#define NV_PLX_EEPROM_CONTROL_AND_STATUS_REG                    0x00000260
-#define NV_PLX_EEPROM_CONTROL_AND_STATUS_REG_CTRL               15:0
-#define NV_PLX_EEPROM_CONTROL_AND_STATUS_REG_CTRL_ADDR          12:0
-#define NV_PLX_EEPROM_CONTROL_AND_STATUS_REG_CTRL_CMD           15:13
-#define NV_PLX_EEPROM_CONTROL_AND_STATUS_REG_CTRL_CMD_READ      0x00000003
-#define NV_PLX_EEPROM_CONTROL_AND_STATUS_REG_STATUS             23:16
-#define NV_PLX_EEPROM_CONTROL_AND_STATUS_REG_ADDR_WIDTH         23:22
-#define NV_PLX_EEPROM_CONTROL_AND_STATUS_REG_ADDR_WIDTH_2BYTE   0x00000002
-
-#define NV_PLX_EEPROM_STATUS_REG_ADDR                           0x00000262
-#define NV_PLX_EEPROM_STATUS_REG_ADDR_TRANSACTION               3:3
-#define NV_PLX_EEPROM_STATUS_REG_ADDR_TRANSACTION_COMPLETE      0x00000000
-#define NV_PLX_EEPROM_STATUS_REG_ADDR_TRANSACTION_NOT_COMPLETE  0x00000001
-
-#define NV_PLX_EEPROM_BUFFER_ADDR                               0x00000264
-
-#define NV_PLX_EEPROM_DATA_ADDR_ZERO                            0x00000000
-#define NV_PLX_EEPROM_DATA_ADDR_ZERO_SIGNATURE                  7:0
-#define NV_PLX_EEPROM_DATA_ADDR_ZERO_CONFIGBYTE_COUNT           31:16
-
 static NV_STATUS Plx_Pex8747_setupFunc(OBJHWBC *pPlx, OBJCL *pCl);
 static NV_STATUS Plx_Pex8747_ChangeUpstreamBusSpeed(OBJHWBC *pPlx, OBJCL *pCl, NvU32 cmd);
 static NV_STATUS Plx_Pex8747_GetUpstreamBusSpeed(OBJHWBC *pPlx, OBJCL *pCl, NvU32 *speed);
 static RmPhysAddr Plx_Pex8747_GetBar0(OBJCL *pCl, OBJHWBC *pPlx);
 
 //
-// static functions 
+// static functions
 //
 
 static OBJHWBC  *objClFindUpperHWBC(OBJCL *, NBADDR, OBJHWBC *, RmPhysAddr);
@@ -3081,4 +3030,3 @@ subdeviceCtrlCmdBusGetHwbcUpstreamPcieSpeed_IMPL
     return clGetUpstreamBusSpeed(pBusInfoParams->primaryBus, pCl,
                                       &pBusInfoParams->busSpeed);
 }
-

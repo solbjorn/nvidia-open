@@ -21,8 +21,6 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#define  __NO_VERSION__
-
 #include "os-interface.h"
 #include "nv-linux.h"
 
@@ -36,4 +34,3 @@ NvU64 NV_API_CALL nv_get_kern_phys_address(NvU64 address)
         "NVRM: can't translate address in %s()!\n", __FUNCTION__);
     return 0;
 }
-

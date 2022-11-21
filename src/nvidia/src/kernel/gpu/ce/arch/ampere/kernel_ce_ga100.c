@@ -48,16 +48,9 @@
 #define NV_CE_ODD_ASYNC_LCE_MASK              0xAAAAAAA0
 #define NV_CE_MAX_LCE_MASK                    0x3FF
 #define NV_CE_MAX_GRCE                        2
-#define NV_CE_NUM_HSHUB_PCES                  16
 #define NV_CE_PCE_STRIDE                      3
 #define NV_CE_SYS_LCE_ALLOWED_HSPCE_CONFIG    0x8
 #define NV_CE_NUM_DEFAULT_PCES                2
-
-#define NV_CE_SYS_ALLOWED_LCE_MASK            0x0C
-#define NV_CE_GRCE_ALLOWED_LCE_MASK           0x03
-#define NV_CE_EVEN_ASYNC_LCE_MASK             0x55555550
-#define NV_CE_ODD_ASYNC_LCE_MASK              0xAAAAAAA0
-#define NV_CE_MAX_LCE_MASK                    0x3FF
 
 static void _ceGetAlgorithmPceIndex(OBJGPU *, KernelCE*, NvU32 *, NvU32 *, NvBool *, NvU8 *);
 
@@ -596,7 +589,7 @@ kceMapPceLceForSysmemLinks_GA100
     NV_STATUS status = NV_OK;
 
     KernelNvlink *pKernelNvlink = GPU_GET_KERNEL_NVLINK(pGpu);
- 
+
     NV2080_CTRL_NVLINK_HSHUB_GET_SYSMEM_NVLINK_MASK_PARAMS paramsNvlinkMask;
     NV2080_CTRL_INTERNAL_HSHUB_GET_HSHUB_ID_FOR_LINKS_PARAMS *pParamsHshubId = NULL;
 
@@ -1021,7 +1014,7 @@ kceGetGrceSupportedLceMask_GA100
  *
  * @param[in]   pGpu            OBJGPU pointer
  * @param[in]   pKCe            KernelCE pointer
- * @param[in]   checkGen        genX for query 
+ * @param[in]   checkGen        genX for query
  */
 NvBool
 kceIsGenXorHigherSupported_GA100

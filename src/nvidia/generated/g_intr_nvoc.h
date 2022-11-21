@@ -2023,6 +2023,8 @@ static inline void intrGetGmmuInterrupts(OBJGPU *pGpu, struct Intr *pIntr, union
         count += 1;                                                          \
     } while(0)
 
+NV_STATUS intrGetPendingStall_GM107(OBJGPU *pGpu, Intr *pIntr, MC_ENGINE_BITVECTOR *pEngines, THREAD_STATE_NODE *pThreadState);
+
 #endif // INTR_H
 
 #ifdef __cplusplus

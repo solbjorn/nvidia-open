@@ -122,7 +122,6 @@ typedef struct
 } FWSECLIC_FRTS_REGION_DESC;
 
 #define FWSECLIC_FRTS_REGION_MEDIA_FB (2)
-#define FWSECLIC_FRTS_REGION_SIZE_1MB_IN_4K (0x100)
 
 typedef struct
 {

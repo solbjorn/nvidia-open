@@ -21,7 +21,6 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#define  __NO_VERSION__
 #include "nv-linux.h"
 #include "os-interface.h"
 

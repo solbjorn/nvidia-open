@@ -21,8 +21,6 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#define  __NO_VERSION__
-
 #include "os-interface.h"
 #include "nv-linux.h"
 #include "nv_speculation_barrier.h"
@@ -532,7 +530,7 @@ int nvidia_mmap_helper(
             else
             {
                 if (nv_encode_caching(&vma->vm_page_prot,
-                        rm_disable_iomap_wc() ? NV_MEMORY_UNCACHED : mmap_context->caching, 
+                        rm_disable_iomap_wc() ? NV_MEMORY_UNCACHED : mmap_context->caching,
                         NV_MEMORY_TYPE_FRAMEBUFFER))
                 {
                     if (nv_encode_caching(&vma->vm_page_prot,

@@ -53,10 +53,10 @@ kgmmuFmtFamiliesInit_GH100(OBJGPU *pGpu, KernelGmmu* pKernelGmmu)
 
     // Initialize the sparse encoding in the PDE PCF field for V3
     GMMU_FMT_FAMILY *pFam = pKernelGmmu->pFmtFamilies[GMMU_FMT_VERSION_3 - 1];
- 
+
     if (pFam != NULL)
     {
-        // 1.Initialize sparsePde 
+        // 1.Initialize sparsePde
         pdePcfSw |= (1 << SW_MMU_PCF_SPARSE_IDX);
         pdePcfSw |= (1 << SW_MMU_PCF_ATS_ALLOWED_IDX);
         NV_ASSERT_OR_RETURN((kgmmuTranslatePdePcfFromSw_HAL(pKernelGmmu, pdePcfSw, &pdePcfHw) == NV_OK),
@@ -64,7 +64,7 @@ kgmmuFmtFamiliesInit_GH100(OBJGPU *pGpu, KernelGmmu* pKernelGmmu)
         gmmuFieldSetAperture(&pFam->pde.fldAperture, GMMU_APERTURE_INVALID,
                              pFam->sparsePde.v8);
         nvFieldSet32(&pFam->pde.fldPdePcf, pdePcfHw, pFam->sparsePde.v8);
- 
+
         // 2.Initialize sparsePdeMulti
         for (i = 0; i < MMU_FMT_MAX_SUB_LEVELS; ++i)
         {
@@ -77,7 +77,7 @@ kgmmuFmtFamiliesInit_GH100(OBJGPU *pGpu, KernelGmmu* pKernelGmmu)
                 nvFieldSet32(&pPdeFmt->fldPdePcf, pdePcfHw, pFam->sparsePdeMulti.v8);
             }
         }
- 
+
         // 3.Initialize nv4kPte
         ptePcfSw |= (1 << SW_MMU_PCF_NV4K_IDX);
         nvFieldSetBool(&pFam->pte.fldValid, NV_FALSE, pFam->nv4kPte.v8);
@@ -285,46 +285,6 @@ kgmmuTranslatePdePcfFromHw_GH100
             default: return NV_ERR_NOT_SUPPORTED;
         }
     }
-
-    return NV_OK;
-}
-
-/*
- * @brief   Validates fabric base address.
- *
- * @param   pKernelGmmu
- * @param   fabricBaseAddr
- *
- * @returns On success, NV_OK.
- *          On failure, returns NV_ERR_XXX.
- */
-NV_STATUS
-kgmmuValidateFabricBaseAddress_GH100
-(
-    KernelGmmu *pKernelGmmu,
-    NvU64       fabricBaseAddr
-)
-{
-    OBJGPU        *pGpu = ENG_GET_GPU(pKernelGmmu);
-    MemoryManager *pMemoryManager = GPU_GET_MEMORY_MANAGER(pGpu);
-    NvU64 fbSizeBytes;
-
-    fbSizeBytes = pMemoryManager->Ram.fbTotalMemSizeMb << 20;
-
-    //
-    // Hopper SKUs will be paired with NVSwitches (Laguna Seca) supporting 2K
-    // mapslots that can cover 512GB each. Make sure that the fabric base
-    // address being used is valid to cover whole frame buffer.
-    //
-
-    // Check if fabric address is aligned to mapslot size.
-    if (fabricBaseAddr & (NVBIT64(39) - 1))
-    {
-        return NV_ERR_INVALID_ARGUMENT;
-    }
-
-    // Align fbSize to mapslot size.
-    fbSizeBytes = RM_ALIGN_UP(fbSizeBytes, NVBIT64(39));
 
     return NV_OK;
 }

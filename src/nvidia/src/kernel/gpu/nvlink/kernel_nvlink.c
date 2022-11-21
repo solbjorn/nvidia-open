@@ -602,7 +602,7 @@ knvlinkUnregisterInbandCallback_IMPL
     return NV_OK;
 }
 
-void
+static void
 knvlinkInbandMsgCallbackDispatcher_WORKITEM
 (
     NvU32 gpuInstance,

@@ -24,8 +24,6 @@
 #include "common_nvswitch.h"
 #include "error_nvswitch.h"
 
-#define NVSWITCH_DATE_LEN    64
-
 //
 // Error logging
 //
@@ -262,7 +260,7 @@ nvswitch_get_error
             error_entry->severity   = NVSWITCH_ERROR_SEVERITY_NONFATAL;
             error_entry->error_resolved = NV_TRUE;
             error_entry->line = 0;
-            error_entry->timer_count = 
+            error_entry->timer_count =
                 ((device == NULL) ? 0 : nvswitch_hw_counter_read_counter(device));
             error_entry->time = nvswitch_os_get_platform_time();
         }

@@ -42,6 +42,8 @@ typedef NvU32 NV_ADDRESS_SPACE;
 
 extern RsServer    g_resServ;
 
+void rmapiInitStubInterface(RM_API *pRmApi);
+
 /**
  * Initialize RMAPI module.
  *
@@ -302,7 +304,7 @@ rmapiEpilogue
     RM_API_CONTEXT    *pContext
 );
 
-void 
+void
 rmapiInitLockInfo
 (
     RM_API            *pRmApi,
@@ -314,7 +316,7 @@ rmapiInitLockInfo
 // RM locking modules: 24-bit group bitmask, 8-bit subgroup id
 //
 // Lock acquires are tagged with a RM_LOCK_MODULE_* in order to partition
-// the acquires into groups, which allows read-only locks to be 
+// the acquires into groups, which allows read-only locks to be
 // enabled / disabled on a per-group basis (via apiLockMask and gpuLockMask
 // in OBJSYS.)
 //

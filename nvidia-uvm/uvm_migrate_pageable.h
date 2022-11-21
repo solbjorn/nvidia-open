@@ -147,20 +147,6 @@ struct migrate_vma {
     unsigned long           start;
     unsigned long           end;
 };
-
-void uvm_migrate_vma_alloc_and_copy_helper(struct vm_area_struct *vma,
-                                           const unsigned long *src,
-                                           unsigned long *dst,
-                                           unsigned long start,
-                                           unsigned long end,
-                                           void *private);
-
-void uvm_migrate_vma_finalize_and_map_helper(struct vm_area_struct *vma,
-                                             const unsigned long *src,
-                                             const unsigned long *dst,
-                                             unsigned long start,
-                                             unsigned long end,
-                                             void *private);
 #else
 void uvm_migrate_vma_alloc_and_copy(struct migrate_vma *args, migrate_vma_state_t *state);
 void uvm_migrate_vma_finalize_and_map(struct migrate_vma *args, migrate_vma_state_t *state);

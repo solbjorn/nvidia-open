@@ -34,10 +34,8 @@
 
 #define FEC_TOTAL_SYMBOLS_PER_BLK(lanes)  ((NvU32)((lanes == 1) ? 512U : 256U))
 #define FEC_PARITY_SYMBOLS_PER_BLK(lanes)  ((NvU32)((lanes == 1) ? 12U : 6U))
-//return max number of FEC parity symbols in x link clock cycles 
+//return max number of FEC parity symbols in x link clock cycles
 #define FEC_PARITY_SYM_SST(lanes, x)   (DP_MIN((NvU32)(x) % FEC_TOTAL_SYMBOLS_PER_BLK(lanes), FEC_PARITY_SYMBOLS_PER_BLK(lanes)) + (NvU32)(x) / FEC_TOTAL_SYMBOLS_PER_BLK(lanes) * FEC_PARITY_SYMBOLS_PER_BLK(lanes) + FEC_PARITY_SYMBOLS_PER_BLK(lanes) + 1U)
-#define FEC_PARITY_SYM_MST(lanes, x)   (DP_MIN((NvU32)(x) % FEC_TOTAL_SYMBOLS_PER_BLK(lanes), FEC_PARITY_SYMBOLS_PER_BLK(lanes)) + (NvU32)(x) / FEC_TOTAL_SYMBOLS_PER_BLK(lanes) * FEC_PARITY_SYMBOLS_PER_BLK(lanes) + 1U)
-
 
 bool DisplayPort::isModePossibleMST
 (
@@ -574,7 +572,7 @@ bool DisplayPort::isModePossibleSSTWithFEC
     if (linkConfig.bEnableFEC)
     {
         //
-        // In worst case, FEC symbols fall into a narrow Hblank period, 
+        // In worst case, FEC symbols fall into a narrow Hblank period,
         // we have to consider this in HBlank checker, see bug 200496977
         // but we don't have to consider this in the calculation of hblank_symbols
         //
@@ -584,7 +582,7 @@ bool DisplayPort::isModePossibleSSTWithFEC
     }
 
     // BlankingSymbolsPerLane is the MinHBlank in link clock cycles,
-    MinHBlank = (unsigned)(divide_ceil(BlankingSymbolsPerLane * modesetInfo.pixelClockHz, 
+    MinHBlank = (unsigned)(divide_ceil(BlankingSymbolsPerLane * modesetInfo.pixelClockHz,
                                         linkConfig.peakRate)); //in pclk cycles
     MinHBlank += 3U; //add some margin
 
@@ -843,7 +841,7 @@ bool DisplayPort::isModePossibleMSTWithFEC
         return false;
     }
 
-    // MST can do SDP splitting so all audio configuration are possible. 
+    // MST can do SDP splitting so all audio configuration are possible.
     dpInfo->hBlankSym = 0U;
     dpInfo->vBlankSym = 0U;
 

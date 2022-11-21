@@ -33,9 +33,7 @@
 #define NV_CE_SYS_ALLOWED_LCE_MASK            0x0C
 #define NV_CE_GRCE_ALLOWED_LCE_MASK           0x03
 #define NV_CE_EVEN_ASYNC_LCE_MASK             0x00000010
-#define NV_CE_ODD_ASYNC_LCE_MASK              0x00000000
 #define NV_CE_MAX_LCE_MASK                    0x1F
-#define NV_CE_MAX_GRCE                        2
 
 /*!
  * @brief Returns the size of the PCE2LCE register array

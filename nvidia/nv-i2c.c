@@ -21,8 +21,6 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#define  __NO_VERSION__
-
 #include <linux/i2c.h>
 
 #include "os-interface.h"
@@ -120,11 +118,11 @@ static int nv_i2c_algo_smbus_xfer(
             }
             else
             {
-                u8 data = command;
+                u8 buf = command;
                 rmStatus = rm_i2c_transfer(sp, nv, (void *)adapter,
                                            NV_I2C_CMD_WRITE,
                                            (NvU8)(addr & 0x7f), 0, 1,
-                                           (NvU8 *)&data);
+                                           &buf);
             }
             break;
 

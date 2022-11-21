@@ -100,7 +100,7 @@ struct BINDATA_STORAGE_PVT_ALL
 
 #undef BINDATA_INCLUDE_DATA
 
-BINDATA_CONST struct BINDATA_STORAGE_PVT_ALL g_bindata_pvt =
+static BINDATA_CONST struct BINDATA_STORAGE_PVT_ALL g_bindata_pvt =
 {
 #define BINDATA_INCLUDE_STORAGE_PVT_DEFN
 
@@ -125,8 +125,6 @@ BINDATA_CONST struct BINDATA_STORAGE_PVT_ALL g_bindata_pvt =
 
 #undef BINDATA_INCLUDE_STORAGE_PVT_DEFN
 };
-
-const NvU32 g_bindata_pvt_count = sizeof(g_bindata_pvt) / sizeof(BINDATA_STORAGE_PVT);
 
 // Lastly, include everything else..
 #define BINDATA_INCLUDE_ARCHIVE

@@ -27,8 +27,6 @@
  * then return by filling out the structure with the callbacks it supports.
  */
 
-#define  __NO_VERSION__
-
 #include "os-interface.h"
 #include "nv-linux.h"
 

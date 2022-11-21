@@ -21,8 +21,6 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#define  __NO_VERSION__
-
 #include <linux/kernel.h> // For container_of
 #include <linux/hrtimer.h>
 #include <linux/ktime.h>
@@ -50,7 +48,7 @@ struct nv_nano_timer
 };
 
 /*!
- * @brief runs nano second resolution timer callback 
+ * @brief runs nano second resolution timer callback
 *
  * @param[in] nv_nstimer    Pointer to nv_nano_timer_t object
  */

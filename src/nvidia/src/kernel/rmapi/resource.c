@@ -173,27 +173,6 @@ void serverControl_InitCookie
                                     = exportedEntry->accessRight;
 }
 
-//
-// This routine searches through the Resource's NVOC exported methods for an entry
-// that matches the specified command.
-//
-// Same logic as rmControlCmdLookup() in legacy RMCTRL path
-//
-NV_STATUS rmresControlLookup_IMPL
-(
-    RmResource                     *pResource,
-    RS_RES_CONTROL_PARAMS_INTERNAL *pRsParams,
-    const struct NVOC_EXPORTED_METHOD_DEF **ppEntry
-)
-{
-    NvU32 cmd = pRsParams->cmd;
-
-    if (RMCTRL_IS_NULL_CMD(cmd))
-        return NV_WARN_NOTHING_TO_DO;
-
-    return resControlLookup_IMPL(staticCast(pResource, RsResource), pRsParams, ppEntry);
-}
-
 NV_STATUS
 rmresGetMemInterMapParams_IMPL
 (
@@ -227,8 +206,8 @@ rmresGetMemoryMappingDescriptor_IMPL
 NV_STATUS
 rmresControl_Prologue_IMPL
 (
-    RmResource *pResource, 
-    CALL_CONTEXT *pCallContext, 
+    RmResource *pResource,
+    CALL_CONTEXT *pCallContext,
     RS_RES_CONTROL_PARAMS_INTERNAL *pParams
 )
 {
@@ -242,7 +221,7 @@ rmresControl_Prologue_IMPL
         (IS_GSP_CLIENT(pGpu) && (pParams->pCookie->ctrlFlags & RMCTRL_FLAGS_ROUTE_TO_PHYSICAL)))
     {
         //
-        // GPU lock is required to protect the RPC buffers. 
+        // GPU lock is required to protect the RPC buffers.
         // However, some controls have  ROUTE_TO_PHYSICAL + NO_GPUS_LOCK flags set.
         // This is not valid in offload mode, but is in monolithic.
         // In those cases, just acquire the lock for the RPC

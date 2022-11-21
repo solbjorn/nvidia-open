@@ -29,39 +29,6 @@
 #include "gpu/ce/kernel_ce.h"
 #include "nvRmReg.h"
 
-//
-// NVLINK Override Configuration
-//
-NV_STATUS
-knvlinkOverrideConfig_GP100
-(
-    OBJGPU       *pGpu,
-    KernelNvlink *pKernelNvlink,
-    NvU32         phase
-)
-{
-    NV_STATUS status = NV_OK;
-
-    NV2080_CTRL_NVLINK_PROCESS_FORCED_CONFIGS_PARAMS forcedConfigParams;
-    portMemSet(&forcedConfigParams, 0, sizeof(forcedConfigParams));
-
-    forcedConfigParams.bLegacyForcedConfig = NV_TRUE;
-    forcedConfigParams.phase               = phase;
-
-    // RPC to GSP-RM to for GSP-RM to process the forced NVLink configurations.
-    status = knvlinkExecGspRmRpc(pGpu, pKernelNvlink,
-                                 NV2080_CTRL_CMD_NVLINK_PROCESS_FORCED_CONFIGS,
-                                 (void *)&forcedConfigParams,
-                                 sizeof(forcedConfigParams));
-    if (status != NV_OK)
-    {
-        NV_PRINTF(LEVEL_ERROR, "Failed to process forced NVLink configurations !\n");
-        return status;
-    }
-
-    return NV_OK;
-}
-
 /*!
  * Get a mask with one bit set for each unique GPU peer connected via
  * NVLINK. In this implementation, each bit is the lowest link ID of
@@ -302,61 +269,4 @@ knvlinkSetupPeerMapping_GP100
             NV_ASSERT(status == NV_OK);
         }
     }
-}
-
-/*!
- * @brief Return the mask of links that are connected
- *
- * @param[in] pGpu           OBJGPU ptr
- * @param[in] pKernelNvlink  KernelNvlink ptr
- */
-NvU32
-knvlinkGetConnectedLinksMask_GP100
-(
-    OBJGPU       *pGpu,
-    KernelNvlink *pKernelNvlink
-)
-{
-    //
-    // Connected links are already filtered against the
-    // enabled links. Hence, enabledLinks has final say
-    //
-    return knvlinkGetEnabledLinkMask(pGpu, pKernelNvlink);
-}
-
-/*!
- * @brief Program NVLink Speed for the enabled links
- *
- * @param[in] pGpu           OBJGPU ptr
- * @param[in] pKernelNvlink  KernelNvlink ptr
- */
-NV_STATUS
-knvlinkProgramLinkSpeed_GP100
-(
-    OBJGPU       *pGpu,
-    KernelNvlink *pKernelNvlink
-)
-{
-    NV_STATUS status = NV_OK;
-
-    NV2080_CTRL_NVLINK_PROGRAM_LINK_SPEED_PARAMS programLinkSpeedParams;
-    portMemSet(&programLinkSpeedParams, 0, sizeof(programLinkSpeedParams));
-
-    programLinkSpeedParams.bPlatformLinerateDefined = NV_FALSE;
-    programLinkSpeedParams.platformLineRate         =
-                          NV_REG_STR_RM_NVLINK_SPEED_CONTROL_SPEED_DEFAULT;
-
-    status = knvlinkExecGspRmRpc(pGpu, pKernelNvlink,
-                                 NV2080_CTRL_CMD_NVLINK_PROGRAM_LINK_SPEED,
-                                 (void *)&programLinkSpeedParams,
-                                 sizeof(programLinkSpeedParams));
-    if (status != NV_OK)
-    {
-        NV_PRINTF(LEVEL_ERROR, "Failed to program NVLink speed for links!\n");
-        return status;
-    }
-
-    pKernelNvlink->nvlinkLinkSpeed = programLinkSpeedParams.nvlinkLinkSpeed;
-
-    return NV_OK;
 }

@@ -44,7 +44,6 @@ static NV_STATUS prbStartPackedField(PRB_ENCODER *encoder,
 
 // Handy macros to check flags
 #define COUNT_FLAG(encoder) ((encoder->flags & PRB_COUNT_ONLY) != 0)
-#define FIXED_FLAG(encoder) ((encoder->flags & PRB_FIXED_MODE) != 0)
 
 /*!
  * @brief Initializes a memory buffer. Sets the position to the base address.
@@ -1065,4 +1064,3 @@ prbEncCatMsg(PRB_ENCODER *encoder, void *pMsg, NvU32 len)
 
     return prbEncAddBytes(encoder, field_desc, pBuff + used, msgLen);
 }
-

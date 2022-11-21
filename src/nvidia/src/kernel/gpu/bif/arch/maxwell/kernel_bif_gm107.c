@@ -35,8 +35,6 @@
 #define NV_XVR_VEND_XP1                                  0x00000F04 /* RW-4R */
 
 #define NV_XVR_VEND_XP1_IGNORE_L0S                            23:23 /* RWIVF */
-#define NV_XVR_VEND_XP1_IGNORE_L0S_INIT                  0x00000000 /* RWI-V */
-#define NV_XVR_VEND_XP1_IGNORE_L0S__PROD                 0x00000000 /* RW--V */
 #define NV_XVR_VEND_XP1_IGNORE_L0S_EN                    0x00000001 /* RW--V */
 #endif
 

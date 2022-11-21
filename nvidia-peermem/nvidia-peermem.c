@@ -38,7 +38,9 @@
 #include "peer_mem.h"
 #include "conftest.h"
 
+#ifdef NV_MLNX_IB_PEER_MEM_SYMBOLS_PRESENT
 #define DRV_NAME    "nv_mem"
+#endif
 #define DRV_VERSION NV_VERSION_STRING
 
 MODULE_AUTHOR("Yishai Hadas");
@@ -477,7 +479,7 @@ static int __init nv_mem_client_init(void)
     }
 
     // The nc client enables support for persistent pages.
-    // Thanks to this check, nvidia-peermem requires the new symbol from nvidia.ko, which 
+    // Thanks to this check, nvidia-peermem requires the new symbol from nvidia.ko, which
     // prevents users to unintentionally load this module with unsupported nvidia.ko.
     BUG_ON(!nvidia_p2p_cap_persistent_pages);
     strcpy(nv_mem_client_nc.name, DRV_NAME "_nc");

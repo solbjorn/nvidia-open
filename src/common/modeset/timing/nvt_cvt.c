@@ -71,19 +71,16 @@ const NvU32 NVT_CVT_MIN_V_BPORCH     = 6;  // Minimum vertical back porch.
 // Blanking period.This implies that for a fixed blank of 80 pixel clocks, the Horizontal Back Porch is
 // fixed to(80 / 2) 40 pixel clocks and the Horizontal Front Porch is fixed to(80 - 40 - 32) = 8 clock cycles.
 #define NVT_CVT_RB2_H_FPORCH               8
-#define NVT_CVT_RB2_H_BPORCH               40
 
 // VESA CVT spec ver2.0:
 //
 // Page 15 : Table 3-2 Constants
 #define NVT_CVT_RB3_CLOCK_STEP_KHZ        1000
-#define NVT_CVT_RB3_H_BLANK_PIXELS        NVT_CVT_RB2_H_BLANK_PIXELS
 #define NVT_CVT_RB3_H_SYNC_PIXELS         NVT_CVT_RB2_H_SYNC_PIXELS
 #define NVT_CVT_RB3_H_FPORCH              NVT_CVT_RB2_H_FPORCH
 #define NVT_CVT_RB3_MIN_VBLANK_MICROSEC   NVT_CVT_RB2_MIN_VBLANK_MICROSEC
 #define NVT_CVT_RB3_V_FIELD_RATE_PPM_ADJ  350
 #define NVT_CVT_RB3_V_SYNC_WIDTH          NVT_CVT_RB2_V_SYNC_WIDTH
-#define NVT_CVT_RB3_MIN_V_FPORCH          NVT_CVT_RB2_MIN_V_FPORCH
 #define NVT_CVT_RB3_MIN_V_BPROCH          NVT_CVT_RB2_MIN_V_BPORCH
 
 #define NVT_CVT_RB3_MIN_VBI               NVT_CVT_RB2_MIN_VBI

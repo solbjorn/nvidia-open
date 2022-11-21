@@ -141,12 +141,6 @@
 
 #include "vgpu/rpc.h"
 
-#define _MMUXLATEVADDR_FLAG_SHOW_INVALID        NVBIT(0)
-#define _MMUXLATEVADDR_FLAG_VALIDATE_ONLY       NVBIT(1) // incomplete
-#define _MMUXLATEVADDR_FLAG_VALIDATE_TERSELY    NVBIT(2) // incomplete
-// no trace output
-#define _MMUXLATEVADDR_FLAG_XLATE_ONLY          _MMUXLATEVADDR_FLAG_VALIDATE_TERSELY
-
 static NV_STATUS _dmaGetFabricAddress(OBJGPU *pGpu, NvU32 aperture, NvU32 kind, NvU64 *fabricAddr);
 
 static NV_STATUS
@@ -465,13 +459,13 @@ dmaAllocMapping_GM107
     if (pMemorySystemConfig->bUseRawModeComptaglineAllocation &&
         pMemorySystemConfig->bDisablePlcForCertainOffsetsBug3046774)
     {
-        MemoryManager *pMemoryManager = GPU_GET_MEMORY_MANAGER(pGpu);
+        MemoryManager *memmgr = GPU_GET_MEMORY_MANAGER(pGpu);
 
         if (((vaspaceGetFlags(pVAS) & VASPACE_FLAGS_FLA) || (dynamicCast(pVAS, FABRIC_VASPACE) != NULL)) &&
-            memmgrIsKind_HAL(pMemoryManager, FB_IS_KIND_COMPRESSIBLE, pLocals->kind) &&
-            !memmgrIsKind_HAL(pMemoryManager, FB_IS_KIND_DISALLOW_PLC, pLocals->kind))
+            memmgrIsKind_HAL(memmgr, FB_IS_KIND_COMPRESSIBLE, pLocals->kind) &&
+            !memmgrIsKind_HAL(memmgr, FB_IS_KIND_DISALLOW_PLC, pLocals->kind))
         {
-            memmgrGetDisablePlcKind_HAL(pMemoryManager, &pLocals->kind);
+            memmgrGetDisablePlcKind_HAL(memmgr, &pLocals->kind);
         }
     }
 

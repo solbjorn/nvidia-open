@@ -36,7 +36,6 @@
 
 #include "nv-time.h"
 
-#define NV_BUILD_MODULE_INSTANCES 0
 #include "nv-linux.h"
 
 #if defined(NV_LINUX_LOG2_H_PRESENT)

@@ -31,7 +31,7 @@
 /*!
  * @brief Permanently converts a VA_LIST_SIMPLE into a VA_LIST_DICT
  */
-NV_STATUS
+static NV_STATUS
 vaListInitMap(VA_LIST *pVaList)
 {
     NV_STATUS status;
@@ -561,7 +561,7 @@ vaListFindVa(VA_LIST *pVaList, OBJVASPACE *pVAS, NvU64 *pVaddr)
  *
  * @return NV_ERR_OBJECT_NOT_FOUND if VAS not in list
  */
-NV_STATUS 
+NV_STATUS
 vaListGetRefCount(VA_LIST *pVaList, OBJVASPACE *pVAS, NvU64 *pRefCount)
 {
     NV_STATUS status = NV_OK;
@@ -620,7 +620,7 @@ vaListGetRefCount(VA_LIST *pVaList, OBJVASPACE *pVAS, NvU64 *pRefCount)
  *
  * @return NV_ERR_OBJECT_NOT_FOUND if VAS not in list
  */
-NV_STATUS 
+NV_STATUS
 vaListSetRefCount(VA_LIST *pVaList, OBJVASPACE *pVAS, NvU64 refCount)
 {
     NV_STATUS status = NV_OK;
@@ -666,4 +666,3 @@ vaListSetRefCount(VA_LIST *pVaList, OBJVASPACE *pVAS, NvU64 refCount)
 
     return status;
 }
-

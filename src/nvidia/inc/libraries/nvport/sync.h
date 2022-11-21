@@ -823,7 +823,5 @@ void portSyncExRestorePreemption(NvU64 preemptionState);
 
 /// @} End extended functions
 
-#include "nvport/inline/sync_tracking.h"
-
 #endif // _NVPORT_SYNC_H_
 /// @}

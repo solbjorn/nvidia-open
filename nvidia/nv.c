@@ -138,18 +138,12 @@ static NvTristate nv_chipset_is_io_coherent = NV_TRISTATE_INDETERMINATE;
 NvBool nv_ats_supported = NVCPU_IS_PPC64LE
 ;
 
-// allow an easy way to convert all debug printfs related to events
-// back and forth between 'info' and 'errors'
-#if defined(NV_DBG_EVENTS)
-#define NV_DBG_EVENTINFO NV_DBG_ERRORS
-#else
-#define NV_DBG_EVENTINFO NV_DBG_INFO
-#endif
-
+#ifndef NV_SOUND_HDA_CODEC_H_PRESENT
 #if defined(HDA_MAX_CODECS)
 #define NV_HDA_MAX_CODECS HDA_MAX_CODECS
 #else
 #define NV_HDA_MAX_CODECS 8
+#endif
 #endif
 
 /***

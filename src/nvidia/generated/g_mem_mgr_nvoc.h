@@ -2753,6 +2753,7 @@ static inline NV_STATUS memmgrReserveMemoryForFsp(OBJGPU *pGpu, struct MemoryMan
 NvU64 memmgrGetMaxContextSize_GP100(OBJGPU *pGpu, MemoryManager *pMemoryManager);
 NvU64 memmgrGetMaxContextSize_GV100(OBJGPU *pGpu, MemoryManager *pMemoryManager);
 NvU32 memmgrChooseKindCompressC_GM107(OBJGPU *pGpu, MemoryManager *pMemoryManager, FB_ALLOC_PAGE_FORMAT *pFbAllocPageFormat);
+NvU64 memmgrGetMaxContextSize_GM200(OBJGPU *pGpu, MemoryManager *pMemoryManager);
 
 #endif // MEM_MGR_H
 

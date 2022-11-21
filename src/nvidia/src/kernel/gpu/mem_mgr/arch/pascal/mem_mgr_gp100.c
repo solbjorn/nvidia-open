@@ -248,8 +248,6 @@ memmgrGetMaxContextSize_GP100
     MemoryManager *pMemoryManager
 )
 {
-    extern NvU64 memmgrGetMaxContextSize_GM200(OBJGPU *pGpu, MemoryManager *pMemoryManager);
-
     NvU64 size = memmgrGetMaxContextSize_GM200(pGpu, pMemoryManager);
 
     //

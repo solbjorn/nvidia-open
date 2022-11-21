@@ -125,7 +125,6 @@
 
 #include <pascal/gp100/dev_mmu.h>
 
-#define NV_GPU_OPS_NUM_GPFIFO_ENTRIES_DEFAULT 1024
 #define NV_GPU_SMALL_PAGESIZE (4 * 1024)
 
 #define PAGE_SIZE_DEFAULT UVM_PAGE_SIZE_DEFAULT

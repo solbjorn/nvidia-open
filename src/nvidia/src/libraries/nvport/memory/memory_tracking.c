@@ -52,7 +52,7 @@ struct PORT_MEM_ALLOCATOR_IMPL
 #define PORT_MEM_PRINT_INFO(...)
 #elif PORT_MEM_TRACK_PRINT_LEVEL == PORT_MEM_TRACK_PRINT_LEVEL_BASIC
 #define PORT_MEM_PRINT_ERROR(...) portDbgPrintf(__VA_ARGS__)
-#define PORT_MEM_PRINT_INFO(...)
+#define PORT_MEM_PRINT_INFO(...)	no_printk(__VA_ARGS__)
 #else
 #define PORT_MEM_PRINT_ERROR(...) portDbgPrintf(__VA_ARGS__)
 #define PORT_MEM_PRINT_INFO(...)  portDbgPrintf(__VA_ARGS__)
@@ -1087,7 +1087,7 @@ _portMemTrackAlloc
 {
     PORT_UNREFERENCED_VARIABLE(pMem);
     if (pTracking == NULL) return;
-    PORT_MEM_PRINT_INFO("Allocating %u bytes at address %p", size, pMem);
+    PORT_MEM_PRINT_INFO("Allocating %llu bytes at address %p", size, pMem);
     PORT_MEM_PRINT_INFO(PORT_MEM_CALLERINFO_PRINT_ARGS(PORT_MEM_CALLERINFO_PARAM));
 
     PORT_MEM_COUNTER_INC(&pTracking->counter, size);

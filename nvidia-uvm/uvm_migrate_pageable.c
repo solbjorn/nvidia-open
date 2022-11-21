@@ -545,7 +545,8 @@ void uvm_migrate_vma_alloc_and_copy(struct migrate_vma *args, migrate_vma_state_
         state->status = tracker_status;
 }
 
-void uvm_migrate_vma_alloc_and_copy_helper(struct vm_area_struct *vma,
+#ifdef CONFIG_MIGRATE_VMA_HELPER
+static void uvm_migrate_vma_alloc_and_copy_helper(struct vm_area_struct *vma,
                                 const unsigned long *src,
                                 unsigned long *dst,
                                 unsigned long start,
@@ -563,6 +564,7 @@ void uvm_migrate_vma_alloc_and_copy_helper(struct vm_area_struct *vma,
 
     uvm_migrate_vma_alloc_and_copy(&args, (migrate_vma_state_t *) private);
 }
+#endif
 
 void uvm_migrate_vma_finalize_and_map(struct migrate_vma *args, migrate_vma_state_t *state)
 {
@@ -634,7 +636,8 @@ void uvm_migrate_vma_finalize_and_map(struct migrate_vma *args, migrate_vma_stat
     UVM_ASSERT(!bitmap_intersects(state->populate_pages_mask, state->allocation_failed_mask, state->num_pages));
 }
 
-void uvm_migrate_vma_finalize_and_map_helper(struct vm_area_struct *vma,
+#ifdef CONFIG_MIGRATE_VMA_HELPER
+static void uvm_migrate_vma_finalize_and_map_helper(struct vm_area_struct *vma,
                                              const unsigned long *src,
                                              const unsigned long *dst,
                                              unsigned long start,
@@ -652,6 +655,7 @@ void uvm_migrate_vma_finalize_and_map_helper(struct vm_area_struct *vma,
 
     uvm_migrate_vma_finalize_and_map(&args, (migrate_vma_state_t *) private);
 }
+#endif
 
 static NV_STATUS nv_migrate_vma(struct migrate_vma *args, migrate_vma_state_t *state)
 {

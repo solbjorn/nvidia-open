@@ -30,12 +30,6 @@
 #include "lr10/pmgr_lr10.h"
 #include "nvswitch/lr10/dev_pmgr.h"
 
-/*! The number of nanoseconds we will wait for slave clock stretching.
- *  Previously, this was set to 100us, but proved too
- *  short (see bug 630691) so was increased to 2ms.
- */
-#define I2C_STRETCHED_LOW_TIMEOUT_NS_LR10 2000000
-
 NVSWITCH_I2C_DEVICE_DESCRIPTOR_TYPE nvswitch_i2c_device_allow_list_lr10[] =
 {
 

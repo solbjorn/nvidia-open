@@ -54,7 +54,6 @@
 
 
 #define RS_ACCESS_NONE {-1}
-#define RS_ACCESS_LIST(...) {__VA_ARGS__}
 
 // Populate rights required
 #define RS_ENTRY(cls, internalClass, bMultiInstance, parentList, allocParam, freePriority, flags, rightsRequired) \
@@ -63,7 +62,6 @@
 #include "resource_list.h"
 
 #undef RS_ACCESS_NONE
-#undef RS_ACCESS_LIST
 
 // Populate forward declarations
 #define RS_ENTRY(cls, internalClass, bMultiInstance, parentList, allocParam, freePriority, flags, rightsRequired) \
@@ -94,7 +92,6 @@
 #define RS_ROOT_OBJECT NV_FALSE
 #define RS_ANY_PARENT NV_TRUE
 #define RS_ACCESS_NONE NV_FALSE
-#define RS_ACCESS_LIST(...) NV_TRUE
 static RS_RESOURCE_DESC
 g_RsResourceDescList[] =
 {
@@ -104,7 +101,6 @@ g_RsResourceDescList[] =
 #undef RS_ROOT_OBJECT
 #undef RS_ANY_PARENT
 #undef RS_ACCESS_NONE
-#undef RS_ACCESS_LIST
 #undef RS_REQUIRED
 #undef RS_OPTIONAL
 #undef RS_NONE

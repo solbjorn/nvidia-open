@@ -1180,11 +1180,13 @@ static inline NvBool tmrGetCallbackInterruptPending(OBJGPU *pGpu, struct OBJTMR 
 
 #undef PRIVATE_FIELD
 
-
 NV_STATUS tmrCtrlCmdEventCreate(OBJGPU *pGpu, TMR_EVENT_SET_PARAMS *pParams);
 NV_STATUS tmrCtrlCmdEventSchedule(OBJGPU *pGpu, TMR_EVENT_SCHEDULE_PARAMS *pParams);
 NV_STATUS tmrCtrlCmdEventCancel(OBJGPU *pGpu, TMR_EVENT_GENERAL_PARAMS *pParams);
 NV_STATUS tmrCtrlCmdEventDestroy(OBJGPU *pGpu, TMR_EVENT_GENERAL_PARAMS *pParams);
+
+NV_STATUS tmrGetGpuPtimerOffset_GM107(OBJGPU *pGpu, OBJTMR *pTmr, NvU32 *pGpuTimestampOffsetLo, NvU32 *pGpuTimestampOffsetHi);
+NV_STATUS tmrGetGpuPtimerOffset_GV100(OBJGPU *pGpu, OBJTMR *pTmr, NvU32 *pGpuTimestampOffsetLo, NvU32 *pGpuTimestampOffsetHi);
 
 #endif // _OBJTMR_H_
 

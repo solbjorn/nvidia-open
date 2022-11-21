@@ -1215,9 +1215,6 @@ objClInitGpuPortData
 
     if (!pGpu->getProperty(pGpu, PDB_PROP_GPU_UPSTREAM_PORT_L1_UNSUPPORTED))
     {
-        NvU16 vendorID;
-        NvU16 deviceID;
-
         if (pGpu->gpuClData.upstreamPort.addr.valid)
         {
             vendorID = pGpu->gpuClData.upstreamPort.VendorID;
@@ -5054,6 +5051,7 @@ static NvU16 _clPcieCopyConfigSpaceDiagData(NvU8* pBuffer, NvU32 bufferSz, void 
  *
  * @return  NvU16 size of diagnostic data collected.
  */
+static
 NvU16 _clPcieSavePcieDiagnosticBlock(void *pDeviceHandle, CL_PCIE_DC_DIAGNOSTIC_COLLECTION_ENTRY *pScriptEntry, NvU16 blkOffset, NvU16 blkSize, void * pBuffer, NvU32 size)
 {
     CL_PCIE_DC_DIAGNOSTIC_COLLECTION_ENTRY *pBlkHeader;
@@ -5096,6 +5094,7 @@ NvU16 _clPcieSavePcieDiagnosticBlock(void *pDeviceHandle, CL_PCIE_DC_DIAGNOSTIC_
  *
  * @return  NvU16 size of diagnostic data collected.
  */
+static
 NvU16 _clPcieGetDiagnosticData(OBJGPU *pGpu, CL_PCIE_DC_DIAGNOSTIC_COLLECTION_ENTRY *pScript, NvU16 count, NvU8 * pBuffer, NvU32 size)
 {
     static volatile NvS32   capMapWriteLock = 0;

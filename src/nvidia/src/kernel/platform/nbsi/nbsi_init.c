@@ -38,8 +38,6 @@
 
 // Template to use to read in emulated nbsi table from registry.
 
-#define NBSI_ROM_CODE_SIZE (256*1024) // allocate amt for ROMs to be read into
-
 extern const GUID NV_GUID_UEFI_VARIABLE;
 
 //----------------------------------------------------------------------------
@@ -366,7 +364,6 @@ static NV_STATUS testNbsiDir
 // useful defines to make calls to testNbsiTable more readable.
 #define TEST_NBSI_TABLE_DO_ALLOC_SIZE_CHECK   NV_TRUE
 #define TEST_NBSI_TABLE_SKIP_ALLOC_SIZE_CHECK NV_FALSE
-#define TEST_NBSI_TABLE_DO_HASH_CHECK         NV_TRUE
 #define TEST_NBSI_TABLE_SKIP_HASH_CHECK       NV_FALSE
 #define TEST_NBSI_TABLE_DO_GLOBTYPE_CHECK     NV_TRUE
 #define TEST_NBSI_TABLE_SKIP_GLOBTYPE_CHECK   NV_FALSE

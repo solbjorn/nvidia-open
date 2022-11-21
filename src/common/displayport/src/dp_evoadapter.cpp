@@ -44,13 +44,6 @@
 using namespace DisplayPort;
 
 //
-//  Evo hardcodes the relationship between stream and head #
-//    Head#x is always stream x+1
-//
-#define STREAM_TO_HEAD_ID(s) ((s) - 1)
-#define HEAD_TO_STREAM_ID(s) ((s) + 1)
-
-//
 // Data Base used to store all the regkey values.
 // The type is defined in dp_regkeydatabase.h.
 // All entries set to 0 before initialized by the first EvoMainLink constructor.

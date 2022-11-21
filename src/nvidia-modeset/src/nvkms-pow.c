@@ -94,8 +94,6 @@ ivln2_l  = {0x3E54AE0BF85DDF44}; // 1/ln2 tail,                1.925962991126617
 // Little endian only
 #define __HI(x) *(1+(int*)&x)
 #define __LO(x) *(int*)&x
-#define __HIp(x) *(1+(int*)x)
-#define __LOp(x) *(int*)x
 
 /*
  * F64_copysign(float64_t x, float64_t y)

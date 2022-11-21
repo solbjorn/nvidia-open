@@ -21,8 +21,6 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#define  __NO_VERSION__
-
 #include "os-interface.h"
 #include "nv-linux.h"
 #include "nv-reg.h"
@@ -48,11 +46,11 @@ int nv_pat_mode = NV_PAT_MODE_DISABLED;
 
 
 #define NV_READ_PAT_ENTRIES(pat1, pat2)   rdmsr(0x277, (pat1), (pat2))
-#define NV_WRITE_PAT_ENTRIES(pat1, pat2)  wrmsr(0x277, (pat1), (pat2))
 #define NV_PAT_ENTRY(pat, index) \
     (((pat) & (0xff << ((index)*8))) >> ((index)*8))
 
 #if NV_ENABLE_BUILTIN_PAT_SUPPORT
+#define NV_WRITE_PAT_ENTRIES(pat1, pat2)  wrmsr(0x277, (pat1), (pat2))
 
 static unsigned long orig_pat1, orig_pat2;
 

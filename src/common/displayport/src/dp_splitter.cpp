@@ -37,9 +37,6 @@
 
 using namespace DisplayPort;
 
-#define DP_MAX_HEADER_SIZE                   16
-// timeout after 110ms with a retry recurring every 5ms for 10 times
-#define DOWNSTREAM_RETRY_ON_DEFER_TIMEOUT    110
 #define DOWNSTREAM_RETRY_ON_DEFER_PERIOD     5
 #define DOWNSTREAM_RETRY_ON_DEFER_COUNT      10
 

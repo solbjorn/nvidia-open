@@ -41,7 +41,6 @@
 NV_STATUS
 kgmmuFmtFamiliesInit_GV100(OBJGPU *pGpu, KernelGmmu *pKernelGmmu)
 {
-    extern NV_STATUS kgmmuFmtFamiliesInit_GM200(OBJGPU *pGpu, KernelGmmu *pKernelGmmu);
     NvU32            v;
     NV_STATUS        result;
     GMMU_FMT_FAMILY *pFam;
@@ -254,8 +253,6 @@ kgmmuInstBlkVaLimitGet_GV100
     NvU64                *pData
 )
 {
-    extern NV_STATUS kgmmuInstBlkVaLimitGet_GP100(KernelGmmu *pKernelGmmu, OBJVASPACE *pVAS, NvU32 subctxId, INST_BLK_INIT_PARAMS *pParams, NvU32 *pOffset, NvU64 *pData);
-
     if (subctxId == FIFO_PDB_IDX_BASE)
     {
         return kgmmuInstBlkVaLimitGet_GP100(pKernelGmmu, pVAS, subctxId, pParams,
@@ -297,8 +294,6 @@ kgmmuInstBlkPageDirBaseGet_GV100
     NvU32                *pDataHi
 )
 {
-    extern NV_STATUS kgmmuInstBlkPageDirBaseGet_GP100(OBJGPU *pGpu, KernelGmmu *pKernelGmmu, OBJVASPACE *pVAS, INST_BLK_INIT_PARAMS *pParams, NvU32 subctxid, NvU32 *pOffsetLo, NvU32 *pDataLo, NvU32 *pOffsetHi, NvU32 *pDataHi);
-
     if (subctxId == FIFO_PDB_IDX_BASE)
     {
         return kgmmuInstBlkPageDirBaseGet_GP100(pGpu, pKernelGmmu, pVAS,

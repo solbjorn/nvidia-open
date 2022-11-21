@@ -24,6 +24,7 @@
 #include "os/os.h"
 #include "kernel/gpu/mig_mgr/kernel_mig_manager.h"
 #include "kernel/gpu/fifo/kernel_channel.h"
+#include "g_kernel_nvenc_ctx_nvoc.h"
 
 #include "class/clc0b7.h"
 #include "class/cld0b7.h"

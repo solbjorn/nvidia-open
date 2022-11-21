@@ -1720,6 +1720,11 @@ extern const MMU_TRACE_CALLBACKS g_gmmuTraceCallbacks;
 
 void       gmmuMemDescCacheFree(GVAS_GPU_STATE *pGpuState);
 
+NV_STATUS kgmmuFmtFamiliesInit_GM200(OBJGPU *pGpu, KernelGmmu *pKernelGmmu);
+NV_STATUS kgmmuFmtFamiliesInit_GV100(OBJGPU *pGpu, KernelGmmu *pKernelGmmu);
+NV_STATUS kgmmuInstBlkVaLimitGet_GP100(KernelGmmu *pKernelGmmu, OBJVASPACE *pVAS, NvU32 subctxId, INST_BLK_INIT_PARAMS *pParams, NvU32 *pOffset, NvU64 *pData);
+NV_STATUS kgmmuInstBlkPageDirBaseGet_GP100(OBJGPU *pGpu, KernelGmmu *pKernelGmmu, OBJVASPACE *pVAS, INST_BLK_INIT_PARAMS *pParams, NvU32 subctxid, NvU32 *pOffsetLo, NvU32 *pDataLo, NvU32 *pOffsetHi, NvU32 *pDataHi);
+
 #endif // KERN_GMMU_H
 
 #ifdef __cplusplus

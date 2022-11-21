@@ -30,12 +30,6 @@
 #include <linux/cpumask.h>
 #include <linux/mm.h>
 
-// If NV_BUILD_MODULE_INSTANCES is not defined, do it here in order to avoid
-// build warnings/errors when including nv-linux.h as it expects the definition
-// to be present.
-#ifndef NV_BUILD_MODULE_INSTANCES
-#define NV_BUILD_MODULE_INSTANCES 1
-#endif
 #include "nv-linux.h"
 
 // Below are just a very few lines of printing and test assertion support.

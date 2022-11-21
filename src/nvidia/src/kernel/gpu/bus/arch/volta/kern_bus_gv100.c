@@ -28,9 +28,6 @@
 #include "gpu/mem_sys/kern_mem_sys.h"
 #include "os/os.h"
 
-// @ref busMigrateBarMapping_GV100 to see how FB region is organized
-#define COHERENT_CPU_MAPPING_WPR            COHERENT_CPU_MAPPING_REGION_0
-
 /*!
  * @brief Sets up a memdesc and a CPU pointer to the bottom
  *        of FB that will be used for issuing reads in order

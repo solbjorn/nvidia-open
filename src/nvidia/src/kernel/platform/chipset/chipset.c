@@ -38,6 +38,7 @@
 #include "gpu_mgr/gpu_mgr.h"
 #include "gpu/gsp/gsp_static_config.h"
 #include "ctrl/ctrl2080/ctrl2080bus.h"
+#include "g_subdevice_nvoc.h"
 
 // local static funcs
 static void clDestructHWBC(OBJHWBC *pHWBC);
@@ -191,7 +192,7 @@ clInitMappingPciBusDevice_IMPL
 
     if (gpuGetDBDF(pGpu) == 0)
     {
-        if (!(IS_SIMULATION(pGpu)|| IS_SIM_MODS(GPU_GET_OS(pGpu))) 
+        if (!(IS_SIMULATION(pGpu)|| IS_SIM_MODS(GPU_GET_OS(pGpu)))
                || (bFoundDevice == NV_FALSE))
         {
             NV_PRINTF(LEVEL_ERROR,
@@ -210,7 +211,7 @@ clInitMappingPciBusDevice_IMPL
 static void getSubsystemFromPCIECapabilities
 (
     NvU32 domain,
-    NvU8 bus, 
+    NvU8 bus,
     NvU8 device,
     NvU8 func,
     NvU16 *subvendorID,

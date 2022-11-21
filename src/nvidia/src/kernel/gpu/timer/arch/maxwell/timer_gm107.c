@@ -34,56 +34,6 @@
 /* ------------------------- Static Function Prototypes --------------------- */
 /* ------------------------- Public Functions  ------------------------------ */
 
-/*
- * @brief Sets the GPU time to the current wall-clock time.
- *
- *  @param[in] pGpu- GPU Object pointer
- *  @param[in] pTmr- Timer Object pointer
- *
- *  @return NV_OK
- *  @return NV_ERR_PRIV_SEC_VIOLATION - PTIMER_TIME is read-only.
- */
-NV_STATUS
-tmrSetCurrentTime_GM107
-(
-    OBJGPU *pGpu,
-    OBJTMR *pTmr
-)
-{
-    NvU64   ns;                     // Time since 1970 in ns.
-    NvU32   seconds;                // Time since 1970 in seconds
-    NvU32   useconds;               //  and uSeconds.
-
-    //
-    // Get current time from operating system.
-    //
-    // We get the time in seconds and microseconds since 1970
-    // Note that we don't really need the real time of day
-    //
-    osGetCurrentTime(&seconds, &useconds);
-
-    NV_PRINTF(LEVEL_INFO,
-              "osGetCurrentTime returns 0x%x seconds, 0x%x useconds\n",
-              seconds, useconds);
-
-    //
-    // Calculate ns since 1970.
-    //
-    ns = ((NvU64)seconds * 1000000 + useconds) * 1000;
-
-    //
-    // TIME_0 must always come 2nd.  On Maxwell and later writing TIME_0 is
-    // the trigger to load the new time.
-    //
-    GPU_REG_WR32(pGpu, NV_PTIMER_TIME_1, NvU64_HI32(ns));
-    GPU_REG_WR32(pGpu, NV_PTIMER_TIME_0, NvU64_LO32(ns));
-
-    // Mark that time has been initialized
-    pTmr->bInitialized = NV_TRUE;
-
-    return NV_OK;
-}
-
 #define NV_NUM_PTIMER_SAMPLES 3
 
 NV_STATUS

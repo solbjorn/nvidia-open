@@ -28,7 +28,6 @@
  * This implementation uses the NVIDIA OS interface into the unix kernels.
  */
 
-#define PORT_SYNC_IMPL
 #include "nvport/nvport.h"
 
 #if !PORT_IS_KERNEL_BUILD

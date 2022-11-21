@@ -762,7 +762,7 @@ deviceCtrlCmdDmaGetPdeInfo_IMPL
     //
     if (IS_VIRTUAL_WITHOUT_SRIOV(pGpu))
     {
-        NV_STATUS status = NV_OK;
+        status = NV_OK;
         NV_RM_RPC_CONTROL(pGpu,
                           pRmCtrlParams->hClient,
                           pRmCtrlParams->hObject,
@@ -1059,58 +1059,6 @@ deviceCtrlCmdDmaEnablePrivilegedRange_IMPL
     }
 
     return NV_ERR_NOT_SUPPORTED;
-}
-
-NV_STATUS
-diagapiCtrlCmdDmaIsSupportedSparseVirtual_IMPL
-(
-    DiagApi *pDiagApi,
-    NV208F_CTRL_DMA_IS_SUPPORTED_SPARSE_VIRTUAL_PARAMS *pParams
-)
-{
-    OBJGPU *pGpu = GPU_RES_GET_GPU(pDiagApi);
-    VirtMemAllocator *pDma = GPU_GET_DMA(pGpu);
-
-    pParams->bIsSupported = pDma->getProperty(pDma, PDB_PROP_DMA_IS_SUPPORTED_SPARSE_VIRTUAL);
-    return NV_OK;
-}
-
-NV_STATUS
-diagapiCtrlCmdDmaGetVasBlockDetails_IMPL
-(
-    DiagApi *pDiagApi,
-    NV208F_CTRL_DMA_GET_VAS_BLOCK_DETAILS_PARAMS *pParams
-)
-{
-    OBJGPU             *pGpu        = GPU_RES_GET_GPU(pDiagApi);
-    RsResourceRef      *pSubdevRef;
-    Subdevice          *pGpuSubDevInfo;
-    OBJVASPACE         *pVAS        = NULL;
-    OBJEHEAP           *pHeap       = NULL;
-    EMEMBLOCK          *pMemBlock   = NULL;
-
-    if (NV_OK != refFindAncestorOfType(RES_GET_REF(pDiagApi), classId(Subdevice), &pSubdevRef))
-        return NV_ERR_INVALID_OBJECT_PARENT;
-
-    pGpuSubDevInfo = dynamicCast(pSubdevRef->pResource, Subdevice);
-
-    NV_CHECK_OK_OR_RETURN(LEVEL_WARNING,
-                          vaspaceGetByHandleOrDeviceDefault(RES_GET_CLIENT(pDiagApi), RES_GET_PARENT_HANDLE(pGpuSubDevInfo),
-                                                            pParams->hVASpace, &pVAS));
-
-    pHeap = vaspaceGetHeap(pVAS);
-    NV_ASSERT_OR_RETURN(NULL != pHeap, NV_ERR_INVALID_ARGUMENT);
-    pMemBlock = pHeap->eheapGetBlock(pHeap, pParams->virtualAddress, 0);
-    NV_ASSERT_OR_RETURN(NULL != pMemBlock, NV_ERR_INVALID_ARGUMENT);
-
-    pParams->beginAddress   = pMemBlock->begin;
-    pParams->endAddress     = pMemBlock->end;
-    pParams->alignedAddress = pMemBlock->align;
-    pParams->pageSize = vaspaceGetMapPageSize(pVAS, pGpu, pMemBlock);
-
-    NV_ASSERT_OR_RETURN(0 != pParams->pageSize, NV_ERR_INVALID_ARGUMENT);
-
-    return NV_OK;
 }
 
 /*!

@@ -58,8 +58,7 @@
 // RS-TODO: Rename classes that have 'Object' in their names
 //
 
-
-
+#ifdef RS_ENTRY
 RS_ENTRY(
     /* External Class         */ NV01_ROOT,
     /* Internal Class         */ RmClientResource,
@@ -1436,6 +1435,7 @@ RS_ENTRY(
     /* Flags                  */ RS_FLAGS_ACQUIRE_GPUS_LOCK,
     /* Required Access Rights */ RS_ACCESS_NONE
 )
+#endif /* RS_ENTRY */
 
 // Undefine the entry macro to simplify call sites
 #undef RS_ENTRY

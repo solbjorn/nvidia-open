@@ -21,7 +21,6 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#define  __NO_VERSION__
 #define NV_DEFINE_REGISTRY_KEY_TABLE
 #include "os-interface.h"
 #include "nv-linux.h"

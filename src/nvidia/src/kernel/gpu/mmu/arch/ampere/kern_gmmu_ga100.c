@@ -72,52 +72,6 @@ kgmmuSetTlbInvalidationScope_GA100
     return NV_OK;
 }
 
-/*!
- * @brief   Validates fabric base address.
- *
- * @param   pKernelGmmu
- * @param   fabricBaseAddr
- *
- * @returns On success, NV_OK.
- *          On failure, returns NV_ERR_XXX.
- */
-NV_STATUS
-kgmmuValidateFabricBaseAddress_GA100
-(
-    KernelGmmu *pKernelGmmu,
-    NvU64       fabricBaseAddr
-)
-{
-    OBJGPU        *pGpu = ENG_GET_GPU(pKernelGmmu);
-    MemoryManager *pMemoryManager = GPU_GET_MEMORY_MANAGER(pGpu);
-    NvU64 fbSizeBytes;
-
-    fbSizeBytes = pMemoryManager->Ram.fbTotalMemSizeMb << 20;
-
-    //
-    // Ampere SKUs will be paired with NVSwitches (Limerock) supporting 2K
-    // mapslots that can cover 64GB each. Make sure that the fabric base
-    // address being used is valid to cover whole frame buffer.
-    //
-
-    // Check if fabric address is aligned to mapslot size.
-    if (fabricBaseAddr & (NVBIT64(36) - 1))
-    {
-        return NV_ERR_INVALID_ARGUMENT;
-    }
-
-    // Align fbSize to mapslot size.
-    fbSizeBytes = RM_ALIGN_UP(fbSizeBytes, NVBIT64(36));
-
-    // Make sure the address range doesn't go beyond the limit, (2K * 64GB).
-    if ((fabricBaseAddr + fbSizeBytes) > NVBIT64(47))
-    {
-        return NV_ERR_INVALID_ARGUMENT;
-    }
-
-    return NV_OK;
-}
-
 NV_STATUS
 kgmmuSetupWarForBug2720120_GA100
 (

@@ -25,6 +25,7 @@
 #include "gpu/mig_mgr/kernel_mig_manager.h"
 #include "nvos.h"
 #include "resserv/rs_server.h"
+#include "g_kernel_nvjpg_ctx_nvoc.h"
 
 #include "class/clc4d1.h" // NVC4D1_VIDEO_NVJPG
 #include "class/clb8d1.h" // NVB8D1_VIDEO_NVJPG

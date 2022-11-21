@@ -224,7 +224,7 @@ _memMulticastFabricDescriptorDequeueWaitUnderLock
     }
 }
 
-NV_STATUS
+static NV_STATUS
 _memMulticastFabricGpuOsInfoAddUnderLock
 (
     MemoryMulticastFabric          *pMemoryMulticastFabric,
@@ -387,7 +387,7 @@ _memMulticastFabricBatchDetachMemInfo
     rmGpuLocksRelease(GPUS_LOCK_FLAGS_NONE, NULL);
 }
 
-NV_STATUS
+static NV_STATUS
 _memMulticastFabricSendInbandTeamSetupRequestV1UnderLock
 (
     OBJGPU                          *pGpu,
@@ -469,7 +469,7 @@ done:
     return status;
 }
 
-NV_STATUS
+static NV_STATUS
 _memMulticastFabricSendInbandTeamReleaseRequestV1UnderLock
 (
     OBJGPU *pGpu,
@@ -523,7 +523,7 @@ done:
 // The caller must have acquired the pMulticastFabricOpsMutex lock.
 // GPU lock is acquired as needed.
 //
-NV_STATUS
+static NV_STATUS
 _memMulticastFabricSendInbandTeamSetupRequest
 (
     OBJGPU                          *pGpu,
@@ -556,7 +556,7 @@ done:
     return status;
 }
 
-NV_STATUS
+static NV_STATUS
 _memMulticastFabricSendInbandTeamReleaseRequest
 (
     OBJGPU *pGpu,
@@ -589,7 +589,7 @@ done:
     return status;
 }
 
-NV_STATUS
+static NV_STATUS
 _memMulticastFabricSendInbandRequestUnderLock
 (
     MEM_MULTICAST_FABRIC_DESCRIPTOR   *pMulticastFabricDesc,
@@ -695,7 +695,7 @@ _memMulticastFabricDescriptorFreeUnderLock
     }
 }
 
-NV_STATUS
+static NV_STATUS
 _memMulticastFabricConstructUnderLock
 (
     MemoryMulticastFabric        *pMemoryMulticastFabric,
@@ -731,7 +731,7 @@ fail:
     return status;
 }
 
-NV_STATUS
+static NV_STATUS
 _memMulticastFabricAttachMemInfoAddUnderLock
 (
     MEM_MULTICAST_FABRIC_DESCRIPTOR       *pMulticastFabricDesc,
@@ -785,7 +785,7 @@ _memMulticastFabricAttachMemInfoAddUnderLock
 // The caller must have acquired the pMulticastFabricOpsMutex lock.
 // GPU lock is acquired as needed.
 //
-NV_STATUS
+static NV_STATUS
 _memMulticastFabricSetupFabricMapping
 (
     OBJGPU                               *pGpu,
@@ -858,7 +858,7 @@ releaseGpuLock:
     return status;
 }
 
-NV_STATUS
+static NV_STATUS
 _memMulticastFabricBatchSetupFabricMappingUnderLock
 (
     MEM_MULTICAST_FABRIC_DESCRIPTOR *pMulticastFabricDesc,
@@ -887,7 +887,7 @@ batchRemoveMapping:
     return status;
 }
 
-NV_STATUS
+static NV_STATUS
 _memMulticastFabricCreateMemDescUnderLock
 (
     MEM_MULTICAST_FABRIC_DESCRIPTOR  *pMulticastFabricDesc,
@@ -923,7 +923,7 @@ _memMulticastFabricCreateMemDescUnderLock
     return NV_OK;
 }
 
-void
+static void
 _memMulticastFabricInstallMemDescUnderLock
 (
     MEM_MULTICAST_FABRIC_DESCRIPTOR *pMulticastFabricDesc,
@@ -951,7 +951,7 @@ _memMulticastFabricInstallMemDescUnderLock
 // TODO: This function will be invoked as part of the FM inband
 // response handling once inband integration is complete.
 //
-NV_STATUS
+static NV_STATUS
 _memMulticastFabricAttachMemPostProcessorUnderLock
 (
     MEM_MULTICAST_FABRIC_DESCRIPTOR *pMulticastFabricDesc,
@@ -1017,7 +1017,7 @@ installMemDesc:
     return status;
 }
 
-void
+static void
 _memorymulticastfabricDestructUnderLock
 (
     MemoryMulticastFabric *pMemoryMulticastFabric

@@ -21,8 +21,6 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#define  __NO_VERSION__
-
 #include <generated/utsrelease.h>
 
 #include "os-interface.h"

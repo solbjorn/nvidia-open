@@ -77,7 +77,6 @@ static NvBool ValidateMode(NVDpyEvoPtr pDpyEvo,
                            struct NvKmsUsageBounds *pModeUsage);
 
 #define NV_MAX_MODE_NAME_LEN 64
-#define NV_MAX_MODE_DESCRIPTION_LEN 128
 
 /* A single frequency, at its longest, will have the format: "aaa.bbb" */
 #define NV_MAX_FREQUENCY_STRING_LEN 8

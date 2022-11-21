@@ -1802,7 +1802,7 @@ bool uvm_mmu_gpu_needs_dynamic_sysmem_mapping(uvm_gpu_t *gpu)
     return uvm_gpu_is_virt_mode_sriov_heavy(gpu);
 }
 
-NV_STATUS create_static_vidmem_mapping(uvm_gpu_t *gpu)
+static NV_STATUS create_static_vidmem_mapping(uvm_gpu_t *gpu)
 {
     NvU32 page_size;
     NvU64 size;

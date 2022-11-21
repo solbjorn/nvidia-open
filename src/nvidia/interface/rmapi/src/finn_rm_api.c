@@ -56,33 +56,14 @@
 #endif
 
 // Set memory region to all zeroes.
-#if defined(FINN_MEMZERO) /* Use override from Makefile */
-#elif defined(NVRM) /* Kernel Mode */
-#define FINN_MEMZERO(buf, size) portMemSet(buf, 0, size)
-
-#else /* User Mode */
+#ifndef FINN_MEMZERO /* Use override from Makefile */
 #define FINN_MEMZERO(buf, size) memset(buf, 0, size)
 #endif
 
-// Copy nonoverlapping memory region.
-#if defined(FINN_MEMCPY) /* Use override from Makefile */
-#elif defined(NVRM) /* Kernel Mode */
-#define FINN_MEMCPY(dst, src, size) portMemCopy(dst, size, src, size)
-
-#else /* User Mode */
-#define FINN_MEMCPY(dst, src, size) memcpy(dst, src, size)
-#endif
-
 // Report an error.
-#if defined(FINN_ERROR) /* Use override from Makefile */
-#elif defined(NVRM) /* Kernel Mode */
-#define FINN_ERROR(err) /* No-op */
-
-#else /* User Mode */
+#ifndef FINN_ERROR /* Use override from Makefile */
 #define FINN_ERROR(err) /* No-op */
 #endif
-
-
 
 //
 // The purpose of the bit pump is to ensure 64-bit aligned access to the
@@ -7472,5 +7453,3 @@ static NV_STATUS Nvb06fCtrlCmdRestoreEngineCtxDataFinnParamsDeserialize(finn_bit
 exit:
     return status;
 }
-
-

@@ -884,6 +884,7 @@ NV_STATUS uvm_test_pmm_check_leak(UVM_TEST_PMM_CHECK_LEAK_PARAMS *params, struct
     return status;
 }
 
+static
 NV_STATUS __test_pmm_async_alloc_type(uvm_va_space_t *va_space,
                                       uvm_gpu_t *gpu,
                                       size_t num_chunks,
@@ -1108,8 +1109,6 @@ static NV_STATUS test_pmm_reverse_map_many_blocks(uvm_gpu_t *gpu, uvm_va_space_t
     // incrementally. Therefore, the reverse translations will show them in
     // order.
     uvm_for_each_va_range_in(va_range, va_space, addr, addr + size - 1) {
-        uvm_va_block_t *va_block;
-
         for_each_va_block_in_va_range(va_range, va_block) {
             NvU32 num_va_block_pages = 0;
 

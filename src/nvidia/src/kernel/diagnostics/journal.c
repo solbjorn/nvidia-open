@@ -64,12 +64,12 @@
 #define NOCAT_FULLCHIP_TDR_STR                  "FULL CHIP RESET"
 #define NOCAT_BUS_RESET_TDR_STR                 "BUS RESET"
 #define NOCAT_GC6_RESET_TDR_STR                 "GC6 RESET"
-#define NOCAT_NORMAL_TDR_STR                    "NORMAL TDR"
 #define NOCAT_UCODE_RESET_TDR_STR               "UCODE RESET"
 #define NOCAT_SURPRISE_REMOVAL_TDR_STR          "SURPRISE REMOVAL"
 #define NOCAT_DEFAULT_TAG_VALUE_STR             "prod"
-#define NOCAT_DEFAULT_TDR_REASON_SRC_STR        "KMD"
+#if NOCAT_PROBE_FB_MEMORY
 #define NOCAT_FBSIZETESTED                      0x10
+#endif
 
 // Reducing size to 4K for reducing non-paged allocations on win8
 #define NVDUMP_DEBUGGER_BUFFER_SIZE (4 * 1024)

@@ -29,37 +29,6 @@
 
 #include "objtmr.h"
 
-//
-// This function returns current time from OS timer
-//
-NvU64
-tmrGetTimeEx_OSTIMER
-(
-    OBJGPU             *pGpu,
-    OBJTMR             *pTmr,
-    THREAD_STATE_NODE  *pThreadState
-)
-{
-    NvU32   seconds;                // Time since 1970 in seconds
-    NvU32   useconds;               //  and uSeconds.
-    NvU64 timeNs; // Time since 1970 in ns.
-
-    //
-    // Get current time from operating system.
-    //
-    // We get the time in seconds and microseconds since 1970
-    // Note that we don't really need the real time of day
-    //
-    osGetCurrentTime(&seconds, &useconds);
-
-    //
-    // Calculate ns since 1970.
-    //
-    timeNs = ((NvU64)seconds * 1000000 + useconds) * 1000;
-
-    return timeNs;
-}
-
 /*!
  *  Creates OS timer event
  *
@@ -227,84 +196,6 @@ NV_STATUS tmrEventDestroyOSTimer_OSTIMER
 }
 
 NV_STATUS
-tmrGetIntrStatus_OSTIMER
-(
-    OBJGPU             *pGpu,
-    OBJTMR             *pTmr,
-    NvU32              *pStatus,
-    THREAD_STATE_NODE  *pThreadState
-)
-{
-    *pStatus = 0;
-    return NV_OK;
-}
-
-//
-// For functions that only need a short delta of time elapsed (~ 4.29 seconds)
-// NOTE: Since it wraps around every 4.29 seconds, for general GetTime purposes,
-//       it's better to use tmrGetTime().
-//
-NvU32
-tmrGetTimeLo_OSTIMER
-(
-    OBJGPU *pGpu,
-    OBJTMR *pTmr
-)
-{
-    return NvU64_LO32(tmrGetTimeEx_HAL(pGpu, pTmr, NULL));
-}
-
-NvU64
-tmrGetTime_OSTIMER
-(
-    OBJGPU             *pGpu,
-    OBJTMR             *pTmr
-)
-{
-    return tmrGetTimeEx_HAL(pGpu, pTmr, NULL);
-}
-
-NvU32
-tmrReadTimeLoReg_OSTIMER
-(
-    OBJGPU             *pGpu,
-    OBJTMR             *pTmr,
-    THREAD_STATE_NODE  *pThreadState
-)
-{
-    return NvU64_LO32(tmrGetTimeEx_HAL(pGpu, pTmr, pThreadState));
-}
-
-NvU32
-tmrReadTimeHiReg_OSTIMER
-(
-    OBJGPU             *pGpu,
-    OBJTMR             *pTmr,
-    THREAD_STATE_NODE  *pThreadState
-)
-{
-    return NvU64_HI32(tmrGetTimeEx_HAL(pGpu, pTmr, pThreadState));
-}
-
-NV_STATUS
-tmrGetGpuAndCpuTimestampPair_OSTIMER
-(
-    OBJGPU  *pGpu,
-    OBJTMR  *pTmr,
-    NvU64   *pGpuTime,
-    NvU64   *pCpuTime
-)
-{
-#if PORT_IS_FUNC_SUPPORTED(portUtilExReadTimestampCounter)
-    *pGpuTime = tmrGetTimeEx_HAL(pGpu, pTmr, NULL);
-    *pCpuTime = portUtilExReadTimestampCounter();
-    return NV_OK;
-#else
-    return NV_ERR_NOT_SUPPORTED;
-#endif
-}
-
-NV_STATUS
 tmrDelay_OSTIMER
 (
      OBJTMR    *pTmr,
@@ -322,4 +213,3 @@ tmrDelay_OSTIMER
 
     return NV_OK;
 }
-
