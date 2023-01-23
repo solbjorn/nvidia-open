@@ -61,9 +61,11 @@ typedef struct
     NvU64 align;
 } LibosElf64ProgramHeader;
 
+#ifndef PF_X
 #define PF_X 1
 #define PF_W 2
 #define PF_R 4
+#endif
 
 #define PT_LOAD    1
 #define PT_NOTE    4
@@ -99,7 +101,7 @@ typedef struct
 } LibosElf64Symbol;
 
 typedef struct {
-  NvS64 tag; 
+  NvS64 tag;
   NvU64 ptr;
 } LibosElf64Dynamic;
 

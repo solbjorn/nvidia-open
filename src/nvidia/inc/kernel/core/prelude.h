@@ -66,30 +66,30 @@ typedef struct THREAD_STATE_NODE THREAD_STATE_NODE; // FW declare thread state
 //    (v - v + gran) ensures that gran is upcasted to match v before
 //    the ~ operation, without explicitly having to typecast it.
 //
-#define RM_ALIGN_DOWN(v, gran)          ((v) & ~(((v) - (v) + (gran)) - 1))
-#define RM_ALIGN_UP(v, gran)            (((v) + ((gran) - 1)) & ~(((v) - (v) + (gran))-1))
-#define RM_IS_ALIGNED(v, gran)          ((((gran) - 1) & (v)) == 0)
+#define RM_ALIGN_DOWN(v, gran)		ALIGN_DOWN(v, gran)
+#define RM_ALIGN_UP(v, gran)		ALIGN(v, gran)
+#define RM_IS_ALIGNED(v, gran)		IS_ALIGNED(v, gran)
 
-#define RM_ALIGN_PTR_DOWN(p, gran)      ((void *) RM_ALIGN_DOWN(((NvUPtr)p), (gran)))
-#define RM_ALIGN_PTR_UP(p, gran)        ((void *) RM_ALIGN_UP(((NvUPtr)p), (gran)))
+#define RM_ALIGN_PTR_DOWN(p, gran)	PTR_ALIGN_DOWN(p, gran)
+#define RM_ALIGN_PTR_UP(p, gran)	PTR_ALIGN(p, gran)
 
-#define RM_PAGE_ALIGN_DOWN(value)       RM_ALIGN_DOWN((value), RM_PAGE_SIZE)
-#define RM_PAGE_ALIGN_UP(value)         RM_ALIGN_UP((value), RM_PAGE_SIZE)
+#define RM_PAGE_ALIGN_DOWN(value)	ALIGN_DOWN(value, PAGE_SIZE)
+#define RM_PAGE_ALIGN_UP(value)		ALIGN(value, PAGE_SIZE)
 
 #define NV_DELTA(a, b)                  (NV_MAX((a), (b)) - NV_MIN((a), (b)))       // Okay for unsigned or signed
 
-#define NV_ROUNDUP(a,b)                 ((NV_CEIL(a,b))*(b))
+#define NV_ROUNDUP(a, b)		roundup(a, b)
 #define NV_ROUND_TO_QUANTA(a, quanta)   (((quanta) == 0) ? (a): ((((a) + ((quanta) >> 1)) / (quanta)) *  (quanta)))
 #define NV_FLOOR_TO_QUANTA(a, quanta)   (((a) / (quanta)) *  (quanta))
-#define NV_SIZEOF32(x)                  (sizeof(x))
-#define NV_ARRAY_ELEMENTS(x)            ((sizeof(x)/sizeof((x)[0])))
-#define NV_ARRAY_ELEMENTS32(x)          ((NV_SIZEOF32(x)/NV_SIZEOF32((x)[0])))
-#define NV_BYTESWAP16(a)                ((((a) & 0xff00)>>8)      |  \
-                                         (((a) & 0x00ff)<<8))
-#define NV_BYTESWAP32(a)                ((((a) & 0xff000000)>>24) |  \
-                                         (((a) & 0x00ff0000)>>8)  |  \
-                                         (((a) & 0x0000ff00)<<8)  |  \
-                                         (((a) & 0x000000ff)<<24))
+#ifndef NV_SIZEOF32
+#define NV_SIZEOF32(x)			sizeof(x)
+#endif
+#ifndef NV_ARRAY_ELEMENTS
+#define NV_ARRAY_ELEMENTS(x)		ARRAY_SIZE(x)
+#define NV_ARRAY_ELEMENTS32(x)		ARRAY_SIZE(x)
+#endif
+#define NV_BYTESWAP16(a)		swab16(a)
+#define NV_BYTESWAP32(a)		swab32(a)
 #define NV_TO_LOWER(c)                  (((c)>='A'&&(c)<='Z')?(c)+('a'-'A'):(c))
 #define NV_TO_UPPER(c)                  (((c)>='a'&&(c)<='z')?((c)-'a'+'A'):(c))
 
