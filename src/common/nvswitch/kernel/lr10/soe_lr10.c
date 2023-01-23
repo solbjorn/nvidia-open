@@ -21,6 +21,9 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
+#include <linux/firmware.h>
+#include <linux/pci.h>
+
 #include "soe/soe_nvswitch.h"
 #include "soe/soe_priv_nvswitch.h"
 #include "soe/soebif.h"
@@ -28,10 +31,9 @@
 
 #include "nvlink_export.h"
 #include "common_nvswitch.h"
+#include <core/bin_data.h>
 #include "lr10/lr10.h"
 #include "lr10/soe_lr10.h"
-#include "soe/bin/g_soeuc_lr10_dbg.h"
-#include "soe/bin/g_soeuc_lr10_prd.h"
 #include "soe/soeifcmn.h"
 #include "nvswitch/lr10/dev_soe_ip.h"
 #include "nvswitch/lr10/dev_soe_ip_addendum.h"
@@ -230,17 +232,18 @@ _nvswitch_soe_send_test_cmd
     return status;
 }
 
-static NvlStatus
-_nvswitch_get_soe_ucode_binaries
-(
-    nvswitch_device *device,
-    const NvU32 **soe_ucode_data,
-    const NvU32 **soe_ucode_header
-)
-{
-    NvU32 debug_mode;
+BINDATA_FIRMWARE("soe_ucode_data_lr10_dbg.bin");
+BINDATA_FIRMWARE("soe_ucode_header_lr10_dbg.bin");
+BINDATA_FIRMWARE("soe_ucode_data_lr10_prd.bin");
+BINDATA_FIRMWARE("soe_ucode_header_lr10_prd.bin");
 
-    if (!soe_ucode_data || !soe_ucode_header)
+static NvlStatus
+_nvswitch_get_soe_ucode_binaries(nvswitch_device *device, const char **data,
+				 const char **header)
+{
+	NvU32 debug_mode;
+
+    if (!data || !header)
     {
         NVSWITCH_PRINT(device, ERROR,
             "%s: SOE get ucode binaries BadArgs!\n",
@@ -253,13 +256,13 @@ _nvswitch_get_soe_ucode_binaries
 
     if (debug_mode)
     {
-        *soe_ucode_data = soe_ucode_data_lr10_dbg;
-        *soe_ucode_header = soe_ucode_header_lr10_dbg;
+		*data = BINDATA_PATH("soe_ucode_data_lr10_dbg.bin");
+		*header = BINDATA_PATH("soe_ucode_header_lr10_dbg.bin");
     }
     else
     {
-        *soe_ucode_data = soe_ucode_data_lr10_prd;
-        *soe_ucode_header = soe_ucode_header_lr10_prd;
+		*data = BINDATA_PATH("soe_ucode_data_lr10_prd.bin");
+		*header = BINDATA_PATH("soe_ucode_header_lr10_prd.bin");
     }
 
     return NVL_SUCCESS;
@@ -276,9 +279,13 @@ _nvswitch_load_soe_ucode_image
     nvswitch_device *device
 )
 {
-    NvlStatus status;
-    const NvU32 *soe_ucode_data;
-    const NvU32 *soe_ucode_header;
+	struct pci_dev *pdev = device->os_handle;
+	const struct firmware *header;
+	const char *soe_ucode_header;
+	const struct firmware *data;
+	const char *soe_ucode_data;
+	NvlStatus status;
+	int ret;
 
     status = _nvswitch_get_soe_ucode_binaries(device, &soe_ucode_data, &soe_ucode_header);
     if (status != NVL_SUCCESS)
@@ -289,8 +296,22 @@ _nvswitch_load_soe_ucode_image
         return status;
     }
 
-    status = _nvswitch_soe_copy_ucode_cpubitbang(device, soe_ucode_data,
-                                                     soe_ucode_header);
+	ret = request_firmware(&header, soe_ucode_header, &pdev->dev);
+	if (ret)
+		return ret;
+
+	ret = request_firmware(&data, soe_ucode_data, &pdev->dev);
+	if (ret) {
+		release_firmware(header);
+		return ret;
+	}
+
+	status = _nvswitch_soe_copy_ucode_cpubitbang(device,
+						     (void *)data->data,
+						     (void *)header->data);
+	release_firmware(header);
+	release_firmware(data);
+
     if (status != NVL_SUCCESS)
     {
         NVSWITCH_PRINT(device, ERROR,
@@ -299,7 +320,7 @@ _nvswitch_load_soe_ucode_image
         return status;
     }
 
-    return status;
+	return 0;
 }
 
 /*
