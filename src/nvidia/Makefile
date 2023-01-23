@@ -71,3 +71,8 @@ NVIDIA_API_CFLAGS += -DPORT_ASSERT_FAILED_USES_STRINGS=1
 
 NVIDIA_API_CFLAGS += -Wwrite-strings
 NVIDIA_API_CFLAGS += --std=gnu11
+
+# pahole can't handle _Atomic (WIP patch is ready), limit debuginfo to level 1
+ifneq ($(filter -g%,$(KBUILD_CFLAGS)),)
+NVIDIA_API_CFLAGS += -g1
+endif
