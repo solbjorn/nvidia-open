@@ -1263,7 +1263,7 @@ nvswitch_probe
         return -EINVAL;
     }
 
-    printk(KERN_INFO "nvidia-nvswitch: Probing device %04x:%02x:%02x.%x, "
+    pci_info(pci_dev, "nvidia-nvswitch: Probing device %04x:%02x:%02x.%x, "
            "Vendor Id = 0x%x, Device Id = 0x%x, Class = 0x%x \n",
            NV_PCI_DOMAIN_NUMBER(pci_dev),
            NV_PCI_BUS_NUMBER(pci_dev),
@@ -1426,7 +1426,7 @@ nvswitch_remove
         goto done;
     }
 
-    printk(KERN_INFO "%s: removing device %04x:%02x:%02x.%x\n",
+    pci_info(pci_dev, "%s: removing device %04x:%02x:%02x.%x\n",
            nvswitch_dev->name,
            NV_PCI_DOMAIN_NUMBER(pci_dev),
            NV_PCI_BUS_NUMBER(pci_dev),
@@ -1809,107 +1809,6 @@ nvswitch_exit
     nvswitch.initialized = NV_FALSE;
 }
 
-//
-// Get current time in seconds.nanoseconds
-// In this implementation, the time is monotonic time
-//
-NvU64
-nvswitch_os_get_platform_time
-(
-    void
-)
-{
-    struct timespec64 ts;
-
-    ktime_get_raw_ts64(&ts);
-    return (NvU64) timespec64_to_ns(&ts);
-}
-
-//
-// Get current time in seconds.nanoseconds
-// In this implementation, the time is from epoch time
-// (midnight UTC of January 1, 1970).
-// This implementation cannot be used for polling loops
-// due to clock skew during system startup (bug 3302382,
-// 3297170, 3273847, 3277478, 200693329).
-// Instead, nvswitch_os_get_platform_time() is used
-// for polling loops
-//
-NvU64
-nvswitch_os_get_platform_time_epoch
-(
-    void
-)
-{
-    struct timespec64 ts;
-
-    ktime_get_real_ts64(&ts);
-    return (NvU64) timespec64_to_ns(&ts);
-}
-
-void
-nvswitch_os_print
-(
-    const int  log_level,
-    const char *fmt,
-    ...
-)
-{
-    va_list arglist;
-    char   *kern_level;
-    char    fmt_printk[NVSWITCH_LOG_BUFFER_SIZE];
-
-    switch (log_level)
-    {
-        case NVSWITCH_DBG_LEVEL_MMIO:
-            kern_level = KERN_DEBUG;
-            break;
-        case NVSWITCH_DBG_LEVEL_INFO:
-            kern_level = KERN_INFO;
-            break;
-        case NVSWITCH_DBG_LEVEL_SETUP:
-            kern_level = KERN_INFO;
-            break;
-        case NVSWITCH_DBG_LEVEL_WARN:
-            kern_level = KERN_WARNING;
-            break;
-        case NVSWITCH_DBG_LEVEL_ERROR:
-            kern_level = KERN_ERR;
-            break;
-        default:
-            kern_level = KERN_DEFAULT;
-            break;
-    }
-
-    va_start(arglist, fmt);
-    snprintf(fmt_printk, sizeof(fmt_printk), "%s%s", kern_level, fmt);
-    vprintk(fmt_printk, arglist);
-    va_end(arglist);
-}
-
-void
-nvswitch_os_override_platform
-(
-    void *os_handle,
-    NvBool *rtlsim
-)
-{
-    // Never run on RTL
-    *rtlsim = NV_FALSE;
-}
-
-NvlStatus
-nvswitch_os_read_registery_binary
-(
-    void *os_handle,
-    const char *name,
-    NvU8 *data,
-    NvU32 length
-)
-{
-    return -NVL_ERR_NOT_SUPPORTED;
-}
-
 NvU32
 nvswitch_os_get_device_count
 (
@@ -1917,63 +1816,6 @@ nvswitch_os_get_device_count
 )
 {
     return NV_ATOMIC_READ(nvswitch.count);
-}
-
-//
-// A helper to convert a string to an unsigned int.
-//
-// The string should be NULL terminated.
-// Only works with base16 values.
-//
-static int
-nvswitch_os_strtouint
-(
-    char *str,
-    unsigned int *data
-)
-{
-    char *p;
-    unsigned long long val;
-
-    if (!str || !data)
-    {
-        return -EINVAL;
-    }
-
-    *data = 0;
-    val = 0;
-    p = str;
-
-    while (*p != '\0')
-    {
-        if ((tolower(*p) == 'x') && (*str == '0') && (p == str + 1))
-        {
-            p++;
-        }
-        else if (*p >='0' && *p <= '9')
-        {
-            val = val * 16 + (*p - '0');
-            p++;
-        }
-        else if (tolower(*p) >= 'a' && tolower(*p) <= 'f')
-        {
-            val = val * 16 + (tolower(*p) - 'a' + 10);
-            p++;
-        }
-        else
-        {
-            return -EINVAL;
-        }
-    }
-
-    if (val > 0xFFFFFFFF)
-    {
-        return -EINVAL;
-    }
-
-    *data = (unsigned int)val;
-
-    return 0;
 }
 
 NvlStatus
@@ -2024,7 +1866,7 @@ nvswitch_os_read_registry_dword
     strncpy(regkey_val, regkey_val_start, regkey_val_len);
     regkey_val[regkey_val_len] = '\0';
 
-    if (nvswitch_os_strtouint(regkey_val, data) != 0)
+    if (kstrtou32(regkey_val, 16, data) != 0)
     {
         return -NVL_ERR_GENERIC;
     }
@@ -2129,17 +1971,6 @@ nvswitch_os_alloc_contig_memory
     *virt_addr = (void *)nv_gfp_addr;
 
     return NVL_SUCCESS;
-}
-
-void
-nvswitch_os_free_contig_memory
-(
-    void *os_handle,
-    void *virt_addr,
-    NvU32 size
-)
-{
-    NV_FREE_PAGES((unsigned long)virt_addr, get_order(size));
 }
 
 static inline int
@@ -2270,277 +2101,6 @@ nvswitch_os_sync_dma_region_for_device
     return NVL_SUCCESS;
 }
 
-static inline void *
-_nvswitch_os_malloc
-(
-    NvLength size
-)
-{
-    void *ptr = NULL;
-
-    if (!NV_MAY_SLEEP())
-    {
-        if (size <= NVSWITCH_KMALLOC_LIMIT)
-        {
-            ptr = kmalloc(size, NV_GFP_ATOMIC);
-        }
-    }
-    else
-    {
-        if (size <= NVSWITCH_KMALLOC_LIMIT)
-        {
-            ptr = kmalloc(size, NV_GFP_NO_OOM);
-        }
-
-        if (ptr == NULL)
-        {
-            ptr = vmalloc(size);
-        }
-    }
-
-    return ptr;
-}
-
-void *
-nvswitch_os_malloc_trace
-(
-    NvLength size,
-    const char *file,
-    NvU32 line
-)
-{
-#if defined(NV_MEM_LOGGER)
-    void *ptr = _nvswitch_os_malloc(size);
-    if (ptr)
-    {
-        nv_memdbg_add(ptr, size, file, line);
-    }
-
-    return ptr;
-#else
-    return _nvswitch_os_malloc(size);
-#endif
-}
-
-static inline void
-_nvswitch_os_free
-(
-    void *ptr
-)
-{
-    if (!ptr)
-        return;
-
-    if (is_vmalloc_addr(ptr))
-    {
-        vfree(ptr);
-    }
-    else
-    {
-        kfree(ptr);
-    }
-}
-
-void
-nvswitch_os_free
-(
-    void *ptr
-)
-{
-#if defined (NV_MEM_LOGGER)
-    if (ptr == NULL)
-        return;
-
-    nv_memdbg_remove(ptr, 0, NULL, 0);
-
-    return _nvswitch_os_free(ptr);
-#else
-    return _nvswitch_os_free(ptr);
-#endif
-}
-
-NvLength
-nvswitch_os_strlen
-(
-    const char *str
-)
-{
-    return strlen(str);
-}
-
-char*
-nvswitch_os_strncpy
-(
-    char *dest,
-    const char *src,
-    NvLength length
-)
-{
-    return strncpy(dest, src, length);
-}
-
-int
-nvswitch_os_strncmp
-(
-    const char *s1,
-    const char *s2,
-    NvLength length
-)
-{
-    return strncmp(s1, s2, length);
-}
-
-void *
-nvswitch_os_memset
-(
-    void *dest,
-    int value,
-    NvLength size
-)
-{
-     return memset(dest, value, size);
-}
-
-void *
-nvswitch_os_memcpy
-(
-    void *dest,
-    const void *src,
-    NvLength size
-)
-{
-    return memcpy(dest, src, size);
-}
-
-int
-nvswitch_os_memcmp
-(
-    const void *s1,
-    const void *s2,
-    NvLength size
-)
-{
-    return memcmp(s1, s2, size);
-}
-
-NvU32
-nvswitch_os_mem_read32
-(
-    const volatile void * address
-)
-{
-    return (*(const volatile NvU32*)(address));
-}
-
-void
-nvswitch_os_mem_write32
-(
-    volatile void *address,
-    NvU32 data
-)
-{
-    (*(volatile NvU32 *)(address)) = data;
-}
-
-NvU64
-nvswitch_os_mem_read64
-(
-    const volatile void * address
-)
-{
-    return (*(const volatile NvU64 *)(address));
-}
-
-void
-nvswitch_os_mem_write64
-(
-    volatile void *address,
-    NvU64 data
-)
-{
-    (*(volatile NvU64 *)(address)) = data;
-}
-
-int
-nvswitch_os_snprintf
-(
-    char *dest,
-    NvLength size,
-    const char *fmt,
-    ...
-)
-{
-    va_list arglist;
-    int chars_written;
-
-    va_start(arglist, fmt);
-    chars_written = vsnprintf(dest, size, fmt, arglist);
-    va_end(arglist);
-
-    return chars_written;
-}
-
-int
-nvswitch_os_vsnprintf
-(
-    char *buf,
-    NvLength size,
-    const char *fmt,
-    va_list arglist
-)
-{
-    return vsnprintf(buf, size, fmt, arglist);
-}
-
-void
-nvswitch_os_assert_log
-(
-    int cond,
-    const char *fmt,
-    ...
-)
-{
-    if(cond == 0x0)
-    {
-        if (printk_ratelimit())
-        {
-            va_list arglist;
-            char fmt_printk[NVSWITCH_LOG_BUFFER_SIZE];
-
-            va_start(arglist, fmt);
-            vsnprintf(fmt_printk, sizeof(fmt_printk), fmt, arglist);
-            va_end(arglist);
-            nvswitch_os_print(NVSWITCH_DBG_LEVEL_ERROR, "%s", fmt_printk);
-            WARN_ON(1);
-         }
-         dbg_breakpoint();
-    }
-}
-
-/*
- * Sleep for specified milliseconds. Yields the CPU to scheduler.
- */
-void
-nvswitch_os_sleep
-(
-    unsigned int ms
-)
-{
-    NV_STATUS status;
-    status = nv_sleep_ms(ms);
-
-    if (status != NV_OK)
-    {
-        if (printk_ratelimit())
-        {
-            nvswitch_os_print(NVSWITCH_DBG_LEVEL_ERROR, "NVSwitch: requested"
-                              " sleep duration %d msec exceeded %d msec\n",
-                              ms, NV_MAX_ISR_DELAY_MS);
-            WARN_ON(1);
-        }
-    }
-}
-
 NvlStatus
 nvswitch_os_acquire_fabric_mgmt_cap
 (
@@ -2594,55 +2154,6 @@ nvswitch_os_is_admin
     return NV_IS_SUSER();
 }
 
-#define NV_KERNEL_RELEASE    ((LINUX_VERSION_CODE >> 16) & 0x0ff)
-#define NV_KERNEL_VERSION    ((LINUX_VERSION_CODE >> 8)  & 0x0ff)
-#define NV_KERNEL_SUBVERSION ((LINUX_VERSION_CODE)       & 0x0ff)
-
-NvlStatus
-nvswitch_os_get_os_version
-(
-    NvU32 *pMajorVer,
-    NvU32 *pMinorVer,
-    NvU32 *pBuildNum
-)
-{
-    if (pMajorVer)
-        *pMajorVer = NV_KERNEL_RELEASE;
-    if (pMinorVer)
-        *pMinorVer = NV_KERNEL_VERSION;
-    if (pBuildNum)
-        *pBuildNum = NV_KERNEL_SUBVERSION;
-
-    return NVL_SUCCESS;
-}
-
-/*!
- * @brief: OS specific handling to add an event.
- */
-NvlStatus
-nvswitch_os_add_client_event
-(
-    void            *osHandle,
-    void            *osPrivate,
-    NvU32           eventId
-)
-{
-    return NVL_SUCCESS;
-}
-
-/*!
- * @brief: OS specific handling to remove all events corresponding to osPrivate.
- */
-NvlStatus
-nvswitch_os_remove_client_event
-(
-    void            *osHandle,
-    void            *osPrivate
-)
-{
-    return NVL_SUCCESS;
-}
-
 /*!
  * @brief: OS specific handling to notify an event.
  */
@@ -2664,20 +2175,5 @@ nvswitch_os_notify_client_event
     private_data->file_event.event_pending = NV_TRUE;
     wake_up_interruptible(&private_data->file_event.wait_q_event);
 
-    return NVL_SUCCESS;
-}
-
-/*!
- * @brief: Gets OS specific support for the REGISTER_EVENTS ioctl
- */
-NvlStatus
-nvswitch_os_get_supported_register_events_params
-(
-    NvBool *many_events,
-    NvBool *os_descriptor
-)
-{
-    *many_events   = NV_FALSE;
-    *os_descriptor = NV_FALSE;
     return NVL_SUCCESS;
 }

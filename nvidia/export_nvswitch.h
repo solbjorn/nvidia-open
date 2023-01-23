@@ -28,6 +28,15 @@
 extern "C" {
 #endif
 
+#include <linux/delay.h>
+#include <linux/io.h>
+#include <linux/ktime.h>
+#include <linux/printk.h>
+#include <linux/slab.h>
+#include <linux/time64.h>
+#include <linux/timekeeping.h>
+#include <linux/version.h>
+
 #include "nv_stdarg.h"
 #include "nvlink_common.h"
 #include "ioctl_common_nvswitch.h"
@@ -636,36 +645,43 @@ nvswitch_os_get_device_count
  * Get current time in nanoseconds
  * The time is since epoch time (midnight UTC of January 1, 1970)
  */
-NvU64
-nvswitch_os_get_platform_time
-(
-    void
-);
+static inline NvU64 nvswitch_os_get_platform_time(void)
+{
+	return ktime_get_raw_ns();
+}
 
-NvU64
-nvswitch_os_get_platform_time_epoch
-(
-    void
-);
-
-#if (defined(_WIN32) || defined(_WIN64))
-#define NVSWITCH_PRINT_ATTRIB(str, arg1)
-#else
-#define NVSWITCH_PRINT_ATTRIB(str, arg1)             \
-    __attribute__ ((format (printf, (str), (arg1))))
-#endif // (defined(_WIN32) || defined(_WIN64))
+static inline NvU64 nvswitch_os_get_platform_time_epoch(void)
+{
+	return ktime_get_real_ns();
+}
 
 /*
  * printf wrapper
  */
-void
-NVSWITCH_PRINT_ATTRIB(2, 3)
-nvswitch_os_print
-(
-    int         log_level,
-    const char *pFormat,
-    ...
-);
+#define nvswitch_os_print(log_level, pFormat, ...) ({			\
+	int __nvsw_ret;							\
+									\
+	switch (log_level) {						\
+	case NVSWITCH_DBG_LEVEL_MMIO:					\
+		__nvsw_ret = printk(KERN_DEBUG pFormat, ##__VA_ARGS__);	\
+		break;							\
+	case NVSWITCH_DBG_LEVEL_INFO:					\
+	case NVSWITCH_DBG_LEVEL_SETUP:					\
+		__nvsw_ret = pr_info(pFormat, ##__VA_ARGS__);		\
+		break;							\
+	case NVSWITCH_DBG_LEVEL_WARN:					\
+		__nvsw_ret = pr_warn(pFormat, ##__VA_ARGS__);		\
+		break;							\
+	case NVSWITCH_DBG_LEVEL_ERROR:					\
+		__nvsw_ret = pr_err(pFormat, ##__VA_ARGS__);		\
+		break;							\
+	default:							\
+		__nvsw_ret = printk(pFormat, ##__VA_ARGS__);		\
+		break;							\
+	}								\
+									\
+	__nvsw_ret;							\
+})
 
 /*
  * "Registry" interface for dword
@@ -681,14 +697,17 @@ nvswitch_os_read_registry_dword
 /*
  * "Registry" interface for binary data
  */
-NvlStatus
+static inline NvlStatus
 nvswitch_os_read_registery_binary
 (
     void *os_handle,
     const char *name,
     NvU8 *data,
     NvU32 length
-);
+)
+{
+	return -NVL_ERR_NOT_SUPPORTED;
+}
 
 NvBool
 nvswitch_os_is_uuid_in_blacklist
@@ -700,12 +719,15 @@ nvswitch_os_is_uuid_in_blacklist
 /*
  * Override platform/simulation settings for cases
  */
-void
+static inline void
 nvswitch_os_override_platform
 (
     void *os_handle,
     NvBool *rtlsim
-);
+)
+{
+	*rtlsim = false;
+}
 
 /*
  * Memory management interface
@@ -719,13 +741,16 @@ nvswitch_os_alloc_contig_memory
     NvBool force_dma32
 );
 
-void
+static __always_inline void
 nvswitch_os_free_contig_memory
 (
     void *os_handle,
     void *virt_addr,
     NvU32 size
-);
+)
+{
+	free_pages((unsigned long)virt_addr, get_order(size));
+}
 
 NvlStatus
 nvswitch_os_map_dma_region
@@ -772,138 +797,136 @@ nvswitch_os_sync_dma_region_for_device
     NvU32 direction
 );
 
-void *
+static __always_inline void *
 nvswitch_os_malloc_trace
 (
     NvLength size,
     const char *file,
     NvU32 line
-);
+)
+{
+	return kvmalloc(size, in_task() ? GFP_KERNEL : GFP_ATOMIC);
+}
 
-void
-nvswitch_os_free
-(
-    void *pMem
-);
+static __always_inline void nvswitch_os_free(const void *pMem)
+{
+	kvfree(pMem);
+}
 
-NvLength
+static __always_inline NvLength
 nvswitch_os_strlen
 (
     const char *str
-);
+)
+{
+	return strlen(str);
+}
 
-char*
+static __always_inline char *
 nvswitch_os_strncpy
 (
     char *pDest,
     const char *pSrc,
     NvLength length
-);
+)
+{
+	strscpy(pDest, pSrc, length);
 
-int
+	return pDest;
+}
+
+static __always_inline int
 nvswitch_os_strncmp
 (
     const char *s1,
     const char *s2,
     NvLength length
-);
+)
+{
+	return strncmp(s1, s2, length);
+}
 
-void *
+static __always_inline void *
 nvswitch_os_memset
 (
     void *pDest,
     int value,
     NvLength size
-);
+)
+{
+	return memset(pDest, value, size);
+}
 
-void *
+static __always_inline void *
 nvswitch_os_memcpy
 (
     void *pDest,
     const void *pSrc,
     NvLength size
-);
+)
+{
+	return memcpy(pDest, pSrc, size);
+}
 
-int
+static __always_inline int
 nvswitch_os_memcmp
 (
     const void *s1,
     const void *s2,
     NvLength size
-);
+)
+{
+	return memcmp(s1, s2, size);
+}
 
 /*
  * Memory read / write interface
  */
-NvU32
-nvswitch_os_mem_read32
-(
-    const volatile void * pAddress
-);
-
-void
-nvswitch_os_mem_write32
-(
-    volatile void *pAddress,
-    NvU32 data
-);
-
-NvU64
-nvswitch_os_mem_read64
-(
-    const volatile void *pAddress
-);
-
-void
-nvswitch_os_mem_write64
-(
-    volatile void *pAddress,
-    NvU64 data
-);
+#define nvswitch_os_mem_read32(pAddress)	readl(pAddress)
+#define nvswitch_os_mem_write32(pAddress, data)	writel(data, pAddress)
+#define nvswitch_os_mem_read64(pAddress)	readq(pAddress)
+#define nvswitch_os_mem_write64(pAddress, data)	writeq(data, pAddress)
 
 /*
  * Interface to write formatted output to sized buffer
  */
-int
-nvswitch_os_snprintf
-(
-    char *pString,
-    NvLength size,
-    const char *pFormat,
-    ...
-);
+#define nvswitch_os_snprintf(pString, size, pFormat, ...)	\
+	snprintf(pString, size, pFormat, ##__VA_ARGS__)
 
 /*
  * Interface to write formatted output to sized buffer
  */
-int
+static __always_inline int
 nvswitch_os_vsnprintf
 (
     char *buf,
     NvLength size,
     const char *fmt,
     va_list arglist
-);
+)
+{
+	return vsnprintf(buf, size, fmt, arglist);
+}
 
 /*
  * Debug assert and log interface
  */
-void
-nvswitch_os_assert_log
-(
-    int cond,
-    const char *pFormat,
-    ...
-);
+#define nvswitch_os_assert_log(cond, pFormat, ...)	WARN_ON_ONCE(!cond)
 
 /*
  * Interface to sleep for specified milliseconds. Yields the CPU to scheduler.
  */
-void
+static __always_inline void
 nvswitch_os_sleep
 (
     unsigned int ms
-);
+)
+{
+	if (in_task())
+		msleep(ms);
+	else
+		mdelay(ms);
+}
 
 NvlStatus
 nvswitch_os_acquire_fabric_mgmt_cap
@@ -924,15 +947,22 @@ nvswitch_os_is_admin
     void
 );
 
-NvlStatus
+static __always_inline NvlStatus
 nvswitch_os_get_os_version
 (
     NvU32 *pMajorVer,
     NvU32 *pMinorVer,
     NvU32 *pBuildNum
-);
+)
+{
+	*pMajorVer = LINUX_VERSION_MAJOR;
+	*pMinorVer = LINUX_VERSION_PATCHLEVEL;
+	*pBuildNum = LINUX_VERSION_SUBLEVEL;
 
-void
+	return 0;
+}
+
+void __printf(3, 4)
 nvswitch_lib_smbpbi_log_sxid
 (
     nvswitch_device *device,
@@ -944,23 +974,29 @@ nvswitch_lib_smbpbi_log_sxid
 /*!
  * @brief: OS Specific handling to add an event.
  */
-NvlStatus
+static __always_inline NvlStatus
 nvswitch_os_add_client_event
 (
     void            *osHandle,
     void            *osPrivate,
     NvU32           eventId
-);
+)
+{
+	return 0;
+}
 
 /*!
  * @brief: OS specific handling to remove all events corresponding to osPrivate.
  */
-NvlStatus
+static __always_inline NvlStatus
 nvswitch_os_remove_client_event
 (
     void            *osHandle,
     void            *osPrivate
-);
+)
+{
+	return 0;
+}
 
 /*!
  * @brief: OS specific handling to notify an event.
@@ -976,12 +1012,18 @@ nvswitch_os_notify_client_event
 /*!
  * @brief: Gets OS specific support for the REGISTER_EVENTS ioctl
  */
-NvlStatus
+static __always_inline NvlStatus
 nvswitch_os_get_supported_register_events_params
 (
     NvBool *bSupportsManyEvents,
     NvBool *bUserSuppliesOsData
-);
+)
+{
+	*bSupportsManyEvents = false;
+	*bUserSuppliesOsData = false;
+
+	return 0;
+}
 
 #ifdef __cplusplus
 }

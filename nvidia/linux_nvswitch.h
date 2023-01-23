@@ -40,8 +40,6 @@
     nvswitch_os_assert_log((_cond), "NVSwitch: Assertion failed in %s() at %s:%d\n",    \
          __FUNCTION__ , __FILE__, __LINE__)
 
-#define NVSWITCH_KMALLOC_LIMIT (128 * 1024)
-
 #define nvswitch_os_malloc(_size)        nvswitch_os_malloc_trace(_size, __FILE__, __LINE__)
 
 typedef struct
