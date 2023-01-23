@@ -2051,11 +2051,11 @@ kgspPrepareBootBinaryImage_IMPL
                         fail);
 
     pKernelGsp->gspRmBootUcodeSize   = bufSize;
-    pKernelGsp->pGspRmBootUcodeImage = (NvU8 *)NvP64_VALUE(pVa);;
+    pKernelGsp->pGspRmBootUcodeImage = (NvU8 *)NvP64_VALUE(pVa);
     pKernelGsp->pGspRmBootUcodeMemdescPriv = pPriv;
 
     NV_ASSERT_OK_OR_GOTO(status,
-                        bindataWriteToBuffer(pBinStorageImage,
+                        bindataWriteToBuffer(pGpu->pOsGpuInfo, pBinStorageImage,
                                pKernelGsp->pGspRmBootUcodeImage,
                                bufSize),
                         fail);
@@ -2073,7 +2073,7 @@ kgspPrepareBootBinaryImage_IMPL
     pKernelGsp->pGspRmBootUcodeDesc = (RM_RISCV_UCODE_DESC*)pDesc;
 
     NV_ASSERT_OK_OR_GOTO(status,
-                         bindataWriteToBuffer(pBinStorageDesc, pDesc, bufSize),
+                         bindataWriteToBuffer(pGpu->pOsGpuInfo, pBinStorageDesc, pDesc, bufSize),
                          fail);
 
     return status;

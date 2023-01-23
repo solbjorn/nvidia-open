@@ -25,17 +25,13 @@
  * @brief Bindata APIs implememtation
  */
 
-#include <linux/zlib.h>
+#include <linux/dev_printk.h>
+#include <linux/firmware.h>
 
 #include "core/bin_data.h"
-#include "bin_data_pvt.h"
 #include "os/os.h"
 #include "nvRmReg.h"
-
-/*
- * Private helper functions
- */
-static void bindataMarkReferenced(const BINDATA_STORAGE *pBinStorage);
+#include "nv.h"
 
 /*!
  * Retrieve data from Bindata storage and write it to the given memory buffer.  When
@@ -47,15 +43,11 @@ static void bindataMarkReferenced(const BINDATA_STORAGE *pBinStorage);
  *
  * @return      'NV_OK'         If the ucode was written to memory buffer successfully
  */
-NV_STATUS
-bindataWriteToBuffer
-(
-    const BINDATA_STORAGE *pBinStorage,
-    NvU8                  *pBuffer,
-    NvU32                  bufferSize
-)
+NV_STATUS bindataWriteToBuffer(const struct nv_state_t *nv,
+			       const BINDATA_STORAGE *pBinStorage,
+			       NvU8 *pBuffer, NvU32 bufferSize)
 {
-	const BINDATA_STORAGE_PVT *pvt = (typeof(pvt))pBinStorage;
+	const struct firmware *fw;
 	int ret;
 
 	// paged memory access check
@@ -66,23 +58,24 @@ bindataWriteToBuffer
 	NV_ASSERT_OR_RETURN(bufferSize >= bindataGetBufferSize(pBinStorage),
 			    NV_ERR_BUFFER_TOO_SMALL);
 
-	if (!pvt->bCompressed) {
-		memcpy(pBuffer, pvt->pData, pvt->actualSize);
-		return NV_OK;
-	}
-
-	ret = zlib_inflate_blob(pBuffer, bufferSize, pvt->pData,
-				pvt->compressedSize);
-	if (ret != pvt->actualSize) {
-		NV_PRINTF(LEVEL_ERROR,
-			  "failed to get inflated data, got %u bytes, expecting %u\n",
-			  max(ret, 0), pvt->actualSize);
+	ret = request_firmware_into_buf(&fw, pBinStorage->path,
+					nv_get_firmware_dev(nv),
+					pBuffer, bufferSize);
+	if (ret) {
 		DBG_BREAKPOINT();
-
 		return NV_ERR_INFLATE_COMPRESSED_DATA_FAILED;
 	}
 
-	return NV_OK;
+	if (fw->size != pBinStorage->size) {
+		dev_err_once(nv_get_firmware_dev(nv),
+			     "firmware size mismatch for %s: %lu != %u\n",
+			     pBinStorage->path, fw->size, pBinStorage->size);
+		ret = NV_ERR_INFLATE_COMPRESSED_DATA_FAILED;
+	}
+
+	release_firmware(fw);
+
+	return ret;
 }
 
 NvU32
@@ -94,12 +87,7 @@ bindataGetBufferSize
     // paged memory access check
     osPagedSegmentAccessCheck();
 
-    if (pBinStorage == NULL)
-    {
-        return 0;
-    }
-
-    return ((const BINDATA_STORAGE_PVT *) pBinStorage)->actualSize;
+	return pBinStorage ? pBinStorage->size : 0;
 }
 
 
@@ -118,9 +106,6 @@ bindataArchiveGetStorage(
     const char *binName
 )
 {
-    NvLength len;
-    NvU32 i;
-
     // paged memory access check
     osPagedSegmentAccessCheck();
 
@@ -129,28 +114,12 @@ bindataArchiveGetStorage(
         return NULL;
     }
 
-    len = portStringLength(binName) + 1;
-    for (i = 0 ; i < pBinArchive->entryNum; i++)
-    {
-        if (portStringCompare(binName, pBinArchive->entries[i].name, len) == 0)
-        {
-            bindataMarkReferenced(pBinArchive->entries[i].pBinStorage);
-            return pBinArchive->entries[i].pBinStorage;
-        }
-    }
-    return NULL;
-}
+	for (u32 i = 0; i < pBinArchive->nents; i++) {
+		const BINDATA_STORAGE *entry = &pBinArchive->entries[i];
 
+		if (!strcmp(entry->tag, binName))
+			return entry;
+	}
 
-// File Overriding Feature is only enabled under MODS
-
-static void bindataMarkReferenced(const BINDATA_STORAGE *pBinStorage)
-{
-    if (BINDATA_IS_MUTABLE)
-    {
-        // Cast away the constness
-        BINDATA_STORAGE_PVT *pMutablePvt = (BINDATA_STORAGE_PVT *)pBinStorage;
-        NV_ASSERT(pMutablePvt->pData != NULL || pMutablePvt->actualSize != 0);
-        pMutablePvt->bReferenced = NV_TRUE;
-    }
+	return NULL;
 }

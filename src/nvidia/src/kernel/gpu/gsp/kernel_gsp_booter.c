@@ -104,12 +104,9 @@ kgspFreeFlcnUcode
 }
 
 static NV_STATUS
-s_bindataWriteToFixedSizeBuffer
-(
-    const BINDATA_STORAGE *pBinStorage,
-    void *pBuf,  // out
-    NvU32 bufSize
-)
+s_bindataWriteToFixedSizeBuffer(const OBJGPU *pGpu,
+				const BINDATA_STORAGE *pBinStorage,
+				void *pBuf, NvU32 bufSize)
 {
     NV_STATUS status = NV_OK;
 
@@ -119,7 +116,7 @@ s_bindataWriteToFixedSizeBuffer
         return status;
     }
 
-    status = bindataWriteToBuffer(pBinStorage, (NvU8 *) pBuf, bufSize);
+    status = bindataWriteToBuffer(pGpu->pOsGpuInfo, pBinStorage, (NvU8 *) pBuf, bufSize);
     if (status != NV_OK)
     {
         return status;
@@ -250,7 +247,7 @@ s_allocateUcodeFromBinArchive
 
     // Retrieve header
     NV_ASSERT_OK_OR_GOTO(status,
-        s_bindataWriteToFixedSizeBuffer(pBinHeader, &header, sizeof(header)),
+        s_bindataWriteToFixedSizeBuffer(pGpu, pBinHeader, &header, sizeof(header)),
         out);
 
     if (header.numApps != 1)
@@ -262,12 +259,12 @@ s_allocateUcodeFromBinArchive
 
     // Retrieve signature patch location
     NV_ASSERT_OK_OR_GOTO(status,
-        s_bindataWriteToFixedSizeBuffer(pBinPatchLoc, &patchLoc, sizeof(patchLoc)),
+        s_bindataWriteToFixedSizeBuffer(pGpu, pBinPatchLoc, &patchLoc, sizeof(patchLoc)),
         out);
 
     // Retrieve signature patch index
     NV_ASSERT_OK_OR_GOTO(status,
-        s_bindataWriteToFixedSizeBuffer(pBinPatchSig, &patchSig, sizeof(patchSig)),
+        s_bindataWriteToFixedSizeBuffer(pGpu, pBinPatchSig, &patchSig, sizeof(patchSig)),
         out);
 
     if (patchSig != 0)
@@ -279,12 +276,12 @@ s_allocateUcodeFromBinArchive
 
     // Retrieve signature patch metadata
     NV_ASSERT_OK_OR_GOTO(status,
-        s_bindataWriteToFixedSizeBuffer(pBinPatchMeta, &patchMeta, sizeof(patchMeta)),
+        s_bindataWriteToFixedSizeBuffer(pGpu, pBinPatchMeta, &patchMeta, sizeof(patchMeta)),
         out);
 
     // Retrieve signatures
     NV_ASSERT_OK_OR_GOTO(status,
-        s_bindataWriteToFixedSizeBuffer(pBinNumSigs, &numSigs, sizeof(numSigs)),
+        s_bindataWriteToFixedSizeBuffer(pGpu, pBinNumSigs, &numSigs, sizeof(numSigs)),
         out);
 
     if (numSigs == 0)
@@ -311,7 +308,7 @@ s_allocateUcodeFromBinArchive
     }
 
     NV_ASSERT_OK_OR_GOTO(status,
-        bindataWriteToBuffer(pBinSig, (NvU8 *) pSignatures, signaturesTotalSize),
+        bindataWriteToBuffer(pGpu->pOsGpuInfo, pBinSig, (NvU8 *) pSignatures, signaturesTotalSize),
         out);
 
     // Populate KernelGspFlcnUcode structure
@@ -356,7 +353,7 @@ s_allocateUcodeFromBinArchive
         }
 
         // Copy in the whole image
-        status = bindataWriteToBuffer(pBinImage, pMappedUcodeMem, pUcode->size);
+        status = bindataWriteToBuffer(pGpu->pOsGpuInfo, pBinImage, pMappedUcodeMem, pUcode->size);
         NV_ASSERT(status == NV_OK);
 
         // Patch signatures (only if image copy above succeeded)
@@ -403,7 +400,7 @@ s_allocateUcodeFromBinArchive
 
         // Copy in the whole image
         NV_ASSERT_OK_OR_GOTO(status,
-            bindataWriteToBuffer(pBinImage, pUcode->pImage, pUcode->size),
+            bindataWriteToBuffer(pGpu->pOsGpuInfo, pBinImage, pUcode->pImage, pUcode->size),
             out);
 
         // Patch signatures

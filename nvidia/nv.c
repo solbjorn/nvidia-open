@@ -3541,6 +3541,11 @@ void NV_API_CALL nv_put_firmware(
     release_firmware(fw_handle);
 }
 
+struct device *nv_get_firmware_dev(const struct nv_state_t *nv)
+{
+	return NV_GET_NVL_FROM_NV_STATE(nv)->dev;
+}
+
 nv_file_private_t* NV_API_CALL nv_get_file_private(
     NvS32 fd,
     NvBool ctl,

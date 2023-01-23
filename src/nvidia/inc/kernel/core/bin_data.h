@@ -24,56 +24,45 @@
 #ifndef _BINDATA_H
 #define _BINDATA_H
 
+#include <linux/module.h>
 #include "core/core.h"
 
-/**************************************************************************************************************
-*
-*    File:  bindata.h
-*
-*    Description:
-*        Bindata management APIs
-*
-**************************************************************************************************************/
+struct nv_state_t;
 
-//
-// Public interface for accessing the acquired binary data
-//
+typedef struct {
+	const char		*tag;
+	const char		*path;
+	u32			size;
+} BINDATA_STORAGE;
 
-//
-// Binary data access handler
-//
-typedef struct BINDATA_RUNTIME_INFO BINDATA_RUNTIME_INFO, *PBINDATA_RUNTIME_INFO;
-
-//
-// Public binary storage information
-//
-struct BINDATA_STORAGE;         // currently no public data fields
-typedef struct BINDATA_STORAGE BINDATA_STORAGE, *PBINDATA_STORAGE;
-
-//
-// Utilities
-//
-NV_STATUS bindataWriteToBuffer(const BINDATA_STORAGE *pBinStorage, NvU8 *pBuffer, NvU32 bufferSize);
-NvU32     bindataGetBufferSize(const BINDATA_STORAGE *pBinStorage);
-
-
-//
-// Bindata Archive support
-//
-typedef struct
-{
-    const char*              name;                // string of file name or name tag
-    const PBINDATA_STORAGE   pBinStorage;         // pointer to the binary storage
-} BINDATA_ARCHIVE_ENTRY;
-
-typedef struct
-{
-    NvU32 entryNum;
-    BINDATA_ARCHIVE_ENTRY entries[];
+typedef struct {
+	u32			nents;
+	const BINDATA_STORAGE	entries[];
 } BINDATA_ARCHIVE;
 
+#define BINDATA_PATH(file)	"nvidia/" NV_VERSION_STRING "/ucode/" file
+#define BINDATA_FIRMWARE(file)	MODULE_FIRMWARE(BINDATA_PATH(file))
 
-// Bindata Archive API - get Bindata storage from a Bindata Archive
+#define BINDATA_ENTRY(_tag, _file, _size) {				\
+	.tag	= (_tag),						\
+	.path	= BINDATA_PATH(_file),					\
+	.size	= (_size),						\
+}
+
+#define BINDATA_ARCHIVE_INIT(...) {					\
+		.nents		= sizeof((BINDATA_STORAGE []){		\
+					 __VA_ARGS__			\
+				  }) / sizeof(BINDATA_STORAGE),		\
+		.entries	= {					\
+			__VA_ARGS__					\
+		},							\
+}
+
+NV_STATUS bindataWriteToBuffer(const struct nv_state_t *nv,
+			       const BINDATA_STORAGE *pBinStorage,
+			       NvU8 *pBuffer, NvU32 bufferSize);
+NvU32     bindataGetBufferSize(const BINDATA_STORAGE *pBinStorage);
+
 const BINDATA_STORAGE * bindataArchiveGetStorage(const BINDATA_ARCHIVE *pBinArchive, const char *bindataName);
 
 #endif // _BINDATA_H

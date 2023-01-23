@@ -773,10 +773,10 @@ kfspSetupGspImages
     NV_STATUS status = NV_OK;
 
     const BINDATA_ARCHIVE *pBinArchive;
-    PBINDATA_STORAGE pGspImage;
-    PBINDATA_STORAGE pGspImageHash;
-    PBINDATA_STORAGE pGspImageSignature;
-    PBINDATA_STORAGE pGspImagePublicKey;
+    const BINDATA_STORAGE *pGspImage;
+    const BINDATA_STORAGE *pGspImageHash;
+    const BINDATA_STORAGE *pGspImageSignature;
+    const BINDATA_STORAGE *pGspImagePublicKey;
     NvU32 pGspImageSize;
     NvU32 pGspImageMapSize;
     NvP64 pVaKernel = NULL;
@@ -792,10 +792,10 @@ kfspSetupGspImages
     }
 
     // Set up the structures to send GSP-FMC
-    pGspImage = (PBINDATA_STORAGE)bindataArchiveGetStorage(pBinArchive, "ucode_image");
-    pGspImageHash = (PBINDATA_STORAGE)bindataArchiveGetStorage(pBinArchive, "ucode_hash");
-    pGspImageSignature = (PBINDATA_STORAGE)bindataArchiveGetStorage(pBinArchive, "ucode_sig");
-    pGspImagePublicKey = (PBINDATA_STORAGE)bindataArchiveGetStorage(pBinArchive, "ucode_pkey");
+    pGspImage = bindataArchiveGetStorage(pBinArchive, "ucode_image");
+    pGspImageHash = bindataArchiveGetStorage(pBinArchive, "ucode_hash");
+    pGspImageSignature = bindataArchiveGetStorage(pBinArchive, "ucode_sig");
+    pGspImagePublicKey = bindataArchiveGetStorage(pBinArchive, "ucode_pkey");
 
     if ((pGspImage == NULL) || (pGspImageHash == NULL) ||
         (pGspImageSignature == NULL) || (pGspImagePublicKey == NULL))
@@ -821,7 +821,7 @@ kfspSetupGspImages
 
     portMemSet(pVaKernel, 0, pGspImageMapSize);
 
-    status = bindataWriteToBuffer(pGspImage, pVaKernel, pGspImageSize);
+    status = bindataWriteToBuffer(pGpu->pOsGpuInfo, pGspImage, pVaKernel, pGspImageSize);
     NV_ASSERT_OR_GOTO(status == NV_OK, failed);
 
     // Clean up CPU side resources since they are not needed anymore
@@ -829,13 +829,13 @@ kfspSetupGspImages
 
     pCotPayload->gspFmcSysmemOffset = memdescGetPhysAddr(pKernelFsp->pGspFmcMemdesc, AT_GPU, 0);
 
-    status = bindataWriteToBuffer(pGspImageHash, (NvU8*)pCotPayload->hash384, sizeof(pCotPayload->hash384));
+    status = bindataWriteToBuffer(pGpu->pOsGpuInfo, pGspImageHash, (NvU8*)pCotPayload->hash384, sizeof(pCotPayload->hash384));
     NV_ASSERT_OR_GOTO(status == NV_OK, failed);
 
-    status = bindataWriteToBuffer(pGspImageSignature, (NvU8*)pCotPayload->signature, sizeof(pCotPayload->signature));
+    status = bindataWriteToBuffer(pGpu->pOsGpuInfo, pGspImageSignature, (NvU8*)pCotPayload->signature, sizeof(pCotPayload->signature));
     NV_ASSERT_OR_GOTO(status == NV_OK, failed);
 
-    status = bindataWriteToBuffer(pGspImagePublicKey, (NvU8*)pCotPayload->publicKey, sizeof(pCotPayload->publicKey));
+    status = bindataWriteToBuffer(pGpu->pOsGpuInfo, pGspImagePublicKey, (NvU8*)pCotPayload->publicKey, sizeof(pCotPayload->publicKey));
     NV_ASSERT_OR_GOTO(status == NV_OK, failed);
 
     // Set up boot args based on the mode of operation

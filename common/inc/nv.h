@@ -800,6 +800,7 @@ NvBool     NV_API_CALL  nv_requires_dma_remap    (nv_state_t *);
 NvBool     NV_API_CALL  nv_is_rm_firmware_active(nv_state_t *);
 const void*NV_API_CALL  nv_get_firmware(nv_state_t *, nv_firmware_type_t, nv_firmware_chip_family_t, const void **, NvU32 *);
 void       NV_API_CALL  nv_put_firmware(const void *);
+struct device *nv_get_firmware_dev(const struct nv_state_t *nv);
 
 nv_file_private_t* NV_API_CALL nv_get_file_private(NvS32, NvBool, void **);
 void               NV_API_CALL nv_put_file_private(void *);

@@ -123,7 +123,7 @@ s_allocateGenericBlUcode
     }
 
     NV_ASSERT_OK_OR_GOTO(status,
-        bindataWriteToBuffer(pBinDesc, (NvU8 *) pGenericBlUcodeDesc, descSizeAligned), out);
+        bindataWriteToBuffer(pGpu->pOsGpuInfo, pBinDesc, (NvU8 *) pGenericBlUcodeDesc, descSizeAligned), out);
 
     // allocate img
     pBinImg = bindataArchiveGetStorage(pBinArchive, "ucode_image");
@@ -142,8 +142,8 @@ s_allocateGenericBlUcode
         goto out;
     }
 
-    NV_ASSERT_OK_OR_GOTO(status, 
-        bindataWriteToBuffer(pBinImg, pGenericBlUcodeImg, imgSizeAligned), out);
+    NV_ASSERT_OK_OR_GOTO(status,
+        bindataWriteToBuffer(pGpu->pOsGpuInfo, pBinImg, pGenericBlUcodeImg, imgSizeAligned), out);
 
     *ppDesc = pGenericBlUcodeDesc;
     *ppImg = pGenericBlUcodeImg;
