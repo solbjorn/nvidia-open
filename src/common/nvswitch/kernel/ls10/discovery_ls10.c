@@ -1283,26 +1283,26 @@ NVSWITCH_LIST_LS10_ENGINES(LS10_ASSERT_DISC_ENTRY);
 static void nvswitch_process_common(ls10_device *chip_device,
 				    const struct ls10_disc_entry *entry)
 {
-	NVSWITCH_ENGINE_DESCRIPTOR_TYPE *current;
+	NVSWITCH_ENGINE_DESCRIPTOR_TYPE *curr;
 	const ENGINE_DISCOVERY_TYPE_LS10 *eng;
 
-	current = &chip_device->io.common[entry->id];
-	current->eng_name = entry->name;
-	current->eng_id = entry->id;
-	current->eng_count = entry->n;
+	curr = &chip_device->io.common[entry->id];
+	curr->eng_name = entry->name;
+	curr->eng_id = entry->id;
+	curr->eng_count = entry->n;
 
 	eng = (void *)chip_device + entry->uc_off;
 
 	for (u32 i = 0; i < entry->n; i++) {
 		if (eng[i].valid)
-			current->uc_addr[i] = eng[i].info.uc.uc_addr;
+			curr->uc_addr[i] = eng[i].info.uc.uc_addr;
 	}
 
 	eng = (void *)chip_device + entry->mc_off;
 	if (eng[0].valid)
-		current->bc_addr = eng[0].info.bc.bc_addr;
+		curr->bc_addr = eng[0].info.bc.bc_addr;
 
-	current->mc_addr_count = 0;
+	curr->mc_addr_count = 0;
 }
 
 //
