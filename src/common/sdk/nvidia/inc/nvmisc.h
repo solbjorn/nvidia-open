@@ -826,7 +826,9 @@ NVMISC_MEMCPY(void *dest, const void *src, size_t n)
 static __always_inline char *
 NVMISC_STRNCPY(char *dest, const char *src, size_t n)
 {
-	return strncpy(dest, src, n);
+	strscpy(dest, src, n);
+
+	return dest;
 }
 
 #else /* __cplusplus */

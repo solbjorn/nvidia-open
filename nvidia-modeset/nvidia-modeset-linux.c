@@ -209,7 +209,9 @@ void* __nvkms_memcpy(void *dest, const void *src, size_t n)
 
 char* __nvkms_strncpy(char *dest, const char *src, size_t n)
 {
-    return strncpy(dest, src, n);
+	strscpy(dest, src, n);
+
+	return dest;
 }
 
 void __nvkms_usleep(NvU64 usec)

@@ -169,7 +169,9 @@ static __always_inline int nvkms_strcmp(const char *s1, const char *s2)
 static __always_inline char *
 nvkms_strncpy(char *dest, const char *src, size_t n)
 {
-	return strncpy(dest, src, n);
+	strscpy(dest, src, n);
+
+	return dest;
 }
 
 static __always_inline void nvkms_usleep(NvU64 usec)
