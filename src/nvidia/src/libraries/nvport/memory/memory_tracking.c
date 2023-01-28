@@ -52,8 +52,8 @@ struct PORT_MEM_ALLOCATOR_IMPL
 // Debug print macros
 //
 #if PORT_MEM_TRACK_PRINT_LEVEL == PORT_MEM_TRACK_PRINT_LEVEL_SILENT
-#define PORT_MEM_PRINT_ERROR(...)
-#define PORT_MEM_PRINT_INFO(...)
+#define PORT_MEM_PRINT_ERROR(...)	no_printk(__VA_ARGS__)
+#define PORT_MEM_PRINT_INFO(...)	no_printk(__VA_ARGS__)
 #elif PORT_MEM_TRACK_PRINT_LEVEL == PORT_MEM_TRACK_PRINT_LEVEL_BASIC
 #define PORT_MEM_PRINT_ERROR(...) portDbgPrintf(__VA_ARGS__)
 #define PORT_MEM_PRINT_INFO(...)	no_printk(__VA_ARGS__)

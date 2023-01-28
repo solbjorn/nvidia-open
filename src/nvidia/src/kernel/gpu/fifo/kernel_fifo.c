@@ -3193,12 +3193,13 @@ kfifoGetAllocatedChannelMask_IMPL
     CHID_MGR *pChidMgr;
     NvU32     chId;
     NvU32     numChannels;
+	u32 tail;
 
     NV_ASSERT(pBitMask != NULL);
     portMemSet(pBitMask, 0, bitMaskSize);
 
-    NV_ASSERT_OR_RETURN(bitMaskSize % sizeof(NvU32) == 0,
-                        NV_ERR_INVALID_ARGUMENT);
+	tail = bitMaskSize % sizeof(u32);
+	NV_ASSERT_OR_RETURN(!tail, NV_ERR_INVALID_ARGUMENT);
 
     if (!kfifoIsPerRunlistChramEnabled(pKernelFifo))
     {

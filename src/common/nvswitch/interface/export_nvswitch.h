@@ -907,7 +907,7 @@ nvswitch_os_memcmp
 /*
  * Interface to write formatted output to sized buffer
  */
-static __always_inline int
+static __always_inline int __printf(3, 0)
 nvswitch_os_vsnprintf
 (
     char *buf,

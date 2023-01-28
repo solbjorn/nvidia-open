@@ -189,10 +189,13 @@ void nvDbg_Printf  (const char *file, int line, const char *function, int debugl
 // nvDbg_vPrintf() call, create a copy of the va_list using va_copy().
 // The caller controls the lifetime of the va_list argument, and should free it using va_end.
 //
+__printf(5, 0)
 void nvDbg_vPrintf (const char *file, int line, const char *function, int debuglevel, const char *s, va_list args);
 void nvDbg_PrintBuf(const char *file, int line, const char *function, int debgulevel, NvU8 buffer[], NvU32 bufsize);
 
+__printf(3, 0)
 int nvDbgVsnprintf(char *dest, NvU32 destSize, const char *fmt, va_list args);
+__printf(3, 4)
 int nvDbgSnprintf (char *dest, NvU32 destSize, const char *fmt, ...);
 
 struct OBJGPU;
@@ -301,8 +304,9 @@ void nvDbgDumpBufferBytes(void *pBuffer, NvU32 length);
 #define DBG_VAL_PTR(p)
 #endif
 
-
+__printf(3, 0)
 void nvErrorLog(void *pVoid, NvU32 num, const char *pFormat, va_list arglist);
+__printf(3, 4)
 void nvErrorLog_va(void * pGpu, NvU32 num, const char * pFormat, ...);
 
 // memory allocation tracking data structs and globals

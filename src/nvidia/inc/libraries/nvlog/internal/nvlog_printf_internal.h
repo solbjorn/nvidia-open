@@ -40,8 +40,14 @@
  *
  */
 
+#ifndef _NVLOG_PRINTF_INTERNAL_H_
+#define _NVLOG_PRINTF_INTERNAL_H_
+
+#include <linux/printk.h>
+
 // Compile time stubbing out output below NVLOG_LEVEL level
-#define _NVLOG_NOTHING(...)        ((void)0)
+#define _NVLOG_NOTHING(tag, route, level, format, ...)	\
+	no_printk(format, ##__VA_ARGS__)
 
 //
 // Use __COUNTER__ if available. If not, we can use __LINE__ since it is also
@@ -147,3 +153,5 @@ NV_STATUS nvlogPrint_printf(NvU32 dbgLevel, NvU32 file, NvU32 line, ...);
 #define _NVLOG_PRINTF(tag, route, level, format, ...) _NVLOG_GET_PRINT
 
 #endif // NVLOG_ENABLED && !defined(NVLOG_PARSING)
+
+#endif /* _NVLOG_PRINTF_INTERNAL_H_ */

@@ -120,7 +120,7 @@ nvAssertFailed
 
     NV_ASSERT_PRINTF(LEVEL_ERROR, "Assertion failed: " NV_ASSERT_FAILED_PRINTF_FMT,
         NV_ASSERT_FAILED_PRINTF_PARAM);
-    NV_ASSERT_LOG(LEVEL_ERROR, "Assertion failed @ 0x%016x", ip);
+    NV_ASSERT_LOG(LEVEL_ERROR, "Assertion failed @ 0x%016llx", ip);
     NV_JOURNAL_ASSERT_FAILURE(lineNum, ip);
 }
 

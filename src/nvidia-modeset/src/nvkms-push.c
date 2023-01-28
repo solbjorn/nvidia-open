@@ -209,6 +209,7 @@ static void NvPushImportPushbufferWrapped(
     /* XXX TODO: implement me */
 }
 
+__printf(2, 3)
 static void NvPushImportLogError(
     NvPushDevicePtr pDevice,
     const char *fmt, ...)

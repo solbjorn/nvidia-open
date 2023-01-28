@@ -923,6 +923,7 @@ static void LogModeValidationBegin(NVEvoInfoStringPtr pInfoString,
 /*!
  * Append to pInfoString with any mode validation failure.
  */
+__printf(3, 4)
 static void LogModeValidationEnd(const NVDispEvoRec *pDispEvo,
                                  NVEvoInfoStringPtr pInfoString,
                                  const char *failureReasonFormat, ...)

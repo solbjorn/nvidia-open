@@ -118,7 +118,7 @@ os_string_compare(const char *cs, const char *ct)
 #define os_snprintf(buf, size, fmt, ...)		\
 	snprintf(buf, size, fmt, ##__VA_ARGS__)
 
-static __always_inline NvS32
+static __always_inline NvS32 __printf(3, 0)
 os_vsnprintf(char *buf, NvU32 size, const char *fmt, va_list arglist)
 {
 	return vsnprintf(buf, size, fmt, arglist);
