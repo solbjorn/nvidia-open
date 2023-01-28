@@ -677,7 +677,7 @@ static void *gpuBar0BaseAddress(OBJGPU *pGpu)
 }
 
 static void eccErrorCallback(void *pArg, void *pData, NvHandle hEvent,
-                             NvU32 data, NvU32 status)
+			     NvU32 data, NV_STATUS status)
 {
     subDeviceDesc *rmSubDevice = (subDeviceDesc *)pArg;
 

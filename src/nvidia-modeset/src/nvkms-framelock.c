@@ -106,9 +106,8 @@ FrameLockHandleSyncEvent(void *dataPtr, NvU32 dataU32)
  * resman locks held, etc).  Schedule deferred work, so that we can
  * process the event without resman's encumbrances.
  */
-static void FrameLockEvent(void *arg, void *pEventDataVoid,
-                           NvU32 hEvent,
-                           NvU32 Data, NV_STATUS Status)
+static void FrameLockEvent(void *arg, void *pEventDataVoid, NvHandle hEvent,
+			   NvU32 Data, NV_STATUS Status)
 {
     static nvkms_timer_proc_t *callbackTable[] = {
         [NV30F1_GSYNC_NOTIFIERS_SYNC_LOSS(0)] = FrameLockHandleSyncEvent,

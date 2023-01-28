@@ -1522,8 +1522,8 @@ static void FreeDpys(NVDispEvoPtr pDispEvo)
  * stack, resman locks held, etc).  Schedule deferred work, so that we
  * can process the hotplug event without resman's encumbrances.
  */
-static void ReceiveHotplugEvent(void *arg, void *pEventDataVoid, NvU32 hEvent,
-                                NvU32 Data, NV_STATUS Status)
+static void ReceiveHotplugEvent(void *arg, void *pEventDataVoid,
+				NvHandle hEvent, NvU32 Data, NV_STATUS Status)
 {
     (void) nvkms_alloc_timer_with_ref_ptr(
         nvHandleHotplugEventDeferredWork, /* callback */
@@ -1532,8 +1532,8 @@ static void ReceiveHotplugEvent(void *arg, void *pEventDataVoid, NvU32 hEvent,
         0);
 }
 
-static void ReceiveDPIRQEvent(void *arg, void *pEventDataVoid, NvU32 hEvent,
-                              NvU32 Data, NV_STATUS Status)
+static void ReceiveDPIRQEvent(void *arg, void *pEventDataVoid, NvHandle hEvent,
+			      NvU32 Data, NV_STATUS Status)
 {
     // XXX The displayId of the connector that generated the event should be
     // available here somewhere.  We should figure out how to find that and
@@ -1597,8 +1597,8 @@ DifrPrefetchEventDeferredWork(void *dataPtr, NvU32 dataU32)
     nvDIFRSendPrefetchResponse(pDevEvo->pDifrState, status);
 }
 
-static void DifrPrefetchEvent(void *arg, void *pEventDataVoid,
-                              NvU32 hEvent, NvU32 Data, NV_STATUS Status)
+static void DifrPrefetchEvent(void *arg, void *pEventDataVoid, NvHandle hEvent,
+			      NvU32 Data, NV_STATUS Status)
 {
     Nv2080LpwrDifrPrefetchNotification *notif =
         (Nv2080LpwrDifrPrefetchNotification *)pEventDataVoid;
@@ -2631,7 +2631,8 @@ CompletionNotifierEventDeferredWork(void *dataPtr, NvU32 dataU32)
 }
 
 static void CompletionNotifierEvent(void *arg, void *pEventDataVoid,
-                                    NvU32 hEvent, NvU32 Data, NV_STATUS Status)
+				    NvHandle hEvent, NvU32 Data,
+				    NV_STATUS Status)
 {
   (void) nvkms_alloc_timer_with_ref_ptr(
         CompletionNotifierEventDeferredWork, /* callback */
@@ -4449,12 +4450,9 @@ static NvBool AllocGpuVASpace(NVDevEvoPtr pDevEvo)
     return TRUE;
 }
 
-static void NonStallInterruptCallback(
-    void *arg,
-    void *pEventDataVoid,
-    NvU32 hEvent,
-    NvU32 data,
-    NV_STATUS status)
+static void NonStallInterruptCallback(void *arg, void *pEventDataVoid,
+				      NvHandle hEvent, NvU32 data,
+				      NV_STATUS status)
 {
     /*
      * We are called within resman's altstack and locks.  Schedule a separate

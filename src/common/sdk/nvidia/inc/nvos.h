@@ -371,7 +371,8 @@ typedef struct
 /* For use with NV01_EVENT_KERNEL_CALLBACK. */
 /* NVOS10_EVENT_KERNEL_CALLBACK data structure storage needs to be retained by the caller. */
 typedef void (*Callback1ArgVoidReturn)(void *arg);
-typedef void (*Callback5ArgVoidReturn)(void *arg1, void *arg2, NvHandle hEvent, NvU32 data, NvU32 status);
+typedef void (*Callback5ArgVoidReturn)(void *arg1, void *arg2, NvHandle hEvent,
+				       NvU32 data, NV_STATUS status);
 
 /* NOTE: the 'void* arg' below is ok (but unfortunate) since this interface
    can only be used by other kernel drivers which must share the same ptr-size */

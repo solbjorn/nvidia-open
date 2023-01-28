@@ -44,7 +44,7 @@ struct NvKmsKapiChannelEvent {
 };
 
 static void ChannelEventHandler(void *arg1, void *arg2, NvHandle hEvent,
-                                 NvU32 data, NvU32 status)
+				NvU32 data, NV_STATUS status)
 {
     struct NvKmsKapiChannelEvent *cb = arg1;
     cb->proc(cb->data, 0);
