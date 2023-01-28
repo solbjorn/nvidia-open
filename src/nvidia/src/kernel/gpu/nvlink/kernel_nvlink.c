@@ -972,7 +972,8 @@ knvlinkPrepareForXVEReset_IMPL
     // Let fabric manager handle link shutdown/reset if the fabric is managed
     // externally.
     //
-    if (pSys->getProperty(pSys, PDB_PROP_SYS_FABRIC_IS_EXTERNALLY_MANAGED))
+    if (pKernelNvlink->ipVerNvlink < NVLINK_VERSION_40 &&
+        pSys->getProperty(pSys, PDB_PROP_SYS_FABRIC_IS_EXTERNALLY_MANAGED))
     {
         NV_PRINTF(LEVEL_INFO,
                   "NVLink fabric is externally managed, skipping\n");
@@ -1078,6 +1079,43 @@ knvlinkPrepareForXVEReset_IMPL
 
             retStatus = (retStatus == NV_OK) ? status : retStatus;
         }
+#if defined(INCLUDE_NVLINK_LIB)
+        else
+        {
+            NvU32 linkId;
+
+            //
+            // The connections have been successfully reset, update connected and disconnected
+            // links masks on both the devices
+            //
+            FOR_EACH_INDEX_IN_MASK(32, linkId, pKernelNvlink->enabledLinks)
+            {
+                pKernelNvlink->disconnectedLinkMask |=  NVBIT(linkId);
+                pKernelNvlink->connectedLinksMask   &= ~NVBIT(linkId);
+
+                if (pKernelNvlink->nvlinkLinks[linkId].remoteEndInfo.deviceType !=
+                                              NV2080_CTRL_NVLINK_DEVICE_INFO_DEVICE_TYPE_GPU)
+                {
+                    continue;
+                }
+
+                pRemoteGpu = gpumgrGetGpuFromBusInfo(
+                                            pKernelNvlink->nvlinkLinks[linkId].remoteEndInfo.domain,
+                                            pKernelNvlink->nvlinkLinks[linkId].remoteEndInfo.bus,
+                                            pKernelNvlink->nvlinkLinks[linkId].remoteEndInfo.device);
+
+                if (!API_GPU_IN_RESET_SANITY_CHECK(pRemoteGpu))
+                {
+                    KernelNvlink *pRemoteKernelNvlink = GPU_GET_KERNEL_NVLINK(pRemoteGpu);
+                    NvU32 remoteLinkId = pKernelNvlink->nvlinkLinks[linkId].remoteEndInfo.linkNumber;
+
+                    pRemoteKernelNvlink->disconnectedLinkMask |=  NVBIT(remoteLinkId);
+                    pRemoteKernelNvlink->connectedLinksMask   &= ~NVBIT(remoteLinkId);
+                }
+            }
+            FOR_EACH_INDEX_IN_MASK_END;
+        }
+#endif
 
         //
         // knvlinkCoreResetDeviceLinks() only resets the links which have

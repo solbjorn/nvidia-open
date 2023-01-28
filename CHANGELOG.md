@@ -2,6 +2,18 @@
 
 ## Release 525 Entries
 
+### [525.85.05] 2023-01-19
+
+#### Fixed
+
+- Fix build problems with Clang 15.0, [#377](https://github.com/NVIDIA/open-gpu-kernel-modules/issues/377) by @ptr1337
+
+### [525.78.01] 2023-01-05
+
+### [525.60.13] 2022-12-05
+
+### [525.60.11] 2022-11-28
+
 ### [525.53] 2022-11-10
 
 #### Changed
@@ -18,6 +30,8 @@
 - Added support for rotation in X11, Quadro Sync, Stereo, and YUV 4:2:0 on Turing.
 
 ## Release 520 Entries
+
+### [520.61.07] 2022-10-20
 
 ### [520.56.06] 2022-10-12
 

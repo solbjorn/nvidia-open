@@ -104,7 +104,7 @@ typedef struct TlsDatabase
     volatile NvU32 initCount;
 } TlsDatabase;
 
-TlsDatabase tlsDatabase; // Zero initialized
+static TlsDatabase tlsDatabase; // Zero initialized
 
 // Helper function prototypes
 static NvBool              _tlsIsIsr(void);
@@ -583,12 +583,12 @@ static ThreadEntry *_tlsIsrEntriesFind(NvU64 approxSp)
 
 #else // Lockless
 
-static NV_STATUS _tlsIsrEntriesInit()
+static NV_STATUS _tlsIsrEntriesInit(void)
 {
     portMemSet(tlsDatabase.isrEntries, 0, sizeof(tlsDatabase.isrEntries));
     return NV_OK;
 }
-static void _tlsIsrEntriesDestroy()
+static void _tlsIsrEntriesDestroy(void)
 {
     portMemSet(tlsDatabase.isrEntries, 0, sizeof(tlsDatabase.isrEntries));
 }

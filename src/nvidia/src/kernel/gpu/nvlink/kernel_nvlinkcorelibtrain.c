@@ -91,7 +91,6 @@ knvlinkCoreGetRemoteDeviceInfo_IMPL
     //
     if (!knvlinkPoweredUpForD3_HAL(pGpu, pKernelNvlink))
     {
-
         //
         // Optimization: Check for nvlink proxy only when system fabric is externally
         // managed. This would avoid RPCs in non-nvswitch cases.
@@ -128,8 +127,8 @@ knvlinkCoreGetRemoteDeviceInfo_IMPL
             {
                 NV_PRINTF(LEVEL_ERROR, "Failed to floorsweep valid nvlink config!\n");
                 return NV_ERR_NOT_READY;
-                }
-                }
+            }
+        }
 
         // We only need to look at links that are still considered disconnected
         FOR_EACH_INDEX_IN_MASK(32, linkId, pKernelNvlink->disconnectedLinkMask)
@@ -145,7 +144,7 @@ knvlinkCoreGetRemoteDeviceInfo_IMPL
                 continue;
             }
 
-            bUpdateConnStatus          = NV_FALSE;
+            bUpdateConnStatus = NV_FALSE;
 
             if (pKernelNvlink->nvlinkLinks[linkId].core_link)
             {
@@ -210,7 +209,7 @@ knvlinkCoreGetRemoteDeviceInfo_IMPL
                             pKernelNvlink->nvlinkLinks[linkId].core_link, &conn_info, flags);
                 }
 
-                 // RPC into GSP-RM to update the link connected status only if its required
+                // RPC into GSP-RM to update the link connected status only if its required
                 if (pKernelNvlink->nvlinkLinks[linkId].remoteEndInfo.bConnected != conn_info.bConnected)
                     bUpdateConnStatus = NV_TRUE;
 
@@ -579,13 +578,14 @@ knvlinkTrainP2pLinksToActive_IMPL
     NV_STATUS status = NV_OK;
 
 #if defined(INCLUDE_NVLINK_LIB)
-
     NV2080_CTRL_NVLINK_ARE_LINKS_TRAINED_PARAMS linkTrainedParams;
-    OBJSYS *pSys        = SYS_GET_INSTANCE();
-    NvU32   version     = pKernelNvlink0->ipVerNvlink;
-    NvBool  bTrainLinks = NV_FALSE;
-    NvU32   count       = 0;
-    NvU32   i;
+    OBJSYS       *pSys           = SYS_GET_INSTANCE();
+    KernelNvlink *pKernelNvlink1 = GPU_GET_KERNEL_NVLINK(pGpu1);
+    NvU32         version        = pKernelNvlink0->ipVerNvlink;
+    NvBool        bTrainLinks    = NV_FALSE;
+    NvU32         count          = 0;
+    NvU32         remoteLink;
+    NvU32         i;
 
     nvlink_link *pLinks[NVLINK_MAX_LINKS_SW] = { 0 };
 
@@ -638,18 +638,23 @@ knvlinkTrainP2pLinksToActive_IMPL
     //
     if (IsAMPEREorBetter(pGpu0))
     {
-        NvU32 linkMask = 0;
+        NvU32 localMask  = 0;
+        NvU32 remoteMask = 0;
 
         FOR_EACH_INDEX_IN_MASK(32, i, pKernelNvlink0->enabledLinks)
         {
             if (KNVLINK_IS_LINK_CONNECTED_TO_GPU(pKernelNvlink0, i, pGpu1))
             {
-                linkMask |= BIT(i);
+                remoteLink = pKernelNvlink0->nvlinkLinks[i].remoteEndInfo.linkNumber;
+
+                localMask  |= BIT(i);
+                remoteMask |= BIT(remoteLink);
             }
         }
         FOR_EACH_INDEX_IN_MASK_END;
 
-        if ((linkMask & pKernelNvlink0->initializedLinks) == linkMask)
+        if (((pKernelNvlink0->initializedLinks & localMask)  == localMask) &&
+            ((pKernelNvlink1->initializedLinks & remoteMask) == remoteMask))
         {
             NV_PRINTF(LEVEL_INFO, "P2P links are all trained already, return\n");
             return NV_OK;
@@ -1028,8 +1033,9 @@ knvlinkCoreShutdownDeviceLinks_IMPL
     NvU32        count = 0;
     NvU32        linkId;
 
-    // Skip link shutdown where fabric manager is present
-    if (pSys->getProperty(pSys, PDB_PROP_SYS_FABRIC_IS_EXTERNALLY_MANAGED) ||
+    // Skip link shutdown where fabric manager is present, for nvlink version bellow 4.0
+    if ((pKernelNvlink->ipVerNvlink < NVLINK_VERSION_40 &&
+         pSys->getProperty(pSys, PDB_PROP_SYS_FABRIC_IS_EXTERNALLY_MANAGED)) ||
         (pKernelNvlink->pNvlinkDev == NULL))
     {
         NV_PRINTF(LEVEL_INFO,
@@ -1126,8 +1132,9 @@ knvlinkCoreResetDeviceLinks_IMPL
     NvU32        count = 0;
     NvU32        linkId;
 
-    // Skip link reset where fabric manager is present
-    if (pSys->getProperty(pSys, PDB_PROP_SYS_FABRIC_IS_EXTERNALLY_MANAGED) ||
+    // Skip link reset where fabric manager is present, for nvlink version bellow 4.0
+    if ((pKernelNvlink->ipVerNvlink < NVLINK_VERSION_40 &&
+         pSys->getProperty(pSys, PDB_PROP_SYS_FABRIC_IS_EXTERNALLY_MANAGED)) ||
         (pKernelNvlink->pNvlinkDev == NULL))
     {
         NV_PRINTF(LEVEL_INFO,
@@ -1331,6 +1338,12 @@ knvlinkFloorSweep_IMPL
     {
         return NV_OK;
     }
+
+    //
+    // This call must be before the floorswept to cache the NVLink bridge
+    // information in physical RM.
+    //
+    knvlinkDirectConnectCheck_HAL(pGpu, pKernelNvlink);
 
     // floorsweeping in corelib will update connection info that RM qill query below
     (void)nvlink_lib_powerdown_floorswept_links_to_off(pKernelNvlink->pNvlinkDev);

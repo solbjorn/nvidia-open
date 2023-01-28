@@ -668,7 +668,7 @@ static NvBool FrameLockUseHouseSyncGetSupport(NVFrameLockEvoPtr pFrameLockEvo,
 
     if (!val) return FALSE;
 
-    gsyncGetControlParamsParams.which = 
+    gsyncGetControlParamsParams.which =
         NV30F1_CTRL_GSYNC_GET_CONTROL_SYNC_USE_HOUSE;
 
     ret = nvRmApiControl(nvEvoGlobal.clientHandle,
@@ -735,9 +735,9 @@ NvBool nvFrameLockSetUseHouseSyncEvo(NVFrameLockEvoPtr pFrameLockEvo, NvU32 val)
     NvU32 ret;
     NvBool houseSyncOutputMode = FALSE;
 
-    gsyncSetControlParamsParams.which = 
+    gsyncSetControlParamsParams.which =
         NV30F1_CTRL_GSYNC_SET_CONTROL_SYNC_USE_HOUSE;
-    
+
     gsyncSetControlParamsParams.useHouseSync = val;
 
     ret = nvRmApiControl(nvEvoGlobal.clientHandle,
@@ -802,7 +802,7 @@ static NvBool FrameLockSetPolarity(
     NvU32 ret;
     NvU32 polarity;
 
-    gsyncSetControlParamsParams.which = 
+    gsyncSetControlParamsParams.which =
         NV30F1_CTRL_GSYNC_SET_CONTROL_SYNC_POLARITY;
 
     switch (val) {
@@ -821,7 +821,7 @@ static NvBool FrameLockSetPolarity(
     default:
         return FALSE;
     }
-        
+
     gsyncSetControlParamsParams.syncPolarity = polarity;
 
     ret = nvRmApiControl(nvEvoGlobal.clientHandle,
@@ -946,7 +946,7 @@ static NvS64 FrameLockInterpretSyncRate(const NVFrameLockEvoRec *pFrameLockEvo,
 {
     /* Only show decimal places if they are accurate. The queried
        value provides 4 decimal places */
-    if (pFrameLockEvo->caps & 
+    if (pFrameLockEvo->caps &
         NV30F1_CTRL_GSYNC_GET_CAPS_CAP_FLAGS_FREQ_ACCURACY_2DPS) {
         // only two are valid
         val -= (val % 100);

@@ -797,7 +797,7 @@ NV_STATUS osAllocPagesInternal(
     OBJSYS    *pSys = SYS_GET_INSTANCE();
     OBJGPU *pGpu = pMemDesc->pGpu;
     nv_state_t *nv = NV_GET_NV_STATE(pGpu);
-    void *pMemData;
+    void *pMemData = NULL;
     NV_STATUS status;
 
     memdescSetAddress(pMemDesc, NvP64_NULL);
@@ -1128,12 +1128,11 @@ static void postEvent(
     NvBool dataValid
 )
 {
-    nv_state_t *nv = nv_get_ctl_state();
-    portSyncSpinlockAcquire(nv->event_spinlock);
-    if (event->active)
-        nv_post_event(event, hEvent, notifyIndex,
-                      info32, info16, dataValid);
-    portSyncSpinlockRelease(nv->event_spinlock);
+    if (osReferenceObjectCount(event) != NV_OK)
+        return;
+    nv_post_event(event, hEvent, notifyIndex,
+                  info32, info16, dataValid);
+    osDereferenceObjectCount(event);
 }
 
 NvU32 osSetEvent
@@ -1352,6 +1351,12 @@ NV_STATUS osReferenceObjectCount(void *pEvent)
     nv_event_t *event = pEvent;
 
     portSyncSpinlockAcquire(nv->event_spinlock);
+    // If event->active is false, don't allow any more reference
+    if (!event->active)
+    {
+        portSyncSpinlockRelease(nv->event_spinlock);
+        return NV_ERR_INVALID_EVENT;
+    }
     ++event->refcount;
     portSyncSpinlockRelease(nv->event_spinlock);
     return NV_OK;
@@ -1364,11 +1369,10 @@ NV_STATUS osDereferenceObjectCount(void *pOSEvent)
 
     portSyncSpinlockAcquire(nv->event_spinlock);
     NV_ASSERT(event->refcount > 0);
-    --event->refcount;
     // If event->refcount == 0 but event->active is true, the client
     // has not yet freed the OS event.  free_os_event will free its
     // memory when they do, or else when the client itself is freed.
-    if (event->refcount == 0 && !event->active)
+    if (--event->refcount == 0 && !event->active)
         portMemFree(event);
     portSyncSpinlockRelease(nv->event_spinlock);
 

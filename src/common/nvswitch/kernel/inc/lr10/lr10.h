@@ -1,5 +1,5 @@
 /*
- * SPDX-FileCopyrightText: Copyright (c) 2018-2022 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+ * SPDX-FileCopyrightText: Copyright (c) 2018-2023 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
  * SPDX-License-Identifier: MIT
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
@@ -638,7 +638,9 @@ void      nvswitch_apply_recal_settings_lr10(nvswitch_device *device, nvlink_lin
 void      nvswitch_setup_link_system_registers_lr10(nvswitch_device *device, nvlink_link *link);
 void      nvswitch_load_link_disable_settings_lr10(nvswitch_device *device, nvlink_link *link);
 NvBool    nvswitch_is_smbpbi_supported_lr10(nvswitch_device *device);
+NvlStatus nvswitch_ctrl_get_board_part_number_lr10(nvswitch_device *device, NVSWITCH_GET_BOARD_PART_NUMBER_VECTOR *p);
 
+NvlStatus nvswitch_reset_and_train_link_lr10(nvswitch_device *device, nvlink_link *link);
 NvlStatus nvswitch_ctrl_get_bios_info_lr10(nvswitch_device *device, NVSWITCH_GET_BIOS_INFO_PARAMS *p);
 
 #endif //_LR10_H_

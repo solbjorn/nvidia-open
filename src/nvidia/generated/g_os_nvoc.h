@@ -720,6 +720,12 @@ NV_STATUS osTegraAllocateDisplayBandwidth(OS_GPU_INFO *pOsGpuInfo,
                                           NvU32 averageBandwidthKBPS,
                                           NvU32 floorBandwidthKBPS);
 
+static inline
+NV_STATUS osGetCurrentProcessGfid(NvU32 *pGfid)
+{
+	return NV_ERR_NOT_SUPPORTED;
+}
+
 static __always_inline NvBool osIsAdministrator(void)
 {
 	return capable(CAP_SYS_ADMIN);

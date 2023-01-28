@@ -5357,6 +5357,7 @@ static void EvoParsePrecompScalerCaps5(NVEvoCapabilitiesPtr pEvoCaps,
     for (i = 0; i < NVC573_SYS_CAPB_WINDOW_EXISTS__SIZE_1; i++) {
         NVEvoWindowCaps *pWinCaps = &pEvoCaps->window[i];
         NVEvoScalerCaps *pScalerCaps = &pWinCaps->scalerCaps;
+        NVEvoScalerTapsCaps *pTapsCaps;
         NvU32 capA = ReadCapReg(pCaps, NVC573_PRECOMP_WIN_PIPE_HDR_CAPA(i));
         NvU32 capD, capF;
 
@@ -5364,8 +5365,6 @@ static void EvoParsePrecompScalerCaps5(NVEvoCapabilitiesPtr pEvoCaps,
             FLD_TEST_DRF(C573, _PRECOMP_WIN_PIPE_HDR_CAPA, _SCLR_PRESENT,
                          _TRUE, capA);
         if (pScalerCaps->present) {
-            NVEvoScalerTapsCaps *pTapsCaps;
-
             capD = ReadCapReg(pCaps, NVC573_PRECOMP_WIN_PIPE_HDR_CAPD(i));
             capF = ReadCapReg(pCaps, NVC573_PRECOMP_WIN_PIPE_HDR_CAPF(i));
 

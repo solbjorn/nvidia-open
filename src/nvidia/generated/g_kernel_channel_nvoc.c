@@ -792,12 +792,12 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_KernelCh
 #endif
     },
     {               /*  [34] */
-#if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x102204u)
+#if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x142204u)
         /*pFunc=*/      NULL,
 #else
         /*pFunc=*/      kchannelCtrlCmdSetChannelHwState_IMPL_cb,
-#endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x102204u)
-        /*flags=*/      0x102204u,
+#endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x142204u)
+        /*flags=*/      0x142204u,
         /*accessRight=*/0x0u,
         /*methodId=*/   0xb06f0110u,
         /*paramSize=*/  sizeof(NVB06F_CTRL_SET_CHANNEL_HW_STATE_PARAMS),
@@ -822,12 +822,12 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_KernelCh
 #endif
     },
     {               /*  [36] */
-#if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x102204u)
+#if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x142204u)
         /*pFunc=*/      NULL,
 #else
         /*pFunc=*/      kchannelCtrlCmdRestoreEngineCtxData_IMPL_cb,
-#endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x102204u)
-        /*flags=*/      0x102204u,
+#endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x142204u)
+        /*flags=*/      0x142204u,
         /*accessRight=*/0x0u,
         /*methodId=*/   0xb06f0112u,
         /*paramSize=*/  sizeof(NVB06F_CTRL_RESTORE_ENGINE_CTX_DATA_PARAMS),
@@ -1218,7 +1218,7 @@ static void __nvoc_init_funcTable_KernelChannel_1(KernelChannel *pThis, RmHalspe
     pThis->__kchannelCtrlCmdGetChannelHwState__ = &kchannelCtrlCmdGetChannelHwState_IMPL;
 #endif
 
-#if !NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x102204u)
+#if !NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x142204u)
     pThis->__kchannelCtrlCmdSetChannelHwState__ = &kchannelCtrlCmdSetChannelHwState_IMPL;
 #endif
 
@@ -1226,7 +1226,7 @@ static void __nvoc_init_funcTable_KernelChannel_1(KernelChannel *pThis, RmHalspe
     pThis->__kchannelCtrlCmdSaveEngineCtxData__ = &kchannelCtrlCmdSaveEngineCtxData_IMPL;
 #endif
 
-#if !NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x102204u)
+#if !NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x142204u)
     pThis->__kchannelCtrlCmdRestoreEngineCtxData__ = &kchannelCtrlCmdRestoreEngineCtxData_IMPL;
 #endif
 

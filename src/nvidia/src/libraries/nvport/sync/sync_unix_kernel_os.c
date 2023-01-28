@@ -318,10 +318,12 @@ NvBool portSyncExSafeToSleep(void)
 {
     return os_semaphore_may_sleep();
 }
+
 NvBool portSyncExSafeToWake(void)
 {
     return NV_TRUE;
 }
+
 NvU64 portSyncExGetInterruptLevel(void)
 {
     return !os_semaphore_may_sleep();

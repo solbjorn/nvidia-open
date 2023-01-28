@@ -41,3 +41,4 @@
 #include "g_bindata_kgspGetBinArchiveBooterUnloadUcode_GA102.c"
 #include "g_bindata_kgspGetBinArchiveBooterUnloadUcode_AD102.c"
 #include "g_bindata_ksec2GetBinArchiveBlUcode_TU102.c"
+#include "g_bindata_ksec2GetBinArchiveSecurescrubUcode_AD10X.c"

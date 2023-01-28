@@ -41,7 +41,7 @@ static void _addrtreeConvertLevelFrameToNodeIndex(PMA_ADDRTREE *pTree, NvU32 lev
                                                   ADDRTREE_NODE **ppNode, NvU32 *pIndex);
 PMA_PAGESTATUS _pmaAddrtreeReadLevelAndSkipUnavailable(void *pMap, NvU32 levelNum, NvU64 frameNum,
                                                      PMA_PAGESTATUS searchState, NvBool bAllowFree,
-                                                     NvU64 *pNumFramesToSkip);
+                                                     NvU64 *pNumFramesToSkip, NvBool bReverse);
 
 static NvU64 alignUpToMod(NvU64 frame, NvU64 alignment, NvU64 mod)
 {
@@ -518,6 +518,7 @@ _addrtreeNodeMaskAvailable(
     ADDRTREE_NODE  *node,
     NvU64           mask,
     PMA_PAGESTATUS  state,
+    NvBool          bReverse,
     NvU64          *pDiff
 )
 {
@@ -542,13 +543,21 @@ _addrtreeNodeMaskAvailable(
 
     allocated &= mask;
 
-    //
-    // Skip past all unavailable and return last child index
-    // which does not satisfy the given state
-    // This will underflow for allocated == 0, but in that case,
-    // *pDiff should not be read anyway
-    //
-    *pDiff = 64 - portUtilCountLeadingZeros64(allocated) - 1;
+    if (!bReverse)
+    {
+        //
+        // Skip past all unavailable and return last child index
+        // which does not satisfy the given state
+        // This will underflow for allocated == 0, but in that case,
+        // *pDiff should not be read anyway
+        //
+        *pDiff = 64 - portUtilCountLeadingZeros64(allocated) - 1;
+    }
+    else
+    {
+        // Return the first child index that doesn't satisfy given state
+        *pDiff = portUtilCountTrailingZeros64(allocated);
+    }
 
     return (allocated == 0);
 }
@@ -583,7 +592,8 @@ _pmaAddrtreeReadLevelAndSkipUnavailable
     NvU64          frameNum,
     PMA_PAGESTATUS searchState,
     NvBool         bAllowFree,
-    NvU64         *pNumFramesToSkip
+    NvU64         *pNumFramesToSkip,
+    NvBool         bReverse
 )
 {
     NvU32 index;
@@ -626,7 +636,10 @@ _pmaAddrtreeReadLevelAndSkipUnavailable
                 _addrtreeConvertFrame(pTree, n->level, newFrame, levelNum, &targetFrameStartForThisNode);
                 _addrtreeConvertFrame(pTree, n->level, 1ULL, levelNum, &numTargetFramesPerAncestor);
 
-                *pNumFramesToSkip = numTargetFramesPerAncestor - (frameNum - targetFrameStartForThisNode);
+                if (!bReverse)
+                    *pNumFramesToSkip = numTargetFramesPerAncestor - (frameNum - targetFrameStartForThisNode);
+                else
+                    *pNumFramesToSkip = frameNum - targetFrameStartForThisNode + 1;
             } else {
                 //
                 // This node is in a state we're searching for.
@@ -701,7 +714,7 @@ _pmaAddrtreeAvailable
         {
             childrenMask = _addrtreeComputeMask(node, frameStart, numFrames);
 
-            if (!_addrtreeNodeMaskAvailable(node, childrenMask, state, &nodeIndexDiff))
+            if (!_addrtreeNodeMaskAvailable(node, childrenMask, state, NV_FALSE, &nodeIndexDiff))
             {
                 *pDiff = node->frame + nodeIndexDiff;
                 return NV_FALSE;
@@ -732,6 +745,75 @@ _pmaAddrtreeAvailable
     return NV_TRUE;
 }
 
+//
+// For the given state, between frameStart and (frameStart + numFrames - 1)
+// for a given level, this function returns
+//
+// NV_TRUE  if the range is available
+// NV_FALSE if the range is not available
+//          and the frame number of the first frame which does not
+//          satisfy the given state in the variable pDiff
+//
+// XXX: Caution! This will not properly pick up nodes only in state `state`
+// If it were used for discontig scanning, it would be wrong!
+//
+static NvBool
+_pmaAddrtreeAvailableReverse
+(
+    PMA_ADDRTREE  *pTree,
+    NvU32          level,
+    PMA_PAGESTATUS state,
+    NvU64          frameStart,
+    NvU64          numFrames,
+    NvU64          *pDiff
+)
+{
+    NvU64 i, startIdx, endIdx, childrenMask;
+    PMA_PAGESTATUS foundState;
+    NvU64 nodeIndexDiff;
+    ADDRTREE_NODE *node;
+
+    NV_ASSERT(level != 0); // TODO handle the root node case
+
+    startIdx = _addrtreeGetNodeIdx(pTree, level, frameStart);
+    endIdx   = _addrtreeGetNodeIdx(pTree, level, (frameStart + numFrames - 1));
+
+    // For reverse alloc, begin checking from the start so that we can skip the most frames in the overall search
+    for (i = startIdx; i <= endIdx; i++)
+    {
+        node = &(pTree->levels[level].pNodeList[i]);
+        if (_addrtreeNodeValid(pTree, node, &foundState))
+        {
+            childrenMask = _addrtreeComputeMask(node, frameStart, numFrames);
+
+            if (!_addrtreeNodeMaskAvailable(node, childrenMask, state, NV_TRUE, &nodeIndexDiff))
+            {
+                *pDiff = node->frame + nodeIndexDiff;
+                return NV_FALSE;
+            }
+        }
+        else
+        {
+            if ((foundState != STATE_FREE) && (foundState != state))
+            {
+                // This node is completely allocated.
+                // Return the frame number of the first frame in this node
+                *pDiff = node->frame;
+                return NV_FALSE;
+            }
+            else
+            {
+                //
+                // This node is completely free or in a state we're looking for,
+                // continue checking
+                //
+                continue;
+            }
+        }
+    }
+
+    return NV_TRUE;
+}
 
 static NvBool
 _pmaAddrtreeContigSearchLoop
@@ -774,7 +856,7 @@ _pmaAddrtreeContigSearchLoop
         // Read endStatus first so we don't have to waste time traversing the
         // tree again to read startStatus if endStatus is not even usable
         //
-        endStatus = _pmaAddrtreeReadLevelAndSkipUnavailable(pTree, level, endFrame, state, NV_TRUE, &framesToSkip);
+        endStatus = _pmaAddrtreeReadLevelAndSkipUnavailable(pTree, level, endFrame, state, NV_TRUE, &framesToSkip, NV_FALSE);
 
         if (framesToSkip > 1) {
             freeStart = NV_ALIGN_UP(endFrame + framesToSkip, frameAlignment);
@@ -782,7 +864,7 @@ _pmaAddrtreeContigSearchLoop
             continue;
         }
 
-        startStatus = _pmaAddrtreeReadLevelAndSkipUnavailable(pTree, level, freeStart, state, NV_TRUE, &framesToSkip);
+        startStatus = _pmaAddrtreeReadLevelAndSkipUnavailable(pTree, level, freeStart, state, NV_TRUE, &framesToSkip, NV_FALSE);
 
         if (framesToSkip > 1) {
             freeStart += NV_ALIGN_UP(framesToSkip, frameAlignment);
@@ -833,6 +915,103 @@ _pmaAddrtreeContigSearchLoop
     return found;
 }
 
+static NvBool
+_pmaAddrtreeContigSearchLoopReverse
+(
+    PMA_ADDRTREE  *pTree,
+    NvU32          level,
+    PMA_PAGESTATUS state,
+    NvU64          addrBase,
+    NvU64          localStart,
+    NvU64          localEnd,
+    NvU64          numFrames,
+    NvU64          frameAlignment,
+    NvU64         *freeList
+)
+{
+    NvBool found = NV_FALSE;
+    NvU64 freeStart;
+    NvU64 diff;
+    PMA_PAGESTATUS startStatus, endStatus;
+
+    if ((state != STATE_FREE) && (state != STATE_UNPIN))
+    {
+        NV_PRINTF(LEVEL_INFO, "Scanning for state %d is not supported\n", state);
+        return found;
+    }
+
+    freeStart = localEnd + 1 - numFrames;  // First frame from end able to accommodate num_frames allocation.
+    freeStart = NV_ALIGN_DOWN(freeStart, frameAlignment);
+    while (!found)
+    {
+        NvU64 framesToSkip = 0;
+
+        if (freeStart < localStart || (NvS64)freeStart < 0)  // Account for underflow
+        {
+            // freeStart too close to local search start. Re-starting search
+            break;
+        }
+
+        //
+        // For reverse allocation, read startStatus first so we don't have to waste time
+        // traversing the tree again to read endStatus if startStatus is not even usable
+        //
+        startStatus = _pmaAddrtreeReadLevelAndSkipUnavailable(pTree, level, freeStart, state, NV_TRUE, &framesToSkip, NV_TRUE);
+        if (framesToSkip > 1) {
+            NvU64 newEndFrame = freeStart - framesToSkip;
+            freeStart = newEndFrame + 1 - numFrames;
+            freeStart = NV_ALIGN_DOWN(freeStart, frameAlignment);
+            continue;
+        }
+
+        endStatus = _pmaAddrtreeReadLevelAndSkipUnavailable(pTree, level, freeStart + numFrames - 1, state, NV_TRUE, &framesToSkip, NV_TRUE);
+        if (framesToSkip > 1) {
+            freeStart -= NV_ALIGN_UP(framesToSkip, frameAlignment);
+            continue;
+        }
+
+        if ((startStatus == STATE_FREE) || (startStatus == state))
+        {
+            if ((endStatus == STATE_FREE) || (endStatus == state))
+            {
+                if (_pmaAddrtreeAvailableReverse(pTree, level, state, freeStart, numFrames, &diff))
+                {
+                    found = NV_TRUE;
+                    // Subtract off padding when returning
+                    *freeList = addrBase + ((freeStart << pTree->levels[level+1].pageSizeShift) -
+                                (pTree->numPaddingFrames << PMA_PAGE_SHIFT));
+                    //NV_PRINTF(LEVEL_INFO, "found! 0x%llx\n", freeStart);
+                }
+                else
+                {
+                    //NV_PRINTF(LEVEL_INFO, "Frame number of allocated frame = 0x%llx\n",
+                    //          diff);
+                    //
+                    // Find the next aligned free frame and set it as the end
+                    // frame for next iteration's scan.
+                    //
+                    freeStart = NV_ALIGN_DOWN(diff - numFrames, frameAlignment);
+                }
+            }
+            else
+            {
+                // Start point isn't free, so bump to check the next aligned frame
+                freeStart -= frameAlignment;
+            }
+        }
+        else
+        {
+            //
+            // End point isn't usable, so jump to after the end to check again
+            // However, align the new start point properly before next iteration.
+            //
+            freeStart -= NV_ALIGN_UP(numFrames, frameAlignment);
+        }
+    }
+
+    return found;
+}
+
 static NV_STATUS
 _pmaAddrtreeScanContiguous
 (
@@ -845,7 +1024,8 @@ _pmaAddrtreeScanContiguous
     NvU32 pageSize,
     NvU64 alignment,
     NvU64 *numPagesAlloc,
-    NvBool bSkipEvict
+    NvBool bSkipEvict,
+    NvBool bReverseAlloc
 )
 {
     NvU64 localStart, localEnd, frameAlignment;
@@ -886,9 +1066,17 @@ _pmaAddrtreeScanContiguous
     //NV_PRINTF(LEVEL_INFO, "Scanning level %d with addrBase 0x%llx in frame range 0x%llx..0x%llx, "
     //                      "pages to allocate 0x%llx (pageSize=0x%x, alignment=0x%x)\n",
     //                      (level - 1), addrBase, localStart, localEnd, numPages, pageSize, alignment);
+    if (!bReverseAlloc)
+    {
+        found = _pmaAddrtreeContigSearchLoop(pTree, level - 1, STATE_FREE, addrBase, localStart, localEnd,
+                                             numPages, frameAlignment, freeList);
+    }
+    else
+    {
+        found = _pmaAddrtreeContigSearchLoopReverse(pTree, level - 1, STATE_FREE, addrBase, localStart, localEnd,
+                                                    numPages, frameAlignment, freeList);
+    }
 
-    found = _pmaAddrtreeContigSearchLoop(pTree, level - 1, STATE_FREE, addrBase, localStart, localEnd,
-                                         numPages, frameAlignment, freeList);
     if (found)
     {
         *numPagesAlloc = numPages;
@@ -901,8 +1089,16 @@ _pmaAddrtreeScanContiguous
     }
 
     // Loop back to the beginning and continue searching for evictable pages
-    found = _pmaAddrtreeContigSearchLoop(pTree, level - 1, STATE_UNPIN, addrBase, localStart, localEnd,
-                                         numPages, frameAlignment, freeList);
+    if (!bReverseAlloc)
+    {
+        found = _pmaAddrtreeContigSearchLoop(pTree, level - 1, STATE_UNPIN, addrBase, localStart, localEnd,
+                                             numPages, frameAlignment, freeList);
+    }
+    else
+    {
+        found = _pmaAddrtreeContigSearchLoopReverse(pTree, level - 1, STATE_UNPIN, addrBase, localStart, localEnd,
+                                                    numPages, frameAlignment, freeList);
+    }
     if (found)
         return NV_ERR_IN_USE;
     else
@@ -925,7 +1121,8 @@ pmaAddrtreeScanContiguous
     NvU32 pageSize,
     NvU64 alignment,
     NvU64 *numPagesAlloc,
-    NvBool bSkipEvict
+    NvBool bSkipEvict,
+    NvBool bReverseAlloc
 )
 {
     if (NV_UNLIKELY(pageSize == _PMA_128KB)) {
@@ -947,7 +1144,8 @@ pmaAddrtreeScanContiguous
             _PMA_64KB,
             alignment,
             numPagesAlloc,
-            bSkipEvict);
+            bSkipEvict,
+            bReverseAlloc);
 
         *numPagesAlloc /= 2;
 
@@ -965,7 +1163,8 @@ pmaAddrtreeScanContiguous
             pageSize,
             alignment,
             numPagesAlloc,
-            bSkipEvict);
+            bSkipEvict,
+            bReverseAlloc);
     }
 }
 
@@ -980,7 +1179,8 @@ _pmaAddrtreeDiscontigSearchLoop
     NvU64          localEnd,
     NvU64          numFrames,
     NvU64          frameAlignment,
-    NvU64         *freeList
+    NvU64         *freeList,
+    NvBool         bReverseAlloc
 )
 {
     NvU64 found = 0;
@@ -993,7 +1193,7 @@ _pmaAddrtreeDiscontigSearchLoop
         return found;
     }
 
-    freeStart = localStart;
+    freeStart = !bReverseAlloc ? localStart : localEnd;
 
     //
     // We only need one frame at a time on this level,
@@ -1003,13 +1203,13 @@ _pmaAddrtreeDiscontigSearchLoop
     {
         NvU64 framesToSkip = 0;
 
-        if (freeStart > localEnd) break;
+        if (freeStart > localEnd || freeStart < localStart || (NvS64)freeStart < 0) break;
 
         //
         // For discontig, we MUST only pick up the exact state.
         // Otherwise we give away pages for eviction that we already stored off to be allocated.
         //
-        startStatus = _pmaAddrtreeReadLevelAndSkipUnavailable(pTree, level, freeStart, state, NV_FALSE, &framesToSkip);
+        startStatus = _pmaAddrtreeReadLevelAndSkipUnavailable(pTree, level, freeStart, state, NV_FALSE, &framesToSkip, bReverseAlloc);
 
         if (startStatus == state)
         {
@@ -1017,7 +1217,7 @@ _pmaAddrtreeDiscontigSearchLoop
             freeList[found++] = addrBase + ((freeStart << pTree->levels[level+1].pageSizeShift) -
                                 (pTree->numPaddingFrames << PMA_PAGE_SHIFT));
         }
-        freeStart += framesToSkip;
+        freeStart = !bReverseAlloc ? (freeStart + framesToSkip) : (freeStart - framesToSkip);
     }
 
     return found;
@@ -1035,7 +1235,8 @@ _pmaAddrtreeScanDiscontiguous
     NvU32 pageSize,
     NvU64 alignment,
     NvU64 *numPagesAlloc,
-    NvBool bSkipEvict
+    NvBool bSkipEvict,
+    NvBool bReverseAlloc
 )
 {
     NvU64 localStart, localEnd;
@@ -1081,7 +1282,7 @@ _pmaAddrtreeScanDiscontiguous
     //                      (level - 1), addrBase, localStart, localEnd, numPages, pageSize, alignment);
 
     foundFree = _pmaAddrtreeDiscontigSearchLoop(pTree, level - 1, STATE_FREE, addrBase, localStart, localEnd,
-                                                numPages, alignment, freeList);
+                                                numPages, alignment, freeList, bReverseAlloc);
 
 
     // numPagesAlloc must be set for partial allocations
@@ -1101,7 +1302,7 @@ _pmaAddrtreeScanDiscontiguous
     // This next search picks up only evictable pages and not free pages
     //
     foundEvictable = _pmaAddrtreeDiscontigSearchLoop(pTree, level - 1, STATE_UNPIN, addrBase, localStart, localEnd,
-                                                     (numPages - foundFree), alignment, (freeList + foundFree));
+                                                     (numPages - foundFree), alignment, (freeList + foundFree), bReverseAlloc);
 
     if ((foundFree + foundEvictable) == numPages)
         return NV_ERR_IN_USE;
@@ -1125,7 +1326,8 @@ pmaAddrtreeScanDiscontiguous
     NvU32 pageSize,
     NvU64 alignment,
     NvU64 *numPagesAlloc,
-    NvBool bSkipEvict
+    NvBool bSkipEvict,
+    NvBool bReverseAlloc
 )
 {
     if (NV_UNLIKELY(pageSize == _PMA_128KB)) {
@@ -1156,7 +1358,8 @@ pmaAddrtreeScanDiscontiguous
                 _PMA_64KB,
                 alignment,
                 &localNumPagesAlloc,
-                bSkipEvict);
+                bSkipEvict,
+                bReverseAlloc);
 
             // Give back the first of every two 64KB frames
             *numPagesAlloc += localNumPagesAlloc / 2;
@@ -1166,7 +1369,21 @@ pmaAddrtreeScanDiscontiguous
                 return status;
             }
 
-            rangeStart = freeList[i] + _PMA_128KB;
+            if (!bReverseAlloc)
+                rangeStart = freeList[i] + _PMA_128KB;
+            else
+            {
+                rangeEnd = freeList[i] - 1;
+                if (rangeEnd < rangeStart || (NvS64)rangeEnd < 0)
+                {
+                    // Extended the current implementation to reverse alloc here but
+                    // isn't this logic incorrect for tryEvict case? As we are closing
+                    // off the region for tryEvict case after an allocation is made.
+                    // Also we don't check evictable for remaining pages after the
+                    // first NV_ERR_IN_USE is returned.
+                    if (i < numPages - 1) return NV_ERR_NO_MEMORY;
+                }
+            }
         }
 
         return status;
@@ -1183,7 +1400,8 @@ pmaAddrtreeScanDiscontiguous
             pageSize,
             alignment,
             numPagesAlloc,
-            bSkipEvict);
+            bSkipEvict,
+            bReverseAlloc);
     }
 }
 
@@ -1884,7 +2102,7 @@ NV_STATUS pmaAddrtreeScanContiguousNumaEviction
         // Read endStatus first so we don't have to waste time traversing the
         // tree again to read startStatus if endStatus is not even usable
         //
-        endStatus = _pmaAddrtreeReadLevelAndSkipUnavailable(pTree, level, endFrame, STATE_UNPIN, NV_FALSE, &framesToSkip);
+        endStatus = _pmaAddrtreeReadLevelAndSkipUnavailable(pTree, level, endFrame, STATE_UNPIN, NV_FALSE, &framesToSkip, NV_FALSE);
 
         if (framesToSkip > 1) {
             frameNum = NV_ALIGN_UP(endFrame + framesToSkip, frameAlignment);
@@ -1892,7 +2110,7 @@ NV_STATUS pmaAddrtreeScanContiguousNumaEviction
             continue;
         }
 
-        startStatus = _pmaAddrtreeReadLevelAndSkipUnavailable(pTree, level, frameNum, STATE_UNPIN, NV_FALSE, &framesToSkip);
+        startStatus = _pmaAddrtreeReadLevelAndSkipUnavailable(pTree, level, frameNum, STATE_UNPIN, NV_FALSE, &framesToSkip, NV_FALSE);
 
         if (framesToSkip > 1) {
             frameNum += NV_ALIGN_UP(framesToSkip, frameAlignment);

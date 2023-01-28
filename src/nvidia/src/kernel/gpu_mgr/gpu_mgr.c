@@ -726,6 +726,9 @@ static NvBool _gpumgrIsRmFirmwareDefaultChip(NvU32 pmcBoot42)
 
 static NvBool _gpumgrIsVgxRmFirmwareDefaultChip(NvU32 pmcBoot42)
 {
+    if (DRF_VAL(_PMC, _BOOT_42, _ARCHITECTURE, pmcBoot42) == NV_PMC_BOOT_42_ARCHITECTURE_AD100)
+        return NV_TRUE;
+
     return NV_FALSE;
 }
 

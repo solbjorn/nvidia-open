@@ -846,6 +846,17 @@ nvswitch_os_strncmp
 	return strncmp(s1, s2, length);
 }
 
+static __always_inline char *
+nvswitch_os_strncat
+(
+    char *s1,
+    const char *s2,
+    NvLength length
+)
+{
+	return strncat(s1, s2, length);
+}
+
 static __always_inline void *
 nvswitch_os_memset
 (

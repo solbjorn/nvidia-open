@@ -31,7 +31,6 @@
 #include "common_nvswitch.h"
 #include "ls10/ls10.h"
 #include "ls10/soe_ls10.h"
-#include "lr10/soe_lr10.h"
 
 #include "nvswitch/ls10/dev_soe_ip.h"
 #include "nvswitch/ls10/dev_soe_ip_addendum.h"
@@ -337,6 +336,13 @@ nvswitch_set_nport_tprod_state_ls10
     NVSWITCH_TIMEOUT    timeout;
     RM_SOE_CORE_CMD_NPORT_TPROD_STATE *nportTprodState;
 
+    if (!NVSWITCH_ENG_IS_VALID(device, NPORT, nport))
+    {
+         NVSWITCH_PRINT(device, ERROR, "%s: NPORT #%d invalid\n",
+                        __FUNCTION__, nport);
+        return -NVL_BAD_ARGS;
+    }
+
     nvswitch_os_memset(&cmd, 0, sizeof(cmd));
 
     cmd.hdr.unitId = RM_SOE_UNIT_CORE;
@@ -362,6 +368,56 @@ nvswitch_set_nport_tprod_state_ls10
     }
 
     return NVL_SUCCESS;
+}
+
+/*
+ * @Brief : INIT L2 register state in SOE
+ *
+ * @param[in] device
+ * @param[in] nport
+ */
+void
+nvswitch_soe_init_l2_state_ls10
+(
+    nvswitch_device *device
+)
+{
+    FLCN            *pFlcn;
+    NvU32            cmdSeqDesc = 0;
+    NV_STATUS        status;
+    RM_FLCN_CMD_SOE  cmd;
+    NVSWITCH_TIMEOUT timeout;
+    RM_SOE_CORE_CMD_L2_STATE *pL2State;
+
+    if (!nvswitch_is_soe_supported(device))
+    {
+        NVSWITCH_PRINT(device, INFO, "%s: SOE is not supported. skipping!\n",
+                       __FUNCTION__);
+        return;
+    }
+
+    pFlcn       = device->pSoe->pFlcn;
+
+    nvswitch_os_memset(&cmd, 0, sizeof(cmd));
+    cmd.hdr.unitId = RM_SOE_UNIT_CORE;
+    cmd.hdr.size   = sizeof(cmd);
+
+    pL2State = &cmd.cmd.core.l2State;
+    pL2State->cmdType = RM_SOE_CORE_CMD_INIT_L2_STATE;
+
+    nvswitch_timeout_create(NVSWITCH_INTERVAL_5MSEC_IN_NS, &timeout);
+    status = flcnQueueCmdPostBlocking(device, pFlcn,
+                                      (PRM_FLCN_CMD)&cmd,
+                                      NULL,                 // pMsg
+                                      NULL,                 // pPayload
+                                      SOE_RM_CMDQ_LOG_ID,
+                                      &cmdSeqDesc,
+                                      &timeout);
+    if (status != NV_OK)
+    {
+        NVSWITCH_PRINT(device, ERROR, "%s: Failed to send INIT_L2_STATE command to SOE, status 0x%x\n", 
+                       __FUNCTION__, status);
+    }
 }
 
 /*
@@ -424,11 +480,19 @@ nvswitch_init_soe_ls10
         return status;
     }
 
+    //
+    // Set TRACEPC to stack mode for better ucode trace
+    // In Vulcan CR firmware, this is set to reduced mode in the SOE's manifest
+    //
+    data = flcnRiscvRegRead_HAL(device, pFlcn, NV_PRISCV_RISCV_TRACECTL);
+    data = FLD_SET_DRF(_PRISCV, _RISCV_TRACECTL, _MODE, _STACK, data);
+    flcnRiscvRegWrite_HAL(device, pFlcn, NV_PRISCV_RISCV_TRACECTL, data);
+
     // Sanity the command and message queues as a final check
     if (_nvswitch_soe_send_test_cmd(device) != NV_OK)
     {
         NVSWITCH_PRINT_SXID(device, NVSWITCH_ERR_HW_SOE_BOOTSTRAP,
-            "SOE init failed(2)\n");
+            "SOE init failed(4)\n");
         status = -NVL_ERR_INVALID_STATE;
         goto nvswitch_init_soe_fail;
     }
@@ -465,6 +529,7 @@ nvswitch_unload_soe_ls10
     // Detach driver from SOE Queues
     _nvswitch_soe_attach_detach_driver_ls10(device, NV_FALSE);
 
+
     return NVL_SUCCESS;
 }
 
@@ -489,7 +554,7 @@ nvswitch_soe_register_event_callbacks_ls10
                  device, pFlcn,
                  RM_SOE_UNIT_THERM,
                  NULL,
-                 nvswitch_therm_soe_callback_lr10,
+                 nvswitch_therm_soe_callback_ls10,
                  NULL,
                  &pSoe->thermEvtDesc);
     if (status != NV_OK)
@@ -577,6 +642,7 @@ _soeService_LS10
 )
 {
     NvBool  bRecheckMsgQ    = NV_FALSE;
+    NvBool  bRecheckPrintQ  = NV_FALSE;
     NvU32   clearBits       = 0;
     NvU32   intrStatus;
     PFLCN   pFlcn  = ENG_GET_FLCN(pSoe);
@@ -642,6 +708,8 @@ _soeService_LS10
         NVSWITCH_PRINT(device, INFO,
                     "%s: Received a SWGEN1 interrupt\n",
                     __FUNCTION__);
+        flcnDebugBufferDisplay_HAL(device, pFlcn);
+        bRecheckPrintQ = NV_TRUE;
     }
 
     // Clear any sources that were serviced and get the new status.
@@ -674,6 +742,22 @@ _soeService_LS10
            // It is not necessary to RMW IRQSSET (zeros are ignored)
            flcnRegWrite_HAL(device, pFlcn, NV_PFALCON_FALCON_IRQSSET,
                             DRF_DEF(_PFALCON, _FALCON_IRQSSET, _SWGEN0, _SET));
+        }
+    }
+
+    //
+    // If we just processed a SWGEN1 interrupt (Debug Buffer interrupt), peek
+    // into the Debug Buffer and see if any text was missed the last time
+    // the buffer was displayed (above). If it is not empty, re-generate SWGEN1
+    // (since it is now cleared) and exit. As long as an interrupt is pending,
+    // this function will be re-entered and the message(s) will be processed.
+    //
+    if (bRecheckPrintQ)
+    {
+        if (!flcnDebugBufferIsEmpty_HAL(device, pFlcn))
+        {
+            flcnRegWrite_HAL(device, pFlcn, NV_PFALCON_FALCON_IRQSSET,
+                              DRF_DEF(_PFALCON, _FALCON_IRQSSET, _SWGEN1, _SET));
         }
     }
 

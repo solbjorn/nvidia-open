@@ -354,9 +354,7 @@ static void free_os_event_under_lock(nv_event_t *event)
     // If refcount > 0, event will be freed by osDereferenceObjectCount
     // when the last associated RM event is freed.
     if (event->refcount == 0)
-    {
         portMemFree(event);
-    }
 }
 
 static void free_os_events(
@@ -775,7 +773,7 @@ static NV_STATUS RmAccessRegistry(
         // the passed-in ParmStrLength does not account for '\0'
         ParmStrLength++;
 
-        if (ParmStrLength > NVOS38_MAX_REGISTRY_STRING_LENGTH)
+        if ((ParmStrLength == 0) || (ParmStrLength > NVOS38_MAX_REGISTRY_STRING_LENGTH))
         {
             RmStatus = NV_ERR_INVALID_STRING_LENGTH;
             goto done;
@@ -786,6 +784,11 @@ static NV_STATUS RmAccessRegistry(
         if (RmStatus != NV_OK)
         {
             RmStatus = NV_ERR_OPERATING_SYSTEM;
+            goto done;
+        }
+        if (tmpParmStr[ParmStrLength - 1] != '\0')
+        {
+            RmStatus = NV_ERR_INVALID_ARGUMENT;
             goto done;
         }
     }
@@ -2121,9 +2124,20 @@ static NV_STATUS RmGetAllocPrivate(
     if (rmStatus != NV_OK)
         goto done;
 
-    endingOffset = pageOffset + length;
+    if (!portSafeAddU64(pageOffset, length, &endingOffset))
+    {
+        rmStatus = NV_ERR_INVALID_ARGUMENT;
+        goto done;
+    }
+
     pageCount = (endingOffset / os_page_size);
-    pageCount += (*pPageIndex + ((endingOffset % os_page_size) ? 1 : 0));
+
+    if (!portSafeAddU64(*pPageIndex + ((endingOffset % os_page_size) ? 1 : 0),
+                        pageCount, &pageCount))
+    {
+        rmStatus = NV_ERR_INVALID_ARGUMENT;
+        goto done;
+    }
 
     if (pageCount > NV_RM_PAGES_TO_OS_PAGES(pMemDesc->PageCount))
     {
@@ -2894,23 +2908,21 @@ static NV_STATUS RmRunNanoTimerCallback(
     void *pTmrEvent
 )
 {
-    OBJSYS             *pSys = SYS_GET_INSTANCE();
     POBJTMR             pTmr = GPU_GET_TIMER(pGpu);
     THREAD_STATE_NODE   threadState;
     NV_STATUS         status = NV_OK;
     // LOCK: try to acquire GPUs lock
     if ((status = rmGpuLocksAcquire(GPU_LOCK_FLAGS_COND_ACQUIRE, RM_LOCK_MODULES_TMR)) != NV_OK)
     {
-        PTMR_EVENT_PVT pEvent = (PTMR_EVENT_PVT) pTmrEvent;
-        // We failed to acquire the lock; schedule a timer to try again.
-        return osStartNanoTimer(pGpu->pOsGpuInfo, pEvent->super.pOSTmrCBdata, 1000);
-    }
+        TMR_EVENT *pEvent = (TMR_EVENT *)pTmrEvent;
 
-    if ((status = osCondAcquireRmSema(pSys->pSema)) != NV_OK)
-    {
-        // UNLOCK: release GPUs lock
-        rmGpuLocksRelease(GPUS_LOCK_FLAGS_NONE, NULL);
-        return status;
+        //
+        // We failed to acquire the lock - depending on what's holding it,
+        // the lock could be held for a while, so try again soon, but not too
+        // soon to prevent the owner from making forward progress indefinitely.
+        //
+        return osStartNanoTimer(pGpu->pOsGpuInfo, pEvent->pOSTmrCBdata,
+                                osGetTickResolution());
     }
 
     threadStateInitISRAndDeferredIntHandler(&threadState, pGpu,
@@ -2923,7 +2935,6 @@ static NV_STATUS RmRunNanoTimerCallback(
     threadStateFreeISRAndDeferredIntHandler(&threadState,
         pGpu, THREAD_STATE_FLAGS_IS_DEFERRED_INT_HANDLER);
 
-    osReleaseRmSema(pSys->pSema, NULL);
     // UNLOCK: release GPUs lock
     rmGpuLocksRelease(GPUS_LOCK_FLAGS_NONE, pGpu);
 

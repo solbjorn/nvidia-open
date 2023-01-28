@@ -1,5 +1,5 @@
 /*
- * SPDX-FileCopyrightText: Copyright (c) 2020-2022 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+ * SPDX-FileCopyrightText: Copyright (c) 2020-2023 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
  * SPDX-License-Identifier: MIT
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
@@ -371,6 +371,7 @@ typedef struct
     _op(XAL, )                                  \
     _op(XPL, )                                  \
     _op(XTL, )                                  \
+    _op(XTL_CONFIG, )                           \
     _op(SAW, )                                  \
     _op(SOE, )                                  \
     _op(SMR, )                                  \
@@ -952,11 +953,8 @@ NvBool    nvswitch_i2c_is_device_access_allowed_ls10(nvswitch_device *device, Nv
 NvlStatus nvswitch_minion_get_ali_debug_registers_ls10(nvswitch_device *device, nvlink_link *link, NVSWITCH_MINION_ALI_DEBUG_REGISTERS *params);
 void      nvswitch_setup_link_system_registers_ls10(nvswitch_device *device, nvlink_link *link);
 void      nvswitch_load_link_disable_settings_ls10(nvswitch_device *device, nvlink_link *link);
+void      nvswitch_link_disable_interrupts_ls10(nvswitch_device *device, NvU32 link);
 void      nvswitch_execute_unilateral_link_shutdown_ls10(nvlink_link *link);
-
-void      nvswitch_init_dlpl_interrupts_ls10(nvlink_link *link);
-
-void      nvswitch_service_minion_all_links_ls10(nvswitch_device *device);
 
 //
 // SU generated functions
@@ -971,5 +969,8 @@ void      nvswitch_init_dlpl_interrupts_ls10(nvlink_link *link);
 void      nvswitch_service_minion_all_links_ls10(nvswitch_device *device);
 
 NvBool    nvswitch_is_inforom_supported_ls10(nvswitch_device *device);
+void      nvswitch_set_error_rate_threshold_ls10(nvlink_link *link, NvBool bIsDefault);
+void      nvswitch_configure_error_rate_threshold_interrupt_ls10(nvlink_link *link, NvBool bEnable);
+NvlStatus nvswitch_reset_and_train_link_ls10(nvswitch_device *device, nvlink_link *link);
 
 #endif //_LS10_H_

@@ -392,6 +392,14 @@ kgspBootstrapRiscvOSEarly_TU102
     // Load init args into mailbox regs
     kgspProgramLibosBootArgsAddr_HAL(pGpu, pKernelGsp);
 
+    // Execute Scrubber if needed
+    if (pKernelGsp->pScrubberUcode != NULL)
+    {
+        NV_ASSERT_OK_OR_GOTO(status,
+                             kgspExecuteScrubberIfNeeded_HAL(pGpu, pKernelGsp),
+                             exit);
+    }
+
     {
         status = kgspExecuteBooterLoad_HAL(pGpu, pKernelGsp,
             memdescGetPhysAddr(pKernelGsp->pWprMetaDescriptor, AT_GPU, 0));
@@ -573,10 +581,6 @@ kgspCalculateFbLayout_TU102
 
     pWprMeta->gspFwRsvdStart = pWprMeta->nonWprHeapOffset;
 
-    // Make sure carveout size is less than 256MB
-    NV_ASSERT_OR_RETURN((pWprMeta->fbSize - pWprMeta->gspFwRsvdStart) < (256 * 1024 * 1024),
-        NV_ERR_OUT_OF_RANGE);
-
     // Physical address of GSP-RM firmware in system memory.
     pWprMeta->sysmemAddrOfRadix3Elf =
         memdescGetPhysAddr(pKernelGsp->pGspUCodeRadix3Descriptor, AT_GPU, 0);
@@ -595,10 +599,20 @@ kgspCalculateFbLayout_TU102
         pWprMeta->sysmemAddrOfSignature = memdescGetPhysAddr(pKernelGsp->pSignatureMemdesc, AT_GPU, 0);
         pWprMeta->sizeOfSignature = memdescGetSize(pKernelGsp->pSignatureMemdesc);
     }
+
     pWprMeta->bootCount = 0;
     pWprMeta->verified = 0;
     pWprMeta->revision = GSP_FW_WPR_META_REVISION;
     pWprMeta->magic = GSP_FW_WPR_META_MAGIC;
+
+    if (pGpu->bVgpuGspPluginOffloadEnabled)
+    {
+        pKernelGsp->pWprMeta->driverModel = 1;
+    }
+    else
+    {
+        pKernelGsp->pWprMeta->driverModel = 0;
+    }
 
     return NV_OK;
 }

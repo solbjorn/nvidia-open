@@ -1318,7 +1318,6 @@ nvswitch_process_discovery_ls10
     ls10_device *chip_device = NVSWITCH_GET_CHIP_DEVICE_LS10(device);
     NvU32       i, j;
     NvU64       localMinionLinkMask;
-    NvlStatus   retval = NVL_SUCCESS;
     NvU64       link_enable_mask;
 
     //
@@ -1336,6 +1335,31 @@ nvswitch_process_discovery_ls10
     }
 
     //
+    // Process common engine information
+    //
+
+    // Mark all entries as invalid
+    for (i = 0; i < NVSWITCH_ENGINE_ID_SIZE; i++)
+    {
+        chip_device->io.common[i].eng_name = "";
+        chip_device->io.common[i].eng_id = NVSWITCH_ENGINE_ID_SIZE; // Out of range
+        chip_device->io.common[i].eng_count = 0;
+        for (j = 0; j < NVSWITCH_ENGINE_DESCRIPTOR_UC_SIZE; j++)
+        {
+            chip_device->io.common[i].uc_addr[j] = NVSWITCH_BASE_ADDR_INVALID;
+        }
+        chip_device->io.common[i].bc_addr = NVSWITCH_BASE_ADDR_INVALID;
+        for (j = 0; j < NVSWITCH_ENGINE_DESCRIPTOR_MC_SIZE; j++)
+        {
+            chip_device->io.common[i].mc_addr[j] = NVSWITCH_BASE_ADDR_INVALID;
+        }
+        chip_device->io.common[i].mc_addr_count = 0;
+    }
+
+	for (i = 0; i < ARRAY_SIZE(ls10_disc_arr); i++)
+		nvswitch_process_common(chip_device, &ls10_disc_arr[i]);
+
+    //
     // Disable engines requested by regkey "LinkEnableMask".
     // All the links are enabled by default.
     //
@@ -1349,6 +1373,7 @@ nvswitch_process_discovery_ls10
             NVSWITCH_PRINT(device, SETUP,
                 "%s: Disable link #%d\n",
                 __FUNCTION__, i);
+            nvswitch_link_disable_interrupts_ls10(device, i);
             device->link[i].valid                  = NV_FALSE;
             chip_device->engNPORT[i].valid         = NV_FALSE;
             chip_device->engNPORT_PERFMON[i].valid = NV_FALSE;
@@ -1381,30 +1406,5 @@ nvswitch_process_discovery_ls10
         }
     }
 
-    //
-    // Process common engine information
-    //
-
-    // Mark all entries as invalid
-    for (i = 0; i < NVSWITCH_ENGINE_ID_SIZE; i++)
-    {
-        chip_device->io.common[i].eng_name = "";
-        chip_device->io.common[i].eng_id = NVSWITCH_ENGINE_ID_SIZE; // Out of range
-        chip_device->io.common[i].eng_count = 0;
-        for (j = 0; j < NVSWITCH_ENGINE_DESCRIPTOR_UC_SIZE; j++)
-        {
-            chip_device->io.common[i].uc_addr[j] = NVSWITCH_BASE_ADDR_INVALID;
-        }
-        chip_device->io.common[i].bc_addr = NVSWITCH_BASE_ADDR_INVALID;
-        for (j = 0; j < NVSWITCH_ENGINE_DESCRIPTOR_MC_SIZE; j++)
-        {
-            chip_device->io.common[i].mc_addr[j] = NVSWITCH_BASE_ADDR_INVALID;
-        }
-        chip_device->io.common[i].mc_addr_count = 0;
-    }
-
-	for (i = 0; i < ARRAY_SIZE(ls10_disc_arr); i++)
-		nvswitch_process_common(chip_device, &ls10_disc_arr[i]);
-
-    return retval;
+    return NVL_SUCCESS;
 }

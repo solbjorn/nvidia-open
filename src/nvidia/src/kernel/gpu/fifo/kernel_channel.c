@@ -145,6 +145,8 @@ kchannelConstruct_IMPL
     NvBool                  bTsgAllocated    = NV_FALSE;
     NvHandle                hChanGrp         = NV01_NULL_OBJECT;
     RsResourceRef          *pDeviceRef       = NULL;
+    RsResourceRef          *pVASpaceRef      = NULL;
+    KernelGraphicsContext  *pKernelGraphicsContext = NULL;
     NvBool                  bMIGInUse;
     KernelChannelGroup     *pKernelChannelGroup = NULL;
     NvU32                   chID             = ~0;
@@ -216,7 +218,17 @@ kchannelConstruct_IMPL
             pKernelChannel->privilegeLevel =
                 DRF_VAL(_KERNELCHANNEL, _ALLOC_INTERNALFLAGS, _PRIVILEGE, pChannelGpfifoParams->internalFlags);
         }
-        pKernelChannel->ProcessID = pChannelGpfifoParams->ProcessID;
+
+        // In GSP, all vGPU channel's will simply consider GFID as the processID
+        if (IS_VGPU_GSP_PLUGIN_OFFLOAD_ENABLED(pGpu) && IS_GFID_VF(callingContextGfid))
+        {
+            pKernelChannel->ProcessID = callingContextGfid;
+        }
+        else
+        {
+            pKernelChannel->ProcessID = pChannelGpfifoParams->ProcessID;
+        }
+
         pKernelChannel->SubProcessID = pChannelGpfifoParams->SubProcessID;
     }
     else
@@ -684,7 +696,7 @@ kchannelConstruct_IMPL
 
         if (status != NV_OK)
         {
-            NV_PRINTF(LEVEL_ERROR, "Error in Allocating channel id %d for hClient %d hKernelChannel %d \n",
+            NV_PRINTF(LEVEL_ERROR, "Error in Allocating channel id 0x%x for hClient 0x%x hKernelChannel 0x%x \n",
                                    chID, hClient, pResourceRef->hResource);
             DBG_BREAKPOINT();
             goto cleanup;
@@ -719,7 +731,7 @@ kchannelConstruct_IMPL
 
         if (status != NV_OK)
         {
-            NV_PRINTF(LEVEL_ERROR, "Error in Allocating channel id %d for hClient %d hKernelChannel %d \n",
+            NV_PRINTF(LEVEL_ERROR, "Error in Allocating channel id 0x%x for hClient 0x%x hKernelChannel 0x%x \n",
                       chID, hClient, pResourceRef->hResource);
             chID = ~0;
             DBG_BREAKPOINT();
@@ -842,8 +854,6 @@ kchannelConstruct_IMPL
     // We depend on VASpace if it was provided
     if (pChannelGpfifoParams->hVASpace != NV01_NULL_OBJECT)
     {
-        RsResourceRef *pVASpaceRef = NULL;
-
         NV_ASSERT_OK_OR_GOTO(status, clientGetResourceRef(pRsClient, pChannelGpfifoParams->hVASpace, &pVASpaceRef), cleanup);
         NV_ASSERT_OR_ELSE(pVASpaceRef != NULL, status = NV_ERR_INVALID_OBJECT; goto cleanup);
 
@@ -865,8 +875,6 @@ kchannelConstruct_IMPL
     pKernelChannel->hKernelGraphicsContext = pKernelChannelGroupApi->hKernelGraphicsContext;
     if (pKernelChannel->hKernelGraphicsContext != NV01_NULL_OBJECT)
     {
-        KernelGraphicsContext *pKernelGraphicsContext;
-
         NV_ASSERT_OK_OR_GOTO(status,
             kgrctxFromKernelChannel(pKernelChannel, &pKernelGraphicsContext),
             cleanup);
@@ -908,6 +916,24 @@ cleanup:
         if (bNotifyActionsSetup)
         {
             _kchannelCleanupNotifyActions(pKernelChannel);
+        }
+
+        // Remove any dependencies we may have added; we don't want our destructor called when freeing anything below
+        if (pKernelGraphicsContext != NULL)
+        {
+            refRemoveDependant(RES_GET_REF(pKernelGraphicsContext), pResourceRef);
+        }
+        if (pKernelChannel->pKernelCtxShareApi != NULL)
+        {
+            refRemoveDependant(RES_GET_REF(pKernelChannel->pKernelCtxShareApi), pResourceRef);
+        }
+        if (pVASpaceRef != NULL)
+        {
+            refRemoveDependant(pVASpaceRef, pResourceRef);
+        }
+        if (bTsgAllocated)
+        {
+            refRemoveDependant(pChanGrpRef, pResourceRef);
         }
 
         if (bAddedToGroup)
@@ -3697,7 +3723,12 @@ kchannelUpdateWorkSubmitTokenNotifIndex_IMPL
     NV_CHECK_OR_RETURN(LEVEL_INFO, index != NV_CHANNELGPFIFO_NOTIFICATION_TYPE_ERROR,
                      NV_ERR_INVALID_ARGUMENT);
 
-    notificationBufferSize = (index + 1) * sizeof(NvNotification);
+    // Check for integer overflows
+    if (((index + 1) < index) ||
+        !portSafeMulU64(index + 1, sizeof(NvNotification), &notificationBufferSize))
+    {
+        return NV_ERR_OUT_OF_RANGE;
+    }
 
     status = deviceGetByInstance(pClient, gpuGetDeviceInstance(pGpu), &pDevice);
     if (status != NV_OK)

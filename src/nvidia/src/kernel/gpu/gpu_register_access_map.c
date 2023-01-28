@@ -107,14 +107,14 @@ gpuSetUserRegisterAccessPermissionsInBulk_IMPL(OBJGPU *pGpu, const NvU32 *pOffse
                                                NvU32 arrSizeBytes, NvBool bAllow)
 {
     NvU32 numElements;
-    NV_STATUS status;
-    NvU32 i;
 
     NV_ASSERT_OR_RETURN((arrSizeBytes & (2 * sizeof(NvU32) - 1)) == 0, NV_ERR_INVALID_ARGUMENT);
     numElements = arrSizeBytes / sizeof(NvU32);
 
-    for (i = 0; i < numElements; i += 2)
+    for (u32 i = 0; i < numElements; i += 2)
     {
+        NV_STATUS status;
+
         status = gpuSetUserRegisterAccessPermissions(pGpu,
                     pOffsetsSizesArr[i], pOffsetsSizesArr[i + 1], bAllow);
 
@@ -190,7 +190,6 @@ static NvBool _getIsProfilingPrivileged(OBJGPU *pGpu)
 #if defined(DEBUG) || defined(DEVELOP)
     return NV_FALSE;
 #else
-
     if (NV_OK == osReadRegistryDword(pGpu, NV_REG_STR_RM_PROFILING_ADMIN_ONLY, &data32))
     {
         return (data32 == NV_REG_STR_RM_PROFILING_ADMIN_ONLY_TRUE);
@@ -333,7 +332,7 @@ done:
 NV_STATUS
 gpuInitRegisterAccessMap_IMPL(OBJGPU *pGpu, NvU8 *pAccessMap, NvU32 accessMapSize, const NvU8 *pComprData, const NvU32 comprDataSize)
 {
-    NvU32 inflatedBytes        = 0;
+    NvU32 inflatedBytes;
 
     NV_ASSERT_OR_RETURN(pAccessMap != NULL, NV_ERR_INVALID_STATE);
     NV_ASSERT_OR_RETURN(accessMapSize != 0, NV_ERR_INVALID_STATE);

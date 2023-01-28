@@ -75,7 +75,7 @@ endif
 # $(EXTRA_CFLAGS) to ccflags-y for compatibility.
 #
 
-subdir-ccflags-y += -DNV_VERSION_STRING=$(call stringify,525.53)
+subdir-ccflags-y += -DNV_VERSION_STRING=$(call stringify,525.85.05)
 
 COMMON_CFLAGS += -I$(src)/common/inc
 COMMON_CFLAGS += -DNVRM
@@ -123,6 +123,7 @@ NV_CONFTEST_CFLAGS = $(patsubst -frandomize-layout-seed-file=./%,\
 		       $(_NV_CONFTEST_CFLAGS))
 
 NV_CONFTEST_CFLAGS += -Wno-error=implicit-function-declaration # relies to test args
+NV_CONFTEST_CFLAGS += -Wno-error=missing-prototypes
 
 NV_CONFTEST_COMPILE_TEST_HEADERS := $(obj)/conftest/functions.h
 NV_CONFTEST_COMPILE_TEST_HEADERS += $(obj)/conftest/generic.h

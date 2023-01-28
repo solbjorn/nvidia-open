@@ -38,6 +38,7 @@ extern "C" {
 #include "core/locks.h"
 #include "gpu/eng_state.h"
 #include "lib/ref_count.h"
+#include "objtmr.h"
 #include "nvCpuUuid.h"
 #include "gpu/bus/kern_bus.h"
 
@@ -97,6 +98,9 @@ typedef struct _def_knvlink_conn_info
 #define NVLINK_INITOPTIMIZE_POLL_TIMEOUT                10000000
 #define NVLINK_INITOPTIMIZE_POLL_TIMEOUT_EMU            20000000
 #define NVLINK_INITOPTIMIZE_POLL_COUNT_DELAY_MS         1000
+
+// Link Retrain after reset time = 10s
+#define NVLINK_RETRAIN_TIME                             10000000000
 
 /**********************************************************/
 
@@ -179,6 +183,8 @@ typedef struct _def_knvlink_link
     // RXDET per-lane status
     NvU32     laneRxdetStatusMask;
 
+    TMR_EVENT *pTmrEvent;
+
 } KNVLINK_RM_LINK, *PKNVLINK_RM_LINK;
 
 typedef struct NVLINK_INBAND_CALLBACK
@@ -189,6 +195,12 @@ typedef struct NVLINK_INBAND_CALLBACK
     NvU32 wqItemFlags;
 } NVLINK_INBAND_MSG_CALLBACK;
 
+typedef struct
+{
+    NvU8 linkId;
+} NVLINK_ID, *PNVLINK_ID;
+
+MAKE_LIST(FaultUpList, NVLINK_ID);
 
 /*!
  * KernelNvlink is a logical abstraction of the GPU Nvlink Engine. The
@@ -215,6 +227,7 @@ struct KernelNvlink {
     NV_STATUS (*__knvlinkStatePostUnload__)(OBJGPU *, struct KernelNvlink *, NvU32);
     NvBool (*__knvlinkIsPresent__)(OBJGPU *, struct KernelNvlink *);
     NV_STATUS (*__knvlinkSetUniqueFabricBaseAddress__)(OBJGPU *, struct KernelNvlink *, NvU64);
+    NV_STATUS (*__knvlinkHandleFaultUpInterrupt__)(OBJGPU *, struct KernelNvlink *, NvU32);
     NV_STATUS (*__knvlinkValidateFabricBaseAddress__)(OBJGPU *, struct KernelNvlink *, NvU64);
     NvU32 (*__knvlinkGetConnectedLinksMask__)(OBJGPU *, struct KernelNvlink *);
     NV_STATUS (*__knvlinkEnableLinksPostTopology__)(OBJGPU *, struct KernelNvlink *, NvU32);
@@ -233,6 +246,7 @@ struct KernelNvlink {
     NV_STATUS (*__knvlinkDiscoverPostRxDetLinks__)(OBJGPU *, struct KernelNvlink *, OBJGPU *);
     NV_STATUS (*__knvlinkLogAliDebugMessages__)(OBJGPU *, struct KernelNvlink *);
     NvBool (*__knvlinkIsFloorSweepingNeeded__)(OBJGPU *, struct KernelNvlink *, NvU32, NvU32);
+    void (*__knvlinkDirectConnectCheck__)(OBJGPU *, struct KernelNvlink *);
     NV_STATUS (*__knvlinkReconcileTunableState__)(POBJGPU, struct KernelNvlink *, void *);
     NV_STATUS (*__knvlinkStateInitLocked__)(POBJGPU, struct KernelNvlink *);
     NV_STATUS (*__knvlinkStatePreLoad__)(POBJGPU, struct KernelNvlink *, NvU32);
@@ -282,6 +296,7 @@ struct KernelNvlink {
     NvU32 bridgeSensableLinks;
     NvU32 bridgedLinks;
     NvU32 enabledLinks;
+    FaultUpList faultUpLinks;
     NvU32 initializedLinks;
     KNVLINK_RM_LINK nvlinkLinks[18];
     NvBool bIsGpuDegraded;
@@ -380,6 +395,8 @@ NV_STATUS __nvoc_objCreate_KernelNvlink(KernelNvlink**, Dynamic*, NvU32);
 #define knvlinkIsPresent(arg0, arg1) knvlinkIsPresent_DISPATCH(arg0, arg1)
 #define knvlinkSetUniqueFabricBaseAddress(pGpu, pKernelNvlink, arg0) knvlinkSetUniqueFabricBaseAddress_DISPATCH(pGpu, pKernelNvlink, arg0)
 #define knvlinkSetUniqueFabricBaseAddress_HAL(pGpu, pKernelNvlink, arg0) knvlinkSetUniqueFabricBaseAddress_DISPATCH(pGpu, pKernelNvlink, arg0)
+#define knvlinkHandleFaultUpInterrupt(pGpu, pKernelNvlink, arg0) knvlinkHandleFaultUpInterrupt_DISPATCH(pGpu, pKernelNvlink, arg0)
+#define knvlinkHandleFaultUpInterrupt_HAL(pGpu, pKernelNvlink, arg0) knvlinkHandleFaultUpInterrupt_DISPATCH(pGpu, pKernelNvlink, arg0)
 #define knvlinkValidateFabricBaseAddress(pGpu, pKernelNvlink, arg0) knvlinkValidateFabricBaseAddress_DISPATCH(pGpu, pKernelNvlink, arg0)
 #define knvlinkValidateFabricBaseAddress_HAL(pGpu, pKernelNvlink, arg0) knvlinkValidateFabricBaseAddress_DISPATCH(pGpu, pKernelNvlink, arg0)
 #define knvlinkGetConnectedLinksMask(pGpu, pKernelNvlink) knvlinkGetConnectedLinksMask_DISPATCH(pGpu, pKernelNvlink)
@@ -416,6 +433,8 @@ NV_STATUS __nvoc_objCreate_KernelNvlink(KernelNvlink**, Dynamic*, NvU32);
 #define knvlinkLogAliDebugMessages_HAL(pGpu, pKernelNvlink) knvlinkLogAliDebugMessages_DISPATCH(pGpu, pKernelNvlink)
 #define knvlinkIsFloorSweepingNeeded(pGpu, pKernelNvlink, numActiveLinksPerIoctrl, numLinksPerIoctrl) knvlinkIsFloorSweepingNeeded_DISPATCH(pGpu, pKernelNvlink, numActiveLinksPerIoctrl, numLinksPerIoctrl)
 #define knvlinkIsFloorSweepingNeeded_HAL(pGpu, pKernelNvlink, numActiveLinksPerIoctrl, numLinksPerIoctrl) knvlinkIsFloorSweepingNeeded_DISPATCH(pGpu, pKernelNvlink, numActiveLinksPerIoctrl, numLinksPerIoctrl)
+#define knvlinkDirectConnectCheck(pGpu, pKernelNvlink) knvlinkDirectConnectCheck_DISPATCH(pGpu, pKernelNvlink)
+#define knvlinkDirectConnectCheck_HAL(pGpu, pKernelNvlink) knvlinkDirectConnectCheck_DISPATCH(pGpu, pKernelNvlink)
 #define knvlinkReconcileTunableState(pGpu, pEngstate, pTunableState) knvlinkReconcileTunableState_DISPATCH(pGpu, pEngstate, pTunableState)
 #define knvlinkStateInitLocked(pGpu, pEngstate) knvlinkStateInitLocked_DISPATCH(pGpu, pEngstate)
 #define knvlinkStatePreLoad(pGpu, pEngstate, arg0) knvlinkStatePreLoad_DISPATCH(pGpu, pEngstate, arg0)
@@ -1348,6 +1367,16 @@ static inline NV_STATUS knvlinkSetUniqueFabricBaseAddress_DISPATCH(OBJGPU *pGpu,
     return pKernelNvlink->__knvlinkSetUniqueFabricBaseAddress__(pGpu, pKernelNvlink, arg0);
 }
 
+NV_STATUS knvlinkHandleFaultUpInterrupt_GH100(OBJGPU *pGpu, struct KernelNvlink *pKernelNvlink, NvU32 arg0);
+
+static inline NV_STATUS knvlinkHandleFaultUpInterrupt_46f6a7(OBJGPU *pGpu, struct KernelNvlink *pKernelNvlink, NvU32 arg0) {
+    return NV_ERR_NOT_SUPPORTED;
+}
+
+static inline NV_STATUS knvlinkHandleFaultUpInterrupt_DISPATCH(OBJGPU *pGpu, struct KernelNvlink *pKernelNvlink, NvU32 arg0) {
+    return pKernelNvlink->__knvlinkHandleFaultUpInterrupt__(pGpu, pKernelNvlink, arg0);
+}
+
 NV_STATUS knvlinkValidateFabricBaseAddress_GA100(OBJGPU *pGpu, struct KernelNvlink *pKernelNvlink, NvU64 arg0);
 
 NV_STATUS knvlinkValidateFabricBaseAddress_GH100(OBJGPU *pGpu, struct KernelNvlink *pKernelNvlink, NvU64 arg0);
@@ -1534,6 +1563,16 @@ static inline NvBool knvlinkIsFloorSweepingNeeded_DISPATCH(OBJGPU *pGpu, struct 
     return pKernelNvlink->__knvlinkIsFloorSweepingNeeded__(pGpu, pKernelNvlink, numActiveLinksPerIoctrl, numLinksPerIoctrl);
 }
 
+static inline void knvlinkDirectConnectCheck_b3696a(OBJGPU *pGpu, struct KernelNvlink *pKernelNvlink) {
+    return;
+}
+
+void knvlinkDirectConnectCheck_GH100(OBJGPU *pGpu, struct KernelNvlink *pKernelNvlink);
+
+static inline void knvlinkDirectConnectCheck_DISPATCH(OBJGPU *pGpu, struct KernelNvlink *pKernelNvlink) {
+    pKernelNvlink->__knvlinkDirectConnectCheck__(pGpu, pKernelNvlink);
+}
+
 static inline NV_STATUS knvlinkReconcileTunableState_DISPATCH(POBJGPU pGpu, struct KernelNvlink *pEngstate, void *pTunableState) {
     return pEngstate->__knvlinkReconcileTunableState__(pGpu, pEngstate, pTunableState);
 }
@@ -1660,6 +1699,8 @@ NvlStatus knvlinkCoreAliTrainingCallback             (nvlink_link *link);
 
 // NVLINK Utility Functions
 void knvlinkUtoa(NvU8 *, NvU64, NvU64);
+
+NV_STATUS ioctrlFaultUpTmrHandler(OBJGPU *, struct OBJTMR *,TMR_EVENT *);
 
 #endif // _KERNEL_NVLINK_H_
 

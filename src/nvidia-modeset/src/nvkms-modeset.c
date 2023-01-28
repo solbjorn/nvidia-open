@@ -145,7 +145,7 @@ InheritPreviousModesetState(const NVDevEvoRec *pDevEvo,
                             const struct NvKmsPerOpenDev *pCurrentModesetOpenDev)
 {
     return (pCurrentModesetOpenDev != pDevEvo->pNvKmsOpenDev) &&
-                (pCurrentModesetOpenDev == pDevEvo->lastModesettingClient);
+                !pDevEvo->modesetOwnerChanged;
 }
 
 /*!
@@ -2829,7 +2829,7 @@ NvBool nvSetDispModeEvo(NVDevEvoPtr pDevEvo,
 
     pDevEvo->skipConsoleRestore = FALSE;
 
-    pDevEvo->lastModesettingClient = pOpenDev;
+    pDevEvo->modesetOwnerChanged = FALSE;
 
     FOR_ALL_EVO_DISPLAYS(pDispEvo, dispIndex, pDevEvo) {
         NvU32 head;

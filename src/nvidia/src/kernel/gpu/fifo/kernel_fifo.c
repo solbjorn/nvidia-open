@@ -294,6 +294,7 @@ _kfifoChidMgrAllocChidHeaps
         NvU32 userdBar1Size;
         NvU32 numChannels         = kfifoChidMgrGetNumChannels(pGpu, pKernelFifo, pChidMgr);
         NvU32 subProcessIsolation = 1;
+        NvBool bIsolationEnabled;
 
         pChidMgr->pGlobalChIDHeap = portMemAllocNonPaged(sizeof(OBJEHEAP));
         if (pChidMgr->pGlobalChIDHeap == NULL)
@@ -310,8 +311,9 @@ _kfifoChidMgrAllocChidHeaps
         // should not be in the same page
         //
         kfifoGetUserdSizeAlign_HAL(pKernelFifo, &userdBar1Size, NULL);
+	bIsolationEnabled = (pKernelFifo->bUsePerRunlistChram && pKernelFifo->bDisableChidIsolation) ? NV_FALSE : NV_TRUE;
         pChidMgr->pGlobalChIDHeap->eheapSetOwnerIsolation(pChidMgr->pGlobalChIDHeap,
-                                                          NV_TRUE,
+                                                          bIsolationEnabled,
                                                           RM_PAGE_SIZE / userdBar1Size);
 
         // Disable USERD allocation isolation for guest if disabled from vmioplugin
@@ -1657,6 +1659,7 @@ kfifoGetChannelIterator_IMPL
 {
     portMemSet(pIt, 0, sizeof(*pIt));
     pIt->physicalChannelID = 0;
+    pIt->pFifoDataBlock    = NULL;
     pIt->runlistId         = 0;
     pIt->numRunlists       = 1;
     if (kfifoIsPerRunlistChramEnabled(pKernelFifo))
@@ -1706,30 +1709,49 @@ NV_STATUS kfifoGetNextKernelChannel_IMPL
         }
 
         pIt->numChannels = kfifoChidMgrGetNumChannels(pGpu, pKernelFifo, pChidMgr);
+
+        if (pIt->pFifoDataBlock == NULL)
+        {
+            pIt->pFifoDataBlock = pChidMgr->pFifoDataHeap->eheapGetBlock(
+                pChidMgr->pFifoDataHeap,
+                pIt->physicalChannelID,
+                NV_TRUE);
+        }
+
         while (pIt->physicalChannelID < pIt->numChannels)
         {
-            pKernelChannel = kfifoChidMgrGetKernelChannel(pGpu, pKernelFifo,
-                                                          pChidMgr,
-                                                          pIt->physicalChannelID);
-            pIt->physicalChannelID++;
+            if (pIt->pFifoDataBlock->owner == NVOS32_BLOCK_TYPE_FREE)
+            {
+                pIt->physicalChannelID = pIt->pFifoDataBlock->end + 1;
+            }
+            else
+            {
+                pIt->physicalChannelID++;
+                pKernelChannel = (KernelChannel *)pIt->pFifoDataBlock->pData;
 
-            //
-            // This iterator can be used during an interrupt, when a KernelChannel may
-            // be in the process of being destroyed. If a KernelChannel expects a pChannel
-            // but does not have one, it means it's being destroyed and we don't want to
-            // return it.
-            //
-            if (pKernelChannel == NULL)
-                continue;
-            if (!kchannelIsValid_HAL(pKernelChannel))
-                continue;
-            *ppKernelChannel = pKernelChannel;
-            return NV_OK;
+                //
+                // This iterator can be used during an interrupt, when a KernelChannel may
+                // be in the process of being destroyed. If a KernelChannel expects a pChannel
+                // but does not have one, it means it's being destroyed and we don't want to
+                // return it.
+                //
+                if (pKernelChannel != NULL && kchannelIsValid_HAL(pKernelChannel))
+                {
+                    // Prepare iterator to check next block in pChidMgr->pFifoDataHeap
+                    pIt->pFifoDataBlock = pIt->pFifoDataBlock->next;
+                    *ppKernelChannel = pKernelChannel;
+                    return NV_OK;
+                }
+            }
+
+            // Check next block in pChidMgr->pFifoDataHeap
+            pIt->pFifoDataBlock = pIt->pFifoDataBlock->next;
         }
 
         pIt->runlistId++;
-        // Reset channel index to 0 for next runlist
+        // Reset iterator for next runlist
         pIt->physicalChannelID = 0;
+        pIt->pFifoDataBlock = NULL;
     }
 
     return NV_ERR_OBJECT_NOT_FOUND;
@@ -3351,4 +3373,3 @@ kfifoGetGuestEngineLookupTable_IMPL
 
     return guestEngineLookupTable;
 };
-

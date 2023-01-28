@@ -292,7 +292,6 @@ NV_STATUS mmuWalkProcessPdes
         //
         if (NV_ERR_MORE_PROCESSING_REQUIRED == status)
         {
-
             NvU64 vaLevelBase  = mmuFmtLevelVirtAddrLo(pLevel->pFmt, vaLo);
             NvU32 entryIndexLo = mmuFmtVirtAddrToEntryIndex(pLevel->pFmt, vaLo);
             NvU32 entryIndexHi = mmuFmtVirtAddrToEntryIndex(pLevel->pFmt, vaHi);
@@ -309,7 +308,6 @@ NV_STATUS mmuWalkProcessPdes
             RELEASE_PDES_STACK releasePdesStack;
 
             status = NV_OK;
-
             listInit(&processPdesStack, portMemAllocatorGetGlobalNonPaged());
             listInit(&releasePdesStack, portMemAllocatorGetGlobalNonPaged());
 

@@ -920,23 +920,31 @@ void DeviceImpl::applyOUIOverrides()
             if ((buffer[3] == 0x53) && (buffer[4] == 0x59) && (buffer[5] == 0x4E) && (buffer[6] == 0x41))
             {
                 // For Synaptic VMM5331 and VMM5320, it only support MSA-Over-MST for DP after Firmware 5.4.5
-                if (buffer[7] == 0x53 &&
-                    (buffer[8] == 0x31 || buffer[8] == 0x20))
+                if (buffer[7] == 0x53)
                 {
-                    this->bSdpExtCapable = False;
+                    //
+                    // This flag will be checked only in DSC Pass through cases (MST).
+                    // All Synaptics VMM53XX chips which support pass through can only support
+                    // color formats that are listed in 0x69h even in pass through mode.
+                    //
                     this->bDscPassThroughColorFormatWar = true;
-
-                    //
-                    // Check firmware version
-                    // 0x50A: FW/SW Major Revision.
-                    // 0x50B: FW/SW Minor Revision.
-                    // 0x50C: Build Number.
-                    //
-                    if ((buffer[10] >= 0x06) ||
-                        ((buffer[10] == 0x05) && (buffer[11] >= 0x05)) ||
-                        ((buffer[10] == 0x05) && (buffer[11] == 0x04) && (buffer[12] >= 0x05)))
+            
+                    if ((buffer[8] == 0x31) || (buffer[8] == 0x20))
                     {
-                        this->bSdpExtCapable = True;
+                        this->bSdpExtCapable = False;
+
+                        //
+                        // Check firmware version
+                        // 0x50A: FW/SW Major Revision.
+                        // 0x50B: FW/SW Minor Revision.
+                        // 0x50C: Build Number.
+                        //
+                        if ((buffer[10] >= 0x06) ||
+                            ((buffer[10] == 0x05) && (buffer[11] >= 0x05)) ||
+                            ((buffer[10] == 0x05) && (buffer[11] == 0x04) && (buffer[12] >= 0x05)))
+                        {
+                            this->bSdpExtCapable = True;
+                        }
                     }
                 }
             }
@@ -1041,6 +1049,46 @@ bool DeviceImpl::getSDPExtnForColorimetrySupported()
     }
 
     return (this->bSdpExtCapable == True);
+}
+
+bool DeviceImpl::getPanelFwRevision(NvU16 *revision)
+{
+    NvU8 fwRevisionMajor   = 0;
+    NvU8 fwRevisionMinor   = 0;
+    unsigned size          = 0;
+    unsigned nakReason     = NakUndefined;
+
+    if (!revision)
+    {
+        return false;
+    }
+
+    *revision = 0;
+
+    //
+    // On faked mux devices, we cannot check if the device has
+    // the capability as we don't have access to aux.
+    //
+    if (this->isFakedMuxDevice())
+    {
+        return false;
+    }
+
+    if (AuxBus::success != this->getDpcdData(NV_DPCD14_FW_SW_REVISION_MAJOR,
+                                             &fwRevisionMajor, sizeof(fwRevisionMajor), &size, &nakReason))
+    {
+        return false;
+    }
+
+    if (AuxBus::success != this->getDpcdData(NV_DPCD14_FW_SW_REVISION_MINOR,
+                                             &fwRevisionMinor, sizeof(fwRevisionMinor), &size, &nakReason))
+    {
+        return false;
+    }
+
+    *revision = (fwRevisionMajor << 8) | fwRevisionMinor;
+
+    return true;
 }
 
 bool DeviceImpl::isPowerSuspended()

@@ -264,10 +264,10 @@ _gpuApertureWriteRegUnicast
     NvU32           size
 )
 {
-    GPU_IO_DEVICE     *pDevice     = (GPU_IO_DEVICE*) pAperture->pDevice;
-    NvU32              deviceIndex = pDevice->deviceIndex;
-    NvU32              instance    = pDevice->instance;
-    NvU32              regAddr     = pAperture->baseAddress + addr;
+    GPU_IO_DEVICE     *pDevice;
+    NvU32              deviceIndex;
+    NvU32              instance;
+    NvU32              regAddr;
     NvU32              flags       = 0;
     NV_STATUS          status;
     THREAD_STATE_NODE *pThreadState;
@@ -275,6 +275,11 @@ _gpuApertureWriteRegUnicast
 
     NV_ASSERT_OR_RETURN_VOID(pAperture);
     NV_ASSERT_OR_RETURN_VOID(pAperture->pDevice);
+
+    pDevice     = (GPU_IO_DEVICE*) pAperture->pDevice;
+    deviceIndex = pDevice->deviceIndex;
+    instance    = pDevice->instance;
+    regAddr     = pAperture->baseAddress + addr;
 
     pMapping = gpuGetDeviceMapping(pGpu, deviceIndex, instance);
 
@@ -471,17 +476,23 @@ _gpuApertureReadReg
 {
     NvU32              flags       = 0;
     NvU32              returnValue = 0;
-    GPU_IO_DEVICE     *pDevice     = (GPU_IO_DEVICE*) pAperture->pDevice;
-    OBJGPU            *pGpu        = pDevice->pGpu;
+    GPU_IO_DEVICE     *pDevice;
+    OBJGPU            *pGpu;
     NV_STATUS          status      = NV_OK;
-    NvU32              regAddr     = pAperture->baseAddress + addr;
-    NvU32              deviceIndex = pDevice->deviceIndex;
-    NvU32              instance    = pDevice->instance;
+    NvU32              regAddr;
+    NvU32              deviceIndex;
+    NvU32              instance;
     THREAD_STATE_NODE *pThreadState;
     DEVICE_MAPPING *pMapping;
 
     NV_ASSERT_OR_RETURN(pAperture,          NV_ERR_INVALID_ARGUMENT);
     NV_ASSERT_OR_RETURN(pAperture->pDevice, NV_ERR_INVALID_ARGUMENT);
+
+    pDevice     = (GPU_IO_DEVICE*) pAperture->pDevice;
+    pGpu        = pDevice->pGpu;
+    regAddr     = pAperture->baseAddress + addr;
+    deviceIndex = pDevice->deviceIndex;
+    instance    = pDevice->instance;
 
     pGpu->registerAccess.regReadCount++;
 
@@ -1635,7 +1646,7 @@ gpuValidateRegOffset_IMPL
 {
     NvU64 maxBar0Size = pGpu->deviceMappings[0].gpuNvLength;
 
-    // The register offset should be 4 bytes smaller than the max bar size 
+    // The register offset should be 4 bytes smaller than the max bar size
     if (offset > (maxBar0Size - 4))
     {
         return NV_ERR_INVALID_ARGUMENT;

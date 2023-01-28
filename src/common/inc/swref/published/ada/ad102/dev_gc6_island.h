@@ -1,5 +1,5 @@
 /*
- * SPDX-FileCopyrightText: Copyright (c) 2015-2022 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+ * SPDX-FileCopyrightText: Copyright (c) 2003-2022 NVIDIA CORPORATION & AFFILIATES
  * SPDX-License-Identifier: MIT
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
@@ -21,45 +21,9 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef EFI_CONSOLE_H
-#define EFI_CONSOLE_H
+#ifndef __ad102_dev_gc6_island_h__
+#define __ad102_dev_gc6_island_h__
 
-#include "gpu/disp/kern_disp_max.h"
+#define NV_PGC6_BSI_SECURE_SCRATCH_15                                             0x001180fc /* RW-4R */
 
-struct OBJGPU;
-
-typedef struct
-{
-    NvBool isDispStateSave;
-
-    NvU32 activeDisplayId[OBJ_MAX_HEADS];
-
-    struct
-    {
-        NvU32 displayId;
-
-        struct {
-            NvU32 index;
-            NvU32 subLinkMask;
-        } sorXBar;
-
-        struct {
-            NvU32 linkBw;
-            NvU32 laneCount;
-            NvU32 linkCtl;
-        } displayPort;
-    } activeDfpState[OBJ_MAX_DFPS];
-    NvU32 numDfps;
-
-    struct
-    {
-        NvU32           coreChannelClass;
-        NvU32           cacheSize;
-        NvU32          *pCache;
-    } display;
-} nv_efi_t;
-
-void        RmSaveEFIDisplayState       (OBJGPU *pGpu);
-void        RmRestoreEFIDisplayState    (OBJGPU *pGpu);
-
-#endif // EFI_CONSOLE_H
+#endif // __ad102_dev_gc6_island_h__

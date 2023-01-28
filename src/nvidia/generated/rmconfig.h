@@ -127,6 +127,8 @@
 #define RMCFG_CHIP_T210      0
 #define RMCFG_CHIP_T186      0
 #define RMCFG_CHIP_T002_TURING_NOT_EXIST 0
+#define RMCFG_CHIP_T003_HOPPER_NOT_EXIST 0
+#define RMCFG_CHIP_T004_ADA_NOT_EXIST 0
 
 
 //
@@ -201,6 +203,8 @@
 #define RMCFG_CHIP_tAMPERE   0
 #define RMCFG_CHIP_TAMPERE   0
 #define RMCFG_CHIP_AMPERE_TEGRA_BIG_GPUS 0
+#define RMCFG_CHIP_HOPPER_TEGRA_BIG_GPUS 0
+#define RMCFG_CHIP_ADA_TEGRA_BIG_GPUS 0
 #define RMCFG_CHIP_TEGRA_NVDISP_GPUS 0
 #define RMCFG_CHIP_T23X_TEGRA_NVDISP_GPUS 0
 #define RMCFG_CHIP_TEGRA_TEGRA_NVDISP_GPUS 0
@@ -238,6 +242,7 @@
 #define RMCFG_FEATURE_RMCORE_BASE                 1  // RMCORE Base
 #define RMCFG_FEATURE_KERNEL_RM                   1  // Kernel layer of RM
 #define RMCFG_FEATURE_ORIN_PHYSICAL_RM            1  // Physical layer of RM, disabled only on Orin
+#define RMCFG_FEATURE_VGPU_GSP_PLUGIN_OFFLOAD     1  // vGPU GSP plugin offload
 #define RMCFG_FEATURE_LIBOS_3_X                   1  // Enable Libos-3.x feature
 #define RMCFG_FEATURE_NOTEBOOK                    1  // Notebook support
 #define RMCFG_FEATURE_EXTDEV                      1  // Daughter boards connected to Quadro GPUs

@@ -464,7 +464,7 @@ compile_test() {
             #
             # Added by commit 3c299dc22635 ("PCI: add
             # pci_get_domain_bus_and_slot function") in 2.6.33 but aarch64
-            # support was added by commit d1e6dc91b532 
+            # support was added by commit d1e6dc91b532
             # ("arm64: Add architectural support for PCI") in 3.18-rc1
             #
             CODE="
@@ -931,6 +931,23 @@ compile_test() {
             }"
 
             compile_check_conftest "$CODE" "NV_MDEV_DRIVER_HAS_SUPPORTED_TYPE_GROUPS" "" "types"
+        ;;
+
+        vfio_device_ops_has_dma_unmap)
+            #
+            # Determine if 'vfio_device_ops' struct has 'dma_unmap' field.
+            #
+            # Added by commit ce4b4657ff18 ("vfio: Replace the DMA unmapping
+            # notifier with a callback") in v6.0
+            #
+            CODE="
+            #include <linux/pci.h>
+            #include <linux/vfio.h>
+            int conftest_vfio_device_ops_has_dma_unmap(void) {
+                return offsetof(struct vfio_device_ops, dma_unmap);
+            }"
+
+            compile_check_conftest "$CODE" "NV_VFIO_DEVICE_OPS_HAS_DMA_UNMAP" "" "types"
         ;;
 
         pci_irq_vector_helpers)
@@ -1580,6 +1597,7 @@ compile_test() {
 
             void conftest_drm_bus_present(void) {
                 struct drm_bus bus;
+                (void)bus;
             }"
 
             compile_check_conftest "$CODE" "NV_DRM_BUS_PRESENT" "" "types"
@@ -1978,7 +1996,7 @@ compile_test() {
             #
             # Added by commit 210647af897a ("PCI: Rename pci_remove_bus_device
             # to pci_stop_and_remove_bus_device") in v3.4 (2012-02-25) but
-            # aarch64 support was added by commit d1e6dc91b532 
+            # aarch64 support was added by commit d1e6dc91b532
             # ("arm64: Add architectural support for PCI") in v3.18-rc1.
             #
             CODE="
@@ -2500,7 +2518,7 @@ compile_test() {
             fi
         ;;
 
-        vfio_pin_pages)
+        vfio_pin_pages_has_vfio_device_arg)
             #
             # Determine if vfio_pin_pages() kABI accepts "struct vfio_device *"
             # argument instead of "struct device *"
@@ -2528,6 +2546,37 @@ compile_test() {
                 rm -f conftest$$.o
             else
                 echo "#undef NV_VFIO_PIN_PAGES_HAS_VFIO_DEVICE_ARG" | append_conftest "functions"
+            fi
+        ;;
+
+        vfio_pin_pages_has_pages_arg)
+            #
+            # Determine if vfio_pin_pages() kABI accepts "struct pages **:
+            # argument instead of "unsigned long *phys_pfn"
+            #
+            # Replaced "unsigned long *phys_pfn" with "struct pages **pages"
+            # in commit 34a255e676159 ("vfio: Replace phys_pfn with pages for
+            # vfio_pin_pages()") in v6.0.
+            #
+            echo "$CONFTEST_PREAMBLE
+            #include <linux/pci.h>
+            #include <linux/vfio.h>
+            int vfio_pin_pages(struct vfio_device *device,
+                               dma_addr_t iova,
+                               int npage,
+                               int prot,
+                               struct page **pages) {
+                return 0;
+            }" > conftest$$.c
+
+            $CC $CFLAGS -c conftest$$.c > /dev/null 2>&1
+            rm -f conftest$$.c
+
+            if [ -f conftest$$.o ]; then
+                echo "#define NV_VFIO_PIN_PAGES_HAS_PAGES_ARG" | append_conftest "functions"
+                rm -f conftest$$.o
+            else
+                echo "#undef NV_VFIO_PIN_PAGES_HAS_PAGES_ARG" | append_conftest "functions"
             fi
         ;;
 
@@ -2624,8 +2673,8 @@ compile_test() {
             #
             # Added by commit b164d31f50b2 ("drm/modes: add connector reference
             # counting. (v2)") in v4.7 (2016-05-04), when it replaced
-            # drm_connector_find(). 
-            # 
+            # drm_connector_find().
+            #
             # It was originally added in drm_crtc.h, then moved to
             # drm_connector.h by commit 522171951761
             # ("drm: Extract drm_connector.[hc]") in v4.9 (2016-08-12)
@@ -2649,7 +2698,7 @@ compile_test() {
             #
             # Determine if function drm_connector_put() is present.
             #
-            # Added by commit ad09360750af ("drm: Introduce 
+            # Added by commit ad09360750af ("drm: Introduce
             # drm_connector_{get,put}()") in v4.12 (2017-02-28),
             # when it replaced drm_connector_unreference() that
             # was added with NV_DRM_CONNECTOR_LOOKUP_PRESENT.
@@ -5301,6 +5350,29 @@ compile_test() {
             }"
 
             compile_check_conftest "$CODE" "NV_ACPI_VIDEO_BACKLIGHT_USE_NATIVE" "" "functions"
+        ;;
+
+        drm_connector_has_override_edid)
+            #
+            # Determine if 'struct drm_connector' has an 'override_edid' member.
+            #
+            # Removed by commit 90b575f52c6ab ("drm/edid: detach debugfs EDID
+            # override from EDID property update") in linux-next, expected in
+            # v6.2-rc1.
+            #
+            CODE="
+            #include <linux/stddef.h>
+            #if defined(NV_DRM_DRM_CRTC_H_PRESENT)
+            #include <drm/drm_crtc.h>
+            #endif
+            #if defined(NV_DRM_DRM_CONNECTOR_H_PRESENT)
+            #include <drm/drm_connector.h>
+            #endif
+            int conftest_drm_connector_has_override_edid(void) {
+                return offsetof(struct drm_connector, override_edid);
+            }"
+
+            compile_check_conftest "$CODE" "NV_DRM_CONNECTOR_HAS_OVERRIDE_EDID" "" "types"
         ;;
 
         # When adding a new conftest entry, please use the correct format for

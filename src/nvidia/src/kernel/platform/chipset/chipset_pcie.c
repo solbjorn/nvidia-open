@@ -5149,6 +5149,11 @@ NvU16 _clPcieGetDiagnosticData(OBJGPU *pGpu, CL_PCIE_DC_DIAGNOSTIC_COLLECTION_EN
             // if this block doesn't fit, skip it but continue because another block might.
             continue;
         }
+        if ((blkHeader.deviceType == RM_PCIE_DEVICE_TYPE_NONE) || (blkHeader.action == RM_PCIE_ACTION_EOS))
+        {
+            NV_ASSERT(blkHeader.action == RM_PCIE_ACTION_EOS);
+            break;
+        }
         if (pPCIeHandles[blkHeader.deviceType] == NULL)
         {
             continue;
@@ -5264,10 +5269,6 @@ NvU16 _clPcieGetDiagnosticData(OBJGPU *pGpu, CL_PCIE_DC_DIAGNOSTIC_COLLECTION_EN
                 &blkHeader,
                 0, 0,
                 &pBuffer[collectedDataSize], size - collectedDataSize);
-            break;
-
-        case RM_PCIE_ACTION_EOS:
-            idx = count;
             break;
 
         default:

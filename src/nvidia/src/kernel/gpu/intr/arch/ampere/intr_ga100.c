@@ -73,7 +73,8 @@ intrGetUvmSharedLeafEnDisableMask_GA100
     ct_assert((NV_CTRL_INTR_SUBTREE_TO_LEAF_IDX_END(NV_CPU_INTR_UVM_SHARED_SUBTREE_LAST) - 1) ==
                NV_CTRL_INTR_SUBTREE_TO_LEAF_IDX_START(NV_CPU_INTR_UVM_SHARED_SUBTREE_START));
 
-    // GSP RM services both MMU non-replayable fault and FIFO interrupts
+    // GSP RM services both MMU non-replayable fault and FIFO interrupts with
+    // vgpu plugin offload enabled. Otherwise, GSP RM only services FIFO interrupts
     if (IS_GSP_CLIENT(pGpu))
     {
         return ~mask;
@@ -86,7 +87,7 @@ intrGetUvmSharedLeafEnDisableMask_GA100
         intrVectorTimerSwrl = intrGetVectorFromEngineId(pGpu, pIntr, MC_ENGINE_IDX_TMR_SWRL, NV_FALSE);
     }
 
-    if (intrVectorTimerSwrl != NV_INTR_VECTOR_INVALID)
+    if (intrVectorNonReplayableFault != NV_INTR_VECTOR_INVALID && intrVectorTimerSwrl != NV_INTR_VECTOR_INVALID)
     {
         // Ascertain that they're in the same subtree and same leaf
         NV_ASSERT(NV_CTRL_INTR_GPU_VECTOR_TO_SUBTREE(intrVectorNonReplayableFault) ==
@@ -95,14 +96,22 @@ intrGetUvmSharedLeafEnDisableMask_GA100
                 NV_CTRL_INTR_GPU_VECTOR_TO_LEAF_REG(intrVectorTimerSwrl));
     }
 
-    // Ascertain that they're in the first leaf
-    NV_ASSERT(NV_CTRL_INTR_GPU_VECTOR_TO_LEAF_REG(intrVectorNonReplayableFault) ==
-              NV_CTRL_INTR_SUBTREE_TO_LEAF_IDX_START(NV_CPU_INTR_UVM_SHARED_SUBTREE_START));
+    // On GSP we service non replayable faults in the bottom half, so we shouldn't mask them
+    if (intrVectorNonReplayableFault != NV_INTR_VECTOR_INVALID)
+    {
+        // Ascertain that it's in the first leaf
+        NV_ASSERT(NV_CTRL_INTR_GPU_VECTOR_TO_LEAF_REG(intrVectorNonReplayableFault) ==
+                NV_CTRL_INTR_SUBTREE_TO_LEAF_IDX_START(NV_CPU_INTR_UVM_SHARED_SUBTREE_START));
 
-    mask = NVBIT32(NV_CTRL_INTR_GPU_VECTOR_TO_LEAF_BIT(intrVectorNonReplayableFault));
+        mask |= NVBIT32(NV_CTRL_INTR_GPU_VECTOR_TO_LEAF_BIT(intrVectorNonReplayableFault));
+    }
 
     if (intrVectorTimerSwrl != NV_INTR_VECTOR_INVALID)
     {
+        // Ascertain that it's in the first leaf
+        NV_ASSERT(NV_CTRL_INTR_GPU_VECTOR_TO_LEAF_REG(intrVectorTimerSwrl) ==
+                NV_CTRL_INTR_SUBTREE_TO_LEAF_IDX_START(NV_CPU_INTR_UVM_SHARED_SUBTREE_START));
+
         mask |= NVBIT32(NV_CTRL_INTR_GPU_VECTOR_TO_LEAF_BIT(intrVectorTimerSwrl));
     }
 
