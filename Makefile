@@ -75,7 +75,7 @@ endif
 # $(EXTRA_CFLAGS) to ccflags-y for compatibility.
 #
 
-subdir-ccflags-y += -DNV_VERSION_STRING=$(call stringify,525.85.05)
+subdir-ccflags-y += -DNV_VERSION_STRING=$(call stringify,525.85.12)
 
 COMMON_CFLAGS += -I$(src)/common/inc
 COMMON_CFLAGS += -DNVRM
