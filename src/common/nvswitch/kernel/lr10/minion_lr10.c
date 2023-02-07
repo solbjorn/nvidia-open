@@ -21,12 +21,14 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
+#include <linux/firmware.h>
+#include <linux/pci.h>
+
+#include <core/bin_data.h>
 #include "nvlink_export.h"
 #include "common_nvswitch.h"
 #include "lr10/lr10.h"
 #include "lr10/minion_lr10.h"
-#include "lr10/minion_production_ucode_lr10_dbg.h"
-#include "lr10/minion_production_ucode_lr10_prod.h"
 #include "regkey_nvswitch.h"
 
 #include "nvswitch/lr10/dev_nvlipt_lnk_ip.h"
@@ -132,7 +134,7 @@ _nvswitch_minion_pre_init
     //
 
     // falcon interrupt mask is set through IRQMSET
-    falconIntrMask = (DRF_DEF(_CMINION, _FALCON_IRQMSET, _WDTMR, _SET) | 
+    falconIntrMask = (DRF_DEF(_CMINION, _FALCON_IRQMSET, _WDTMR, _SET) |
                       DRF_DEF(_CMINION, _FALCON_IRQMSET, _HALT, _SET)  |
                       DRF_DEF(_CMINION, _FALCON_IRQMSET, _EXTERR, _SET)|
                       DRF_DEF(_CMINION, _FALCON_IRQMSET, _SWGEN0, _SET)|
@@ -902,6 +904,11 @@ done:
     return status;
 }
 
+BINDATA_FIRMWARE("minion_ucode_data_lr10_dbg.bin");
+BINDATA_FIRMWARE("minion_ucode_header_lr10_dbg.bin");
+BINDATA_FIRMWARE("minion_ucode_data_lr10_prd.bin");
+BINDATA_FIRMWARE("minion_ucode_header_lr10_prd.bin");
+
 /*
  * @Brief : Load minion ucode image
  *
@@ -913,6 +920,9 @@ _nvswitch_load_minion_ucode_image
     nvswitch_device *device
 )
 {
+	struct pci_dev *pdev = device->os_handle;
+	const struct firmware *hdr, *img;
+	const char *hdrname, *imgname;
     NvlStatus status;
     NvU32 data;
     NvBool bDebugMode = NV_FALSE;
@@ -935,34 +945,41 @@ _nvswitch_load_minion_ucode_image
     bDebugMode = FLD_TEST_DRF(_CMINION, _SCP_CTL_STAT, _DEBUG_MODE, _DISABLED, data) ?
                  (NV_FALSE) : (NV_TRUE);
 
+	if (bDebugMode) {
+		hdrname = "minion_ucode_header_lr10_dbg.bin";
+		imgname = "minion_ucode_data_lr10_dbg.bin";
+	} else {
+		hdrname = "minion_ucode_header_lr10_prd.bin";
+		imgname = "minion_ucode_data_lr10_prd.bin";
+	}
+
+	status = request_firmware(&hdr, hdrname, &pdev->dev);
+	if (status)
+		return status;
+
+	status = request_firmware(&img, imgname, &pdev->dev);
+	if (status) {
+		release_firmware(hdr);
+		return status;
+	}
+
     //
     // If ucode load fails via regkey fallback to the default ucode.
     // Copy the ucode to IMEM and DMEM by using backdoor PMB access
     //
-    if (bDebugMode)
-    {
-        status = _nvswitch_minion_copy_ucode_bc(device, minion_ucode_data_lr10_dbg, minion_ucode_header_lr10_dbg);
-        if (status != NVL_SUCCESS)
-        {
-            NVSWITCH_PRINT(device, ERROR,
-                "%s: Unable to copy dbg MINION ucode in broadcast mode!\n",
-                __FUNCTION__);
-            return status;
-        }
-    }
-    else
-    {
-        status = _nvswitch_minion_copy_ucode_bc(device, minion_ucode_data_lr10_prod, minion_ucode_header_lr10_prod);
-        if (status != NVL_SUCCESS)
-        {
-            NVSWITCH_PRINT(device, ERROR,
-                "%s: Unable to copy prod MINION ucode in broadcast mode!\n",
-                __FUNCTION__);
-            return status;
-        }
-    }
+	status = _nvswitch_minion_copy_ucode_bc(device, (const u32 *)img->data,
+						(const u32 *)hdr->data);
+	release_firmware(hdr);
+	release_firmware(img);
 
-    return status;
+	if (status != NVL_SUCCESS) {
+		NVSWITCH_PRINT(device, ERROR,
+			       "%s: Unable to copy MINION ucode in broadcast mode!\n",
+			       __func__);
+		return status;
+	}
+
+	return 0;
 }
 
 /*
@@ -1387,4 +1404,3 @@ nvswitch_minion_clear_dl_error_counters_lr10
     }
     return status;
 }
-
