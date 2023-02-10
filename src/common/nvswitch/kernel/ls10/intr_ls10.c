@@ -4908,7 +4908,7 @@ _nvswitch_service_nvltlc_fatal_ls10
         // as the IP's registers are off
         //
         if (nvswitch_is_link_in_reset(device, link) ||
-            !nvswitch_are_link_clocks_on_ls10(device, link,NVSWITCH_PER_LINK_CLOCK_SET(NCISOCCLK)));
+            !nvswitch_are_link_clocks_on_ls10(device, link,NVSWITCH_PER_LINK_CLOCK_SET(NCISOCCLK)))
         {
             continue;
         }
@@ -5555,7 +5555,7 @@ _nvswitch_deferred_link_errors_check_ls10
 
     if (pErrorReportParams)
     {
-    nvswitch_os_free(pErrorReportParams);
+        nvswitch_os_free(pErrorReportParams);
     }
     chip_device->deferredLinkErrors[link].bLinkErrorsCallBackEnabled = NV_FALSE;
 }

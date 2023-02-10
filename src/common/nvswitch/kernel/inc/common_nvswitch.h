@@ -93,7 +93,9 @@ static NV_INLINE void nvswitch_clear_flags(NvU32 *val, NvU32 flags)
 #define NVSWITCH_INSTANCE_LEN 2
 #endif
 
-#define NV_ARRAY_ELEMENTS(x)   ((sizeof(x)/sizeof((x)[0])))
+#ifndef NV_ARRAY_ELEMENTS
+#define NV_ARRAY_ELEMENTS(x)	ARRAY_SIZE(x)
+#endif
 
 #define NVSWITCH_DBG_LEVEL NVSWITCH_DBG_LEVEL_INFO
 
@@ -281,7 +283,7 @@ typedef struct NVSWITCH_TASK
 
 #define NVSWITCH_TASK_TYPE_FLAGS_RUN_EVEN_IF_DEVICE_NOT_INITIALIZED     0x1    // Run even the if not initialized
 #define NVSWITCH_TASK_TYPE_FLAGS_RUN_ONCE                               0x2    // Only run the task once. Memory for task struct and args will be freed by dispatcher after running.
-#define NVSWITCH_TASK_TYPE_FLAGS_VOID_PTR_ARGS                          0x4    // Function accepts args as void * args. 
+#define NVSWITCH_TASK_TYPE_FLAGS_VOID_PTR_ARGS                          0x4    // Function accepts args as void * args.
 
 //
 // Wrapper struct for deffered SXID errors
@@ -540,10 +542,10 @@ NvU64 nvswitch_read_64bit_counter(nvswitch_device *device, NvU32 lo_offset, NvU3
 void nvswitch_timeout_create(NvU64 timeout_ns, NVSWITCH_TIMEOUT *time);
 NvBool nvswitch_timeout_check(NVSWITCH_TIMEOUT *time);
 NvlStatus nvswitch_task_create(nvswitch_device *device,
-                               void (*task_fn)(nvswitch_device *device), 
+                               void (*task_fn)(nvswitch_device *device),
                                NvU64 period_nsec, NvU32 flags);
 NvlStatus nvswitch_task_create_args(nvswitch_device* device, void *fn_args,
-                               void (*task_fn)(nvswitch_device* device, void *fn_args), 
+                               void (*task_fn)(nvswitch_device* device, void *fn_args),
                                NvU64 period_nsec, NvU32 flags);
 void nvswitch_tasks_destroy(nvswitch_device *device);
 
