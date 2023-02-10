@@ -949,8 +949,8 @@ _nvswitch_load_minion_ucode_image
 		hdrname = "minion_ucode_header_lr10_dbg.bin";
 		imgname = "minion_ucode_data_lr10_dbg.bin";
 	} else {
-		hdrname = "minion_ucode_header_lr10_prd.bin";
-		imgname = "minion_ucode_data_lr10_prd.bin";
+		hdrname = "minion_ucode_header_lr10_prod.bin";
+		imgname = "minion_ucode_data_lr10_prod.bin";
 	}
 
 	status = request_firmware(&hdr, hdrname, &pdev->dev);
