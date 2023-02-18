@@ -75,7 +75,7 @@ struct GpuEngineEventNotificationList
     // Set to non-zero under pSpinlock, set to zero outside of the lock in ISR
     // Insertions/removals on eventNotificationList are blocked while non-zero
     //
-    volatile NvU32 pendingEventNotifyCount;
+	atomic_t			pendingEventNotifyCount;
 };
 
 static NV_STATUS _insertEventNotification
@@ -146,10 +146,12 @@ void gpuEngineEventNotificationListDestroy
     GpuEngineEventNotificationList *pEventNotificationList
 )
 {
+	const GpuEngineEventNotificationList *list = pEventNotificationList;
+
     if (pEventNotificationList == NULL)
         return;
 
-    NV_ASSERT(pEventNotificationList->pendingEventNotifyCount == 0);
+	NV_ASSERT(!atomic_read(&list->pendingEventNotifyCount));
 
     NV_ASSERT(listCount(&pEventNotificationList->pendingEventNotifyList) == 0);
     listDestroy(&pEventNotificationList->pendingEventNotifyList);
@@ -168,6 +170,8 @@ static void _gpuEngineEventNotificationListLockPreemptible
     GpuEngineEventNotificationList *pEventNotificationList
 )
 {
+	const GpuEngineEventNotificationList *list = pEventNotificationList;
+
     do
     {
         portSyncSpinlockAcquire(pEventNotificationList->pSpinlock);
@@ -179,8 +183,8 @@ static void _gpuEngineEventNotificationListLockPreemptible
         // preemption, to guarantee that _gpuEngineEventNotificationListNotify()
         // can make forward progress to drain the pending notifications list.
         //
-        if (pEventNotificationList->pendingEventNotifyCount == 0)
-            return;
+		if (!atomic_read(&list->pendingEventNotifyCount))
+			return;
 
         portSyncSpinlockRelease(pEventNotificationList->pSpinlock);
 
@@ -189,8 +193,8 @@ static void _gpuEngineEventNotificationListLockPreemptible
         // This can only be done in a preemptible context (i.e., add
         // or remove notification in a thread context).
         //
-        while (pEventNotificationList->pendingEventNotifyCount > 0)
-            osSpinLoop();
+		while (atomic_read(&list->pendingEventNotifyCount) > 0)
+			osSpinLoop();
     } while (NV_TRUE);
 }
 
@@ -273,6 +277,7 @@ static NV_STATUS _gpuEngineEventNotificationListNotify
     NvHandle hEvent
 )
 {
+	const GpuEngineEventNotificationList *list = pEventNotificationList;
     NV_STATUS status = NV_OK;
     PendingEventNotifyList *pPending =
         &pEventNotificationList->pendingEventNotifyList;
@@ -289,7 +294,7 @@ static NV_STATUS _gpuEngineEventNotificationListNotify
         EngineEventNotificationListIter engit;
 
         // We don't expect this to be called multiple times in parallel
-        NV_ASSERT_OR_ELSE(pEventNotificationList->pendingEventNotifyCount == 0,
+		NV_ASSERT_OR_ELSE(!atomic_read(&list->pendingEventNotifyCount),
         {
             portSyncSpinlockRelease(pEventNotificationList->pSpinlock);
             return NV_ERR_INVALID_STATE;

@@ -72,7 +72,7 @@ struct KGRAPHICS_FECS_TRACE_INFO
     NvU16  fecsCtxswLogRecordsPerIntr;
     NvU16  fecsTraceRdOffset;
     NvU16  fecsTraceCounter;
-    NvU32  fecsCtxswLogIntrPending;
+	atomic_t			fecsCtxswLogIntrPending;
 
 #if PORT_IS_MODULE_SUPPORTED(crypto)
     PORT_CRYPTO_PRNG *pFecsLogPrng;
@@ -1483,4 +1483,3 @@ fecsSetVgpuStagingBuffer
 
     pFecsTraceInfo->pVgpuStaging = pStagingBuffer;
 }
-

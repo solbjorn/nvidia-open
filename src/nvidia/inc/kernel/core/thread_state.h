@@ -131,7 +131,7 @@ typedef struct THREAD_STATE_DB
      * Thread state sequencer id counter.  The last allocated thread state
      * sequencer id via @ref threadStateInitXYZ().
      */
-    NvU32   threadSeqCntr;
+	atomic_t			threadSeqCntr;
     PORT_SPINLOCK *spinlock;
     ThreadStateNodeMap  dbRoot;
     ThreadStateNodeMap  dbRootPreempted;
@@ -149,7 +149,7 @@ typedef struct THREAD_STATE_DB
 
 //
 // The normal power transition requirement for Windows is 4 seconds.
-// Use longer time to let OS fire timeout and ask recovery. 
+// Use longer time to let OS fire timeout and ask recovery.
 //
 #define TIMEOUT_WDDM_POWER_TRANSITION_INTERVAL_MS       9800
 

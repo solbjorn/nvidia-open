@@ -494,7 +494,7 @@ struct nv_file_private_t
 
     nv_file_private_t *ctl_nvfp;
     void *ctl_nvfp_priv;
-    NvU32 register_or_refcount;
+	atomic_t		register_or_refcount;
 };
 
 // Forward define the gpu ops structures

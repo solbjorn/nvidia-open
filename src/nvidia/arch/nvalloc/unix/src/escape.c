@@ -787,8 +787,11 @@ NV_STATUS RmIoctl(
                                                  NVFP_TYPE_NONE))
                 {
                     // Is this already refcounted...
-                    if (dev_nvfp->register_or_refcount != NVFP_TYPE_REFCOUNTED)
-                    {
+					const atomic_t *a;
+
+					a = &dev_nvfp->register_or_refcount;
+					if (atomic_read(a) !=
+					    NVFP_TYPE_REFCOUNTED) {
                         nv_put_file_private(priv);
                         rmStatus = NV_ERR_IN_USE;
                         goto done;
@@ -912,7 +915,7 @@ NV_STATUS RmIoctl(
             // fd is closed, too, to ensure that the fd associated with
             // ctl_nvfp remains valid.
             //
-            portAtomicSetSize(&nvfp->ctl_nvfp, ctl_nvfp);
+            xchg(&nvfp->ctl_nvfp, ctl_nvfp);
             nvfp->ctl_nvfp_priv = priv;
 
             // UNLOCK: release API lock

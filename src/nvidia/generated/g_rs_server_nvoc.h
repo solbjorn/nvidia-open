@@ -76,7 +76,7 @@ struct RsShared {
     struct Object __nvoc_base_Object;
     struct Object *__nvoc_pbase_Object;
     struct RsShared *__nvoc_pbase_RsShared;
-    NvS32 refCount;
+	atomic_t		refCount;
     struct MapNode node;
 };
 
@@ -316,8 +316,8 @@ struct RsServer
     NvU32                     internalHandleBase;
     NvU32                     clientHandleBase;
 
-    NvU32                     activeClientCount;
-    NvU64                     activeResourceCount;
+	atomic_t		activeClientCount;
+	atomic64_t		activeResourceCount;
 };
 
 /**

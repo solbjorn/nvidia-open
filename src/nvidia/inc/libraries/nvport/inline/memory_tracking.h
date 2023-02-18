@@ -54,14 +54,13 @@ void _portMemAllocatorFree(PORT_MEM_ALLOCATOR *pAlloc, void *pMem);
 void portMemInitializeAllocatorTrackingLimit(NvU32 pid, NvU64 heapSize, NvBool bLimitEnabled);
 #endif
 
-typedef struct PORT_MEM_COUNTER
-{
-    volatile NvU32    activeAllocs;
-    volatile NvU32    totalAllocs;
-    volatile NvU32    peakAllocs;
-    volatile NvLength activeSize;
-    volatile NvLength totalSize;
-    volatile NvLength peakSize;
+typedef struct PORT_MEM_COUNTER {
+	atomic_long_t	activeSize;
+	atomic_long_t	totalSize;
+	atomic_long_t	peakSize;
+	atomic_t	activeAllocs;
+	atomic_t	totalAllocs;
+	atomic_t	peakAllocs;
 } PORT_MEM_COUNTER;
 
 typedef struct PORT_MEM_FENCE_HEAD

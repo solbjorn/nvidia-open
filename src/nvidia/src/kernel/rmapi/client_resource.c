@@ -4351,9 +4351,10 @@ NV_STATUS cliresCtrlCmdSystemGetClientDatabaseInfo_IMPL
     NV0000_CTRL_SYSTEM_GET_CLIENT_DATABASE_INFO_PARAMS *pParams
 )
 {
-    pParams->clientCount = g_resServ.activeClientCount;
-    pParams->resourceCount = g_resServ.activeResourceCount;
-    return NV_OK;
+	pParams->clientCount = atomic_read(&g_resServ.activeClientCount);
+	pParams->resourceCount = atomic64_read(&g_resServ.activeResourceCount);
+
+	return NV_OK;
 }
 
 /*!

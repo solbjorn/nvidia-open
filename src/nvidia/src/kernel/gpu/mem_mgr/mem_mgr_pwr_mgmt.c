@@ -200,7 +200,7 @@ memmgrSavePowerMgmtState_KERNEL
 /*!
  * Restore video memory
  */
-static volatile NvS32 concurrentfbRestorePowerMgmtStateAccess[NV_MAX_DEVICES] = { 0 };
+static atomic_t concurrentfbRestorePowerMgmtStateAccess[NV_MAX_DEVICES];
 NV_STATUS
 memmgrRestorePowerMgmtState_KERNEL
 (

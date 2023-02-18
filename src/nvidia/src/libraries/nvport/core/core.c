@@ -22,22 +22,22 @@
  */
 #include "nvport/nvport.h"
 
-typedef struct _PORT_STATE
-{
-    NvU32 initCount;
-} PORT_STATE;
-static PORT_STATE portState;
-
+typedef struct _PORT_STATE {
 // RISC-V implementation of atomics requires initialization
 // Disable initCount atomic operations for RISC-V builds
 #if PORT_IS_MODULE_SUPPORTED(atomic) && !NVCPU_IS_RISCV64
-#define PORT_DEC(x) portAtomicDecrementS32((volatile NvS32 *)&x)
-#define PORT_INC(x) portAtomicIncrementS32((volatile NvS32 *)&x)
+	atomic_t	initCount;
+#define PORT_READ(x)	atomic_read(&(x))
+#define PORT_DEC(x)	atomic_dec_return(&(x))
+#define PORT_INC(x)	atomic_inc_return(&(x))
 #else
-#define PORT_DEC(x) --x
-#define PORT_INC(x) ++x
+	u32		initCount;
+#define PORT_READ(x)	(x)
+#define PORT_DEC(x)	(--(x))
+#define PORT_INC(x)	(++(x))
 #endif
-
+} PORT_STATE;
+static PORT_STATE portState;
 
 /// @todo Add better way to initialize all modules
 NV_STATUS portInitialize(void)
@@ -94,5 +94,5 @@ void portShutdown(void)
 
 NvBool portIsInitialized(void)
 {
-    return portState.initCount > 0;
+	return PORT_READ(portState.initCount) > 0;
 }

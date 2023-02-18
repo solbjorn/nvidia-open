@@ -50,7 +50,7 @@
 typedef struct
 {
     PORT_SEMAPHORE *    pWaitSema; // Binary semaphore. See bug 1716608
-    volatile NvS32      count;
+	atomic_t		count;
     volatile NvBool     bRunning;
     volatile NvBool     bSignaled;
     OS_THREAD_HANDLE    threadId;
@@ -90,7 +90,7 @@ typedef struct
     // Mask of GPUs that have been "hidden" by the rmGpuLockHide routine.
     // Atomically read/written
     //
-    NvU32 volatile      gpusHiddenMask;
+	atomic_t		gpusHiddenMask;
 
     //
     // Mask of GPUs currently locked.
@@ -205,7 +205,7 @@ rmGpuLockAlloc(NvU32 gpuInst)
         goto done;
     }
 
-    pGpuLock->count = 1;
+	atomic_set(&pGpuLock->count, 1);
     pGpuLock->bRunning = NV_FALSE;
     pGpuLock->bSignaled = NV_FALSE;
     pGpuLock->threadId = ~(NvU64)0;
@@ -363,8 +363,7 @@ rmGpuLockFree(NvU32 gpuInst)
         // Wake up all threads that are waiting, and wait until the holding one
         // is done.
         //
-        while (pGpuLock->count <= 0) // volatile read
-        {
+		while (atomic_read(&pGpuLock->count) <= 0) {
             portSyncSemaphoreRelease(pGpuLock->pWaitSema);
             osSchedule(); // Yield execution
             portSyncSemaphoreAcquire(pGpuLock->pWaitSema);
@@ -607,8 +606,7 @@ _rmGpuLocksAcquire(NvU32 gpuMask, NvU32 flags, NvU32 module, void *ra, NvU32 *pG
             }
             else if (bHighIrql)
             {
-                if (pGpuLock->count <= 0)
-                {
+				if (atomic_read(&pGpuLock->count) <= 0) {
                     status = NV_ERR_STATE_IN_USE;
                     goto done;
                 }
@@ -645,8 +643,7 @@ _rmGpuLocksAcquire(NvU32 gpuMask, NvU32 flags, NvU32 module, void *ra, NvU32 *pG
         // Check to see if the lock is not free...we should only fall into this
         // case if we can actually tolerate waiting for it.
         //
-        if (!bCondAcquireCheck && (pGpuLock->count <= 0))
-        {
+		if (!bCondAcquireCheck && atomic_read(&pGpuLock->count) <= 0) {
             //
             // Assert that this is not already the owner of the GpusLock
             // (the lock will cause a hang if acquired recursively)
@@ -1166,8 +1163,10 @@ static void _gpuLocksReleaseHandleDeferredWork(NvU32 gpuMask)
 
         for (i = 0; i < MAX_DEFERRED_CMDS; i++)
         {
-            if (pGpu->pRmCtrlDeferredCmd[i].pending == RMCTRL_DEFERRED_READY)
-            {
+			const atomic_t *pend;
+
+			pend = &pGpu->pRmCtrlDeferredCmd[i].pending;
+			if (atomic_read(pend) == RMCTRL_DEFERRED_READY) {
                 // ignore failure here since caller won't be able to receive it
                 if (rmControl_Deferred(&pGpu->pRmCtrlDeferredCmd[i]) != NV_OK)
                 {
@@ -1199,7 +1198,7 @@ static void _gpuLocksReleaseHandleDeferredWork(NvU32 gpuMask)
 static NvU32
 _rmGpuLocksRelease(NvU32 gpuMask, NvU32 flags, OBJGPU *pDpcGpu, void *ra)
 {
-    static volatile NvU32 bug200413011_WAR_WakeUpMask;
+	static atomic_t bug200413011_WAR_WakeUpMask;
     GPULOCK *pGpuLock;
     NvU32   gpuMaskWakeup = 0;
     NvU32   gpuInst;
@@ -1283,8 +1282,7 @@ _rmGpuLocksRelease(NvU32 gpuMask, NvU32 flags, OBJGPU *pDpcGpu, void *ra)
 
         pGpuLock = &rmGpuLockInfo.gpuLocks[gpuInst];
 
-        if (pGpuLock->count < 0)
-        {
+		if (atomic_read(&pGpuLock->count) < 0) {
             if (!pGpuLock->bSignaled)
             {
                 gpuMaskWakeup |= NVBIT(gpuInst);
@@ -1325,7 +1323,7 @@ _rmGpuLocksRelease(NvU32 gpuMask, NvU32 flags, OBJGPU *pDpcGpu, void *ra)
             pGpuLock->threadId = ~(NvU64)0;
 
             portAtomicIncrementS32(&pGpuLock->count);
-            NV_ASSERT(pGpuLock->count <= 1);
+			NV_ASSERT(atomic_read(&pGpuLock->count) <= 1);
 
             // update gpusLockedMask
             rmGpuLockInfo.gpusLockedMask &= ~NVBIT(gpuInst);
@@ -1349,10 +1347,14 @@ _rmGpuLocksRelease(NvU32 gpuMask, NvU32 flags, OBJGPU *pDpcGpu, void *ra)
 
     if (bSemaCanWake)
     {
-        NvU32 extraWakeUp;
-        do { extraWakeUp = bug200413011_WAR_WakeUpMask; }
-        while (!portAtomicCompareAndSwapU32(&bug200413011_WAR_WakeUpMask, 0, extraWakeUp));
-        gpuMaskWakeup |= extraWakeUp;
+	atomic_t *mask = &bug200413011_WAR_WakeUpMask;
+	NvU32 wk;
+
+		do {
+			wk = atomic_read(mask);
+		} while (!portAtomicCompareAndSwapU32(mask, 0, wk));
+
+	gpuMaskWakeup |= wk;
     }
 
     //
@@ -1585,7 +1587,8 @@ rmGpuLockShow(NvU32 gpuMask)
 
 NvBool rmGpuLockIsHidden(OBJGPU *pGpu)
 {
-    return ((rmGpuLockInfo.gpusHiddenMask & NVBIT(pGpu->gpuInstance)) != 0);
+	return !!(atomic_read(&rmGpuLockInfo.gpusHiddenMask) &
+		  NVBIT(pGpu->gpuInstance));
 }
 
 //

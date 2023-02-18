@@ -31,7 +31,7 @@ extern "C" {
 #define RM_USER_SHARED_DATA                      (0x000000de)
 
 typedef struct NV00DE_SHARED_DATA {
-    volatile NvU32 seq;
+	atomic_t	seq;
 
     NvU32 bar1Size;
     NvU32 bar1AvailSize;

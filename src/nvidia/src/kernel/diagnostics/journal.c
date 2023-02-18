@@ -84,12 +84,12 @@ static void nvdDebuggerControlFunc(void);
 #if !defined(DEBUG) && !defined(QA_BUILD)
 static NvBool rcdProbeGpuPresent(OBJGPU *pGpu, NvU64 ip);
 static NvBool rcdProbeAllGpusPresent(NvU64 ip);
-static volatile NvS32 probeGpuRecursion = 0;
+static atomic_t probeGpuRecursion;
 #endif
 #endif
 static NvU32 _rcdbGetOcaRecordSizeWithHeader(Journal *pRcDB, RMCD_RECORD_TYPE type);
-static volatile NvS32 concurrentRingBufferAccess = 0;
-static volatile NvS32 assertListRecursion = 0;
+static atomic_t concurrentRingBufferAccess;
+static atomic_t assertListRecursion;
 static void rcdbFindRingBufferForType(Journal *pRcDB, RMCD_RECORD_TYPE recType, RING_BUFFER_LOG **ppRingBuffer);
 static NV_STATUS _rcdbGetNocatJournalRecord(OBJRCDB* pRcdb,
     NvU32 id, NvBool bExactMatch,
@@ -98,7 +98,7 @@ static NV_STATUS _rcdbNocatReportAssert(OBJGPU* pGpu, RmRCCommonAssert_RECORD* p
 
 // Global flag to make sure we never re-enter the nvLog code.
 #if defined(DEBUG) || defined(ASSERT_BUILD) || defined(QA_BUILD) || ((defined(_WIN32) || defined(_WIN64) || defined(NV_UNIX)) && !defined(NV_MODS))
-static volatile NvS32 nvLogRecursion = 0;
+static atomic_t nvLogRecursion;
 #endif
 
 // NvDump interface config - communicates with external kernel debuggers
@@ -3153,10 +3153,8 @@ static RM_NOCAT_JOURNAL_ENTRY* _rcdbAllocNocatJournalRecord
     RM_NOCAT_JOURNAL_ENTRY * pNocatEntry = NULL;
 
     // make sure someone has the lock.
-    if (concurrentRingBufferAccess == 0)
-    {
-        return NULL;
-    }
+	if (!atomic_read(&concurrentRingBufferAccess))
+		return NULL;
 
     pDesc = &pRcdb->nocatJournalDescriptor;
 
@@ -3228,10 +3226,8 @@ _rcdbGetNocatJournalRecord
     NvS32                     idx;
 
     // make sure someone has the lock.
-    if (concurrentRingBufferAccess == 0)
-    {
-        return NV_ERR_BUSY_RETRY;
-    }
+	if (!atomic_read(&concurrentRingBufferAccess))
+		return NV_ERR_BUSY_RETRY;
 
     // is there anything to do
     if ((ppReturnedCommon == NULL) && (ppReturnedNocatEntry == NULL))

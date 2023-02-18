@@ -84,7 +84,7 @@ typedef RS_CONTROL_COOKIE RmCtrlExecuteCookie;
 
 typedef struct
 {
-   NvS32 volatile pending;
+	atomic_t	pending;
    NvU32 cpuInst;
    RmCtrlParams rmCtrlDeferredParams;
    NvU8 paramBuffer[RMCTRL_DEFERRED_MAX_PARAM_SIZE];    // buffer to hold rmCtrlDeferredParams.pParams

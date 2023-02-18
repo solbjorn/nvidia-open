@@ -90,7 +90,6 @@ extern "C" {
 
 #if defined(__clang__)
 #define PORT_COMPILER_IS_CLANG 1
-#define PORT_COMPILER_HAS_INTRINSIC_ATOMICS __has_builtin(__c11_atomic_fetch_add)
 #define PORT_COMPILER_HAS_ATTRIBUTE_FORMAT __has_attribute(__format__)
 #define PORT_COMPILER_HAS_COUNTER          1
 #else
@@ -100,7 +99,6 @@ extern "C" {
 #if defined(__GNUC__) && !defined(__clang__)
 #define PORT_COMPILER_IS_GCC   1
 #define PORT_GCC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
-#define PORT_COMPILER_HAS_INTRINSIC_ATOMICS (PORT_GCC_VERSION >= 40100)
 #define PORT_COMPILER_HAS_ATTRIBUTE_FORMAT  (PORT_GCC_VERSION >= 20300)
 #define PORT_COMPILER_HAS_COUNTER           (PORT_GCC_VERSION >= 40300)
 #define PORT_COMPILER_HAS_INTRINSIC_CPUID   1
@@ -158,7 +156,7 @@ extern "C" {
  *
  * This switch will define type and method aliases for object types in NvPort.
  * The current NvPort style object names are PORT_MODULE_OBJECT, while the
- * methods are portModuleObjectMethod(). 
+ * methods are portModuleObjectMethod().
  * The update proposal dictates these to be PortModuleObject and objectMethod.
  *
  * @todo Currently we just alias the new names to the old ones. Once the coding
@@ -174,18 +172,18 @@ extern "C" {
  *
  * No compilation errors are reported by any compiler when we use
  * the following definition.
- * 
+ *
  * #define PORT_UNREFERENCED_VARIABLE(x)  ((void)sizeof(&(x)))
  *
  * But Coverity reports BAD_SIZEOF error with this definition.
- * Adding a Coverity annotation "coverity[bad_sizeof]" near 
+ * Adding a Coverity annotation "coverity[bad_sizeof]" near
  * the definition does not work. The preprocessor ignores all
  * the comments and the Coverity annotation is also ignored
  * as a legal comment. As a result, this annotation never ends
  * up in the source code where this macro is used. Hence, we use
  * two definitions of this macro - one for Coverity and the other
- * for the rest of the targets. 
- * 
+ * for the rest of the targets.
+ *
  * Coverity does not report any warnings for unused variables.
  * Hence, we do nothing while building for Coverity.
  */

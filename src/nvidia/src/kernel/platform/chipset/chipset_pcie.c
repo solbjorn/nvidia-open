@@ -5097,10 +5097,10 @@ NvU16 _clPcieSavePcieDiagnosticBlock(void *pDeviceHandle, CL_PCIE_DC_DIAGNOSTIC_
 static
 NvU16 _clPcieGetDiagnosticData(OBJGPU *pGpu, CL_PCIE_DC_DIAGNOSTIC_COLLECTION_ENTRY *pScript, NvU16 count, NvU8 * pBuffer, NvU32 size)
 {
-    static volatile NvS32   capMapWriteLock = 0;
     static volatile NvBool  capMapInitialized = NV_FALSE;
     static CL_PCIE_DC_CAPABILITY_MAP
                             capMap[RM_PCIE_DEVICE_COUNT][RM_PCIE_DC_CAP_TYPE_COUNT];
+	static atomic_t capMapWriteLock;
     NBADDR                  *pUpstreamPort = NULL;
     NvU32                   domain = 0;
     NvU8                    bus = 0;

@@ -195,14 +195,16 @@ _portMemCounterInc
     // Atomically compare the peak value with the active, and update if greater.
     while (1)
     {
-        NvU32 peakAllocs = pCounter->peakAllocs;
+		NvU32 peakAllocs = atomic_read(&pCounter->peakAllocs);
+
         if (activeAllocs <= peakAllocs)
             break;
         PORT_MEM_ATOMIC_CAS_U32(&pCounter->peakAllocs, activeAllocs, peakAllocs);
     }
     while (1)
     {
-        NvLength peakSize = pCounter->peakSize;
+		NvLength peakSize = atomic_long_read(&pCounter->peakSize);
+
         if (activeSize <= peakSize)
             break;
         PORT_MEM_ATOMIC_CAS_SIZE(&pCounter->peakSize, activeSize, peakSize);
@@ -526,8 +528,8 @@ static struct PORT_MEM_GLOBALS
         PORT_MEM_ALLOCATOR_IMPL pagedImpl;
         PORT_MEM_ALLOCATOR_IMPL nonPagedImpl;
     } alloc;
-    NvU32 initCount;
-    NvU32 totalAllocators;
+	atomic_t			initCount;
+	atomic_t			totalAllocators;
 #if PORT_MEM_TRACK_USE_LIMIT
     NvBool bLimitEnabled;
     NvU64 limitPid[PORT_MEM_LIMIT_MAX_PIDS];
@@ -869,8 +871,7 @@ portMemInitializeAllocatorTracking
     PORT_MEM_CALLERINFO_COMMA_TYPE_PARAM
 )
 {
-    if (portMemGlobals.initCount == 0)
-    {
+	if (!atomic_read(&portMemGlobals.initCount)) {
         portMemSet(pTracking, 0, sizeof(*pTracking));
         if (pAlloc != NULL)
             pAlloc->pTracking = NULL;
@@ -1119,8 +1120,9 @@ portMemExTrackingGetActiveStats
     {
         return NV_ERR_OBJECT_NOT_FOUND;
     }
-    pStats->numAllocations = pTracking->counter.activeAllocs;
-    pStats->usefulSize     = pTracking->counter.activeSize;
+
+	pStats->numAllocations = atomic_read(&pTracking->counter.activeAllocs);
+	pStats->usefulSize = atomic_long_read(&pTracking->counter.activeSize);
     pStats->metaSize       = pStats->numAllocations * PORT_MEM_STAGING_SIZE;
     pStats->allocatedSize  = pStats->usefulSize + pStats->metaSize;
     return NV_OK;
@@ -1140,8 +1142,9 @@ portMemExTrackingGetTotalStats
     {
         return NV_ERR_OBJECT_NOT_FOUND;
     }
-    pStats->numAllocations = pTracking->counter.totalAllocs;
-    pStats->usefulSize     = pTracking->counter.totalSize;
+
+	pStats->numAllocations = atomic_read(&pTracking->counter.totalAllocs);
+	pStats->usefulSize = atomic_long_read(&pTracking->counter.totalSize);
     pStats->metaSize       = pStats->numAllocations * PORT_MEM_STAGING_SIZE;
     pStats->allocatedSize  = pStats->usefulSize + pStats->metaSize;
     return NV_OK;
@@ -1161,8 +1164,9 @@ portMemExTrackingGetPeakStats
     {
         return NV_ERR_OBJECT_NOT_FOUND;
     }
-    pStats->numAllocations = pTracking->counter.peakAllocs;
-    pStats->usefulSize     = pTracking->counter.peakSize;
+
+	pStats->numAllocations = atomic_read(&pTracking->counter.peakAllocs);
+	pStats->usefulSize = atomic_long_read(&pTracking->counter.peakSize);
     pStats->metaSize       = pStats->numAllocations * PORT_MEM_STAGING_SIZE;
     pStats->allocatedSize  = pStats->usefulSize + pStats->metaSize;
     return NV_OK;
@@ -1225,8 +1229,7 @@ _portMemTrackingRelease
 {
     if (pTracking == NULL) return;
 
-    if (pTracking->counter.activeAllocs != 0)
-    {
+	if (atomic_read(&pTracking->counter.activeAllocs)) {
         PORT_MEM_PRINT_ERROR("Allocator %p released with memory allocations\n", pTracking->pAllocator);
 #if (PORT_MEM_TRACK_PRINT_LEVEL > PORT_MEM_TRACK_PRINT_LEVEL_SILENT)
         portMemPrintTrackingInfo(pTracking->pAllocator);

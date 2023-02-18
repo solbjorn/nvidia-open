@@ -286,7 +286,7 @@ struct Heap {
     NvBool PDB_PROP_HEAP_PAGE_SHUFFLE;
     HEAP_TYPE_INTERNAL heapType;
     void *pHeapTypeSpecificData;
-    NvU64 refCount;
+	atomic64_t		refCount;
     NvBool bHasFbRegions;
     NvU64 base;
     NvU64 total;

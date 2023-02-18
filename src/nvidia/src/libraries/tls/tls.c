@@ -66,7 +66,7 @@ typedef struct TlsDatabase
     /// @brief Allocator which allocates all necessary data for current @ref TlsDatabase.
     PORT_MEM_ALLOCATOR *pAllocator;
     /// @brief Last allocated entry id.
-    NvU64 lastEntryId;
+	atomic64_t	lastEntryId;
 
     /// @brief Lock for the passive thread entry map
     PORT_SPINLOCK *pLock;
@@ -101,7 +101,7 @@ typedef struct TlsDatabase
     NvU32 *isrCount;
 #endif
 
-    volatile NvU32 initCount;
+	atomic_t	initCount;
 } TlsDatabase;
 
 static TlsDatabase tlsDatabase; // Zero initialized
@@ -187,10 +187,10 @@ NV_STATUS tlsInitialize(void)
     mapInitIntrusive(&tlsDatabase.threadEntries);
 
     status = _tlsIsrEntriesInit();
-    if (status != NV_OK)
-        goto done;
+	if (status != NV_OK)
+		goto done;
 
-    tlsDatabase.lastEntryId = TLS_ENTRY_ID_DYNAMIC;
+	atomic64_set(&tlsDatabase.lastEntryId, TLS_ENTRY_ID_DYNAMIC);
 
 #if TLS_THREADS_CAN_RAISE_IRQL
 {
@@ -247,7 +247,8 @@ void tlsShutdown(void)
 void tlsIsrInit(PORT_MEM_ALLOCATOR *pIsrAllocator)
 {
     ThreadEntry *pThreadEntry;
-    NV_ASSERT_OR_RETURN_VOID(tlsDatabase.initCount > 0);
+
+	NV_ASSERT_OR_RETURN_VOID(atomic_read(&tlsDatabase.initCount) > 0);
 
     //
     // If TLS_THREADS_CAN_RAISE_IRQL we treat anything that calls tlsIsrInit as
@@ -283,7 +284,8 @@ void tlsIsrInit(PORT_MEM_ALLOCATOR *pIsrAllocator)
 void tlsIsrDestroy(PORT_MEM_ALLOCATOR *pIsrAllocator)
 {
     ThreadEntry *pThreadEntry;
-    NV_ASSERT_OR_RETURN_VOID(tlsDatabase.initCount > 0);
+
+	NV_ASSERT_OR_RETURN_VOID(atomic_read(&tlsDatabase.initCount) > 0);
 
     if (!_tlsIsIsr())
     {
@@ -308,25 +310,29 @@ void tlsIsrDestroy(PORT_MEM_ALLOCATOR *pIsrAllocator)
 
 PORT_MEM_ALLOCATOR *tlsIsrAllocatorGet(void)
 {
+	NV_ASSERT_OR_RETURN(atomic_read(&tlsDatabase.initCount) > 0, NULL);
 
-    NV_ASSERT_OR_RETURN(tlsDatabase.initCount > 0, NULL);
     return _tlsIsrAllocatorGet();
 }
 
 NvU64 tlsEntryAlloc(void)
 {
-    NV_ASSERT_OR_RETURN(tlsDatabase.initCount > 0, TLS_ERROR_VAL);
+	NV_ASSERT_OR_RETURN(atomic_read(&tlsDatabase.initCount) > 0,
+			    TLS_ERROR_VAL);
+
     return portAtomicExIncrementU64(&tlsDatabase.lastEntryId);
 }
 
 NvP64 *tlsEntryAcquire(NvU64 entryId)
 {
     ThreadEntry *pThreadEntry;
-    NV_ASSERT_OR_RETURN(tlsDatabase.initCount > 0, NULL);
+
+	NV_ASSERT_OR_RETURN(atomic_read(&tlsDatabase.initCount) > 0, NULL);
 
     // User tries allocation of unallocated entryId.
-    NV_ASSERT_OR_RETURN(entryId <= tlsDatabase.lastEntryId ||
-                        entryId >= TLS_ENTRY_ID_TAG_START, NULL);
+	NV_ASSERT_OR_RETURN(entryId <=
+			    atomic64_read(&tlsDatabase.lastEntryId) ||
+			    entryId >= TLS_ENTRY_ID_TAG_START, NULL);
 
     pThreadEntry = _tlsThreadEntryGetOrAlloc();
     NV_ASSERT_OR_RETURN(pThreadEntry != NULL, NULL);
@@ -337,11 +343,13 @@ NvP64 *tlsEntryAcquire(NvU64 entryId)
 NvP64 *tlsEntryAcquireWithAllocator(NvU64 entryId, PORT_MEM_ALLOCATOR *pCustomAllocator)
 {
     ThreadEntry *pThreadEntry;
-    NV_ASSERT_OR_RETURN(tlsDatabase.initCount > 0, NULL);
+
+	NV_ASSERT_OR_RETURN(atomic_read(&tlsDatabase.initCount) > 0, NULL);
 
     // User tries allocation of unallocated entryId.
-    NV_ASSERT_OR_RETURN(entryId <= tlsDatabase.lastEntryId ||
-                        entryId >= TLS_ENTRY_ID_TAG_START, NULL);
+	NV_ASSERT_OR_RETURN(entryId <=
+			    atomic64_read(&tlsDatabase.lastEntryId) ||
+			    entryId >= TLS_ENTRY_ID_TAG_START, NULL);
     NV_ASSERT_OR_RETURN(pCustomAllocator != NULL, NULL);
 
     pThreadEntry = _tlsThreadEntryGetOrAlloc();
@@ -354,7 +362,9 @@ NvU32 tlsEntryRelease(NvU64 entryId)
 {
     ThreadEntry *pThreadEntry;
     TlsEntry *pTlsEntry;
-    NV_ASSERT_OR_RETURN(tlsDatabase.initCount > 0, TLS_ERROR_VAL);
+
+	NV_ASSERT_OR_RETURN(atomic_read(&tlsDatabase.initCount) > 0,
+			    TLS_ERROR_VAL);
 
     pThreadEntry = _tlsThreadEntryGet();
     NV_ASSERT_OR_RETURN(pThreadEntry != NULL, TLS_ERROR_VAL);
@@ -369,7 +379,9 @@ NvU32 tlsEntryReleaseWithAllocator(NvU64 entryId, PORT_MEM_ALLOCATOR *pCustomAll
 {
     ThreadEntry *pThreadEntry;
     TlsEntry *pTlsEntry;
-    NV_ASSERT_OR_RETURN(tlsDatabase.initCount > 0, TLS_ERROR_VAL);
+
+	NV_ASSERT_OR_RETURN(atomic_read(&tlsDatabase.initCount) > 0,
+			    TLS_ERROR_VAL);
     NV_ASSERT_OR_RETURN(pCustomAllocator != NULL, TLS_ERROR_VAL);
 
     pThreadEntry = _tlsThreadEntryGet();
@@ -385,7 +397,9 @@ NvP64 tlsEntryGet(NvU64 entryId)
 {
     ThreadEntry *pThreadEntry;
     TlsEntry *pTlsEntry;
-    NV_ASSERT_OR_RETURN(tlsDatabase.initCount > 0, NvP64_NULL);
+
+	NV_ASSERT_OR_RETURN(atomic_read(&tlsDatabase.initCount) > 0,
+			    NvP64_NULL);
 
     pThreadEntry = _tlsThreadEntryGet();
     if (pThreadEntry == NULL)
@@ -399,7 +413,9 @@ NvU32 tlsEntryReference(NvU64 entryId)
 {
     ThreadEntry *pThreadEntry;
     TlsEntry *pTlsEntry;
-    NV_ASSERT_OR_RETURN(tlsDatabase.initCount > 0, TLS_ERROR_VAL);
+
+	NV_ASSERT_OR_RETURN(atomic_read(&tlsDatabase.initCount) > 0,
+			    TLS_ERROR_VAL);
 
     pThreadEntry = _tlsThreadEntryGet();
     NV_ASSERT_OR_RETURN(pThreadEntry != NULL, TLS_ERROR_VAL);
@@ -414,7 +430,9 @@ NvU32 tlsEntryUnreference(NvU64 entryId)
 {
     ThreadEntry *pThreadEntry;
     TlsEntry *pTlsEntry;
-    NV_ASSERT_OR_RETURN(tlsDatabase.initCount > 0, TLS_ERROR_VAL);
+
+	NV_ASSERT_OR_RETURN(atomic_read(&tlsDatabase.initCount) > 0,
+			    TLS_ERROR_VAL);
 
     pThreadEntry = _tlsThreadEntryGet();
     NV_ASSERT_OR_RETURN(pThreadEntry != NULL, TLS_ERROR_VAL);

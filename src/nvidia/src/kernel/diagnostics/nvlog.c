@@ -41,7 +41,7 @@ static NV_STATUS _allocateNvlogBuffer(NvU32 size, NvU32 flags, NvU32 tag,
                                       NVLOG_BUFFER **ppBuffer);
 static void _deallocateNvlogBuffer(NVLOG_BUFFER *pBuffer);
 
-volatile NvU32 nvlogInitCount;
+atomic_t nvlogInitCount;
 static void *nvlogRegRoot;
 
 // Zero (null) buffer definition.
@@ -276,7 +276,9 @@ nvlogDeallocBuffer
     pBuffer->flags = FLD_SET_DRF(LOG_BUFFER, _FLAGS, _DISABLED,
                                  _YES, pBuffer->flags);
 
-    while (pBuffer->threadCount > 0) { /*spin*/ }
+	while (atomic_read(&pBuffer->threadCount) > 0)
+		cpu_relax();
+
     portSyncSpinlockAcquire(NvLogLogger.mainLock);
       NvLogLogger.pBuffers[hBuffer] = NULL;
       NvLogLogger.nextFree = NV_MIN(hBuffer, NvLogLogger.nextFree);
@@ -587,7 +589,9 @@ nvlogNowrapBufferPush
             // that were still accessing it are done. Spin on volatile threadCount
             // NOTE: threadCount includes the current thread too.
             //
-            while (pBuffer->threadCount > 1) { /*spin*/ }
+			while (atomic_read(&pBuffer->threadCount) > 1)
+				cpu_relax();
+
             portMemFree(pBuffer);
             pBuffer = pNewBuffer;
         }

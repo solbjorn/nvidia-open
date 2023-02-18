@@ -91,7 +91,7 @@ typedef enum
 typedef struct mem_multicast_fabric_descriptor
 {
     // Refcount to keep this descriptor alive
-    NvU64 refCount;
+	atomic64_t				refCount;
 
     // List of clients waiting on this object to be ready
     MemMulticastFabricClientInfoList waitingClientsList;
@@ -100,7 +100,7 @@ typedef struct mem_multicast_fabric_descriptor
     MemMulticastFabricAttachMemInfoList attachMemInfoList;
 
     // Mask representing the list of attached GPUs
-    NvU32 attachedGpusMask;
+	atomic_t				attachedGpusMask;
 
     // List of GPU OS Info
     MemMulticastFabricGpuOsInfoList gpuOsInfoList;
@@ -115,7 +115,7 @@ typedef struct mem_multicast_fabric_descriptor
     NvU64 mcTeamHandle;
 
     // Status of the multicast team
-    NV_STATUS mcTeamStatus;
+	atomic_t				mcTeamStatus;
 
     // Boolean to be set when an Inband request has been sent to FM and is currently in progress
     NvBool bInbandReqInProgress;

@@ -2218,12 +2218,9 @@ kgmmuExtractPteInfo_IMPL
     }
 }
 
-NvS32*
-kgmmuGetFatalFaultIntrPendingState_IMPL
-(
-    KernelGmmu *pKernelGmmu,
-    NvU8 gfid
-)
+atomic_t *
+kgmmuGetFatalFaultIntrPendingState_IMPL(KernelGmmu *pKernelGmmu,
+					NvU8 gfid)
 {
     return &pKernelGmmu->mmuFaultBuffer[gfid].fatalFaultIntrPending;
 }

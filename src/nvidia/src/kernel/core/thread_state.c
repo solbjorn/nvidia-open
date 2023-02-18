@@ -156,7 +156,7 @@ NV_STATUS threadStateGlobalAlloc(void)
     NV_ASSERT(tlsInitialize() == NV_OK);
 
     // Init the thread sequencer id counter to 0.
-    threadStateDatabase.threadSeqCntr = 0;
+	atomic_set(&threadStateDatabase.threadSeqCntr, 0);
 
     threadStateDatabase.spinlock = portSyncSpinlockCreate(portMemAllocatorGetGlobalNonPaged());
     if (threadStateDatabase.spinlock == NULL)

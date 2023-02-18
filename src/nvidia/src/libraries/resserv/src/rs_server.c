@@ -227,8 +227,8 @@ serverConstruct
     pServer->bRsAccessEnabled   = NV_TRUE;
     pServer->internalHandleBase = RS_CLIENT_INTERNAL_HANDLE_BASE;
     pServer->clientHandleBase   = RS_CLIENT_HANDLE_BASE;
-    pServer->activeClientCount  = 0;
-    pServer->activeResourceCount= 0;
+	atomic_set(&pServer->activeClientCount, 0);
+	atomic64_set(&pServer->activeResourceCount, 0);
     pServer->roTopLockApiMask   = 0;
     /* pServer->bUnlockedParamCopy is set in _rmapiLockAlloc */
 
@@ -2546,13 +2546,13 @@ _serverUnlockDualClientWithLockInfo
 NvU32
 serverGetClientCount(RsServer *pServer)
 {
-    return pServer->activeClientCount;
+	return atomic_read(&pServer->activeClientCount);
 }
 
 NvU64
 serverGetResourceCount(RsServer *pServer)
 {
-    return pServer->activeResourceCount;
+	return atomic64_read(&pServer->activeResourceCount);
 }
 
 NV_STATUS
@@ -2844,7 +2844,7 @@ void sessionCheckLocksForRemove_IMPL(RsSession *pSession, RsResourceRef *pResour
     {
         RsShared *pShared = staticCast(pSession, RsShared);
         PORT_RWLOCK *pSessionLock = pSession->pLock;
-        NvBool bDestroy = (pShared->refCount == 1);
+        NvBool bDestroy = atomic_read(&pShared->refCount) == 1;
 
         if (!(pLockInfo->state & RS_LOCK_STATE_SESSION_LOCK_ACQUIRED) || !bDestroy)
         {
@@ -2894,7 +2894,7 @@ serverAllocShareWithHalspecParent
         goto fail;
     }
 
-    pShare->refCount = 1;
+	atomic_set(&pShare->refCount, 1);
 
     portSyncSpinlockAcquire(pServer->pShareMapLock);
     if (mapInsertExisting(&pServer->shareMap, (NvUPtr)pShare, pShare) != NV_TRUE)
@@ -2934,7 +2934,7 @@ serverGetShareRefCount
     RsShared *pShare
 )
 {
-    return pShare->refCount;
+	return atomic_read(&pShare->refCount);
 }
 
 NV_STATUS

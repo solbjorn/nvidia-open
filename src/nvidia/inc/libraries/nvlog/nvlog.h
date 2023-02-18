@@ -188,7 +188,7 @@ NV_STATUS nvlogGetBufferSnapshot(NVLOG_BUFFER_HANDLE hBuffer, NvU8 *pDest, NvU32
 /**
  * @brief Dumps all logs into the the kernel print log
  *
- * @note this will write to the log even if all other prints are disabled, 
+ * @note this will write to the log even if all other prints are disabled,
  * including external release builds. The output will be base64 encoded and
  * not decodable without the database, and pollute the logs. Use with caution.
  *
@@ -250,7 +250,7 @@ NV_STATUS nvlogETWCaptureState(void);
 //
 // Global initialization macros
 //
-extern volatile NvU32 nvlogInitCount;
+extern atomic_t nvlogInitCount;
 #define NVLOG_INIT(pData)                                 \
     do                                                    \
     {                                                     \
@@ -260,14 +260,10 @@ extern volatile NvU32 nvlogInitCount;
         }                                                 \
     } while (0)
 
-#define NVLOG_UPDATE()                                    \
-    do                                                    \
-    {                                                     \
-        if (nvlogInitCount == 1)                          \
-        {                                                 \
-            nvlogUpdate();                                \
-        }                                                 \
-    } while (0)
+#define NVLOG_UPDATE() ({				\
+	if (atomic_read(&nvlogInitCount) == 1)		\
+		nvlogUpdate();				\
+})
 
 #define NVLOG_DESTROY()                                   \
     do                                                    \

@@ -221,7 +221,7 @@ struct GMMU_FAULT_BUFFER
     /*!
      * Flag stating fatalfault interrupt pending
      */
-    NvS32 fatalFaultIntrPending;
+	atomic_t			fatalFaultIntrPending;
 };
 
 typedef struct GMMU_FAULT_PACKET
@@ -1663,7 +1663,9 @@ static inline void kgmmuAccessCntrChangeIntrOwnership(OBJGPU *pGpu, struct Kerne
 #define kgmmuAccessCntrChangeIntrOwnership(pGpu, pKernelGmmu, arg0) kgmmuAccessCntrChangeIntrOwnership_IMPL(pGpu, pKernelGmmu, arg0)
 #endif //__nvoc_kern_gmmu_h_disabled
 
-NvS32 *kgmmuGetFatalFaultIntrPendingState_IMPL(struct KernelGmmu *pKernelGmmu, NvU8 gfid);
+atomic_t *
+kgmmuGetFatalFaultIntrPendingState_IMPL(struct KernelGmmu *pKernelGmmu,
+					NvU8 gfid);
 
 #ifdef __nvoc_kern_gmmu_h_disabled
 static inline NvS32 *kgmmuGetFatalFaultIntrPendingState(struct KernelGmmu *pKernelGmmu, NvU8 gfid) {

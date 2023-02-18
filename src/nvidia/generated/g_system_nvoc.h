@@ -414,7 +414,7 @@ struct OBJSYS {
     PNODE pMemFilterList;
     NvBool PDB_PROP_SYS_IS_QSYNC_FW_REVISION_CHECK_DISABLED;
     NvU64 rmInstanceId;
-    NvU32 currentCid;
+	atomic_t			currentCid;
     OS_RM_CAPS *pOsRmCaps;
     struct OBJGPUMGR *pGpuMgr;
     struct OBJGSYNCMGR *pGsyncMgr;

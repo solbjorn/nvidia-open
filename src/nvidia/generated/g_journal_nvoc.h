@@ -81,7 +81,8 @@ typedef struct _def_event_journal
 
 typedef struct _def_sys_error_info
 {
-    volatile NvU32  InUse;                            // Atomically set when a thread is accessing the structure
+	// Atomically set when a thread is accessing the structure
+	atomic_t	InUse;
     NvU32           LogCount;                         // Count of Logged Event Messages
     NvU32           ErrorCount;                       // Count of Logged Event Messages
     NvU32           TotalErrorCount;                  // Total Number of Errors Encountered

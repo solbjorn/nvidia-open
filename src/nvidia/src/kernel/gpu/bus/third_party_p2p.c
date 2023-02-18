@@ -38,7 +38,7 @@
 // A monotonic counter as ID that's assigned to every new VidmemInfo.
 // This is used to get internal VidmemInfo for persistent mappings.
 //
-static volatile NvU64 vidmemInfoId = 0;
+static atomic64_t vidmemInfoId;
 
 //
 // We make sure that only one instance of NV50_THIRD_PARTY_P2P can be active at
@@ -1156,7 +1156,7 @@ CliUnregisterFromThirdPartyP2P
     return status;
 }
 
-NV_STATUS 
+NV_STATUS
 shrp2pConstruct_IMPL(P2PTokenShare *pP2PTokenShare)
 {
     return NV_OK;

@@ -104,7 +104,8 @@ $(obj)/%.o: $(src)/%.cpp $(recordmcount_source) FORCE
 	$(call if_changed_rule,cxx_o_cpp)
 	$(call cmd,force_checksrc)
 
-# pahole can't handle some C++ tags properly, limit debuginfo to level 1
+# pahole's BTF encoder doesn't support C++ in general, limit debuginfo to
+# level 1 for now, can change once full Rust support is here.
 ifneq ($(filter -g%,$(KBUILD_CFLAGS)),)
 NVIDIA_MODESET_API_CXXFLAGS += -g1
 endif

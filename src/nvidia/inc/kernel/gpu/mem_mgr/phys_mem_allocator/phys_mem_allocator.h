@@ -237,9 +237,11 @@ struct _PMA
     PMA_STATS               pmaStats;                           // PMA statistics used for client heuristics
 
     // Scrubber related states
-    NvSPtr                  initScrubbing;                      // If the init scrubber has finished in this PMA
+	// If the init scrubber has finished in this PMA
+	atomic_long_t		initScrubbing;
     NvBool                  bScrubOnFree;                       // If "scrub on free" is enabled for this PMA object
-    NvSPtr                  scrubberValid;                      // If scrubber object is valid, using atomic variable to prevent races
+	// If scrubber object is valid, using atomic variable to prevent races
+	atomic_long_t		scrubberValid;
     OBJMEMSCRUB            *pScrubObj;                          // Object to store the FreeScrub header
 
     // NUMA states

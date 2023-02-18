@@ -23,6 +23,8 @@
 #ifndef _NVLOG_DEFS_H_
 #define _NVLOG_DEFS_H_
 
+#include <linux/atomic.h>
+
 #include "nvtypes.h"
 /******************* Common Debug & Trace Defines ***************************\
 *                                                                           *
@@ -90,7 +92,7 @@ struct _NVLOG_BUFFER
     /** Position of the next available byte in the buffer */
     NvU32                   pos;
     /** Number of threads currently writing to this buffer */
-    volatile NvS32          threadCount;
+	atomic_t			threadCount;
     /** Specific buffer types will define their fields here */
     union
     {
