@@ -218,8 +218,8 @@ kceGetCeFromNvlinkConfig_IMPL
 
 NV_STATUS kceUpdateClassDB_KERNEL(OBJGPU *pGpu, KernelCE *pKCe)
 {
+    NV2080_CTRL_CE_UPDATE_CLASS_DB_PARAMS params = { };
     RM_API *pRmApi     = GPU_GET_PHYSICAL_RMAPI(pGpu);
-    NV2080_CTRL_CE_UPDATE_CLASS_DB_PARAMS params;
     NV_STATUS status;
     NvBool stubbed;
 
@@ -309,12 +309,12 @@ kceServiceNotificationInterrupt_IMPL
 
 NV_STATUS kceTopLevelPceLceMappingsUpdate_IMPL(OBJGPU *pGpu, KernelCE *pKCe)
 {
+    NV2080_CTRL_CE_UPDATE_PCE_LCE_MAPPINGS_PARAMS params = { };
     NvU32        pceLceMap[NV2080_CTRL_MAX_PCES]    = {0};
     NvU32        grceConfig[NV2080_CTRL_MAX_GRCES]  = {0};
     NvU32        exposeCeMask        = 0;
     NvBool       bUpdateNvlinkPceLce = NV_FALSE;
     NV_STATUS    status              = NV_OK;
-    NV2080_CTRL_CE_UPDATE_PCE_LCE_MAPPINGS_PARAMS params;
     RM_API *pRmApi;
     NvU32        i;
 
@@ -420,7 +420,7 @@ NV_STATUS kceTopLevelPceLceMappingsUpdate_IMPL(OBJGPU *pGpu, KernelCE *pKCe)
 NV_STATUS kceGetFaultMethodBufferSize_IMPL(OBJGPU *pGpu, NvU32 *size)
 {
     RM_API *pRmApi = GPU_GET_PHYSICAL_RMAPI(pGpu);
-    NV2080_CTRL_CE_GET_FAULT_METHOD_BUFFER_SIZE_PARAMS params;
+    NV2080_CTRL_CE_GET_FAULT_METHOD_BUFFER_SIZE_PARAMS params = {0};
 
     NV_ASSERT_OK_OR_RETURN(pRmApi->Control(pRmApi, pGpu->hInternalClient, pGpu->hInternalSubdevice,
             NV2080_CTRL_CMD_CE_GET_FAULT_METHOD_BUFFER_SIZE, &params, sizeof(params)));
@@ -446,7 +446,7 @@ kceGetAvailableHubPceMask_IMPL
 )
 {
     RM_API *pRmApi = GPU_GET_PHYSICAL_RMAPI(pGpu);
-    NV2080_CTRL_CE_GET_HUB_PCE_MASK_PARAMS params;
+    NV2080_CTRL_CE_GET_HUB_PCE_MASK_PARAMS params = {0};
 
     ct_assert(NV_ARRAY_ELEMENTS(pTopoParams->pceAvailableMaskPerHshub) == NV_ARRAY_ELEMENTS(params.hshubPceMasks));
     NV_ASSERT_OR_RETURN(pTopoParams != NULL, NV_ERR_INVALID_ARGUMENT);

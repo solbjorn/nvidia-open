@@ -193,9 +193,11 @@ Edid::Edid(): buffer()
     fallbackEdid = false;
     patchedChecksum = false;
 
-    // clear the WARFlags
-    _WARFlags temp = { };
-    WARFlags = temp;
+    // clear the WARFlags and WARData.
+    _WARFlags flagTemp = { };
+    _WARData  dataTemp = { };
+    WARFlags = flagTemp;
+    WARData  = dataTemp;
 }
 
 Edid::~Edid()

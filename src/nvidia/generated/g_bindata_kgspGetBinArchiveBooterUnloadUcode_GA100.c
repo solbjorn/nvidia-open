@@ -29,10 +29,10 @@
 static const BINDATA_ARCHIVE
 __kgspGetBinArchiveBooterUnloadUcode_GA100 = BINDATA_ARCHIVE_INIT(
 	BINDATA_ENTRY("image_dbg",
-		      "g_booteruc_unload_ga100_dbg_image.bin", 8704),
+		      "g_booteruc_unload_ga100_dbg_image.bin", 20480),
 	BINDATA_ENTRY("header_dbg", "g_booteruc_unload_ga100_dbg_hdr.bin", 36),
 	BINDATA_ENTRY("image_prod",
-		      "g_booteruc_unload_ga100_prod_image.bin", 8704),
+		      "g_booteruc_unload_ga100_prod_image.bin", 20480),
 	BINDATA_ENTRY("header_prod",
 		      "g_booteruc_unload_ga100_prod_hdr.bin", 36),
 	BINDATA_ENTRY("sig_dbg",

@@ -418,7 +418,7 @@ kgmmuIsNonReplayableFaultPending_TU102
 void
 kgmmuClearNonReplayableFaultIntr_TU102
 (
-    POBJGPU            pGpu,
+    OBJGPU            *pGpu,
     KernelGmmu        *pKernelGmmu,
     THREAD_STATE_NODE *pThreadState
 )

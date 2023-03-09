@@ -209,7 +209,6 @@ static uvm_va_space_t *tools_event_tracker_va_space(uvm_tools_event_tracker_t *e
     uvm_va_space_t *va_space;
     UVM_ASSERT(event_tracker->uvm_file);
     va_space = uvm_va_space_get(event_tracker->uvm_file);
-    UVM_ASSERT(uvm_va_space_initialized(va_space) == NV_OK);
     return va_space;
 }
 
@@ -1615,10 +1614,10 @@ NV_STATUS uvm_api_tools_init_event_tracker(UVM_TOOLS_INIT_EVENT_TRACKER_PARAMS *
         goto fail;
     }
 
-    status = uvm_va_space_initialized(uvm_va_space_get(event_tracker->uvm_file));
-    if (status != NV_OK) {
+    if (!uvm_fd_va_space(event_tracker->uvm_file)) {
         fput(event_tracker->uvm_file);
         event_tracker->uvm_file = NULL;
+        status = NV_ERR_ILLEGAL_ACTION;
         goto fail;
     }
 
@@ -1759,7 +1758,6 @@ static NV_STATUS tools_update_status(uvm_va_space_t *va_space)
     uvm_assert_rwsem_locked_write(&g_tools_va_space_list_lock);
     uvm_assert_rwsem_locked_write(&va_space->perf_events.lock);
     uvm_assert_rwsem_locked_write(&va_space->tools.lock);
-    UVM_ASSERT(uvm_va_space_initialized(va_space) == NV_OK);
 
     status = tools_update_perf_events_callbacks(va_space);
     if (status != NV_OK)
@@ -2017,12 +2015,10 @@ static NV_STATUS tools_access_process_memory(uvm_va_space_t *va_space,
     if (status != NV_OK)
         goto exit;
 
-    if (is_write) {
-        block_context = uvm_va_block_context_alloc(mm);
-        if (!block_context) {
-            status = NV_ERR_NO_MEMORY;
-            goto exit;
-        }
+    block_context = uvm_va_block_context_alloc(mm);
+    if (!block_context) {
+        status = NV_ERR_NO_MEMORY;
+        goto exit;
     }
 
     stage_addr = uvm_mem_get_cpu_addr_kernel(stage_mem);
@@ -2045,11 +2041,16 @@ static NV_STATUS tools_access_process_memory(uvm_va_space_t *va_space,
             }
         }
 
+        if (mm)
+            uvm_down_read_mmap_lock(mm);
+
         // The RM flavor of the lock is needed to perform ECC checks.
         uvm_va_space_down_read_rm(va_space);
-        status = uvm_va_block_find_create_managed(va_space, target_va_start, &block);
+        status = uvm_va_block_find_create(va_space, UVM_ALIGN_DOWN(target_va_start, PAGE_SIZE), block_context, &block);
         if (status != NV_OK) {
             uvm_va_space_up_read_rm(va_space);
+            if (mm)
+                uvm_up_read_mmap_lock(mm);
             goto exit;
         }
 
@@ -2071,6 +2072,22 @@ static NV_STATUS tools_access_process_memory(uvm_va_space_t *va_space,
             status = uvm_mem_map_gpu_kernel(stage_mem, gpu);
             if (status != NV_OK) {
                 uvm_va_space_up_read_rm(va_space);
+                if (mm)
+                    uvm_up_read_mmap_lock(mm);
+                goto exit;
+            }
+        }
+
+        // Make sure a CPU resident page has an up to date struct page pointer.
+        if (uvm_va_block_is_hmm(block)) {
+            status = uvm_hmm_va_block_update_residency_info(block,
+                                                            mm,
+                                                            UVM_ALIGN_DOWN(target_va_start, PAGE_SIZE),
+                                                            true);
+            if (status != NV_OK) {
+                uvm_va_space_up_read_rm(va_space);
+                if (mm)
+                    uvm_up_read_mmap_lock(mm);
                 goto exit;
             }
         }
@@ -2083,6 +2100,9 @@ static NV_STATUS tools_access_process_memory(uvm_va_space_t *va_space,
             status = uvm_global_mask_check_ecc_error(global_gpus);
 
         uvm_va_space_up_read_rm(va_space);
+        if (mm)
+            uvm_up_read_mmap_lock(mm);
+
         if (status != NV_OK)
             goto exit;
 

@@ -516,14 +516,23 @@ NvBool NvKmsGrantPermissions(NvS32 fd, struct NvKmsKapiDevice *device,
 			     NvU32 head, NvKmsKapiDisplay display);
 
     /*!
-     * Revoke modeset permissions previously granted. This currently applies for all
-     * previous grant requests for this device.
+     * Revoke permissions previously granted. Only one (dispIndex, head,
+     * display) is currently supported.
      *
-     * \param [in]  device                  A device returned by allocateDevice().
+     * \param [in]  device     A device returned by allocateDevice().
+     *
+     * \param [in]  head       head of display.
+     *
+     * \param [in]  display    The display to revoke.
      *
      * \return NV_TRUE on success, NV_FALSE on failure.
      */
-NvBool NvKmsRevokePermissions(struct NvKmsKapiDevice *device);
+NvBool NvKmsRevokePermissions
+    (
+        struct NvKmsKapiDevice *device,
+        NvU32 head,
+        NvKmsKapiDisplay display
+    );
 
     /*!
      * Registers for notification, via
@@ -656,7 +665,7 @@ NvBool NvKmsGetDynamicDisplayInfo
      * \param [in] device  A device allocated using allocateDevice().
      *
      * \param [in] layout  BlockLinear or Pitch.
-     * 
+     *
      * \param [in] type    Allocation type.
      *
      * \param [in] size    Size, in bytes, of the memory to allocate.
@@ -687,7 +696,7 @@ struct NvKmsKapiMemory *NvKmsAllocateVideoMemory
      * \param [in] device  A device allocated using allocateDevice().
      *
      * \param [in] layout  BlockLinear or Pitch.
-     * 
+     *
      * \param [in] type    Allocation type.
      *
      * \param [in] size    Size, in bytes, of the memory to allocate.

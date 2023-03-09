@@ -518,6 +518,9 @@ knvlinkCoreSetDlLinkModeCallback
     linkIndex     = pNvlinkLink->linkId;
     pKernelIoctrl = KNVLINK_LINK_GET_IOCTRL(pKernelNvlink, linkIndex);
 
+    if (pKernelIoctrl == NULL)
+        return 0;
+
     // If link training is disabled through regkey
     if (pKernelNvlink->bSkipLinkTraining)
     {
@@ -1505,7 +1508,7 @@ knvlinkCoreAliTrainingCallback
 )
 {
     KNVLINK_RM_LINK *pNvlinkLink = (KNVLINK_RM_LINK *) link->link_info;
-    POBJGPU          pGpu        = pNvlinkLink->pGpu;
+    OBJGPU          *pGpu        = pNvlinkLink->pGpu;
     KernelNvlink   * pKernelNvlink     = NULL;
     NV_STATUS        status;
 

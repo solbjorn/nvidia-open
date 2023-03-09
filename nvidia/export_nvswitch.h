@@ -922,7 +922,8 @@ nvswitch_os_vsnprintf
 /*
  * Debug assert and log interface
  */
-#define nvswitch_os_assert_log(cond, pFormat, ...)	WARN_ON_ONCE(!cond)
+#define nvswitch_os_assert_log(pFormat, ...)	\
+	WARN_ONCE(1, pFormat, ##__VA_ARGS__)
 
 /*
  * Interface to sleep for specified milliseconds. Yields the CPU to scheduler.

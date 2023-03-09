@@ -17,4 +17,8 @@
 #define NV_IS_EXPORT_SYMBOL_PRESENT_tegra_dram_types 0
 #define NV_IS_EXPORT_SYMBOL_PRESENT_pxm_to_node 0
 #define NV_IS_EXPORT_SYMBOL_PRESENT_screen_info 1
+#define NV_IS_EXPORT_SYMBOL_PRESENT_i2c_bus_status 0
+#define NV_IS_EXPORT_SYMBOL_PRESENT_tegra_fuse_control_read 0
+#define NV_IS_EXPORT_SYMBOL_PRESENT_tegra_get_platform 0
+#define NV_IS_EXPORT_SYMBOL_PRESENT_pci_find_host_bridge 1
 #define NV_IS_EXPORT_SYMBOL_PRESENT_int_active_memcg 1

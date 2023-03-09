@@ -75,7 +75,7 @@ extern "C" {
 #define PFM_REQ_HNDLR_CTGP_SENSOR             NV0000_CTRL_SYSTEM_PARAM_CTGP
 #define PFM_REQ_HNDLR_PPMD_SENSOR             NV0000_CTRL_SYSTEM_PARAM_PPMD
 #define PFM_REQ_HNDLR_PSHAREPARAMS_COUNT      (9U)
-#define PFM_REQ_HNDLR_CURR_BASE                (2)
+#define PFM_REQ_HNDLR_CURR_BASE               (2U)
 #define PFM_REQ_HNDLR_CURR_VALUE(s)           (PFM_REQ_HNDLR_CURR_BASE + ((s)%PFM_REQ_HNDLR_PSHAREPARAMS_COUNT))
 #define PFM_REQ_HNDLR_LIMIT_BASE              (PFM_REQ_HNDLR_CURR_BASE + PFM_REQ_HNDLR_PSHAREPARAMS_COUNT)
 #define PFM_REQ_HNDLR_LIMIT(s)                (PFM_REQ_HNDLR_LIMIT_BASE + ((s)%PFM_REQ_HNDLR_PSHAREPARAMS_COUNT))
@@ -233,7 +233,7 @@ typedef struct
 #define PRIVATE_FIELD(x) NVOC_PRIVATE_FIELD(x)
 #endif
 struct PlatformRequestHandler {
-    const struct NVOC_RTTI *__nvoc_rtti;
+    struct __rtti_marker __nvoc_rtti;
     struct Object __nvoc_base_Object;
     struct Object *__nvoc_pbase_Object;
     struct PlatformRequestHandler *__nvoc_pbase_PlatformRequestHandler;

@@ -133,7 +133,7 @@ kbusMapCoherentCpuMapping_GV100
     PMEMORY_DESCRIPTOR     pMemDesc
 )
 {
-    RmPhysAddr startAddr = memdescGetPhysAddr(pMemDesc, AT_GPU, 0);
+    RmPhysAddr startAddr = memdescGetPhysAddr(pMemDesc, FORCE_VMMU_TRANSLATION(pMemDesc, AT_GPU), 0);
     NvU64      size = memdescGetSize(pMemDesc);
     RmPhysAddr endAddr = startAddr + size - 1;
     RmPhysAddr rangeStart = 0;
@@ -183,7 +183,7 @@ kbusUnmapCoherentCpuMapping_GV100
     PMEMORY_DESCRIPTOR   pMemDesc
 )
 {
-    RmPhysAddr startAddr = pMemDesc->_pteArray[0] + pMemDesc->PteAdjust;
+    RmPhysAddr startAddr = memdescGetPhysAddr(pMemDesc, FORCE_VMMU_TRANSLATION(pMemDesc, AT_GPU), 0);
     NvU64      size = memdescGetSize(pMemDesc);
     RmPhysAddr endAddr = startAddr + size - 1;
     NvU32 i = 0;

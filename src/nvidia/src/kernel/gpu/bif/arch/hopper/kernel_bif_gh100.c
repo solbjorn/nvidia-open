@@ -36,8 +36,6 @@
 
 #include "os/os.h"
 
-static void _kbifEnablePcieAtomics_GH100(OBJGPU *);
-
 /*!
  * @brief Check if MSI is enabled in HW
  *
@@ -243,7 +241,6 @@ kbifPcieConfigEnableRelaxedOrdering_GH100
     KernelBif *pKernelBif
 )
 {
-
     NvU32 xveDevCtrlStatus;
 
     if (GPU_BUS_CFG_CYCLE_RD32(pGpu,
@@ -310,7 +307,6 @@ kbifGetXveStatusBits_GH100
     NvU32     *pStatus
 )
 {
-
     // control/status reg 0x68
     NvU32 xtlDevCtrlStatus;
 
@@ -390,7 +386,6 @@ kbifClearXveStatus_GH100
     NvU32     *pStatus
 )
 {
-
     NvU32 xtlDevCtrlStatus;
 
     if (pStatus)
@@ -433,7 +428,6 @@ kbifGetXveAerBits_GH100
     NvU32     *pBits
 )
 {
-
     NvU32 xtlAerUncorr;
     NvU32 xtlAerCorr;
 
@@ -509,7 +503,6 @@ kbifClearXveAer_GH100
     NvU32      bits
 )
 {
-
     NvU32 xtlAerUncorr = 0;
     NvU32 xtlAerCorr   = 0;
 
@@ -582,7 +575,6 @@ kbifGetPciConfigSpacePriMirror_GH100
     NvU32     *pSize
 )
 {
-
     *pBase = DEVICE_BASE(NV_EP_PCFGM);
     *pSize = DEVICE_EXTENT(NV_EP_PCFGM) - DEVICE_BASE(NV_EP_PCFGM) + 1;
     return NV_OK;
@@ -629,7 +621,7 @@ kbifProbePcieReqAtomicCaps_GH100
     pKernelBif->osPcieAtomicsOpMask = osAtomicsMask;
 
     // Program PCIe atomics register settings
-    _kbifEnablePcieAtomics_GH100(pGpu);
+    kbifEnablePcieAtomics_HAL(pGpu, pKernelBif);
 
     return;
 }
@@ -637,12 +629,15 @@ kbifProbePcieReqAtomicCaps_GH100
 /*!
  * @brief Enable PCIe atomics if PCIe hierarchy supports it
  *
- * @param[in] pGpu GPU object pointer
+ * @param[in] pGpu       GPU object pointer
+ * @param[in] pKernelBif Kernel BIF object pointer
+ * 
  */
-static void
-_kbifEnablePcieAtomics_GH100
+void
+kbifEnablePcieAtomics_GH100
 (
-    OBJGPU *pGpu
+    OBJGPU    *pGpu,
+    KernelBif *pKernelBif
 )
 {
     NvU32 regVal;

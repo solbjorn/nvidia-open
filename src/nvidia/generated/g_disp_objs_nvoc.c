@@ -125,8 +125,36 @@ static NV_STATUS __nvoc_thunk_RmResource_dispapiCheckMemInterUnmap(struct Displa
     return rmresCheckMemInterUnmap((struct RmResource *)(((unsigned char *)pRmResource) + __nvoc_rtti_DisplayApi_RmResource.offset), bSubdeviceHandleProvided);
 }
 
+static NV_STATUS __nvoc_thunk_RsResource_dispapiMapTo(struct DisplayApi *pResource, RS_RES_MAP_TO_PARAMS *pParams) {
+    return resMapTo((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DisplayApi_RsResource.offset), pParams);
+}
+
 static NvBool __nvoc_thunk_RmResource_dispapiAccessCallback(struct DisplayApi *pResource, struct RsClient *pInvokingClient, void *pAllocParams, RsAccessRight accessRight) {
     return rmresAccessCallback((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_DisplayApi_RmResource.offset), pInvokingClient, pAllocParams, accessRight);
+}
+
+static void __nvoc_thunk_Notifier_dispapiSetNotificationShare(struct DisplayApi *pNotifier, struct NotifShare *pNotifShare) {
+    notifySetNotificationShare((struct Notifier *)(((unsigned char *)pNotifier) + __nvoc_rtti_DisplayApi_Notifier.offset), pNotifShare);
+}
+
+static NvU32 __nvoc_thunk_RsResource_dispapiGetRefCount(struct DisplayApi *pResource) {
+    return resGetRefCount((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DisplayApi_RsResource.offset));
+}
+
+static void __nvoc_thunk_RsResource_dispapiAddAdditionalDependants(struct RsClient *pClient, struct DisplayApi *pResource, RsResourceRef *pReference) {
+    resAddAdditionalDependants(pClient, (struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DisplayApi_RsResource.offset), pReference);
+}
+
+static NV_STATUS __nvoc_thunk_RsResource_dispapiUnmapFrom(struct DisplayApi *pResource, RS_RES_UNMAP_FROM_PARAMS *pParams) {
+    return resUnmapFrom((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DisplayApi_RsResource.offset), pParams);
+}
+
+static NV_STATUS __nvoc_thunk_RsResource_dispapiControlLookup(struct DisplayApi *pResource, struct RS_RES_CONTROL_PARAMS_INTERNAL *pParams, const struct NVOC_EXPORTED_METHOD_DEF **ppEntry) {
+    return resControlLookup((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DisplayApi_RsResource.offset), pParams, ppEntry);
+}
+
+static NV_STATUS __nvoc_thunk_RsResource_dispapiUnmap(struct DisplayApi *pResource, struct CALL_CONTEXT *pCallContext, RsCpuMapping *pCpuMapping) {
+    return resUnmap((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DisplayApi_RsResource.offset), pCallContext, pCpuMapping);
 }
 
 static NV_STATUS __nvoc_thunk_RmResource_dispapiGetMemInterMapParams(struct DisplayApi *pRmResource, RMRES_MEM_INTER_MAP_PARAMS *pParams) {
@@ -137,48 +165,32 @@ static NV_STATUS __nvoc_thunk_RmResource_dispapiGetMemoryMappingDescriptor(struc
     return rmresGetMemoryMappingDescriptor((struct RmResource *)(((unsigned char *)pRmResource) + __nvoc_rtti_DisplayApi_RmResource.offset), ppMemDesc);
 }
 
-static void __nvoc_thunk_Notifier_dispapiSetNotificationShare(struct DisplayApi *pNotifier, struct NotifShare *pNotifShare) {
-    notifySetNotificationShare((struct Notifier *)(((unsigned char *)pNotifier) + __nvoc_rtti_DisplayApi_Notifier.offset), pNotifShare);
-}
-
 static NV_STATUS __nvoc_thunk_RsResource_dispapiControlFilter(struct DisplayApi *pResource, struct CALL_CONTEXT *pCallContext, struct RS_RES_CONTROL_PARAMS_INTERNAL *pParams) {
     return resControlFilter((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DisplayApi_RsResource.offset), pCallContext, pParams);
-}
-
-static NvU32 __nvoc_thunk_RsResource_dispapiGetRefCount(struct DisplayApi *pResource) {
-    return resGetRefCount((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DisplayApi_RsResource.offset));
 }
 
 static NV_STATUS __nvoc_thunk_Notifier_dispapiUnregisterEvent(struct DisplayApi *pNotifier, NvHandle hNotifierClient, NvHandle hNotifierResource, NvHandle hEventClient, NvHandle hEvent) {
     return notifyUnregisterEvent((struct Notifier *)(((unsigned char *)pNotifier) + __nvoc_rtti_DisplayApi_Notifier.offset), hNotifierClient, hNotifierResource, hEventClient, hEvent);
 }
 
-static NV_STATUS __nvoc_thunk_RsResource_dispapiUnmap(struct DisplayApi *pResource, struct CALL_CONTEXT *pCallContext, RsCpuMapping *pCpuMapping) {
-    return resUnmap((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DisplayApi_RsResource.offset), pCallContext, pCpuMapping);
+static NV_STATUS __nvoc_thunk_RmResource_dispapiControlSerialization_Prologue(struct DisplayApi *pResource, struct CALL_CONTEXT *pCallContext, struct RS_RES_CONTROL_PARAMS_INTERNAL *pParams) {
+    return rmresControlSerialization_Prologue((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_DisplayApi_RmResource.offset), pCallContext, pParams);
 }
 
 static NvBool __nvoc_thunk_RsResource_dispapiCanCopy(struct DisplayApi *pResource) {
     return resCanCopy((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DisplayApi_RsResource.offset));
 }
 
-static NV_STATUS __nvoc_thunk_RsResource_dispapiMapTo(struct DisplayApi *pResource, RS_RES_MAP_TO_PARAMS *pParams) {
-    return resMapTo((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DisplayApi_RsResource.offset), pParams);
-}
-
-static void __nvoc_thunk_RsResource_dispapiAddAdditionalDependants(struct RsClient *pClient, struct DisplayApi *pResource, RsResourceRef *pReference) {
-    resAddAdditionalDependants(pClient, (struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DisplayApi_RsResource.offset), pReference);
-}
-
 static void __nvoc_thunk_RsResource_dispapiPreDestruct(struct DisplayApi *pResource) {
     resPreDestruct((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DisplayApi_RsResource.offset));
 }
 
-static NV_STATUS __nvoc_thunk_RsResource_dispapiUnmapFrom(struct DisplayApi *pResource, RS_RES_UNMAP_FROM_PARAMS *pParams) {
-    return resUnmapFrom((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DisplayApi_RsResource.offset), pParams);
-}
-
 static NV_STATUS __nvoc_thunk_RsResource_dispapiIsDuplicate(struct DisplayApi *pResource, NvHandle hMemory, NvBool *pDuplicate) {
     return resIsDuplicate((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DisplayApi_RsResource.offset), hMemory, pDuplicate);
+}
+
+static void __nvoc_thunk_RmResource_dispapiControlSerialization_Epilogue(struct DisplayApi *pResource, struct CALL_CONTEXT *pCallContext, struct RS_RES_CONTROL_PARAMS_INTERNAL *pParams) {
+    rmresControlSerialization_Epilogue((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_DisplayApi_RmResource.offset), pCallContext, pParams);
 }
 
 static PEVENTNOTIFICATION *__nvoc_thunk_Notifier_dispapiGetNotificationListPtr(struct DisplayApi *pNotifier) {
@@ -187,10 +199,6 @@ static PEVENTNOTIFICATION *__nvoc_thunk_Notifier_dispapiGetNotificationListPtr(s
 
 static struct NotifShare *__nvoc_thunk_Notifier_dispapiGetNotificationShare(struct DisplayApi *pNotifier) {
     return notifyGetNotificationShare((struct Notifier *)(((unsigned char *)pNotifier) + __nvoc_rtti_DisplayApi_Notifier.offset));
-}
-
-static NV_STATUS __nvoc_thunk_RsResource_dispapiControlLookup(struct DisplayApi *pResource, struct RS_RES_CONTROL_PARAMS_INTERNAL *pParams, const struct NVOC_EXPORTED_METHOD_DEF **ppEntry) {
-    return resControlLookup((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DisplayApi_RsResource.offset), pParams, ppEntry);
 }
 
 static NV_STATUS __nvoc_thunk_RsResource_dispapiMap(struct DisplayApi *pResource, struct CALL_CONTEXT *pCallContext, RS_CPU_MAP_PARAMS *pParams, RsCpuMapping *pCpuMapping) {
@@ -273,39 +281,43 @@ static void __nvoc_init_funcTable_DisplayApi_1(DisplayApi *pThis, RmHalspecOwner
 
     pThis->__dispapiCheckMemInterUnmap__ = &__nvoc_thunk_RmResource_dispapiCheckMemInterUnmap;
 
+    pThis->__dispapiMapTo__ = &__nvoc_thunk_RsResource_dispapiMapTo;
+
     pThis->__dispapiAccessCallback__ = &__nvoc_thunk_RmResource_dispapiAccessCallback;
+
+    pThis->__dispapiSetNotificationShare__ = &__nvoc_thunk_Notifier_dispapiSetNotificationShare;
+
+    pThis->__dispapiGetRefCount__ = &__nvoc_thunk_RsResource_dispapiGetRefCount;
+
+    pThis->__dispapiAddAdditionalDependants__ = &__nvoc_thunk_RsResource_dispapiAddAdditionalDependants;
+
+    pThis->__dispapiUnmapFrom__ = &__nvoc_thunk_RsResource_dispapiUnmapFrom;
+
+    pThis->__dispapiControlLookup__ = &__nvoc_thunk_RsResource_dispapiControlLookup;
+
+    pThis->__dispapiUnmap__ = &__nvoc_thunk_RsResource_dispapiUnmap;
 
     pThis->__dispapiGetMemInterMapParams__ = &__nvoc_thunk_RmResource_dispapiGetMemInterMapParams;
 
     pThis->__dispapiGetMemoryMappingDescriptor__ = &__nvoc_thunk_RmResource_dispapiGetMemoryMappingDescriptor;
 
-    pThis->__dispapiSetNotificationShare__ = &__nvoc_thunk_Notifier_dispapiSetNotificationShare;
-
     pThis->__dispapiControlFilter__ = &__nvoc_thunk_RsResource_dispapiControlFilter;
-
-    pThis->__dispapiGetRefCount__ = &__nvoc_thunk_RsResource_dispapiGetRefCount;
 
     pThis->__dispapiUnregisterEvent__ = &__nvoc_thunk_Notifier_dispapiUnregisterEvent;
 
-    pThis->__dispapiUnmap__ = &__nvoc_thunk_RsResource_dispapiUnmap;
+    pThis->__dispapiControlSerialization_Prologue__ = &__nvoc_thunk_RmResource_dispapiControlSerialization_Prologue;
 
     pThis->__dispapiCanCopy__ = &__nvoc_thunk_RsResource_dispapiCanCopy;
 
-    pThis->__dispapiMapTo__ = &__nvoc_thunk_RsResource_dispapiMapTo;
-
-    pThis->__dispapiAddAdditionalDependants__ = &__nvoc_thunk_RsResource_dispapiAddAdditionalDependants;
-
     pThis->__dispapiPreDestruct__ = &__nvoc_thunk_RsResource_dispapiPreDestruct;
 
-    pThis->__dispapiUnmapFrom__ = &__nvoc_thunk_RsResource_dispapiUnmapFrom;
-
     pThis->__dispapiIsDuplicate__ = &__nvoc_thunk_RsResource_dispapiIsDuplicate;
+
+    pThis->__dispapiControlSerialization_Epilogue__ = &__nvoc_thunk_RmResource_dispapiControlSerialization_Epilogue;
 
     pThis->__dispapiGetNotificationListPtr__ = &__nvoc_thunk_Notifier_dispapiGetNotificationListPtr;
 
     pThis->__dispapiGetNotificationShare__ = &__nvoc_thunk_Notifier_dispapiGetNotificationShare;
-
-    pThis->__dispapiControlLookup__ = &__nvoc_thunk_RsResource_dispapiControlLookup;
 
     pThis->__dispapiMap__ = &__nvoc_thunk_RsResource_dispapiMap;
 
@@ -337,12 +349,15 @@ NV_STATUS __nvoc_objCreate_DisplayApi(DisplayApi **ppThis, Dynamic *pParent, NvU
     DisplayApi *pThis;
     RmHalspecOwner *pRmhalspecowner;
 
-    pThis = portMemAllocNonPaged(sizeof(DisplayApi));
-    if (pThis == NULL) return NV_ERR_NO_MEMORY;
+    status = __nvoc_handleObjCreateMemAlloc(createFlags, sizeof(DisplayApi), (void**)&pThis, (void**)ppThis);
+    if (status != NV_OK)
+        return status;
 
     portMemSet(pThis, 0, sizeof(DisplayApi));
 
     __nvoc_initRtti(staticCast(pThis, Dynamic), &__nvoc_class_def_DisplayApi);
+
+    pThis->__nvoc_base_RmResource.__nvoc_base_RsResource.__nvoc_base_Object.createFlags = createFlags;
 
     if (pParent != NULL && !(createFlags & NVOC_OBJ_CREATE_FLAGS_PARENT_HALSPEC_ONLY))
     {
@@ -363,11 +378,17 @@ NV_STATUS __nvoc_objCreate_DisplayApi(DisplayApi **ppThis, Dynamic *pParent, NvU
     if (status != NV_OK) goto __nvoc_objCreate_DisplayApi_cleanup;
 
     *ppThis = pThis;
+
     return NV_OK;
 
 __nvoc_objCreate_DisplayApi_cleanup:
     // do not call destructors here since the constructor already called them
-    portMemFree(pThis);
+    if (createFlags & NVOC_OBJ_CREATE_FLAGS_IN_PLACE_CONSTRUCT)
+        portMemSet(pThis, 0, sizeof(DisplayApi));
+    else
+        portMemFree(pThis);
+
+    // coverity[leaked_storage:FALSE]
     return status;
 }
 
@@ -493,12 +514,52 @@ static NvBool __nvoc_thunk_RmResource_dispobjShareCallback(struct DispObject *pR
     return rmresShareCallback((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispObject_RmResource.offset), pInvokingClient, pParentRef, pSharePolicy);
 }
 
-static NV_STATUS __nvoc_thunk_DisplayApi_dispobjControl(struct DispObject *pDisplayApi, struct CALL_CONTEXT *pCallContext, struct RS_RES_CONTROL_PARAMS_INTERNAL *pParams) {
-    return dispapiControl((struct DisplayApi *)(((unsigned char *)pDisplayApi) + __nvoc_rtti_DispObject_DisplayApi.offset), pCallContext, pParams);
+static NV_STATUS __nvoc_thunk_RmResource_dispobjCheckMemInterUnmap(struct DispObject *pRmResource, NvBool bSubdeviceHandleProvided) {
+    return rmresCheckMemInterUnmap((struct RmResource *)(((unsigned char *)pRmResource) + __nvoc_rtti_DispObject_RmResource.offset), bSubdeviceHandleProvided);
+}
+
+static NV_STATUS __nvoc_thunk_RsResource_dispobjMapTo(struct DispObject *pResource, RS_RES_MAP_TO_PARAMS *pParams) {
+    return resMapTo((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispObject_RsResource.offset), pParams);
 }
 
 static NvBool __nvoc_thunk_RmResource_dispobjAccessCallback(struct DispObject *pResource, struct RsClient *pInvokingClient, void *pAllocParams, RsAccessRight accessRight) {
     return rmresAccessCallback((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispObject_RmResource.offset), pInvokingClient, pAllocParams, accessRight);
+}
+
+static void __nvoc_thunk_Notifier_dispobjSetNotificationShare(struct DispObject *pNotifier, struct NotifShare *pNotifShare) {
+    notifySetNotificationShare((struct Notifier *)(((unsigned char *)pNotifier) + __nvoc_rtti_DispObject_Notifier.offset), pNotifShare);
+}
+
+static NvU32 __nvoc_thunk_RsResource_dispobjGetRefCount(struct DispObject *pResource) {
+    return resGetRefCount((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispObject_RsResource.offset));
+}
+
+static void __nvoc_thunk_RsResource_dispobjAddAdditionalDependants(struct RsClient *pClient, struct DispObject *pResource, RsResourceRef *pReference) {
+    resAddAdditionalDependants(pClient, (struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispObject_RsResource.offset), pReference);
+}
+
+static NV_STATUS __nvoc_thunk_DisplayApi_dispobjControl_Prologue(struct DispObject *pDisplayApi, struct CALL_CONTEXT *pCallContext, struct RS_RES_CONTROL_PARAMS_INTERNAL *pRsParams) {
+    return dispapiControl_Prologue((struct DisplayApi *)(((unsigned char *)pDisplayApi) + __nvoc_rtti_DispObject_DisplayApi.offset), pCallContext, pRsParams);
+}
+
+static NV_STATUS __nvoc_thunk_RsResource_dispobjUnmapFrom(struct DispObject *pResource, RS_RES_UNMAP_FROM_PARAMS *pParams) {
+    return resUnmapFrom((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispObject_RsResource.offset), pParams);
+}
+
+static void __nvoc_thunk_DisplayApi_dispobjControl_Epilogue(struct DispObject *pDisplayApi, struct CALL_CONTEXT *pCallContext, struct RS_RES_CONTROL_PARAMS_INTERNAL *pRsParams) {
+    dispapiControl_Epilogue((struct DisplayApi *)(((unsigned char *)pDisplayApi) + __nvoc_rtti_DispObject_DisplayApi.offset), pCallContext, pRsParams);
+}
+
+static NV_STATUS __nvoc_thunk_RsResource_dispobjControlLookup(struct DispObject *pResource, struct RS_RES_CONTROL_PARAMS_INTERNAL *pParams, const struct NVOC_EXPORTED_METHOD_DEF **ppEntry) {
+    return resControlLookup((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispObject_RsResource.offset), pParams, ppEntry);
+}
+
+static NV_STATUS __nvoc_thunk_DisplayApi_dispobjControl(struct DispObject *pDisplayApi, struct CALL_CONTEXT *pCallContext, struct RS_RES_CONTROL_PARAMS_INTERNAL *pParams) {
+    return dispapiControl((struct DisplayApi *)(((unsigned char *)pDisplayApi) + __nvoc_rtti_DispObject_DisplayApi.offset), pCallContext, pParams);
+}
+
+static NV_STATUS __nvoc_thunk_RsResource_dispobjUnmap(struct DispObject *pResource, struct CALL_CONTEXT *pCallContext, RsCpuMapping *pCpuMapping) {
+    return resUnmap((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispObject_RsResource.offset), pCallContext, pCpuMapping);
 }
 
 static NV_STATUS __nvoc_thunk_RmResource_dispobjGetMemInterMapParams(struct DispObject *pRmResource, RMRES_MEM_INTER_MAP_PARAMS *pParams) {
@@ -509,72 +570,40 @@ static NV_STATUS __nvoc_thunk_RmResource_dispobjGetMemoryMappingDescriptor(struc
     return rmresGetMemoryMappingDescriptor((struct RmResource *)(((unsigned char *)pRmResource) + __nvoc_rtti_DispObject_RmResource.offset), ppMemDesc);
 }
 
-static NV_STATUS __nvoc_thunk_RmResource_dispobjCheckMemInterUnmap(struct DispObject *pRmResource, NvBool bSubdeviceHandleProvided) {
-    return rmresCheckMemInterUnmap((struct RmResource *)(((unsigned char *)pRmResource) + __nvoc_rtti_DispObject_RmResource.offset), bSubdeviceHandleProvided);
-}
-
-static void __nvoc_thunk_Notifier_dispobjSetNotificationShare(struct DispObject *pNotifier, struct NotifShare *pNotifShare) {
-    notifySetNotificationShare((struct Notifier *)(((unsigned char *)pNotifier) + __nvoc_rtti_DispObject_Notifier.offset), pNotifShare);
-}
-
 static NV_STATUS __nvoc_thunk_RsResource_dispobjControlFilter(struct DispObject *pResource, struct CALL_CONTEXT *pCallContext, struct RS_RES_CONTROL_PARAMS_INTERNAL *pParams) {
     return resControlFilter((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispObject_RsResource.offset), pCallContext, pParams);
-}
-
-static NvU32 __nvoc_thunk_RsResource_dispobjGetRefCount(struct DispObject *pResource) {
-    return resGetRefCount((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispObject_RsResource.offset));
 }
 
 static NV_STATUS __nvoc_thunk_Notifier_dispobjUnregisterEvent(struct DispObject *pNotifier, NvHandle hNotifierClient, NvHandle hNotifierResource, NvHandle hEventClient, NvHandle hEvent) {
     return notifyUnregisterEvent((struct Notifier *)(((unsigned char *)pNotifier) + __nvoc_rtti_DispObject_Notifier.offset), hNotifierClient, hNotifierResource, hEventClient, hEvent);
 }
 
-static NV_STATUS __nvoc_thunk_RsResource_dispobjUnmap(struct DispObject *pResource, struct CALL_CONTEXT *pCallContext, RsCpuMapping *pCpuMapping) {
-    return resUnmap((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispObject_RsResource.offset), pCallContext, pCpuMapping);
-}
-
-static NV_STATUS __nvoc_thunk_DisplayApi_dispobjControl_Prologue(struct DispObject *pDisplayApi, struct CALL_CONTEXT *pCallContext, struct RS_RES_CONTROL_PARAMS_INTERNAL *pRsParams) {
-    return dispapiControl_Prologue((struct DisplayApi *)(((unsigned char *)pDisplayApi) + __nvoc_rtti_DispObject_DisplayApi.offset), pCallContext, pRsParams);
+static NV_STATUS __nvoc_thunk_RmResource_dispobjControlSerialization_Prologue(struct DispObject *pResource, struct CALL_CONTEXT *pCallContext, struct RS_RES_CONTROL_PARAMS_INTERNAL *pParams) {
+    return rmresControlSerialization_Prologue((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispObject_RmResource.offset), pCallContext, pParams);
 }
 
 static NvBool __nvoc_thunk_RsResource_dispobjCanCopy(struct DispObject *pResource) {
     return resCanCopy((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispObject_RsResource.offset));
 }
 
-static NV_STATUS __nvoc_thunk_RsResource_dispobjMapTo(struct DispObject *pResource, RS_RES_MAP_TO_PARAMS *pParams) {
-    return resMapTo((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispObject_RsResource.offset), pParams);
-}
-
-static void __nvoc_thunk_RsResource_dispobjAddAdditionalDependants(struct RsClient *pClient, struct DispObject *pResource, RsResourceRef *pReference) {
-    resAddAdditionalDependants(pClient, (struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispObject_RsResource.offset), pReference);
-}
-
 static void __nvoc_thunk_RsResource_dispobjPreDestruct(struct DispObject *pResource) {
     resPreDestruct((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispObject_RsResource.offset));
-}
-
-static NV_STATUS __nvoc_thunk_RsResource_dispobjUnmapFrom(struct DispObject *pResource, RS_RES_UNMAP_FROM_PARAMS *pParams) {
-    return resUnmapFrom((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispObject_RsResource.offset), pParams);
 }
 
 static NV_STATUS __nvoc_thunk_RsResource_dispobjIsDuplicate(struct DispObject *pResource, NvHandle hMemory, NvBool *pDuplicate) {
     return resIsDuplicate((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispObject_RsResource.offset), hMemory, pDuplicate);
 }
 
+static void __nvoc_thunk_RmResource_dispobjControlSerialization_Epilogue(struct DispObject *pResource, struct CALL_CONTEXT *pCallContext, struct RS_RES_CONTROL_PARAMS_INTERNAL *pParams) {
+    rmresControlSerialization_Epilogue((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispObject_RmResource.offset), pCallContext, pParams);
+}
+
 static PEVENTNOTIFICATION *__nvoc_thunk_Notifier_dispobjGetNotificationListPtr(struct DispObject *pNotifier) {
     return notifyGetNotificationListPtr((struct Notifier *)(((unsigned char *)pNotifier) + __nvoc_rtti_DispObject_Notifier.offset));
 }
 
-static void __nvoc_thunk_DisplayApi_dispobjControl_Epilogue(struct DispObject *pDisplayApi, struct CALL_CONTEXT *pCallContext, struct RS_RES_CONTROL_PARAMS_INTERNAL *pRsParams) {
-    dispapiControl_Epilogue((struct DisplayApi *)(((unsigned char *)pDisplayApi) + __nvoc_rtti_DispObject_DisplayApi.offset), pCallContext, pRsParams);
-}
-
 static struct NotifShare *__nvoc_thunk_Notifier_dispobjGetNotificationShare(struct DispObject *pNotifier) {
     return notifyGetNotificationShare((struct Notifier *)(((unsigned char *)pNotifier) + __nvoc_rtti_DispObject_Notifier.offset));
-}
-
-static NV_STATUS __nvoc_thunk_RsResource_dispobjControlLookup(struct DispObject *pResource, struct RS_RES_CONTROL_PARAMS_INTERNAL *pParams, const struct NVOC_EXPORTED_METHOD_DEF **ppEntry) {
-    return resControlLookup((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispObject_RsResource.offset), pParams, ppEntry);
 }
 
 static NV_STATUS __nvoc_thunk_RsResource_dispobjMap(struct DispObject *pResource, struct CALL_CONTEXT *pCallContext, RS_CPU_MAP_PARAMS *pParams, RsCpuMapping *pCpuMapping) {
@@ -602,7 +631,6 @@ NVOC_BUILD_CALLBACK(dispobjCtrlCmdGetRgUnderflowProp_IMPL);
 NVOC_BUILD_CALLBACK(dispobjCtrlCmdSetRgUnderflowProp_IMPL);
 NVOC_BUILD_CALLBACK(dispobjCtrlCmdGetRgFliplockProp_IMPL);
 NVOC_BUILD_CALLBACK(dispobjCtrlCmdSetRgFliplockProp_IMPL);
-NVOC_BUILD_CALLBACK(dispobjCtrlCmdGetRgConnectedLockpin_IMPL);
 NVOC_BUILD_CALLBACK(dispobjCtrlCmdGetRgConnectedLockpinStateless_IMPL);
 NVOC_BUILD_CALLBACK(dispobjCtrlCmdGetRgScanLine_IMPL);
 NVOC_BUILD_CALLBACK(dispobjCtrlCmdGetSorSeqCtl_IMPL);
@@ -773,27 +801,12 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispObje
 #endif
     },
     {               /*  [10] */
-#if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x210u)
-        /*pFunc=*/      NULL,
-#else
-        /*pFunc=*/      dispobjCtrlCmdGetRgConnectedLockpin_IMPL_cb,
-#endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x210u)
-        /*flags=*/      0x210u,
-        /*accessRight=*/0x0u,
-        /*methodId=*/   0x50700207u,
-        /*paramSize=*/  sizeof(NV5070_CTRL_CMD_GET_RG_CONNECTED_LOCKPIN_PARAMS),
-        /*pClassInfo=*/ &(__nvoc_class_def_DispObject.classInfo),
-#if NV_PRINTF_STRINGS_ALLOWED
-        /*func=*/       "dispobjCtrlCmdGetRgConnectedLockpin"
-#endif
-    },
-    {               /*  [11] */
-#if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
+#if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x0u)
         /*pFunc=*/      NULL,
 #else
         /*pFunc=*/      dispobjCtrlCmdGetRgConnectedLockpinStateless_IMPL_cb,
-#endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
-        /*flags=*/      0x200u,
+#endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x0u)
+        /*flags=*/      0x0u,
         /*accessRight=*/0x0u,
         /*methodId=*/   0x5070020au,
         /*paramSize=*/  sizeof(NV5070_CTRL_GET_RG_CONNECTED_LOCKPIN_STATELESS_PARAMS),
@@ -802,7 +815,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispObje
         /*func=*/       "dispobjCtrlCmdGetRgConnectedLockpinStateless"
 #endif
     },
-    {               /*  [12] */
+    {               /*  [11] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x210u)
         /*pFunc=*/      NULL,
 #else
@@ -817,7 +830,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispObje
         /*func=*/       "dispobjCtrlCmdGetPinsetLockpins"
 #endif
     },
-    {               /*  [13] */
+    {               /*  [12] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x210u)
         /*pFunc=*/      NULL,
 #else
@@ -832,7 +845,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispObje
         /*func=*/       "dispobjCtrlCmdGetRgScanLine"
 #endif
     },
-    {               /*  [14] */
+    {               /*  [13] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
         /*pFunc=*/      NULL,
 #else
@@ -847,7 +860,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispObje
         /*func=*/       "dispobjCtrlCmdGetFrameLockHeaderLockPins"
 #endif
     },
-    {               /*  [15] */
+    {               /*  [14] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x210u)
         /*pFunc=*/      NULL,
 #else
@@ -862,7 +875,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispObje
         /*func=*/       "dispobjCtrlCmdGetSorSeqCtl"
 #endif
     },
-    {               /*  [16] */
+    {               /*  [15] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x210u)
         /*pFunc=*/      NULL,
 #else
@@ -877,7 +890,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispObje
         /*func=*/       "dispobjCtrlCmdSetSorSeqCtl"
 #endif
     },
-    {               /*  [17] */
+    {               /*  [16] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x210u)
         /*pFunc=*/      NULL,
 #else
@@ -892,7 +905,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispObje
         /*func=*/       "dispobjCtrlCmdGetPiorSeqCtl"
 #endif
     },
-    {               /*  [18] */
+    {               /*  [17] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x210u)
         /*pFunc=*/      NULL,
 #else
@@ -907,7 +920,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispObje
         /*func=*/       "dispobjCtrlCmdSetPiorSeqCtl"
 #endif
     },
-    {               /*  [19] */
+    {               /*  [18] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x210u)
         /*pFunc=*/      NULL,
 #else
@@ -922,7 +935,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispObje
         /*func=*/       "dispobjCtrlCmdSeqProgSpeed"
 #endif
     },
-    {               /*  [20] */
+    {               /*  [19] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
         /*pFunc=*/      NULL,
 #else
@@ -937,7 +950,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispObje
         /*func=*/       "dispobjCtrlCmdGetSorPwm"
 #endif
     },
-    {               /*  [21] */
+    {               /*  [20] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
         /*pFunc=*/      NULL,
 #else
@@ -952,7 +965,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispObje
         /*func=*/       "dispobjCtrlCmdSetSorPwm"
 #endif
     },
-    {               /*  [22] */
+    {               /*  [21] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
         /*pFunc=*/      NULL,
 #else
@@ -967,7 +980,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispObje
         /*func=*/       "dispobjCtrlCmdGetSorOpMode"
 #endif
     },
-    {               /*  [23] */
+    {               /*  [22] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
         /*pFunc=*/      NULL,
 #else
@@ -982,7 +995,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispObje
         /*func=*/       "dispobjCtrlCmdSetSorOpMode"
 #endif
     },
-    {               /*  [24] */
+    {               /*  [23] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x210u)
         /*pFunc=*/      NULL,
 #else
@@ -997,7 +1010,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispObje
         /*func=*/       "dispobjCtrlCmdGetPiorOpMode"
 #endif
     },
-    {               /*  [25] */
+    {               /*  [24] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x210u)
         /*pFunc=*/      NULL,
 #else
@@ -1012,7 +1025,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispObje
         /*func=*/       "dispobjCtrlCmdSetPiorOpMode"
 #endif
     },
-    {               /*  [26] */
+    {               /*  [25] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
         /*pFunc=*/      NULL,
 #else
@@ -1027,7 +1040,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispObje
         /*func=*/       "dispobjCtrlCmdSetSorFlushMode"
 #endif
     },
-    {               /*  [27] */
+    {               /*  [26] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x210u)
         /*pFunc=*/      NULL,
 #else
@@ -1042,7 +1055,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispObje
         /*func=*/       "dispobjCtrlCmdSystemGetCapsV2"
 #endif
     },
-    {               /*  [28] */
+    {               /*  [27] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*pFunc=*/      NULL,
 #else
@@ -1057,7 +1070,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispObje
         /*func=*/       "dispobjCtrlCmdEventSetTrigger"
 #endif
     },
-    {               /*  [29] */
+    {               /*  [28] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x10u)
         /*pFunc=*/      NULL,
 #else
@@ -1077,7 +1090,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispObje
 
 const struct NVOC_EXPORT_INFO __nvoc_export_info_DispObject =
 {
-    /*numEntries=*/     30,
+    /*numEntries=*/     29,
     /*pExportEntries=*/ __nvoc_exported_method_def_DispObject
 };
 
@@ -1191,11 +1204,7 @@ static void __nvoc_init_funcTable_DispObject_1(DispObject *pThis, RmHalspecOwner
     pThis->__dispobjCtrlCmdSetRgFliplockProp__ = &dispobjCtrlCmdSetRgFliplockProp_IMPL;
 #endif
 
-#if !NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x210u)
-    pThis->__dispobjCtrlCmdGetRgConnectedLockpin__ = &dispobjCtrlCmdGetRgConnectedLockpin_IMPL;
-#endif
-
-#if !NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
+#if !NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x0u)
     pThis->__dispobjCtrlCmdGetRgConnectedLockpinStateless__ = &dispobjCtrlCmdGetRgConnectedLockpinStateless_IMPL;
 #endif
 
@@ -1245,47 +1254,51 @@ static void __nvoc_init_funcTable_DispObject_1(DispObject *pThis, RmHalspecOwner
 
     pThis->__dispobjShareCallback__ = &__nvoc_thunk_RmResource_dispobjShareCallback;
 
-    pThis->__dispobjControl__ = &__nvoc_thunk_DisplayApi_dispobjControl;
+    pThis->__dispobjCheckMemInterUnmap__ = &__nvoc_thunk_RmResource_dispobjCheckMemInterUnmap;
+
+    pThis->__dispobjMapTo__ = &__nvoc_thunk_RsResource_dispobjMapTo;
 
     pThis->__dispobjAccessCallback__ = &__nvoc_thunk_RmResource_dispobjAccessCallback;
+
+    pThis->__dispobjSetNotificationShare__ = &__nvoc_thunk_Notifier_dispobjSetNotificationShare;
+
+    pThis->__dispobjGetRefCount__ = &__nvoc_thunk_RsResource_dispobjGetRefCount;
+
+    pThis->__dispobjAddAdditionalDependants__ = &__nvoc_thunk_RsResource_dispobjAddAdditionalDependants;
+
+    pThis->__dispobjControl_Prologue__ = &__nvoc_thunk_DisplayApi_dispobjControl_Prologue;
+
+    pThis->__dispobjUnmapFrom__ = &__nvoc_thunk_RsResource_dispobjUnmapFrom;
+
+    pThis->__dispobjControl_Epilogue__ = &__nvoc_thunk_DisplayApi_dispobjControl_Epilogue;
+
+    pThis->__dispobjControlLookup__ = &__nvoc_thunk_RsResource_dispobjControlLookup;
+
+    pThis->__dispobjControl__ = &__nvoc_thunk_DisplayApi_dispobjControl;
+
+    pThis->__dispobjUnmap__ = &__nvoc_thunk_RsResource_dispobjUnmap;
 
     pThis->__dispobjGetMemInterMapParams__ = &__nvoc_thunk_RmResource_dispobjGetMemInterMapParams;
 
     pThis->__dispobjGetMemoryMappingDescriptor__ = &__nvoc_thunk_RmResource_dispobjGetMemoryMappingDescriptor;
 
-    pThis->__dispobjCheckMemInterUnmap__ = &__nvoc_thunk_RmResource_dispobjCheckMemInterUnmap;
-
-    pThis->__dispobjSetNotificationShare__ = &__nvoc_thunk_Notifier_dispobjSetNotificationShare;
-
     pThis->__dispobjControlFilter__ = &__nvoc_thunk_RsResource_dispobjControlFilter;
-
-    pThis->__dispobjGetRefCount__ = &__nvoc_thunk_RsResource_dispobjGetRefCount;
 
     pThis->__dispobjUnregisterEvent__ = &__nvoc_thunk_Notifier_dispobjUnregisterEvent;
 
-    pThis->__dispobjUnmap__ = &__nvoc_thunk_RsResource_dispobjUnmap;
-
-    pThis->__dispobjControl_Prologue__ = &__nvoc_thunk_DisplayApi_dispobjControl_Prologue;
+    pThis->__dispobjControlSerialization_Prologue__ = &__nvoc_thunk_RmResource_dispobjControlSerialization_Prologue;
 
     pThis->__dispobjCanCopy__ = &__nvoc_thunk_RsResource_dispobjCanCopy;
 
-    pThis->__dispobjMapTo__ = &__nvoc_thunk_RsResource_dispobjMapTo;
-
-    pThis->__dispobjAddAdditionalDependants__ = &__nvoc_thunk_RsResource_dispobjAddAdditionalDependants;
-
     pThis->__dispobjPreDestruct__ = &__nvoc_thunk_RsResource_dispobjPreDestruct;
-
-    pThis->__dispobjUnmapFrom__ = &__nvoc_thunk_RsResource_dispobjUnmapFrom;
 
     pThis->__dispobjIsDuplicate__ = &__nvoc_thunk_RsResource_dispobjIsDuplicate;
 
+    pThis->__dispobjControlSerialization_Epilogue__ = &__nvoc_thunk_RmResource_dispobjControlSerialization_Epilogue;
+
     pThis->__dispobjGetNotificationListPtr__ = &__nvoc_thunk_Notifier_dispobjGetNotificationListPtr;
 
-    pThis->__dispobjControl_Epilogue__ = &__nvoc_thunk_DisplayApi_dispobjControl_Epilogue;
-
     pThis->__dispobjGetNotificationShare__ = &__nvoc_thunk_Notifier_dispobjGetNotificationShare;
-
-    pThis->__dispobjControlLookup__ = &__nvoc_thunk_RsResource_dispobjControlLookup;
 
     pThis->__dispobjMap__ = &__nvoc_thunk_RsResource_dispobjMap;
 
@@ -1316,12 +1329,15 @@ NV_STATUS __nvoc_objCreate_DispObject(DispObject **ppThis, Dynamic *pParent, NvU
     DispObject *pThis;
     RmHalspecOwner *pRmhalspecowner;
 
-    pThis = portMemAllocNonPaged(sizeof(DispObject));
-    if (pThis == NULL) return NV_ERR_NO_MEMORY;
+    status = __nvoc_handleObjCreateMemAlloc(createFlags, sizeof(DispObject), (void**)&pThis, (void**)ppThis);
+    if (status != NV_OK)
+        return status;
 
     portMemSet(pThis, 0, sizeof(DispObject));
 
     __nvoc_initRtti(staticCast(pThis, Dynamic), &__nvoc_class_def_DispObject);
+
+    pThis->__nvoc_base_DisplayApi.__nvoc_base_RmResource.__nvoc_base_RsResource.__nvoc_base_Object.createFlags = createFlags;
 
     if (pParent != NULL && !(createFlags & NVOC_OBJ_CREATE_FLAGS_PARENT_HALSPEC_ONLY))
     {
@@ -1342,11 +1358,17 @@ NV_STATUS __nvoc_objCreate_DispObject(DispObject **ppThis, Dynamic *pParent, NvU
     if (status != NV_OK) goto __nvoc_objCreate_DispObject_cleanup;
 
     *ppThis = pThis;
+
     return NV_OK;
 
 __nvoc_objCreate_DispObject_cleanup:
     // do not call destructors here since the constructor already called them
-    portMemFree(pThis);
+    if (createFlags & NVOC_OBJ_CREATE_FLAGS_IN_PLACE_CONSTRUCT)
+        portMemSet(pThis, 0, sizeof(DispObject));
+    else
+        portMemFree(pThis);
+
+    // coverity[leaked_storage:FALSE]
     return status;
 }
 
@@ -1481,12 +1503,52 @@ static NvBool __nvoc_thunk_RmResource_nvdispapiShareCallback(struct NvDispApi *p
     return rmresShareCallback((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_NvDispApi_RmResource.offset), pInvokingClient, pParentRef, pSharePolicy);
 }
 
-static NV_STATUS __nvoc_thunk_DisplayApi_nvdispapiControl(struct NvDispApi *pDisplayApi, struct CALL_CONTEXT *pCallContext, struct RS_RES_CONTROL_PARAMS_INTERNAL *pParams) {
-    return dispapiControl((struct DisplayApi *)(((unsigned char *)pDisplayApi) + __nvoc_rtti_NvDispApi_DisplayApi.offset), pCallContext, pParams);
+static NV_STATUS __nvoc_thunk_RmResource_nvdispapiCheckMemInterUnmap(struct NvDispApi *pRmResource, NvBool bSubdeviceHandleProvided) {
+    return rmresCheckMemInterUnmap((struct RmResource *)(((unsigned char *)pRmResource) + __nvoc_rtti_NvDispApi_RmResource.offset), bSubdeviceHandleProvided);
+}
+
+static NV_STATUS __nvoc_thunk_RsResource_nvdispapiMapTo(struct NvDispApi *pResource, RS_RES_MAP_TO_PARAMS *pParams) {
+    return resMapTo((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_NvDispApi_RsResource.offset), pParams);
 }
 
 static NvBool __nvoc_thunk_RmResource_nvdispapiAccessCallback(struct NvDispApi *pResource, struct RsClient *pInvokingClient, void *pAllocParams, RsAccessRight accessRight) {
     return rmresAccessCallback((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_NvDispApi_RmResource.offset), pInvokingClient, pAllocParams, accessRight);
+}
+
+static void __nvoc_thunk_Notifier_nvdispapiSetNotificationShare(struct NvDispApi *pNotifier, struct NotifShare *pNotifShare) {
+    notifySetNotificationShare((struct Notifier *)(((unsigned char *)pNotifier) + __nvoc_rtti_NvDispApi_Notifier.offset), pNotifShare);
+}
+
+static NvU32 __nvoc_thunk_RsResource_nvdispapiGetRefCount(struct NvDispApi *pResource) {
+    return resGetRefCount((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_NvDispApi_RsResource.offset));
+}
+
+static void __nvoc_thunk_RsResource_nvdispapiAddAdditionalDependants(struct RsClient *pClient, struct NvDispApi *pResource, RsResourceRef *pReference) {
+    resAddAdditionalDependants(pClient, (struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_NvDispApi_RsResource.offset), pReference);
+}
+
+static NV_STATUS __nvoc_thunk_DisplayApi_nvdispapiControl_Prologue(struct NvDispApi *pDisplayApi, struct CALL_CONTEXT *pCallContext, struct RS_RES_CONTROL_PARAMS_INTERNAL *pRsParams) {
+    return dispapiControl_Prologue((struct DisplayApi *)(((unsigned char *)pDisplayApi) + __nvoc_rtti_NvDispApi_DisplayApi.offset), pCallContext, pRsParams);
+}
+
+static NV_STATUS __nvoc_thunk_RsResource_nvdispapiUnmapFrom(struct NvDispApi *pResource, RS_RES_UNMAP_FROM_PARAMS *pParams) {
+    return resUnmapFrom((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_NvDispApi_RsResource.offset), pParams);
+}
+
+static void __nvoc_thunk_DisplayApi_nvdispapiControl_Epilogue(struct NvDispApi *pDisplayApi, struct CALL_CONTEXT *pCallContext, struct RS_RES_CONTROL_PARAMS_INTERNAL *pRsParams) {
+    dispapiControl_Epilogue((struct DisplayApi *)(((unsigned char *)pDisplayApi) + __nvoc_rtti_NvDispApi_DisplayApi.offset), pCallContext, pRsParams);
+}
+
+static NV_STATUS __nvoc_thunk_RsResource_nvdispapiControlLookup(struct NvDispApi *pResource, struct RS_RES_CONTROL_PARAMS_INTERNAL *pParams, const struct NVOC_EXPORTED_METHOD_DEF **ppEntry) {
+    return resControlLookup((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_NvDispApi_RsResource.offset), pParams, ppEntry);
+}
+
+static NV_STATUS __nvoc_thunk_DisplayApi_nvdispapiControl(struct NvDispApi *pDisplayApi, struct CALL_CONTEXT *pCallContext, struct RS_RES_CONTROL_PARAMS_INTERNAL *pParams) {
+    return dispapiControl((struct DisplayApi *)(((unsigned char *)pDisplayApi) + __nvoc_rtti_NvDispApi_DisplayApi.offset), pCallContext, pParams);
+}
+
+static NV_STATUS __nvoc_thunk_RsResource_nvdispapiUnmap(struct NvDispApi *pResource, struct CALL_CONTEXT *pCallContext, RsCpuMapping *pCpuMapping) {
+    return resUnmap((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_NvDispApi_RsResource.offset), pCallContext, pCpuMapping);
 }
 
 static NV_STATUS __nvoc_thunk_RmResource_nvdispapiGetMemInterMapParams(struct NvDispApi *pRmResource, RMRES_MEM_INTER_MAP_PARAMS *pParams) {
@@ -1497,72 +1559,40 @@ static NV_STATUS __nvoc_thunk_RmResource_nvdispapiGetMemoryMappingDescriptor(str
     return rmresGetMemoryMappingDescriptor((struct RmResource *)(((unsigned char *)pRmResource) + __nvoc_rtti_NvDispApi_RmResource.offset), ppMemDesc);
 }
 
-static NV_STATUS __nvoc_thunk_RmResource_nvdispapiCheckMemInterUnmap(struct NvDispApi *pRmResource, NvBool bSubdeviceHandleProvided) {
-    return rmresCheckMemInterUnmap((struct RmResource *)(((unsigned char *)pRmResource) + __nvoc_rtti_NvDispApi_RmResource.offset), bSubdeviceHandleProvided);
-}
-
-static void __nvoc_thunk_Notifier_nvdispapiSetNotificationShare(struct NvDispApi *pNotifier, struct NotifShare *pNotifShare) {
-    notifySetNotificationShare((struct Notifier *)(((unsigned char *)pNotifier) + __nvoc_rtti_NvDispApi_Notifier.offset), pNotifShare);
-}
-
 static NV_STATUS __nvoc_thunk_RsResource_nvdispapiControlFilter(struct NvDispApi *pResource, struct CALL_CONTEXT *pCallContext, struct RS_RES_CONTROL_PARAMS_INTERNAL *pParams) {
     return resControlFilter((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_NvDispApi_RsResource.offset), pCallContext, pParams);
-}
-
-static NvU32 __nvoc_thunk_RsResource_nvdispapiGetRefCount(struct NvDispApi *pResource) {
-    return resGetRefCount((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_NvDispApi_RsResource.offset));
 }
 
 static NV_STATUS __nvoc_thunk_Notifier_nvdispapiUnregisterEvent(struct NvDispApi *pNotifier, NvHandle hNotifierClient, NvHandle hNotifierResource, NvHandle hEventClient, NvHandle hEvent) {
     return notifyUnregisterEvent((struct Notifier *)(((unsigned char *)pNotifier) + __nvoc_rtti_NvDispApi_Notifier.offset), hNotifierClient, hNotifierResource, hEventClient, hEvent);
 }
 
-static NV_STATUS __nvoc_thunk_RsResource_nvdispapiUnmap(struct NvDispApi *pResource, struct CALL_CONTEXT *pCallContext, RsCpuMapping *pCpuMapping) {
-    return resUnmap((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_NvDispApi_RsResource.offset), pCallContext, pCpuMapping);
-}
-
-static NV_STATUS __nvoc_thunk_DisplayApi_nvdispapiControl_Prologue(struct NvDispApi *pDisplayApi, struct CALL_CONTEXT *pCallContext, struct RS_RES_CONTROL_PARAMS_INTERNAL *pRsParams) {
-    return dispapiControl_Prologue((struct DisplayApi *)(((unsigned char *)pDisplayApi) + __nvoc_rtti_NvDispApi_DisplayApi.offset), pCallContext, pRsParams);
+static NV_STATUS __nvoc_thunk_RmResource_nvdispapiControlSerialization_Prologue(struct NvDispApi *pResource, struct CALL_CONTEXT *pCallContext, struct RS_RES_CONTROL_PARAMS_INTERNAL *pParams) {
+    return rmresControlSerialization_Prologue((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_NvDispApi_RmResource.offset), pCallContext, pParams);
 }
 
 static NvBool __nvoc_thunk_RsResource_nvdispapiCanCopy(struct NvDispApi *pResource) {
     return resCanCopy((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_NvDispApi_RsResource.offset));
 }
 
-static NV_STATUS __nvoc_thunk_RsResource_nvdispapiMapTo(struct NvDispApi *pResource, RS_RES_MAP_TO_PARAMS *pParams) {
-    return resMapTo((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_NvDispApi_RsResource.offset), pParams);
-}
-
-static void __nvoc_thunk_RsResource_nvdispapiAddAdditionalDependants(struct RsClient *pClient, struct NvDispApi *pResource, RsResourceRef *pReference) {
-    resAddAdditionalDependants(pClient, (struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_NvDispApi_RsResource.offset), pReference);
-}
-
 static void __nvoc_thunk_RsResource_nvdispapiPreDestruct(struct NvDispApi *pResource) {
     resPreDestruct((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_NvDispApi_RsResource.offset));
-}
-
-static NV_STATUS __nvoc_thunk_RsResource_nvdispapiUnmapFrom(struct NvDispApi *pResource, RS_RES_UNMAP_FROM_PARAMS *pParams) {
-    return resUnmapFrom((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_NvDispApi_RsResource.offset), pParams);
 }
 
 static NV_STATUS __nvoc_thunk_RsResource_nvdispapiIsDuplicate(struct NvDispApi *pResource, NvHandle hMemory, NvBool *pDuplicate) {
     return resIsDuplicate((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_NvDispApi_RsResource.offset), hMemory, pDuplicate);
 }
 
+static void __nvoc_thunk_RmResource_nvdispapiControlSerialization_Epilogue(struct NvDispApi *pResource, struct CALL_CONTEXT *pCallContext, struct RS_RES_CONTROL_PARAMS_INTERNAL *pParams) {
+    rmresControlSerialization_Epilogue((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_NvDispApi_RmResource.offset), pCallContext, pParams);
+}
+
 static PEVENTNOTIFICATION *__nvoc_thunk_Notifier_nvdispapiGetNotificationListPtr(struct NvDispApi *pNotifier) {
     return notifyGetNotificationListPtr((struct Notifier *)(((unsigned char *)pNotifier) + __nvoc_rtti_NvDispApi_Notifier.offset));
 }
 
-static void __nvoc_thunk_DisplayApi_nvdispapiControl_Epilogue(struct NvDispApi *pDisplayApi, struct CALL_CONTEXT *pCallContext, struct RS_RES_CONTROL_PARAMS_INTERNAL *pRsParams) {
-    dispapiControl_Epilogue((struct DisplayApi *)(((unsigned char *)pDisplayApi) + __nvoc_rtti_NvDispApi_DisplayApi.offset), pCallContext, pRsParams);
-}
-
 static struct NotifShare *__nvoc_thunk_Notifier_nvdispapiGetNotificationShare(struct NvDispApi *pNotifier) {
     return notifyGetNotificationShare((struct Notifier *)(((unsigned char *)pNotifier) + __nvoc_rtti_NvDispApi_Notifier.offset));
-}
-
-static NV_STATUS __nvoc_thunk_RsResource_nvdispapiControlLookup(struct NvDispApi *pResource, struct RS_RES_CONTROL_PARAMS_INTERNAL *pParams, const struct NVOC_EXPORTED_METHOD_DEF **ppEntry) {
-    return resControlLookup((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_NvDispApi_RsResource.offset), pParams, ppEntry);
 }
 
 static NV_STATUS __nvoc_thunk_RsResource_nvdispapiMap(struct NvDispApi *pResource, struct CALL_CONTEXT *pCallContext, RS_CPU_MAP_PARAMS *pParams, RsCpuMapping *pCpuMapping) {
@@ -1763,47 +1793,51 @@ static void __nvoc_init_funcTable_NvDispApi_1(NvDispApi *pThis) {
 
     pThis->__nvdispapiShareCallback__ = &__nvoc_thunk_RmResource_nvdispapiShareCallback;
 
-    pThis->__nvdispapiControl__ = &__nvoc_thunk_DisplayApi_nvdispapiControl;
+    pThis->__nvdispapiCheckMemInterUnmap__ = &__nvoc_thunk_RmResource_nvdispapiCheckMemInterUnmap;
+
+    pThis->__nvdispapiMapTo__ = &__nvoc_thunk_RsResource_nvdispapiMapTo;
 
     pThis->__nvdispapiAccessCallback__ = &__nvoc_thunk_RmResource_nvdispapiAccessCallback;
+
+    pThis->__nvdispapiSetNotificationShare__ = &__nvoc_thunk_Notifier_nvdispapiSetNotificationShare;
+
+    pThis->__nvdispapiGetRefCount__ = &__nvoc_thunk_RsResource_nvdispapiGetRefCount;
+
+    pThis->__nvdispapiAddAdditionalDependants__ = &__nvoc_thunk_RsResource_nvdispapiAddAdditionalDependants;
+
+    pThis->__nvdispapiControl_Prologue__ = &__nvoc_thunk_DisplayApi_nvdispapiControl_Prologue;
+
+    pThis->__nvdispapiUnmapFrom__ = &__nvoc_thunk_RsResource_nvdispapiUnmapFrom;
+
+    pThis->__nvdispapiControl_Epilogue__ = &__nvoc_thunk_DisplayApi_nvdispapiControl_Epilogue;
+
+    pThis->__nvdispapiControlLookup__ = &__nvoc_thunk_RsResource_nvdispapiControlLookup;
+
+    pThis->__nvdispapiControl__ = &__nvoc_thunk_DisplayApi_nvdispapiControl;
+
+    pThis->__nvdispapiUnmap__ = &__nvoc_thunk_RsResource_nvdispapiUnmap;
 
     pThis->__nvdispapiGetMemInterMapParams__ = &__nvoc_thunk_RmResource_nvdispapiGetMemInterMapParams;
 
     pThis->__nvdispapiGetMemoryMappingDescriptor__ = &__nvoc_thunk_RmResource_nvdispapiGetMemoryMappingDescriptor;
 
-    pThis->__nvdispapiCheckMemInterUnmap__ = &__nvoc_thunk_RmResource_nvdispapiCheckMemInterUnmap;
-
-    pThis->__nvdispapiSetNotificationShare__ = &__nvoc_thunk_Notifier_nvdispapiSetNotificationShare;
-
     pThis->__nvdispapiControlFilter__ = &__nvoc_thunk_RsResource_nvdispapiControlFilter;
-
-    pThis->__nvdispapiGetRefCount__ = &__nvoc_thunk_RsResource_nvdispapiGetRefCount;
 
     pThis->__nvdispapiUnregisterEvent__ = &__nvoc_thunk_Notifier_nvdispapiUnregisterEvent;
 
-    pThis->__nvdispapiUnmap__ = &__nvoc_thunk_RsResource_nvdispapiUnmap;
-
-    pThis->__nvdispapiControl_Prologue__ = &__nvoc_thunk_DisplayApi_nvdispapiControl_Prologue;
+    pThis->__nvdispapiControlSerialization_Prologue__ = &__nvoc_thunk_RmResource_nvdispapiControlSerialization_Prologue;
 
     pThis->__nvdispapiCanCopy__ = &__nvoc_thunk_RsResource_nvdispapiCanCopy;
 
-    pThis->__nvdispapiMapTo__ = &__nvoc_thunk_RsResource_nvdispapiMapTo;
-
-    pThis->__nvdispapiAddAdditionalDependants__ = &__nvoc_thunk_RsResource_nvdispapiAddAdditionalDependants;
-
     pThis->__nvdispapiPreDestruct__ = &__nvoc_thunk_RsResource_nvdispapiPreDestruct;
-
-    pThis->__nvdispapiUnmapFrom__ = &__nvoc_thunk_RsResource_nvdispapiUnmapFrom;
 
     pThis->__nvdispapiIsDuplicate__ = &__nvoc_thunk_RsResource_nvdispapiIsDuplicate;
 
+    pThis->__nvdispapiControlSerialization_Epilogue__ = &__nvoc_thunk_RmResource_nvdispapiControlSerialization_Epilogue;
+
     pThis->__nvdispapiGetNotificationListPtr__ = &__nvoc_thunk_Notifier_nvdispapiGetNotificationListPtr;
 
-    pThis->__nvdispapiControl_Epilogue__ = &__nvoc_thunk_DisplayApi_nvdispapiControl_Epilogue;
-
     pThis->__nvdispapiGetNotificationShare__ = &__nvoc_thunk_Notifier_nvdispapiGetNotificationShare;
-
-    pThis->__nvdispapiControlLookup__ = &__nvoc_thunk_RsResource_nvdispapiControlLookup;
 
     pThis->__nvdispapiMap__ = &__nvoc_thunk_RsResource_nvdispapiMap;
 
@@ -1835,12 +1869,15 @@ NV_STATUS __nvoc_objCreate_NvDispApi(NvDispApi **ppThis, Dynamic *pParent, NvU32
     NvDispApi *pThis;
     RmHalspecOwner *pRmhalspecowner;
 
-    pThis = portMemAllocNonPaged(sizeof(NvDispApi));
-    if (pThis == NULL) return NV_ERR_NO_MEMORY;
+    status = __nvoc_handleObjCreateMemAlloc(createFlags, sizeof(NvDispApi), (void**)&pThis, (void**)ppThis);
+    if (status != NV_OK)
+        return status;
 
     portMemSet(pThis, 0, sizeof(NvDispApi));
 
     __nvoc_initRtti(staticCast(pThis, Dynamic), &__nvoc_class_def_NvDispApi);
+
+    pThis->__nvoc_base_DispObject.__nvoc_base_DisplayApi.__nvoc_base_RmResource.__nvoc_base_RsResource.__nvoc_base_Object.createFlags = createFlags;
 
     if (pParent != NULL && !(createFlags & NVOC_OBJ_CREATE_FLAGS_PARENT_HALSPEC_ONLY))
     {
@@ -1861,11 +1898,17 @@ NV_STATUS __nvoc_objCreate_NvDispApi(NvDispApi **ppThis, Dynamic *pParent, NvU32
     if (status != NV_OK) goto __nvoc_objCreate_NvDispApi_cleanup;
 
     *ppThis = pThis;
+
     return NV_OK;
 
 __nvoc_objCreate_NvDispApi_cleanup:
     // do not call destructors here since the constructor already called them
-    portMemFree(pThis);
+    if (createFlags & NVOC_OBJ_CREATE_FLAGS_IN_PLACE_CONSTRUCT)
+        portMemSet(pThis, 0, sizeof(NvDispApi));
+    else
+        portMemFree(pThis);
+
+    // coverity[leaked_storage:FALSE]
     return status;
 }
 
@@ -1991,12 +2034,52 @@ static NvBool __nvoc_thunk_RmResource_dispswobjShareCallback(struct DispSwObj *p
     return rmresShareCallback((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispSwObj_RmResource.offset), pInvokingClient, pParentRef, pSharePolicy);
 }
 
-static NV_STATUS __nvoc_thunk_DisplayApi_dispswobjControl(struct DispSwObj *pDisplayApi, struct CALL_CONTEXT *pCallContext, struct RS_RES_CONTROL_PARAMS_INTERNAL *pParams) {
-    return dispapiControl((struct DisplayApi *)(((unsigned char *)pDisplayApi) + __nvoc_rtti_DispSwObj_DisplayApi.offset), pCallContext, pParams);
+static NV_STATUS __nvoc_thunk_RmResource_dispswobjCheckMemInterUnmap(struct DispSwObj *pRmResource, NvBool bSubdeviceHandleProvided) {
+    return rmresCheckMemInterUnmap((struct RmResource *)(((unsigned char *)pRmResource) + __nvoc_rtti_DispSwObj_RmResource.offset), bSubdeviceHandleProvided);
+}
+
+static NV_STATUS __nvoc_thunk_RsResource_dispswobjMapTo(struct DispSwObj *pResource, RS_RES_MAP_TO_PARAMS *pParams) {
+    return resMapTo((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispSwObj_RsResource.offset), pParams);
 }
 
 static NvBool __nvoc_thunk_RmResource_dispswobjAccessCallback(struct DispSwObj *pResource, struct RsClient *pInvokingClient, void *pAllocParams, RsAccessRight accessRight) {
     return rmresAccessCallback((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispSwObj_RmResource.offset), pInvokingClient, pAllocParams, accessRight);
+}
+
+static void __nvoc_thunk_Notifier_dispswobjSetNotificationShare(struct DispSwObj *pNotifier, struct NotifShare *pNotifShare) {
+    notifySetNotificationShare((struct Notifier *)(((unsigned char *)pNotifier) + __nvoc_rtti_DispSwObj_Notifier.offset), pNotifShare);
+}
+
+static NvU32 __nvoc_thunk_RsResource_dispswobjGetRefCount(struct DispSwObj *pResource) {
+    return resGetRefCount((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispSwObj_RsResource.offset));
+}
+
+static void __nvoc_thunk_RsResource_dispswobjAddAdditionalDependants(struct RsClient *pClient, struct DispSwObj *pResource, RsResourceRef *pReference) {
+    resAddAdditionalDependants(pClient, (struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispSwObj_RsResource.offset), pReference);
+}
+
+static NV_STATUS __nvoc_thunk_DisplayApi_dispswobjControl_Prologue(struct DispSwObj *pDisplayApi, struct CALL_CONTEXT *pCallContext, struct RS_RES_CONTROL_PARAMS_INTERNAL *pRsParams) {
+    return dispapiControl_Prologue((struct DisplayApi *)(((unsigned char *)pDisplayApi) + __nvoc_rtti_DispSwObj_DisplayApi.offset), pCallContext, pRsParams);
+}
+
+static NV_STATUS __nvoc_thunk_RsResource_dispswobjUnmapFrom(struct DispSwObj *pResource, RS_RES_UNMAP_FROM_PARAMS *pParams) {
+    return resUnmapFrom((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispSwObj_RsResource.offset), pParams);
+}
+
+static void __nvoc_thunk_DisplayApi_dispswobjControl_Epilogue(struct DispSwObj *pDisplayApi, struct CALL_CONTEXT *pCallContext, struct RS_RES_CONTROL_PARAMS_INTERNAL *pRsParams) {
+    dispapiControl_Epilogue((struct DisplayApi *)(((unsigned char *)pDisplayApi) + __nvoc_rtti_DispSwObj_DisplayApi.offset), pCallContext, pRsParams);
+}
+
+static NV_STATUS __nvoc_thunk_RsResource_dispswobjControlLookup(struct DispSwObj *pResource, struct RS_RES_CONTROL_PARAMS_INTERNAL *pParams, const struct NVOC_EXPORTED_METHOD_DEF **ppEntry) {
+    return resControlLookup((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispSwObj_RsResource.offset), pParams, ppEntry);
+}
+
+static NV_STATUS __nvoc_thunk_DisplayApi_dispswobjControl(struct DispSwObj *pDisplayApi, struct CALL_CONTEXT *pCallContext, struct RS_RES_CONTROL_PARAMS_INTERNAL *pParams) {
+    return dispapiControl((struct DisplayApi *)(((unsigned char *)pDisplayApi) + __nvoc_rtti_DispSwObj_DisplayApi.offset), pCallContext, pParams);
+}
+
+static NV_STATUS __nvoc_thunk_RsResource_dispswobjUnmap(struct DispSwObj *pResource, struct CALL_CONTEXT *pCallContext, RsCpuMapping *pCpuMapping) {
+    return resUnmap((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispSwObj_RsResource.offset), pCallContext, pCpuMapping);
 }
 
 static NV_STATUS __nvoc_thunk_RmResource_dispswobjGetMemInterMapParams(struct DispSwObj *pRmResource, RMRES_MEM_INTER_MAP_PARAMS *pParams) {
@@ -2007,72 +2090,40 @@ static NV_STATUS __nvoc_thunk_RmResource_dispswobjGetMemoryMappingDescriptor(str
     return rmresGetMemoryMappingDescriptor((struct RmResource *)(((unsigned char *)pRmResource) + __nvoc_rtti_DispSwObj_RmResource.offset), ppMemDesc);
 }
 
-static NV_STATUS __nvoc_thunk_RmResource_dispswobjCheckMemInterUnmap(struct DispSwObj *pRmResource, NvBool bSubdeviceHandleProvided) {
-    return rmresCheckMemInterUnmap((struct RmResource *)(((unsigned char *)pRmResource) + __nvoc_rtti_DispSwObj_RmResource.offset), bSubdeviceHandleProvided);
-}
-
-static void __nvoc_thunk_Notifier_dispswobjSetNotificationShare(struct DispSwObj *pNotifier, struct NotifShare *pNotifShare) {
-    notifySetNotificationShare((struct Notifier *)(((unsigned char *)pNotifier) + __nvoc_rtti_DispSwObj_Notifier.offset), pNotifShare);
-}
-
 static NV_STATUS __nvoc_thunk_RsResource_dispswobjControlFilter(struct DispSwObj *pResource, struct CALL_CONTEXT *pCallContext, struct RS_RES_CONTROL_PARAMS_INTERNAL *pParams) {
     return resControlFilter((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispSwObj_RsResource.offset), pCallContext, pParams);
-}
-
-static NvU32 __nvoc_thunk_RsResource_dispswobjGetRefCount(struct DispSwObj *pResource) {
-    return resGetRefCount((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispSwObj_RsResource.offset));
 }
 
 static NV_STATUS __nvoc_thunk_Notifier_dispswobjUnregisterEvent(struct DispSwObj *pNotifier, NvHandle hNotifierClient, NvHandle hNotifierResource, NvHandle hEventClient, NvHandle hEvent) {
     return notifyUnregisterEvent((struct Notifier *)(((unsigned char *)pNotifier) + __nvoc_rtti_DispSwObj_Notifier.offset), hNotifierClient, hNotifierResource, hEventClient, hEvent);
 }
 
-static NV_STATUS __nvoc_thunk_RsResource_dispswobjUnmap(struct DispSwObj *pResource, struct CALL_CONTEXT *pCallContext, RsCpuMapping *pCpuMapping) {
-    return resUnmap((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispSwObj_RsResource.offset), pCallContext, pCpuMapping);
-}
-
-static NV_STATUS __nvoc_thunk_DisplayApi_dispswobjControl_Prologue(struct DispSwObj *pDisplayApi, struct CALL_CONTEXT *pCallContext, struct RS_RES_CONTROL_PARAMS_INTERNAL *pRsParams) {
-    return dispapiControl_Prologue((struct DisplayApi *)(((unsigned char *)pDisplayApi) + __nvoc_rtti_DispSwObj_DisplayApi.offset), pCallContext, pRsParams);
+static NV_STATUS __nvoc_thunk_RmResource_dispswobjControlSerialization_Prologue(struct DispSwObj *pResource, struct CALL_CONTEXT *pCallContext, struct RS_RES_CONTROL_PARAMS_INTERNAL *pParams) {
+    return rmresControlSerialization_Prologue((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispSwObj_RmResource.offset), pCallContext, pParams);
 }
 
 static NvBool __nvoc_thunk_RsResource_dispswobjCanCopy(struct DispSwObj *pResource) {
     return resCanCopy((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispSwObj_RsResource.offset));
 }
 
-static NV_STATUS __nvoc_thunk_RsResource_dispswobjMapTo(struct DispSwObj *pResource, RS_RES_MAP_TO_PARAMS *pParams) {
-    return resMapTo((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispSwObj_RsResource.offset), pParams);
-}
-
-static void __nvoc_thunk_RsResource_dispswobjAddAdditionalDependants(struct RsClient *pClient, struct DispSwObj *pResource, RsResourceRef *pReference) {
-    resAddAdditionalDependants(pClient, (struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispSwObj_RsResource.offset), pReference);
-}
-
 static void __nvoc_thunk_RsResource_dispswobjPreDestruct(struct DispSwObj *pResource) {
     resPreDestruct((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispSwObj_RsResource.offset));
-}
-
-static NV_STATUS __nvoc_thunk_RsResource_dispswobjUnmapFrom(struct DispSwObj *pResource, RS_RES_UNMAP_FROM_PARAMS *pParams) {
-    return resUnmapFrom((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispSwObj_RsResource.offset), pParams);
 }
 
 static NV_STATUS __nvoc_thunk_RsResource_dispswobjIsDuplicate(struct DispSwObj *pResource, NvHandle hMemory, NvBool *pDuplicate) {
     return resIsDuplicate((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispSwObj_RsResource.offset), hMemory, pDuplicate);
 }
 
+static void __nvoc_thunk_RmResource_dispswobjControlSerialization_Epilogue(struct DispSwObj *pResource, struct CALL_CONTEXT *pCallContext, struct RS_RES_CONTROL_PARAMS_INTERNAL *pParams) {
+    rmresControlSerialization_Epilogue((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispSwObj_RmResource.offset), pCallContext, pParams);
+}
+
 static PEVENTNOTIFICATION *__nvoc_thunk_Notifier_dispswobjGetNotificationListPtr(struct DispSwObj *pNotifier) {
     return notifyGetNotificationListPtr((struct Notifier *)(((unsigned char *)pNotifier) + __nvoc_rtti_DispSwObj_Notifier.offset));
 }
 
-static void __nvoc_thunk_DisplayApi_dispswobjControl_Epilogue(struct DispSwObj *pDisplayApi, struct CALL_CONTEXT *pCallContext, struct RS_RES_CONTROL_PARAMS_INTERNAL *pRsParams) {
-    dispapiControl_Epilogue((struct DisplayApi *)(((unsigned char *)pDisplayApi) + __nvoc_rtti_DispSwObj_DisplayApi.offset), pCallContext, pRsParams);
-}
-
 static struct NotifShare *__nvoc_thunk_Notifier_dispswobjGetNotificationShare(struct DispSwObj *pNotifier) {
     return notifyGetNotificationShare((struct Notifier *)(((unsigned char *)pNotifier) + __nvoc_rtti_DispSwObj_Notifier.offset));
-}
-
-static NV_STATUS __nvoc_thunk_RsResource_dispswobjControlLookup(struct DispSwObj *pResource, struct RS_RES_CONTROL_PARAMS_INTERNAL *pParams, const struct NVOC_EXPORTED_METHOD_DEF **ppEntry) {
-    return resControlLookup((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispSwObj_RsResource.offset), pParams, ppEntry);
 }
 
 static NV_STATUS __nvoc_thunk_RsResource_dispswobjMap(struct DispSwObj *pResource, struct CALL_CONTEXT *pCallContext, RS_CPU_MAP_PARAMS *pParams, RsCpuMapping *pCpuMapping) {
@@ -2213,47 +2264,51 @@ static void __nvoc_init_funcTable_DispSwObj_1(DispSwObj *pThis) {
 
     pThis->__dispswobjShareCallback__ = &__nvoc_thunk_RmResource_dispswobjShareCallback;
 
-    pThis->__dispswobjControl__ = &__nvoc_thunk_DisplayApi_dispswobjControl;
+    pThis->__dispswobjCheckMemInterUnmap__ = &__nvoc_thunk_RmResource_dispswobjCheckMemInterUnmap;
+
+    pThis->__dispswobjMapTo__ = &__nvoc_thunk_RsResource_dispswobjMapTo;
 
     pThis->__dispswobjAccessCallback__ = &__nvoc_thunk_RmResource_dispswobjAccessCallback;
+
+    pThis->__dispswobjSetNotificationShare__ = &__nvoc_thunk_Notifier_dispswobjSetNotificationShare;
+
+    pThis->__dispswobjGetRefCount__ = &__nvoc_thunk_RsResource_dispswobjGetRefCount;
+
+    pThis->__dispswobjAddAdditionalDependants__ = &__nvoc_thunk_RsResource_dispswobjAddAdditionalDependants;
+
+    pThis->__dispswobjControl_Prologue__ = &__nvoc_thunk_DisplayApi_dispswobjControl_Prologue;
+
+    pThis->__dispswobjUnmapFrom__ = &__nvoc_thunk_RsResource_dispswobjUnmapFrom;
+
+    pThis->__dispswobjControl_Epilogue__ = &__nvoc_thunk_DisplayApi_dispswobjControl_Epilogue;
+
+    pThis->__dispswobjControlLookup__ = &__nvoc_thunk_RsResource_dispswobjControlLookup;
+
+    pThis->__dispswobjControl__ = &__nvoc_thunk_DisplayApi_dispswobjControl;
+
+    pThis->__dispswobjUnmap__ = &__nvoc_thunk_RsResource_dispswobjUnmap;
 
     pThis->__dispswobjGetMemInterMapParams__ = &__nvoc_thunk_RmResource_dispswobjGetMemInterMapParams;
 
     pThis->__dispswobjGetMemoryMappingDescriptor__ = &__nvoc_thunk_RmResource_dispswobjGetMemoryMappingDescriptor;
 
-    pThis->__dispswobjCheckMemInterUnmap__ = &__nvoc_thunk_RmResource_dispswobjCheckMemInterUnmap;
-
-    pThis->__dispswobjSetNotificationShare__ = &__nvoc_thunk_Notifier_dispswobjSetNotificationShare;
-
     pThis->__dispswobjControlFilter__ = &__nvoc_thunk_RsResource_dispswobjControlFilter;
-
-    pThis->__dispswobjGetRefCount__ = &__nvoc_thunk_RsResource_dispswobjGetRefCount;
 
     pThis->__dispswobjUnregisterEvent__ = &__nvoc_thunk_Notifier_dispswobjUnregisterEvent;
 
-    pThis->__dispswobjUnmap__ = &__nvoc_thunk_RsResource_dispswobjUnmap;
-
-    pThis->__dispswobjControl_Prologue__ = &__nvoc_thunk_DisplayApi_dispswobjControl_Prologue;
+    pThis->__dispswobjControlSerialization_Prologue__ = &__nvoc_thunk_RmResource_dispswobjControlSerialization_Prologue;
 
     pThis->__dispswobjCanCopy__ = &__nvoc_thunk_RsResource_dispswobjCanCopy;
 
-    pThis->__dispswobjMapTo__ = &__nvoc_thunk_RsResource_dispswobjMapTo;
-
-    pThis->__dispswobjAddAdditionalDependants__ = &__nvoc_thunk_RsResource_dispswobjAddAdditionalDependants;
-
     pThis->__dispswobjPreDestruct__ = &__nvoc_thunk_RsResource_dispswobjPreDestruct;
-
-    pThis->__dispswobjUnmapFrom__ = &__nvoc_thunk_RsResource_dispswobjUnmapFrom;
 
     pThis->__dispswobjIsDuplicate__ = &__nvoc_thunk_RsResource_dispswobjIsDuplicate;
 
+    pThis->__dispswobjControlSerialization_Epilogue__ = &__nvoc_thunk_RmResource_dispswobjControlSerialization_Epilogue;
+
     pThis->__dispswobjGetNotificationListPtr__ = &__nvoc_thunk_Notifier_dispswobjGetNotificationListPtr;
 
-    pThis->__dispswobjControl_Epilogue__ = &__nvoc_thunk_DisplayApi_dispswobjControl_Epilogue;
-
     pThis->__dispswobjGetNotificationShare__ = &__nvoc_thunk_Notifier_dispswobjGetNotificationShare;
-
-    pThis->__dispswobjControlLookup__ = &__nvoc_thunk_RsResource_dispswobjControlLookup;
 
     pThis->__dispswobjMap__ = &__nvoc_thunk_RsResource_dispswobjMap;
 
@@ -2284,12 +2339,15 @@ NV_STATUS __nvoc_objCreate_DispSwObj(DispSwObj **ppThis, Dynamic *pParent, NvU32
     DispSwObj *pThis;
     RmHalspecOwner *pRmhalspecowner;
 
-    pThis = portMemAllocNonPaged(sizeof(DispSwObj));
-    if (pThis == NULL) return NV_ERR_NO_MEMORY;
+    status = __nvoc_handleObjCreateMemAlloc(createFlags, sizeof(DispSwObj), (void**)&pThis, (void**)ppThis);
+    if (status != NV_OK)
+        return status;
 
     portMemSet(pThis, 0, sizeof(DispSwObj));
 
     __nvoc_initRtti(staticCast(pThis, Dynamic), &__nvoc_class_def_DispSwObj);
+
+    pThis->__nvoc_base_DisplayApi.__nvoc_base_RmResource.__nvoc_base_RsResource.__nvoc_base_Object.createFlags = createFlags;
 
     if (pParent != NULL && !(createFlags & NVOC_OBJ_CREATE_FLAGS_PARENT_HALSPEC_ONLY))
     {
@@ -2310,11 +2368,17 @@ NV_STATUS __nvoc_objCreate_DispSwObj(DispSwObj **ppThis, Dynamic *pParent, NvU32
     if (status != NV_OK) goto __nvoc_objCreate_DispSwObj_cleanup;
 
     *ppThis = pThis;
+
     return NV_OK;
 
 __nvoc_objCreate_DispSwObj_cleanup:
     // do not call destructors here since the constructor already called them
-    portMemFree(pThis);
+    if (createFlags & NVOC_OBJ_CREATE_FLAGS_IN_PLACE_CONSTRUCT)
+        portMemSet(pThis, 0, sizeof(DispSwObj));
+    else
+        portMemFree(pThis);
+
+    // coverity[leaked_storage:FALSE]
     return status;
 }
 
@@ -2440,12 +2504,52 @@ static NvBool __nvoc_thunk_RmResource_dispcmnShareCallback(struct DispCommon *pR
     return rmresShareCallback((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispCommon_RmResource.offset), pInvokingClient, pParentRef, pSharePolicy);
 }
 
-static NV_STATUS __nvoc_thunk_DisplayApi_dispcmnControl(struct DispCommon *pDisplayApi, struct CALL_CONTEXT *pCallContext, struct RS_RES_CONTROL_PARAMS_INTERNAL *pParams) {
-    return dispapiControl((struct DisplayApi *)(((unsigned char *)pDisplayApi) + __nvoc_rtti_DispCommon_DisplayApi.offset), pCallContext, pParams);
+static NV_STATUS __nvoc_thunk_RmResource_dispcmnCheckMemInterUnmap(struct DispCommon *pRmResource, NvBool bSubdeviceHandleProvided) {
+    return rmresCheckMemInterUnmap((struct RmResource *)(((unsigned char *)pRmResource) + __nvoc_rtti_DispCommon_RmResource.offset), bSubdeviceHandleProvided);
+}
+
+static NV_STATUS __nvoc_thunk_RsResource_dispcmnMapTo(struct DispCommon *pResource, RS_RES_MAP_TO_PARAMS *pParams) {
+    return resMapTo((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispCommon_RsResource.offset), pParams);
 }
 
 static NvBool __nvoc_thunk_RmResource_dispcmnAccessCallback(struct DispCommon *pResource, struct RsClient *pInvokingClient, void *pAllocParams, RsAccessRight accessRight) {
     return rmresAccessCallback((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispCommon_RmResource.offset), pInvokingClient, pAllocParams, accessRight);
+}
+
+static void __nvoc_thunk_Notifier_dispcmnSetNotificationShare(struct DispCommon *pNotifier, struct NotifShare *pNotifShare) {
+    notifySetNotificationShare((struct Notifier *)(((unsigned char *)pNotifier) + __nvoc_rtti_DispCommon_Notifier.offset), pNotifShare);
+}
+
+static NvU32 __nvoc_thunk_RsResource_dispcmnGetRefCount(struct DispCommon *pResource) {
+    return resGetRefCount((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispCommon_RsResource.offset));
+}
+
+static void __nvoc_thunk_RsResource_dispcmnAddAdditionalDependants(struct RsClient *pClient, struct DispCommon *pResource, RsResourceRef *pReference) {
+    resAddAdditionalDependants(pClient, (struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispCommon_RsResource.offset), pReference);
+}
+
+static NV_STATUS __nvoc_thunk_DisplayApi_dispcmnControl_Prologue(struct DispCommon *pDisplayApi, struct CALL_CONTEXT *pCallContext, struct RS_RES_CONTROL_PARAMS_INTERNAL *pRsParams) {
+    return dispapiControl_Prologue((struct DisplayApi *)(((unsigned char *)pDisplayApi) + __nvoc_rtti_DispCommon_DisplayApi.offset), pCallContext, pRsParams);
+}
+
+static NV_STATUS __nvoc_thunk_RsResource_dispcmnUnmapFrom(struct DispCommon *pResource, RS_RES_UNMAP_FROM_PARAMS *pParams) {
+    return resUnmapFrom((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispCommon_RsResource.offset), pParams);
+}
+
+static void __nvoc_thunk_DisplayApi_dispcmnControl_Epilogue(struct DispCommon *pDisplayApi, struct CALL_CONTEXT *pCallContext, struct RS_RES_CONTROL_PARAMS_INTERNAL *pRsParams) {
+    dispapiControl_Epilogue((struct DisplayApi *)(((unsigned char *)pDisplayApi) + __nvoc_rtti_DispCommon_DisplayApi.offset), pCallContext, pRsParams);
+}
+
+static NV_STATUS __nvoc_thunk_RsResource_dispcmnControlLookup(struct DispCommon *pResource, struct RS_RES_CONTROL_PARAMS_INTERNAL *pParams, const struct NVOC_EXPORTED_METHOD_DEF **ppEntry) {
+    return resControlLookup((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispCommon_RsResource.offset), pParams, ppEntry);
+}
+
+static NV_STATUS __nvoc_thunk_DisplayApi_dispcmnControl(struct DispCommon *pDisplayApi, struct CALL_CONTEXT *pCallContext, struct RS_RES_CONTROL_PARAMS_INTERNAL *pParams) {
+    return dispapiControl((struct DisplayApi *)(((unsigned char *)pDisplayApi) + __nvoc_rtti_DispCommon_DisplayApi.offset), pCallContext, pParams);
+}
+
+static NV_STATUS __nvoc_thunk_RsResource_dispcmnUnmap(struct DispCommon *pResource, struct CALL_CONTEXT *pCallContext, RsCpuMapping *pCpuMapping) {
+    return resUnmap((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispCommon_RsResource.offset), pCallContext, pCpuMapping);
 }
 
 static NV_STATUS __nvoc_thunk_RmResource_dispcmnGetMemInterMapParams(struct DispCommon *pRmResource, RMRES_MEM_INTER_MAP_PARAMS *pParams) {
@@ -2456,72 +2560,40 @@ static NV_STATUS __nvoc_thunk_RmResource_dispcmnGetMemoryMappingDescriptor(struc
     return rmresGetMemoryMappingDescriptor((struct RmResource *)(((unsigned char *)pRmResource) + __nvoc_rtti_DispCommon_RmResource.offset), ppMemDesc);
 }
 
-static NV_STATUS __nvoc_thunk_RmResource_dispcmnCheckMemInterUnmap(struct DispCommon *pRmResource, NvBool bSubdeviceHandleProvided) {
-    return rmresCheckMemInterUnmap((struct RmResource *)(((unsigned char *)pRmResource) + __nvoc_rtti_DispCommon_RmResource.offset), bSubdeviceHandleProvided);
-}
-
-static void __nvoc_thunk_Notifier_dispcmnSetNotificationShare(struct DispCommon *pNotifier, struct NotifShare *pNotifShare) {
-    notifySetNotificationShare((struct Notifier *)(((unsigned char *)pNotifier) + __nvoc_rtti_DispCommon_Notifier.offset), pNotifShare);
-}
-
 static NV_STATUS __nvoc_thunk_RsResource_dispcmnControlFilter(struct DispCommon *pResource, struct CALL_CONTEXT *pCallContext, struct RS_RES_CONTROL_PARAMS_INTERNAL *pParams) {
     return resControlFilter((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispCommon_RsResource.offset), pCallContext, pParams);
-}
-
-static NvU32 __nvoc_thunk_RsResource_dispcmnGetRefCount(struct DispCommon *pResource) {
-    return resGetRefCount((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispCommon_RsResource.offset));
 }
 
 static NV_STATUS __nvoc_thunk_Notifier_dispcmnUnregisterEvent(struct DispCommon *pNotifier, NvHandle hNotifierClient, NvHandle hNotifierResource, NvHandle hEventClient, NvHandle hEvent) {
     return notifyUnregisterEvent((struct Notifier *)(((unsigned char *)pNotifier) + __nvoc_rtti_DispCommon_Notifier.offset), hNotifierClient, hNotifierResource, hEventClient, hEvent);
 }
 
-static NV_STATUS __nvoc_thunk_RsResource_dispcmnUnmap(struct DispCommon *pResource, struct CALL_CONTEXT *pCallContext, RsCpuMapping *pCpuMapping) {
-    return resUnmap((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispCommon_RsResource.offset), pCallContext, pCpuMapping);
-}
-
-static NV_STATUS __nvoc_thunk_DisplayApi_dispcmnControl_Prologue(struct DispCommon *pDisplayApi, struct CALL_CONTEXT *pCallContext, struct RS_RES_CONTROL_PARAMS_INTERNAL *pRsParams) {
-    return dispapiControl_Prologue((struct DisplayApi *)(((unsigned char *)pDisplayApi) + __nvoc_rtti_DispCommon_DisplayApi.offset), pCallContext, pRsParams);
+static NV_STATUS __nvoc_thunk_RmResource_dispcmnControlSerialization_Prologue(struct DispCommon *pResource, struct CALL_CONTEXT *pCallContext, struct RS_RES_CONTROL_PARAMS_INTERNAL *pParams) {
+    return rmresControlSerialization_Prologue((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispCommon_RmResource.offset), pCallContext, pParams);
 }
 
 static NvBool __nvoc_thunk_RsResource_dispcmnCanCopy(struct DispCommon *pResource) {
     return resCanCopy((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispCommon_RsResource.offset));
 }
 
-static NV_STATUS __nvoc_thunk_RsResource_dispcmnMapTo(struct DispCommon *pResource, RS_RES_MAP_TO_PARAMS *pParams) {
-    return resMapTo((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispCommon_RsResource.offset), pParams);
-}
-
-static void __nvoc_thunk_RsResource_dispcmnAddAdditionalDependants(struct RsClient *pClient, struct DispCommon *pResource, RsResourceRef *pReference) {
-    resAddAdditionalDependants(pClient, (struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispCommon_RsResource.offset), pReference);
-}
-
 static void __nvoc_thunk_RsResource_dispcmnPreDestruct(struct DispCommon *pResource) {
     resPreDestruct((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispCommon_RsResource.offset));
-}
-
-static NV_STATUS __nvoc_thunk_RsResource_dispcmnUnmapFrom(struct DispCommon *pResource, RS_RES_UNMAP_FROM_PARAMS *pParams) {
-    return resUnmapFrom((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispCommon_RsResource.offset), pParams);
 }
 
 static NV_STATUS __nvoc_thunk_RsResource_dispcmnIsDuplicate(struct DispCommon *pResource, NvHandle hMemory, NvBool *pDuplicate) {
     return resIsDuplicate((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispCommon_RsResource.offset), hMemory, pDuplicate);
 }
 
+static void __nvoc_thunk_RmResource_dispcmnControlSerialization_Epilogue(struct DispCommon *pResource, struct CALL_CONTEXT *pCallContext, struct RS_RES_CONTROL_PARAMS_INTERNAL *pParams) {
+    rmresControlSerialization_Epilogue((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispCommon_RmResource.offset), pCallContext, pParams);
+}
+
 static PEVENTNOTIFICATION *__nvoc_thunk_Notifier_dispcmnGetNotificationListPtr(struct DispCommon *pNotifier) {
     return notifyGetNotificationListPtr((struct Notifier *)(((unsigned char *)pNotifier) + __nvoc_rtti_DispCommon_Notifier.offset));
 }
 
-static void __nvoc_thunk_DisplayApi_dispcmnControl_Epilogue(struct DispCommon *pDisplayApi, struct CALL_CONTEXT *pCallContext, struct RS_RES_CONTROL_PARAMS_INTERNAL *pRsParams) {
-    dispapiControl_Epilogue((struct DisplayApi *)(((unsigned char *)pDisplayApi) + __nvoc_rtti_DispCommon_DisplayApi.offset), pCallContext, pRsParams);
-}
-
 static struct NotifShare *__nvoc_thunk_Notifier_dispcmnGetNotificationShare(struct DispCommon *pNotifier) {
     return notifyGetNotificationShare((struct Notifier *)(((unsigned char *)pNotifier) + __nvoc_rtti_DispCommon_Notifier.offset));
-}
-
-static NV_STATUS __nvoc_thunk_RsResource_dispcmnControlLookup(struct DispCommon *pResource, struct RS_RES_CONTROL_PARAMS_INTERNAL *pParams, const struct NVOC_EXPORTED_METHOD_DEF **ppEntry) {
-    return resControlLookup((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_DispCommon_RsResource.offset), pParams, ppEntry);
 }
 
 static NV_STATUS __nvoc_thunk_RsResource_dispcmnMap(struct DispCommon *pResource, struct CALL_CONTEXT *pCallContext, RS_CPU_MAP_PARAMS *pParams, RsCpuMapping *pCpuMapping) {
@@ -2755,6 +2827,21 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x210u)
         /*pFunc=*/      NULL,
 #else
+        /*pFunc=*/      dispcmnCtrlCmdSystemGetHotplugState_IMPL_cb,
+#endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x210u)
+        /*flags=*/      0x210u,
+        /*accessRight=*/0x0u,
+        /*methodId=*/   0x730124u,
+        /*paramSize=*/  sizeof(NV0073_CTRL_SYSTEM_GET_HOTPLUG_STATE_PARAMS),
+        /*pClassInfo=*/ &(__nvoc_class_def_DispCommon.classInfo),
+#if NV_PRINTF_STRINGS_ALLOWED
+        /*func=*/       "dispcmnCtrlCmdSystemGetHotplugState"
+#endif
+    },
+    {               /*  [8] */
+#if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x210u)
+        /*pFunc=*/      NULL,
+#else
         /*pFunc=*/      dispcmnCtrlCmdSystemGetHeadRoutingMap_IMPL_cb,
 #endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x210u)
         /*flags=*/      0x210u,
@@ -2766,7 +2853,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdSystemGetHeadRoutingMap"
 #endif
     },
-    {               /*  [8] */
+    {               /*  [9] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x210u)
         /*pFunc=*/      NULL,
 #else
@@ -2781,7 +2868,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdSystemGetActive"
 #endif
     },
-    {               /*  [9] */
+    {               /*  [10] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x210u)
         /*pFunc=*/      NULL,
 #else
@@ -2796,7 +2883,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdSystemGetCapsV2"
 #endif
     },
-    {               /*  [10] */
+    {               /*  [11] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x210u)
         /*pFunc=*/      NULL,
 #else
@@ -2811,7 +2898,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdSystemGetAcpiIdMap"
 #endif
     },
-    {               /*  [11] */
+    {               /*  [12] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x212u)
         /*pFunc=*/      NULL,
 #else
@@ -2826,7 +2913,22 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdSystemGetInternalDisplays"
 #endif
     },
-    {               /*  [12] */
+    {               /*  [13] */
+#if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
+        /*pFunc=*/      NULL,
+#else
+        /*pFunc=*/      dispcmnCtrlCmdSystemGetConnectorTable_IMPL_cb,
+#endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
+        /*flags=*/      0x204u,
+        /*accessRight=*/0x0u,
+        /*methodId=*/   0x730165u,
+        /*paramSize=*/  sizeof(NV0073_CTRL_SYSTEM_GET_CONNECTOR_TABLE_PARAMS),
+        /*pClassInfo=*/ &(__nvoc_class_def_DispCommon.classInfo),
+#if NV_PRINTF_STRINGS_ALLOWED
+        /*func=*/       "dispcmnCtrlCmdSystemGetConnectorTable"
+#endif
+    },
+    {               /*  [14] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
         /*pFunc=*/      NULL,
 #else
@@ -2841,7 +2943,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdSystemGetBootDisplays"
 #endif
     },
-    {               /*  [13] */
+    {               /*  [15] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x12u)
         /*pFunc=*/      NULL,
 #else
@@ -2856,7 +2958,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdSystemExecuteAcpiMethod"
 #endif
     },
-    {               /*  [14] */
+    {               /*  [16] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x0u)
         /*pFunc=*/      NULL,
 #else
@@ -2871,7 +2973,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdSystemGetHotplugUnplugState"
 #endif
     },
-    {               /*  [15] */
+    {               /*  [17] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
         /*pFunc=*/      NULL,
 #else
@@ -2886,7 +2988,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdClearELVBlock"
 #endif
     },
-    {               /*  [16] */
+    {               /*  [18] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
         /*pFunc=*/      NULL,
 #else
@@ -2901,7 +3003,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdSystemArmLightweightSupervisor"
 #endif
     },
-    {               /*  [17] */
+    {               /*  [19] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
         /*pFunc=*/      NULL,
 #else
@@ -2916,7 +3018,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdSystemConfigVrrPstateSwitch"
 #endif
     },
-    {               /*  [18] */
+    {               /*  [20] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
         /*pFunc=*/      NULL,
 #else
@@ -2931,7 +3033,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdSystemQueryDisplayIdsWithMux"
 #endif
     },
-    {               /*  [19] */
+    {               /*  [21] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x0u)
         /*pFunc=*/      NULL,
 #else
@@ -2946,7 +3048,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdSystemAllocateDisplayBandwidth"
 #endif
     },
-    {               /*  [20] */
+    {               /*  [22] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
         /*pFunc=*/      NULL,
 #else
@@ -2961,7 +3063,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdSystemGetHotplugEventConfig"
 #endif
     },
-    {               /*  [21] */
+    {               /*  [23] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
         /*pFunc=*/      NULL,
 #else
@@ -2976,7 +3078,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdSystemSetHotplugEventConfig"
 #endif
     },
-    {               /*  [22] */
+    {               /*  [24] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
         /*pFunc=*/      NULL,
 #else
@@ -2991,7 +3093,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDfpRecordChannelRegisters"
 #endif
     },
-    {               /*  [23] */
+    {               /*  [25] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
         /*pFunc=*/      NULL,
 #else
@@ -3006,7 +3108,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdSystemCheckSidebandI2cSupport"
 #endif
     },
-    {               /*  [24] */
+    {               /*  [26] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
         /*pFunc=*/      NULL,
 #else
@@ -3021,7 +3123,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdSystemCheckSidebandSrSupport"
 #endif
     },
-    {               /*  [25] */
+    {               /*  [27] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x210u)
         /*pFunc=*/      NULL,
 #else
@@ -3036,7 +3138,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdSpecificGetI2cPortid"
 #endif
     },
-    {               /*  [26] */
+    {               /*  [28] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x206u)
         /*pFunc=*/      NULL,
 #else
@@ -3051,7 +3153,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdSpecificGetType"
 #endif
     },
-    {               /*  [27] */
+    {               /*  [29] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
         /*pFunc=*/      NULL,
 #else
@@ -3066,7 +3168,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdSpecificFakeDevice"
 #endif
     },
-    {               /*  [28] */
+    {               /*  [30] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
         /*pFunc=*/      NULL,
 #else
@@ -3081,7 +3183,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdSpecificGetEdidV2"
 #endif
     },
-    {               /*  [29] */
+    {               /*  [31] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
         /*pFunc=*/      NULL,
 #else
@@ -3096,7 +3198,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdSpecificSetEdidV2"
 #endif
     },
-    {               /*  [30] */
+    {               /*  [32] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x210u)
         /*pFunc=*/      NULL,
 #else
@@ -3111,7 +3213,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdSpecificGetConnectorData"
 #endif
     },
-    {               /*  [31] */
+    {               /*  [33] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
         /*pFunc=*/      NULL,
 #else
@@ -3126,7 +3228,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdSpecificSetHdmiEnable"
 #endif
     },
-    {               /*  [32] */
+    {               /*  [34] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
         /*pFunc=*/      NULL,
 #else
@@ -3141,7 +3243,22 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdSpecificCtrlHdmi"
 #endif
     },
-    {               /*  [33] */
+    {               /*  [35] */
+#if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
+        /*pFunc=*/      NULL,
+#else
+        /*pFunc=*/      dispcmnCtrlCmdSpecificSetHdmiAudioMutestream_IMPL_cb,
+#endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
+        /*flags=*/      0x204u,
+        /*accessRight=*/0x0u,
+        /*methodId=*/   0x730275u,
+        /*paramSize=*/  sizeof(NV0073_CTRL_CMD_SPECIFIC_SET_HDMI_AUDIO_MUTESTREAM_PARAMS),
+        /*pClassInfo=*/ &(__nvoc_class_def_DispCommon.classInfo),
+#if NV_PRINTF_STRINGS_ALLOWED
+        /*func=*/       "dispcmnCtrlCmdSpecificSetHdmiAudioMutestream"
+#endif
+    },
+    {               /*  [36] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x4u)
         /*pFunc=*/      NULL,
 #else
@@ -3156,7 +3273,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdSpecificSetAcpiIdMapping"
 #endif
     },
-    {               /*  [34] */
+    {               /*  [37] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
         /*pFunc=*/      NULL,
 #else
@@ -3171,7 +3288,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdSpecificGetAcpiDodDisplayPortAttachment"
 #endif
     },
-    {               /*  [35] */
+    {               /*  [38] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
         /*pFunc=*/      NULL,
 #else
@@ -3186,7 +3303,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdSpecificGetAllHeadMask"
 #endif
     },
-    {               /*  [36] */
+    {               /*  [39] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
         /*pFunc=*/      NULL,
 #else
@@ -3201,7 +3318,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdSpecificSetOdPacket"
 #endif
     },
-    {               /*  [37] */
+    {               /*  [40] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
         /*pFunc=*/      NULL,
 #else
@@ -3216,7 +3333,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdSpecificSetOdPacketCtrl"
 #endif
     },
-    {               /*  [38] */
+    {               /*  [41] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
         /*pFunc=*/      NULL,
 #else
@@ -3231,7 +3348,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdSpecificGetPclkLimit"
 #endif
     },
-    {               /*  [39] */
+    {               /*  [42] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x206u)
         /*pFunc=*/      NULL,
 #else
@@ -3246,7 +3363,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdSpecificOrGetInfo"
 #endif
     },
-    {               /*  [40] */
+    {               /*  [43] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
         /*pFunc=*/      NULL,
 #else
@@ -3261,7 +3378,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdSpecificGetBacklightBrightness"
 #endif
     },
-    {               /*  [41] */
+    {               /*  [44] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
         /*pFunc=*/      NULL,
 #else
@@ -3276,7 +3393,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdSpecificSetBacklightBrightness"
 #endif
     },
-    {               /*  [42] */
+    {               /*  [45] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
         /*pFunc=*/      NULL,
 #else
@@ -3291,7 +3408,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdSpecificSetHdmiSinkCaps"
 #endif
     },
-    {               /*  [43] */
+    {               /*  [46] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
         /*pFunc=*/      NULL,
 #else
@@ -3306,7 +3423,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdSpecificSetMonitorPower"
 #endif
     },
-    {               /*  [44] */
+    {               /*  [47] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
         /*pFunc=*/      NULL,
 #else
@@ -3321,7 +3438,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdSpecificSetHdmiFrlLinkConfig"
 #endif
     },
-    {               /*  [45] */
+    {               /*  [48] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
         /*pFunc=*/      NULL,
 #else
@@ -3336,7 +3453,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdSpecificApplyEdidOverrideV2"
 #endif
     },
-    {               /*  [46] */
+    {               /*  [49] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
         /*pFunc=*/      NULL,
 #else
@@ -3351,7 +3468,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdSpecificGetHdmiGpuCaps"
 #endif
     },
-    {               /*  [47] */
+    {               /*  [50] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
         /*pFunc=*/      NULL,
 #else
@@ -3366,7 +3483,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdSpecificDisplayChange"
 #endif
     },
-    {               /*  [48] */
+    {               /*  [51] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
         /*pFunc=*/      NULL,
 #else
@@ -3381,7 +3498,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdSpecificGetHdmiScdcData"
 #endif
     },
-    {               /*  [49] */
+    {               /*  [52] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
         /*pFunc=*/      NULL,
 #else
@@ -3396,7 +3513,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdSpecificIsDirectmodeDisplay"
 #endif
     },
-    {               /*  [50] */
+    {               /*  [53] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
         /*pFunc=*/      NULL,
 #else
@@ -3411,7 +3528,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdSpecificSetHdmiFrlCapacityComputation"
 #endif
     },
-    {               /*  [51] */
+    {               /*  [54] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
         /*pFunc=*/      NULL,
 #else
@@ -3426,7 +3543,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdSpecificSetSharedGenericPacket"
 #endif
     },
-    {               /*  [52] */
+    {               /*  [55] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
         /*pFunc=*/      NULL,
 #else
@@ -3441,7 +3558,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdSpecificAcquireSharedGenericPacket"
 #endif
     },
-    {               /*  [53] */
+    {               /*  [56] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
         /*pFunc=*/      NULL,
 #else
@@ -3456,7 +3573,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdSpecificReleaseSharedGenericPacket"
 #endif
     },
-    {               /*  [54] */
+    {               /*  [57] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
         /*pFunc=*/      NULL,
 #else
@@ -3471,7 +3588,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdSpecificDispI2cReadWrite"
 #endif
     },
-    {               /*  [55] */
+    {               /*  [58] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x210u)
         /*pFunc=*/      NULL,
 #else
@@ -3486,7 +3603,22 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdSpecificGetValidHeadWindowAssignment"
 #endif
     },
-    {               /*  [56] */
+    {               /*  [59] */
+#if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
+        /*pFunc=*/      NULL,
+#else
+        /*pFunc=*/      dispcmnCtrlCmdSpecificDefaultAdaptivesyncDisplay_IMPL_cb,
+#endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
+        /*flags=*/      0x200u,
+        /*accessRight=*/0x0u,
+        /*methodId=*/   0x7302aeu,
+        /*paramSize=*/  sizeof(NV0073_CTRL_SPECIFIC_DEFAULT_ADAPTIVESYNC_DISPLAY_PARAMS),
+        /*pClassInfo=*/ &(__nvoc_class_def_DispCommon.classInfo),
+#if NV_PRINTF_STRINGS_ALLOWED
+        /*func=*/       "dispcmnCtrlCmdSpecificDefaultAdaptivesyncDisplay"
+#endif
+    },
+    {               /*  [60] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x600u)
         /*pFunc=*/      NULL,
 #else
@@ -3501,13 +3633,13 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdInternalGetHotplugUnplugState"
 #endif
     },
-    {               /*  [57] */
-#if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x206u)
+    {               /*  [61] */
+#if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x212u)
         /*pFunc=*/      NULL,
 #else
         /*pFunc=*/      dispcmnCtrlCmdDfpGetInfo_IMPL_cb,
-#endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x206u)
-        /*flags=*/      0x206u,
+#endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x212u)
+        /*flags=*/      0x212u,
         /*accessRight=*/0x0u,
         /*methodId=*/   0x731140u,
         /*paramSize=*/  sizeof(NV0073_CTRL_DFP_GET_INFO_PARAMS),
@@ -3516,7 +3648,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDfpGetInfo"
 #endif
     },
-    {               /*  [58] */
+    {               /*  [62] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x210u)
         /*pFunc=*/      NULL,
 #else
@@ -3531,7 +3663,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDfpGetDisplayportDongleInfo"
 #endif
     },
-    {               /*  [59] */
+    {               /*  [63] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
         /*pFunc=*/      NULL,
 #else
@@ -3546,7 +3678,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDfpSetEldAudioCaps"
 #endif
     },
-    {               /*  [60] */
+    {               /*  [64] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
         /*pFunc=*/      NULL,
 #else
@@ -3561,7 +3693,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDfpGetSpreadSpectrum"
 #endif
     },
-    {               /*  [61] */
+    {               /*  [65] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
         /*pFunc=*/      NULL,
 #else
@@ -3576,7 +3708,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDfpUpdateDynamicDfpCache"
 #endif
     },
-    {               /*  [62] */
+    {               /*  [66] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
         /*pFunc=*/      NULL,
 #else
@@ -3591,13 +3723,13 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDfpSetAudioEnable"
 #endif
     },
-    {               /*  [63] */
-#if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
+    {               /*  [67] */
+#if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
         /*pFunc=*/      NULL,
 #else
         /*pFunc=*/      dispcmnCtrlCmdDfpAssignSor_IMPL_cb,
-#endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
-        /*flags=*/      0x204u,
+#endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
+        /*flags=*/      0x200u,
         /*accessRight=*/0x0u,
         /*methodId=*/   0x731152u,
         /*paramSize=*/  sizeof(NV0073_CTRL_DFP_ASSIGN_SOR_PARAMS),
@@ -3606,7 +3738,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDfpAssignSor"
 #endif
     },
-    {               /*  [64] */
+    {               /*  [68] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
         /*pFunc=*/      NULL,
 #else
@@ -3621,7 +3753,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDfpGetPadlinkMask"
 #endif
     },
-    {               /*  [65] */
+    {               /*  [69] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
         /*pFunc=*/      NULL,
 #else
@@ -3636,7 +3768,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDfpGetLcdGpioPinNum"
 #endif
     },
-    {               /*  [66] */
+    {               /*  [70] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
         /*pFunc=*/      NULL,
 #else
@@ -3651,7 +3783,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDfpConfigTwoHeadOneOr"
 #endif
     },
-    {               /*  [67] */
+    {               /*  [71] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
         /*pFunc=*/      NULL,
 #else
@@ -3666,7 +3798,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDfpDscCrcControl"
 #endif
     },
-    {               /*  [68] */
+    {               /*  [72] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
         /*pFunc=*/      NULL,
 #else
@@ -3681,7 +3813,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDfpInitMuxData"
 #endif
     },
-    {               /*  [69] */
+    {               /*  [73] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
         /*pFunc=*/      NULL,
 #else
@@ -3696,7 +3828,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDfpSwitchDispMux"
 #endif
     },
-    {               /*  [70] */
+    {               /*  [74] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
         /*pFunc=*/      NULL,
 #else
@@ -3711,7 +3843,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDfpRunPreDispMuxOperations"
 #endif
     },
-    {               /*  [71] */
+    {               /*  [75] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
         /*pFunc=*/      NULL,
 #else
@@ -3726,7 +3858,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDfpRunPostDispMuxOperations"
 #endif
     },
-    {               /*  [72] */
+    {               /*  [76] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
         /*pFunc=*/      NULL,
 #else
@@ -3741,7 +3873,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDfpGetDispMuxStatus"
 #endif
     },
-    {               /*  [73] */
+    {               /*  [77] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
         /*pFunc=*/      NULL,
 #else
@@ -3756,7 +3888,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDfpGetDsiModeTiming"
 #endif
     },
-    {               /*  [74] */
+    {               /*  [78] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x202u)
         /*pFunc=*/      NULL,
 #else
@@ -3771,7 +3903,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDfpGetFixedModeTiming"
 #endif
     },
-    {               /*  [75] */
+    {               /*  [79] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x8204u)
         /*pFunc=*/      NULL,
 #else
@@ -3786,7 +3918,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDpAuxchCtrl"
 #endif
     },
-    {               /*  [76] */
+    {               /*  [80] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
         /*pFunc=*/      NULL,
 #else
@@ -3801,7 +3933,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDpAuxchSetSema"
 #endif
     },
-    {               /*  [77] */
+    {               /*  [81] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x8204u)
         /*pFunc=*/      NULL,
 #else
@@ -3816,7 +3948,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDpCtrl"
 #endif
     },
-    {               /*  [78] */
+    {               /*  [82] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
         /*pFunc=*/      NULL,
 #else
@@ -3831,7 +3963,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDpGetLaneData"
 #endif
     },
-    {               /*  [79] */
+    {               /*  [83] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
         /*pFunc=*/      NULL,
 #else
@@ -3846,7 +3978,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDpSetLaneData"
 #endif
     },
-    {               /*  [80] */
+    {               /*  [84] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
         /*pFunc=*/      NULL,
 #else
@@ -3861,7 +3993,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDpSetTestpattern"
 #endif
     },
-    {               /*  [81] */
+    {               /*  [85] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
         /*pFunc=*/      NULL,
 #else
@@ -3876,7 +4008,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDpSetPreemphasisDrivecurrentPostcursor2Data"
 #endif
     },
-    {               /*  [82] */
+    {               /*  [86] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
         /*pFunc=*/      NULL,
 #else
@@ -3891,7 +4023,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDpGetPreemphasisDrivecurrentPostcursor2Data"
 #endif
     },
-    {               /*  [83] */
+    {               /*  [87] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
         /*pFunc=*/      NULL,
 #else
@@ -3906,7 +4038,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDpMainLinkCtrl"
 #endif
     },
-    {               /*  [84] */
+    {               /*  [88] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
         /*pFunc=*/      NULL,
 #else
@@ -3921,7 +4053,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDpGetAudioMuteStream"
 #endif
     },
-    {               /*  [85] */
+    {               /*  [89] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
         /*pFunc=*/      NULL,
 #else
@@ -3936,7 +4068,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDpSetAudioMuteStream"
 #endif
     },
-    {               /*  [86] */
+    {               /*  [90] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
         /*pFunc=*/      NULL,
 #else
@@ -3951,7 +4083,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDpASSRCtrl"
 #endif
     },
-    {               /*  [87] */
+    {               /*  [91] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
         /*pFunc=*/      NULL,
 #else
@@ -3966,7 +4098,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDpTopologyAllocateDisplayId"
 #endif
     },
-    {               /*  [88] */
+    {               /*  [92] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
         /*pFunc=*/      NULL,
 #else
@@ -3981,7 +4113,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDpTopologyFreeDisplayId"
 #endif
     },
-    {               /*  [89] */
+    {               /*  [93] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
         /*pFunc=*/      NULL,
 #else
@@ -3996,7 +4128,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDpGetLinkConfig"
 #endif
     },
-    {               /*  [90] */
+    {               /*  [94] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
         /*pFunc=*/      NULL,
 #else
@@ -4011,7 +4143,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDpGetEDPData"
 #endif
     },
-    {               /*  [91] */
+    {               /*  [95] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
         /*pFunc=*/      NULL,
 #else
@@ -4026,7 +4158,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDpConfigStream"
 #endif
     },
-    {               /*  [92] */
+    {               /*  [96] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
         /*pFunc=*/      NULL,
 #else
@@ -4041,7 +4173,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDpSetRateGov"
 #endif
     },
-    {               /*  [93] */
+    {               /*  [97] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
         /*pFunc=*/      NULL,
 #else
@@ -4056,7 +4188,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDpSetManualDisplayPort"
 #endif
     },
-    {               /*  [94] */
+    {               /*  [98] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
         /*pFunc=*/      NULL,
 #else
@@ -4071,7 +4203,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDpSetEcf"
 #endif
     },
-    {               /*  [95] */
+    {               /*  [99] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
         /*pFunc=*/      NULL,
 #else
@@ -4086,7 +4218,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDpSendACT"
 #endif
     },
-    {               /*  [96] */
+    {               /*  [100] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x206u)
         /*pFunc=*/      NULL,
 #else
@@ -4101,7 +4233,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDpGetCaps"
 #endif
     },
-    {               /*  [97] */
+    {               /*  [101] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x4u)
         /*pFunc=*/      NULL,
 #else
@@ -4116,7 +4248,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDpGenerateFakeInterrupt"
 #endif
     },
-    {               /*  [98] */
+    {               /*  [102] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
         /*pFunc=*/      NULL,
 #else
@@ -4131,7 +4263,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDpConfigRadScratchReg"
 #endif
     },
-    {               /*  [99] */
+    {               /*  [103] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
         /*pFunc=*/      NULL,
 #else
@@ -4146,7 +4278,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDpConfigSingleHeadMultiStream"
 #endif
     },
-    {               /*  [100] */
+    {               /*  [104] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
         /*pFunc=*/      NULL,
 #else
@@ -4161,7 +4293,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDpSetTriggerSelect"
 #endif
     },
-    {               /*  [101] */
+    {               /*  [105] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
         /*pFunc=*/      NULL,
 #else
@@ -4176,7 +4308,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDpSetTriggerAll"
 #endif
     },
-    {               /*  [102] */
+    {               /*  [106] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x210u)
         /*pFunc=*/      NULL,
 #else
@@ -4191,7 +4323,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDpGetAuxLogData"
 #endif
     },
-    {               /*  [103] */
+    {               /*  [107] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
         /*pFunc=*/      NULL,
 #else
@@ -4206,7 +4338,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDpConfigIndexedLinkRates"
 #endif
     },
-    {               /*  [104] */
+    {               /*  [108] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
         /*pFunc=*/      NULL,
 #else
@@ -4221,7 +4353,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDpSetStereoMSAProperties"
 #endif
     },
-    {               /*  [105] */
+    {               /*  [109] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
         /*pFunc=*/      NULL,
 #else
@@ -4236,7 +4368,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDpConfigureFec"
 #endif
     },
-    {               /*  [106] */
+    {               /*  [110] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
         /*pFunc=*/      NULL,
 #else
@@ -4251,7 +4383,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDpConfigMacroPad"
 #endif
     },
-    {               /*  [107] */
+    {               /*  [111] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
         /*pFunc=*/      NULL,
 #else
@@ -4266,7 +4398,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDpAuxchI2cTransferCtrl"
 #endif
     },
-    {               /*  [108] */
+    {               /*  [112] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
         /*pFunc=*/      NULL,
 #else
@@ -4281,7 +4413,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDpEnableVrr"
 #endif
     },
-    {               /*  [109] */
+    {               /*  [113] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
         /*pFunc=*/      NULL,
 #else
@@ -4296,7 +4428,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDpGetGenericInfoframe"
 #endif
     },
-    {               /*  [110] */
+    {               /*  [114] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
         /*pFunc=*/      NULL,
 #else
@@ -4311,7 +4443,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDpGetMsaAttributes"
 #endif
     },
-    {               /*  [111] */
+    {               /*  [115] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
         /*pFunc=*/      NULL,
 #else
@@ -4326,7 +4458,7 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDfpInternalLcdOverdrive"
 #endif
     },
-    {               /*  [112] */
+    {               /*  [116] */
 #if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
         /*pFunc=*/      NULL,
 #else
@@ -4341,12 +4473,57 @@ static const struct NVOC_EXPORTED_METHOD_DEF __nvoc_exported_method_def_DispComm
         /*func=*/       "dispcmnCtrlCmdDpSetMSAPropertiesv2"
 #endif
     },
+    {               /*  [117] */
+#if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
+        /*pFunc=*/      NULL,
+#else
+        /*pFunc=*/      dispcmnCtrlCmdDfpExecuteInternalLcdOverDrivePolicy_IMPL_cb,
+#endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
+        /*flags=*/      0x200u,
+        /*accessRight=*/0x0u,
+        /*methodId=*/   0x731382u,
+        /*paramSize=*/  sizeof(NV0073_CTRL_DP_EXECUTE_OVERDRIVE_POLICY_PARAMS),
+        /*pClassInfo=*/ &(__nvoc_class_def_DispCommon.classInfo),
+#if NV_PRINTF_STRINGS_ALLOWED
+        /*func=*/       "dispcmnCtrlCmdDfpExecuteInternalLcdOverDrivePolicy"
+#endif
+    },
+    {               /*  [118] */
+#if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
+        /*pFunc=*/      NULL,
+#else
+        /*pFunc=*/      dispcmnCtrlCmdPsrGetSrPanelInfo_IMPL_cb,
+#endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
+        /*flags=*/      0x204u,
+        /*accessRight=*/0x0u,
+        /*methodId=*/   0x731602u,
+        /*paramSize=*/  sizeof(NV0073_CTRL_PSR_GET_SR_PANEL_INFO_PARAMS),
+        /*pClassInfo=*/ &(__nvoc_class_def_DispCommon.classInfo),
+#if NV_PRINTF_STRINGS_ALLOWED
+        /*func=*/       "dispcmnCtrlCmdPsrGetSrPanelInfo"
+#endif
+    },
+    {               /*  [119] */
+#if NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
+        /*pFunc=*/      NULL,
+#else
+        /*pFunc=*/      dispcmnCtrlCmdStereoDongleSupported_IMPL_cb,
+#endif // NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
+        /*flags=*/      0x204u,
+        /*accessRight=*/0x0u,
+        /*methodId=*/   0x731702u,
+        /*paramSize=*/  sizeof(NV0073_CTRL_STEREO_DONGLE_SUPPORTED_PARAMS),
+        /*pClassInfo=*/ &(__nvoc_class_def_DispCommon.classInfo),
+#if NV_PRINTF_STRINGS_ALLOWED
+        /*func=*/       "dispcmnCtrlCmdStereoDongleSupported"
+#endif
+    },
 
 };
 
 const struct NVOC_EXPORT_INFO __nvoc_export_info_DispCommon =
 {
-    /*numEntries=*/     113,
+    /*numEntries=*/     120,
     /*pExportEntries=*/ __nvoc_exported_method_def_DispCommon
 };
 
@@ -4394,12 +4571,16 @@ static void __nvoc_init_funcTable_DispCommon_1(DispCommon *pThis) {
     pThis->__dispcmnCtrlCmdSystemCheckSidebandSrSupport__ = &dispcmnCtrlCmdSystemCheckSidebandSrSupport_IMPL;
 #endif
 
+#if !NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x210u)
+    pThis->__dispcmnCtrlCmdSystemGetHotplugState__ = &dispcmnCtrlCmdSystemGetHotplugState_IMPL;
+#endif
+
 #if !NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x212u)
     pThis->__dispcmnCtrlCmdSystemGetInternalDisplays__ = &dispcmnCtrlCmdSystemGetInternalDisplays_IMPL;
 #endif
 
 #if !NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
-    pThis->__dispcmnCtrlCmdDpEnableVrr__ = &dispcmnCtrlCmdDpEnableVrr_IMPL;
+    pThis->__dispcmnCtrlCmdSystemGetConnectorTable__ = &dispcmnCtrlCmdSystemGetConnectorTable_IMPL;
 #endif
 
 #if !NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
@@ -4419,6 +4600,10 @@ static void __nvoc_init_funcTable_DispCommon_1(DispCommon *pThis) {
 #endif
 
 #if !NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
+    pThis->__dispcmnCtrlCmdDpEnableVrr__ = &dispcmnCtrlCmdDpEnableVrr_IMPL;
+#endif
+
+#if !NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
     pThis->__dispcmnCtrlCmdDpGetAudioMuteStream__ = &dispcmnCtrlCmdDpGetAudioMuteStream_IMPL;
 #endif
 
@@ -4434,12 +4619,24 @@ static void __nvoc_init_funcTable_DispCommon_1(DispCommon *pThis) {
     pThis->__dispcmnCtrlCmdDpSetEcf__ = &dispcmnCtrlCmdDpSetEcf_IMPL;
 #endif
 
+#if !NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
+    pThis->__dispcmnCtrlCmdStereoDongleSupported__ = &dispcmnCtrlCmdStereoDongleSupported_IMPL;
+#endif
+
+#if !NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
+    pThis->__dispcmnCtrlCmdDfpRecordChannelRegisters__ = &dispcmnCtrlCmdDfpRecordChannelRegisters_IMPL;
+#endif
+
 #if !NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
     pThis->__dispcmnCtrlCmdSpecificGetBacklightBrightness__ = &dispcmnCtrlCmdSpecificGetBacklightBrightness_IMPL;
 #endif
 
 #if !NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
     pThis->__dispcmnCtrlCmdSpecificSetBacklightBrightness__ = &dispcmnCtrlCmdSpecificSetBacklightBrightness_IMPL;
+#endif
+
+#if !NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
+    pThis->__dispcmnCtrlCmdPsrGetSrPanelInfo__ = &dispcmnCtrlCmdPsrGetSrPanelInfo_IMPL;
 #endif
 
 #if !NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
@@ -4458,12 +4655,12 @@ static void __nvoc_init_funcTable_DispCommon_1(DispCommon *pThis) {
     pThis->__dispcmnCtrlCmdDfpGetDispMuxStatus__ = &dispcmnCtrlCmdDfpGetDispMuxStatus_IMPL;
 #endif
 
-#if !NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
-    pThis->__dispcmnCtrlCmdDfpRecordChannelRegisters__ = &dispcmnCtrlCmdDfpRecordChannelRegisters_IMPL;
-#endif
-
 #if !NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
     pThis->__dispcmnCtrlCmdDfpInternalLcdOverdrive__ = &dispcmnCtrlCmdDfpInternalLcdOverdrive_IMPL;
+#endif
+
+#if !NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
+    pThis->__dispcmnCtrlCmdDfpExecuteInternalLcdOverDrivePolicy__ = &dispcmnCtrlCmdDfpExecuteInternalLcdOverDrivePolicy_IMPL;
 #endif
 
 #if !NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x12u)
@@ -4647,6 +4844,10 @@ static void __nvoc_init_funcTable_DispCommon_1(DispCommon *pThis) {
 #endif
 
 #if !NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
+    pThis->__dispcmnCtrlCmdSpecificDefaultAdaptivesyncDisplay__ = &dispcmnCtrlCmdSpecificDefaultAdaptivesyncDisplay_IMPL;
+#endif
+
+#if !NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
     pThis->__dispcmnCtrlCmdSpecificSetHdmiFrlCapacityComputation__ = &dispcmnCtrlCmdSpecificSetHdmiFrlCapacityComputation_IMPL;
 #endif
 
@@ -4658,7 +4859,11 @@ static void __nvoc_init_funcTable_DispCommon_1(DispCommon *pThis) {
     pThis->__dispcmnCtrlCmdSpecificGetValidHeadWindowAssignment__ = &dispcmnCtrlCmdSpecificGetValidHeadWindowAssignment_IMPL;
 #endif
 
-#if !NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x206u)
+#if !NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
+    pThis->__dispcmnCtrlCmdSpecificSetHdmiAudioMutestream__ = &dispcmnCtrlCmdSpecificSetHdmiAudioMutestream_IMPL;
+#endif
+
+#if !NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x212u)
     pThis->__dispcmnCtrlCmdDfpGetInfo__ = &dispcmnCtrlCmdDfpGetInfo_IMPL;
 #endif
 
@@ -4678,7 +4883,7 @@ static void __nvoc_init_funcTable_DispCommon_1(DispCommon *pThis) {
     pThis->__dispcmnCtrlCmdDfpUpdateDynamicDfpCache__ = &dispcmnCtrlCmdDfpUpdateDynamicDfpCache_IMPL;
 #endif
 
-#if !NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x204u)
+#if !NVOC_EXPORTED_METHOD_DISABLED_BY_FLAG(0x200u)
     pThis->__dispcmnCtrlCmdDfpAssignSor__ = &dispcmnCtrlCmdDfpAssignSor_IMPL;
 #endif
 
@@ -4836,47 +5041,51 @@ static void __nvoc_init_funcTable_DispCommon_1(DispCommon *pThis) {
 
     pThis->__dispcmnShareCallback__ = &__nvoc_thunk_RmResource_dispcmnShareCallback;
 
-    pThis->__dispcmnControl__ = &__nvoc_thunk_DisplayApi_dispcmnControl;
+    pThis->__dispcmnCheckMemInterUnmap__ = &__nvoc_thunk_RmResource_dispcmnCheckMemInterUnmap;
+
+    pThis->__dispcmnMapTo__ = &__nvoc_thunk_RsResource_dispcmnMapTo;
 
     pThis->__dispcmnAccessCallback__ = &__nvoc_thunk_RmResource_dispcmnAccessCallback;
+
+    pThis->__dispcmnSetNotificationShare__ = &__nvoc_thunk_Notifier_dispcmnSetNotificationShare;
+
+    pThis->__dispcmnGetRefCount__ = &__nvoc_thunk_RsResource_dispcmnGetRefCount;
+
+    pThis->__dispcmnAddAdditionalDependants__ = &__nvoc_thunk_RsResource_dispcmnAddAdditionalDependants;
+
+    pThis->__dispcmnControl_Prologue__ = &__nvoc_thunk_DisplayApi_dispcmnControl_Prologue;
+
+    pThis->__dispcmnUnmapFrom__ = &__nvoc_thunk_RsResource_dispcmnUnmapFrom;
+
+    pThis->__dispcmnControl_Epilogue__ = &__nvoc_thunk_DisplayApi_dispcmnControl_Epilogue;
+
+    pThis->__dispcmnControlLookup__ = &__nvoc_thunk_RsResource_dispcmnControlLookup;
+
+    pThis->__dispcmnControl__ = &__nvoc_thunk_DisplayApi_dispcmnControl;
+
+    pThis->__dispcmnUnmap__ = &__nvoc_thunk_RsResource_dispcmnUnmap;
 
     pThis->__dispcmnGetMemInterMapParams__ = &__nvoc_thunk_RmResource_dispcmnGetMemInterMapParams;
 
     pThis->__dispcmnGetMemoryMappingDescriptor__ = &__nvoc_thunk_RmResource_dispcmnGetMemoryMappingDescriptor;
 
-    pThis->__dispcmnCheckMemInterUnmap__ = &__nvoc_thunk_RmResource_dispcmnCheckMemInterUnmap;
-
-    pThis->__dispcmnSetNotificationShare__ = &__nvoc_thunk_Notifier_dispcmnSetNotificationShare;
-
     pThis->__dispcmnControlFilter__ = &__nvoc_thunk_RsResource_dispcmnControlFilter;
-
-    pThis->__dispcmnGetRefCount__ = &__nvoc_thunk_RsResource_dispcmnGetRefCount;
 
     pThis->__dispcmnUnregisterEvent__ = &__nvoc_thunk_Notifier_dispcmnUnregisterEvent;
 
-    pThis->__dispcmnUnmap__ = &__nvoc_thunk_RsResource_dispcmnUnmap;
-
-    pThis->__dispcmnControl_Prologue__ = &__nvoc_thunk_DisplayApi_dispcmnControl_Prologue;
+    pThis->__dispcmnControlSerialization_Prologue__ = &__nvoc_thunk_RmResource_dispcmnControlSerialization_Prologue;
 
     pThis->__dispcmnCanCopy__ = &__nvoc_thunk_RsResource_dispcmnCanCopy;
 
-    pThis->__dispcmnMapTo__ = &__nvoc_thunk_RsResource_dispcmnMapTo;
-
-    pThis->__dispcmnAddAdditionalDependants__ = &__nvoc_thunk_RsResource_dispcmnAddAdditionalDependants;
-
     pThis->__dispcmnPreDestruct__ = &__nvoc_thunk_RsResource_dispcmnPreDestruct;
-
-    pThis->__dispcmnUnmapFrom__ = &__nvoc_thunk_RsResource_dispcmnUnmapFrom;
 
     pThis->__dispcmnIsDuplicate__ = &__nvoc_thunk_RsResource_dispcmnIsDuplicate;
 
+    pThis->__dispcmnControlSerialization_Epilogue__ = &__nvoc_thunk_RmResource_dispcmnControlSerialization_Epilogue;
+
     pThis->__dispcmnGetNotificationListPtr__ = &__nvoc_thunk_Notifier_dispcmnGetNotificationListPtr;
 
-    pThis->__dispcmnControl_Epilogue__ = &__nvoc_thunk_DisplayApi_dispcmnControl_Epilogue;
-
     pThis->__dispcmnGetNotificationShare__ = &__nvoc_thunk_Notifier_dispcmnGetNotificationShare;
-
-    pThis->__dispcmnControlLookup__ = &__nvoc_thunk_RsResource_dispcmnControlLookup;
 
     pThis->__dispcmnMap__ = &__nvoc_thunk_RsResource_dispcmnMap;
 
@@ -4907,12 +5116,15 @@ NV_STATUS __nvoc_objCreate_DispCommon(DispCommon **ppThis, Dynamic *pParent, NvU
     DispCommon *pThis;
     RmHalspecOwner *pRmhalspecowner;
 
-    pThis = portMemAllocNonPaged(sizeof(DispCommon));
-    if (pThis == NULL) return NV_ERR_NO_MEMORY;
+    status = __nvoc_handleObjCreateMemAlloc(createFlags, sizeof(DispCommon), (void**)&pThis, (void**)ppThis);
+    if (status != NV_OK)
+        return status;
 
     portMemSet(pThis, 0, sizeof(DispCommon));
 
     __nvoc_initRtti(staticCast(pThis, Dynamic), &__nvoc_class_def_DispCommon);
+
+    pThis->__nvoc_base_DisplayApi.__nvoc_base_RmResource.__nvoc_base_RsResource.__nvoc_base_Object.createFlags = createFlags;
 
     if (pParent != NULL && !(createFlags & NVOC_OBJ_CREATE_FLAGS_PARENT_HALSPEC_ONLY))
     {
@@ -4933,11 +5145,17 @@ NV_STATUS __nvoc_objCreate_DispCommon(DispCommon **ppThis, Dynamic *pParent, NvU
     if (status != NV_OK) goto __nvoc_objCreate_DispCommon_cleanup;
 
     *ppThis = pThis;
+
     return NV_OK;
 
 __nvoc_objCreate_DispCommon_cleanup:
     // do not call destructors here since the constructor already called them
-    portMemFree(pThis);
+    if (createFlags & NVOC_OBJ_CREATE_FLAGS_IN_PLACE_CONSTRUCT)
+        portMemSet(pThis, 0, sizeof(DispCommon));
+    else
+        portMemFree(pThis);
+
+    // coverity[leaked_storage:FALSE]
     return status;
 }
 

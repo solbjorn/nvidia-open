@@ -28,7 +28,7 @@
 
 static const BINDATA_ARCHIVE
 __kgspGetBinArchiveGspRmFmcGfwDebugSigned_GH100 = BINDATA_ARCHIVE_INIT(
-	BINDATA_ENTRY("ucode_image", "g_gsp_gh100_dbg_gfw_image.bin", 124232),
+	BINDATA_ENTRY("ucode_image", "g_gsp_gh100_dbg_gfw_image.bin", 126536),
 	BINDATA_ENTRY("ucode_hash", "g_gsp_gh100_dbg_gfw_hash.bin", 48),
 	BINDATA_ENTRY("ucode_sig", "g_gsp_gh100_dbg_gfw_sig.bin", 384),
 	BINDATA_ENTRY("ucode_pkey", "g_gsp_gh100_dbg_gfw_pub_key.bin", 384),

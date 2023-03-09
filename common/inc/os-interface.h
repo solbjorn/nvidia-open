@@ -328,7 +328,7 @@ static inline NV_STATUS os_alloc_pages_node(NvS32 nid, NvU32 size, NvU32 flag,
 					    NvU64 *pAddress)
 {
 	gfp_t gfp_mask = __GFP_THISNODE | GFP_HIGHUSER_MOVABLE | __GFP_COMP |
-	__GFP_NORETRY | __GFP_NOWARN;
+			 __GFP_NORETRY | __GFP_NOWARN;
 	unsigned int order = get_order(size);
 	struct page *page;
 
@@ -377,7 +377,6 @@ static __always_inline void os_free_pages_phys(NvU64 address, NvU32 size)
 	__free_pages(os_get_page_struct(address), get_order(size));
 }
 
-NV_STATUS   NV_API_CALL  os_call_nv_vmbus            (NvU32, void *);
 NV_STATUS   NV_API_CALL  os_open_temporary_file      (void **);
 
 static __always_inline void os_close_file(void *filp)

@@ -144,7 +144,7 @@ typedef struct
 
 typedef struct
 {
-    NvU32    pageSize;           // default is 4k or 64k else use pagesize = 2M.
+    NvU64    pageSize;           // default is 4k or 64k else use pagesize = 2M.
     NvU64    alignment;
 } gpuVaAllocInfo;
 
@@ -404,9 +404,6 @@ static NvU32 getNvlinkConnectionToNpu(const NV2080_CTRL_CMD_NVLINK_GET_NVLINK_ST
                                       NvU32 *linkBandwidthMBps);
 static NvU32 getNvlinkConnectionToSwitch(const NV2080_CTRL_CMD_NVLINK_GET_NVLINK_STATUS_PARAMS *nvlinkStatus,
                                          NvU32 *linkBandwidthMBps);
-static NV_STATUS getC2CConnectionToCpu(struct gpuDevice *device,
-                                       NvBool *connectedToCpu,
-                                       NvU32 *linkBandwidthMBps);
 static NV_STATUS nvGpuOpsGetMemoryByHandle(NvHandle hClient, NvHandle hMemory, Memory **ppMemory);
 static void _nvGpuOpsReleaseChannel(gpuRetainedChannel *retainedChannel);
 static NV_STATUS _nvGpuOpsRetainChannelResources(struct gpuDevice *device,
@@ -1581,8 +1578,8 @@ static NV_STATUS getPCIELinkRateMBps(struct gpuDevice *device, NvU32 *pcieLinkRa
     const NvU32 PCIE_4_ENCODING_RATIO_EFFECTIVE = 128;
     const NvU32 PCIE_5_ENCODING_RATIO_TOTAL = 130;
     const NvU32 PCIE_5_ENCODING_RATIO_EFFECTIVE = 128;
-    const NvU32 PCIE_6_ENCODING_RATIO_TOTAL = 130;
-    const NvU32 PCIE_6_ENCODING_RATIO_EFFECTIVE = 128;
+    const NvU32 PCIE_6_ENCODING_RATIO_TOTAL = 256;
+    const NvU32 PCIE_6_ENCODING_RATIO_EFFECTIVE = 242;
 
     RM_API *pRmApi = rmapiGetInterface(RMAPI_EXTERNAL_KERNEL);
     NV2080_CTRL_BUS_INFO busInfo = {0};
@@ -1778,24 +1775,6 @@ NV_STATUS nvGpuOpsDeviceCreate(struct gpuSession *session,
 
             portMemFree(nvlinkStatus);
             nvlinkStatus = NULL;
-            break;
-        }
-        case NV2080_CTRL_BUS_INFO_INDEX_SYSMEM_CONNECTION_TYPE_C2C:
-        {
-            NvBool c2cConnectedToCpu = NV_FALSE;
-
-            status = getC2CConnectionToCpu(device, &c2cConnectedToCpu, &linkBandwidthMBps);
-            if (status != NV_OK)
-                goto cleanup_ecc;
-
-            if (c2cConnectedToCpu == NV_FALSE)
-            {
-                NV_ASSERT(0);
-                status = NV_ERR_INVALID_STATE;
-                goto cleanup_ecc;
-            }
-
-            sysmemLink = UVM_LINK_TYPE_C2C;
             break;
         }
         case NV2080_CTRL_BUS_INFO_INDEX_SYSMEM_CONNECTION_TYPE_PCIE:
@@ -2342,33 +2321,6 @@ static NvU32 getNvlinkConnectionToGpu(const NV2080_CTRL_CMD_NVLINK_GET_NVLINK_ST
         NV_ASSERT(*linkBandwidthMBps == 0);
 
     return version;
-}
-
-static NV_STATUS getC2CConnectionToCpu(struct gpuDevice *device,
-                                       NvBool *connectedToCpu,
-                                       NvU32 *linkBandwidthMBps)
-{
-    NV2080_CTRL_CMD_BUS_GET_C2C_INFO_PARAMS params = {0};
-    RM_API *pRmApi = rmapiGetInterface(RMAPI_EXTERNAL_KERNEL);
-
-    *connectedToCpu = NV_FALSE;
-    *linkBandwidthMBps = 0;
-
-    NV_ASSERT_OK_OR_RETURN(pRmApi->Control(pRmApi,
-                                           device->session->handle,
-                                           device->subhandle,
-                                           NV2080_CTRL_CMD_BUS_GET_C2C_INFO,
-                                           &params,
-                                           sizeof(params)));
-
-    if (params.bIsLinkUp == NV_TRUE &&
-        (params.remoteType == NV2080_CTRL_BUS_GET_C2C_INFO_REMOTE_TYPE_CPU))
-    {
-        *connectedToCpu = NV_TRUE;
-        *linkBandwidthMBps = params.nrLinks * params.perLinkBwMBps;
-    }
-
-    return NV_OK;
 }
 
 // If the given NvLink connection has a NPU device as an endpoint, return the
@@ -3013,10 +2965,10 @@ nvGpuOpsMemGetPageSize
 (
     OBJGPU *pGpu,
     MEMORY_DESCRIPTOR *pMemDesc,
-    NvU32  *pPageSize
+    NvU64  *pPageSize
 )
 {
-    NvU32 pageSize;
+    NvU64 pageSize;
     MemoryManager *pMemoryManager = GPU_GET_MEMORY_MANAGER(pGpu);
     NV_STATUS status;
 
@@ -3066,7 +3018,8 @@ nvGpuOpsBuildExternalAllocPtes
     GMMU_ENTRY_VALUE        pte                 = {{0}};
 
     NvU64         fabricBaseAddress   = NVLINK_INVALID_FABRIC_ADDR;
-    NvU32         kind, pageSize;
+    NvU32         kind;
+    NvU64         pageSize;
     NvU32         skipPteCount;
     NvBool        vol, atomic, readOnly;
     NvBool        encrypted, privileged;
@@ -3081,6 +3034,7 @@ nvGpuOpsBuildExternalAllocPtes
     NvU64          gpaOffset;
     NvBool         *isPLCable = NULL;
     NvU64          *guestPhysicalAddress = NULL;
+    NvU64          mappingPageSize = pGpuExternalMappingInfo->mappingPageSize;
 
     NV_ASSERT(!memdescHasSubDeviceMemDescs(pMemDesc));
 
@@ -3089,6 +3043,21 @@ nvGpuOpsBuildExternalAllocPtes
                                     &pageSize);
     if (status != NV_OK)
         return status;
+
+    //
+    // Default mappingPageSize to allocation's page size if passed as 0.
+    // If mappingPageSize is non-zero, it must be a multiple of pageSize.
+    // Also, mapping page size cannot be larger than alloc page size.
+    //
+    if (mappingPageSize == 0)
+    {
+        mappingPageSize = pageSize;
+    }
+    else if ((mappingPageSize > pageSize) ||
+             (pageSize % mappingPageSize != 0))
+    {
+        return NV_ERR_INVALID_ARGUMENT;
+    }
 
     // memdescGetSize returns the requested size of the allocation. But, the
     // actual allocation size could be larger than the requested size due
@@ -3102,10 +3071,10 @@ nvGpuOpsBuildExternalAllocPtes
     if ((offset + size) > allocSize)
         return NV_ERR_INVALID_LIMIT;
 
-    if ((size & (pageSize - 1)) != 0)
+    if ((size & (mappingPageSize - 1)) != 0)
         return NV_ERR_INVALID_ARGUMENT;
 
-    if ((offset & (pageSize - 1)) != 0)
+    if ((offset & (mappingPageSize - 1)) != 0)
         return NV_ERR_INVALID_ARGUMENT;
 
     pGVAS = dynamicCast(pVAS, OBJGVASPACE);
@@ -3113,7 +3082,7 @@ nvGpuOpsBuildExternalAllocPtes
     // Get the GMMU format
     pFmt = gvaspaceGetGmmuFmt(pGVAS, pMappingGpu);
     pPteFmt = (GMMU_FMT_PTE*)pFmt->pPte;
-    pLevelFmt = mmuFmtFindLevelWithPageShift(pFmt->pRoot, BIT_IDX_32(pageSize));
+    pLevelFmt = mmuFmtFindLevelWithPageShift(pFmt->pRoot, BIT_IDX_64(mappingPageSize));
 
     oldKind = newKind = memdescGetPteKindForGpu(pMemDesc, pMappingGpu);
     if (pMemory)
@@ -3166,7 +3135,18 @@ nvGpuOpsBuildExternalAllocPtes
 
     isCompressedKind = memmgrIsKind_HAL(pMemoryManager, FB_IS_KIND_COMPRESSIBLE, kind);
 
-    pteCount = NV_MIN((pGpuExternalMappingInfo->pteBufferSize / pLevelFmt->entrySize), (mappingSize / pageSize));
+    //
+    // Specifying mapping page size for compressed
+    // allocations is not yet supported.
+    //
+    if (isCompressedKind && (pGpuExternalMappingInfo->mappingPageSize != 0) &&
+        (pGpuExternalMappingInfo->mappingPageSize != pageSize))
+    {
+        return NV_ERR_NOT_SUPPORTED;
+    }
+
+    pteCount = NV_MIN((pGpuExternalMappingInfo->pteBufferSize / pLevelFmt->entrySize),
+                      (mappingSize / mappingPageSize));
     if (!pteCount)
         return NV_ERR_BUFFER_TOO_SMALL;
 
@@ -3278,7 +3258,8 @@ nvGpuOpsBuildExternalAllocPtes
     // it requires IOMMU mappings to be set up and these are different for each
     // GPU. The IOMMU mappings are currently added by nvGpuOpsDupMemory().
     //
-    memdescGetPhysAddrsForGpu(pMemDesc, pMappingGpu, AT_GPU, offset, pageSize, pteCount, physicalAddresses);
+    memdescGetPhysAddrsForGpu(pMemDesc, pMappingGpu, AT_GPU, offset, mappingPageSize,
+                              pteCount, physicalAddresses);
     kgmmuEncodePhysAddrs(pKernelGmmu, aperture, physicalAddresses, fabricBaseAddress, pteCount);
 
 
@@ -3303,7 +3284,7 @@ nvGpuOpsBuildExternalAllocPtes
         for (iter = 0; iter < pteCount; iter++)
         {
             guestPhysicalAddress[iter] = gpaOffset;
-            gpaOffset += pageSize;
+            gpaOffset += mappingPageSize;
         }
 
         isPLCable = portMemAllocNonPaged((NvU32)pteCount * sizeof(*isPLCable));
@@ -3315,7 +3296,7 @@ nvGpuOpsBuildExternalAllocPtes
 
         portMemSet(isPLCable, 0, ((NvU32)pteCount * sizeof(*isPLCable)));
 
-        NV_RM_RPC_GET_PLCABLE_ADDRESS_KIND(pMappingGpu, guestPhysicalAddress, pageSize, (NvU32)pteCount,
+        NV_RM_RPC_GET_PLCABLE_ADDRESS_KIND(pMappingGpu, guestPhysicalAddress, mappingPageSize, (NvU32)pteCount,
                                            isPLCable, status);
         if (status != NV_OK)
             goto done;
@@ -3360,7 +3341,8 @@ nvGpuOpsBuildExternalAllocPtes
                     }
                     else
                     {
-                        bEnablePlc = kmemsysIsPagePLCable_HAL(pMappingGpu, pKernelMemorySystem, offset, pageSize);
+                        bEnablePlc = kmemsysIsPagePLCable_HAL(pMappingGpu, pKernelMemorySystem,
+                                                              offset, mappingPageSize);
                     }
 
                     if (!bEnablePlc)
@@ -3382,11 +3364,11 @@ nvGpuOpsBuildExternalAllocPtes
 
         portMemCopy(&pGpuExternalMappingInfo->pteBuffer[iter * skipPteCount], pLevelFmt->entrySize, pte.v8, pLevelFmt->entrySize);
 
-        offset += pageSize;
+        offset += mappingPageSize;
     }
 
     pGpuExternalMappingInfo->numWrittenPtes = pteCount;
-    pGpuExternalMappingInfo->numRemainingPtes = (mappingSize / pageSize) - pteCount;
+    pGpuExternalMappingInfo->numRemainingPtes = (mappingSize / mappingPageSize) - pteCount;
     pGpuExternalMappingInfo->pteSize = pLevelFmt->entrySize;
 
 done:
@@ -3830,7 +3812,7 @@ done:
 static NV_STATUS nvGpuOpsMapGpuMemory(struct gpuAddressSpace *vaSpace,
                                       NvU64 vaOffset,
                                       NvLength length,
-                                      NvU32 pageSize,
+                                      NvU64 pageSize,
                                       NvU64 *gpuOffset,
                                       struct allocFlags flags)
 {
@@ -3838,7 +3820,7 @@ static NV_STATUS nvGpuOpsMapGpuMemory(struct gpuAddressSpace *vaSpace,
     NV_STATUS status;
     NvU64 mappedVa = 0;
     NvU32 mapFlags = 0;
-    NvU32 mapPageSize = 0;
+    NvU64 mapPageSize = 0;
     RM_API *pRmApi = rmapiGetInterface(RMAPI_EXTERNAL_KERNEL);
 
     if (!vaSpace || !gpuOffset)
@@ -4110,7 +4092,7 @@ cleanup_dup:
     return status;
 }
 
-NV_STATUS nvGpuOpsPmaAllocPages(void *pPma, NvLength pageCount, NvU32 pageSize,
+NV_STATUS nvGpuOpsPmaAllocPages(void *pPma, NvLength pageCount, NvU64 pageSize,
                                 gpuPmaAllocationOptions *pPmaAllocOptions,
                                 NvU64 *pPages)
 {
@@ -4153,7 +4135,7 @@ NV_STATUS nvGpuOpsPmaAllocPages(void *pPma, NvLength pageCount, NvU32 pageSize,
 NV_STATUS nvGpuOpsPmaPinPages(void *pPma,
                               NvU64 *pPages,
                               NvLength pageCount,
-                              NvU32 pageSize,
+                              NvU64 pageSize,
                               NvU32 flags)
 {
     NV_STATUS status;
@@ -4177,7 +4159,7 @@ NV_STATUS nvGpuOpsPmaPinPages(void *pPma,
 NV_STATUS nvGpuOpsPmaUnpinPages(void *pPma,
                                 NvU64 *pPages,
                                 NvLength pageCount,
-                                NvU32 pageSize)
+                                NvU64 pageSize)
 {
     NV_STATUS status;
     THREAD_STATE_NODE threadState;
@@ -4201,7 +4183,7 @@ NV_STATUS nvGpuOpsPmaUnpinPages(void *pPma,
 void nvGpuOpsPmaFreePages(void *pPma,
                           NvU64 *pPages,
                           NvLength pageCount,
-                          NvU32 pageSize,
+                          NvU64 pageSize,
                           NvU32 flags)
 {
     THREAD_STATE_NODE threadState;
@@ -4555,6 +4537,7 @@ static NV_STATUS channelAllocate(struct gpuAddressSpace *vaSpace,
     // sufficiently large to also accommodate any other channel
     // notifiers, and request a kernel VA and CPU caching.
     //
+
     flags.bGetKernelVA = NV_TRUE;
     errorNotifierSize = sizeof(NvNotification) *
                         NV_CHANNELGPFIFO_NOTIFICATION_TYPE__SIZE_1;
@@ -4625,6 +4608,7 @@ static NV_STATUS channelAllocate(struct gpuAddressSpace *vaSpace,
 
     if (isDeviceVoltaPlus(device))
     {
+
         flags.bGetKernelVA = NV_FALSE;
         status = nvGpuOpsGpuMalloc(vaSpace,
                                    gpPutLoc == UVM_BUFFER_LOCATION_SYS,
@@ -5041,7 +5025,7 @@ NV_STATUS nvGpuOpsMemoryCpuMap(struct gpuAddressSpace *vaSpace,
                                NvU64 memory,
                                NvLength length,
                                void **cpuPtr,
-                               NvU32 pageSize)
+                               NvU64 pageSize)
 {
     gpuMemDesc *memDesc = NULL;
     cpuMappingDesc *cpuMapDesc = NULL;
@@ -5228,7 +5212,7 @@ NV_STATUS nvGpuOpsQueryCaps(struct gpuDevice *device, gpuCaps *caps)
     THREAD_STATE_NODE threadState;
     OBJGPU *pGpu = NULL;
     KernelMemorySystem *pKernelMemorySystem;
-    NV0000_CTRL_GPU_GET_ID_INFO_PARAMS infoParams = {0};
+    NV0000_CTRL_GPU_GET_ID_INFO_V2_PARAMS infoParams = {0};
     struct gpuSession *session = device->session;
     RM_API *pRmApi = rmapiGetInterface(RMAPI_GPU_LOCK_INTERNAL);
 
@@ -5248,7 +5232,7 @@ NV_STATUS nvGpuOpsQueryCaps(struct gpuDevice *device, gpuCaps *caps)
     status = pRmApi->Control(pRmApi,
                              session->handle,
                              session->handle,
-                             NV0000_CTRL_CMD_GPU_GET_ID_INFO,
+                             NV0000_CTRL_CMD_GPU_GET_ID_INFO_V2,
                              &infoParams,
                              sizeof(infoParams));
     if (status != NV_OK)
@@ -6869,7 +6853,8 @@ NV_STATUS nvGpuOpsInitFaultInfo(struct gpuDevice *device,
     NVB069_ALLOCATION_PARAMETERS faultBufferAllocParams = {0};
     NVB069_CTRL_FAULTBUFFER_GET_SIZE_PARAMS sizeParams = {0};
     NVB069_CTRL_CMD_FAULTBUFFER_GET_REGISTER_MAPPINGS_PARAMS registermappingsParams = {0};
-    void *bufferAddress;
+    void *bufferAddress = NULL;
+    NvU32 faultBufferSize = 0;
     RM_API *pRmApi = rmapiGetInterface(RMAPI_EXTERNAL_KERNEL);
 
     pFaultInfo->faultBufferHandle = NV01_NULL_OBJECT;
@@ -6882,36 +6867,32 @@ NV_STATUS nvGpuOpsInitFaultInfo(struct gpuDevice *device,
     if (status != NV_OK)
         goto cleanup;
 
-    // Get the Size of the fault buffer
-    status = pRmApi->Control(pRmApi,
-                             session->handle,
-                             pFaultInfo->faultBufferHandle,
-                             NVB069_CTRL_CMD_FAULTBUFFER_GET_SIZE,
-                             &sizeParams,
-                             sizeof(sizeParams));
-    if (status != NV_OK)
-        goto cleanup_fault_buffer;
 
-    // Map the fault buffer pointer to CPU
-    status = pRmApi->MapToCpu(pRmApi,
-                              session->handle,
-                              device->subhandle,
-                              pFaultInfo->faultBufferHandle,
-                              0,
-                              pFaultInfo->replayable.bufferSize,
-                              &bufferAddress,
-                              0);
-    if (status != NV_OK)
-        goto cleanup_fault_buffer;
+    {
+        // Get the Size of the fault buffer
+        status = pRmApi->Control(pRmApi,
+                                 session->handle,
+                                 pFaultInfo->faultBufferHandle,
+                                 NVB069_CTRL_CMD_FAULTBUFFER_GET_SIZE,
+                                 &sizeParams,
+                                 sizeof(sizeParams));
+        if (status != NV_OK)
+            goto cleanup_fault_buffer;
 
-    status = pRmApi->Control(pRmApi,
-                             session->handle,
-                             pFaultInfo->faultBufferHandle,
-                             NVB069_CTRL_CMD_FAULTBUFFER_GET_REGISTER_MAPPINGS,
-                             &registermappingsParams,
-                             sizeof(registermappingsParams));
-    if (status != NV_OK)
-        goto cleanup_fault_buffer;
+        faultBufferSize = sizeParams.faultBufferSize;
+
+        // Map the fault buffer pointer to CPU
+        status = pRmApi->MapToCpu(pRmApi,
+                                  session->handle,
+                                  device->subhandle,
+                                  pFaultInfo->faultBufferHandle,
+                                  0,
+                                  pFaultInfo->replayable.bufferSize,
+                                  &bufferAddress,
+                                  0);
+        if (status != NV_OK)
+            goto cleanup_fault_buffer;
+    }
 
     if (isDeviceVoltaPlus(device))
     {
@@ -6931,6 +6912,16 @@ NV_STATUS nvGpuOpsInitFaultInfo(struct gpuDevice *device,
         pFaultInfo->nonReplayable.bufferSize          = nonReplayableFaultsParams.bufferSize;
     }
 
+    registermappingsParams.faultBufferType = NVB069_CTRL_FAULT_BUFFER_REPLAYABLE;
+    status = pRmApi->Control(pRmApi,
+                             session->handle,
+                             pFaultInfo->faultBufferHandle,
+                             NVB069_CTRL_CMD_FAULTBUFFER_GET_REGISTER_MAPPINGS,
+                             &registermappingsParams,
+                             sizeof(registermappingsParams));
+    if (status != NV_OK)
+        goto cleanup_fault_buffer;
+
     pFaultInfo->replayable.pFaultBufferGet        = (NvU32*)(NvUPtr)registermappingsParams.pFaultBufferGet;
     pFaultInfo->replayable.pFaultBufferPut        = (NvU32*)(NvUPtr)registermappingsParams.pFaultBufferPut;
     pFaultInfo->replayable.pFaultBufferInfo       = (NvU32*)(NvUPtr)registermappingsParams.pFaultBufferInfo;
@@ -6939,16 +6930,18 @@ NV_STATUS nvGpuOpsInitFaultInfo(struct gpuDevice *device,
     pFaultInfo->replayable.pPmcIntrEnClear        = (NvU32*)(NvUPtr)registermappingsParams.pPmcIntrEnClear;
     pFaultInfo->replayable.replayableFaultMask    = registermappingsParams.replayableFaultMask;
     pFaultInfo->replayable.pPrefetchCtrl          = (NvU32*)(NvUPtr)registermappingsParams.pPrefetchCtrl;
-    pFaultInfo->replayable.bufferSize             = sizeParams.faultBufferSize;
+    pFaultInfo->replayable.bufferSize             = faultBufferSize;
     pFaultInfo->replayable.bufferAddress          = bufferAddress;
 
     return NV_OK;
 
 cleanup_fault_buffer:
-    gpuDeviceUnmapCpuFreeHandle(device,
-                                pFaultInfo->faultBufferHandle,
-                                pFaultInfo->replayable.bufferAddress,
-                                0);
+    {
+        gpuDeviceUnmapCpuFreeHandle(device,
+                                    pFaultInfo->faultBufferHandle,
+                                    pFaultInfo->replayable.bufferAddress,
+                                    0);
+    }
 cleanup:
     portMemSet(pFaultInfo, 0, sizeof(*pFaultInfo));
     return status;
@@ -7201,10 +7194,12 @@ NV_STATUS nvGpuOpsDestroyFaultInfo(struct gpuDevice *device,
         NV_ASSERT(status == NV_OK);
     }
 
-    gpuDeviceUnmapCpuFreeHandle(device,
-                                pFaultInfo->faultBufferHandle,
-                                pFaultInfo->replayable.bufferAddress,
-                                0);
+    {
+        gpuDeviceUnmapCpuFreeHandle(device,
+                                    pFaultInfo->faultBufferHandle,
+                                    pFaultInfo->replayable.bufferAddress,
+                                    0);
+    }
 
     portMemSet(pFaultInfo, 0, sizeof(gpuFaultInfo));
     return status;
@@ -7246,6 +7241,31 @@ NV_STATUS nvGpuOpsGetNonReplayableFaults(gpuFaultInfo *pFaultInfo,
     }
 
     return NV_OK;
+}
+
+NV_STATUS nvGpuOpsFlushReplayableFaultBuffer(struct gpuDevice *device)
+{
+    NV_STATUS   status;
+    NvHandle    hClient = device->session->handle;
+    RsClient   *pClient;
+    Device     *pDevice;
+    OBJGPU     *pGpu;
+    KernelGmmu *pKernelGmmu;
+
+    status = serverGetClientUnderLock(&g_resServ, hClient, &pClient);
+    if (status != NV_OK)
+        return NV_ERR_INVALID_ARGUMENT;
+
+    status = deviceGetByHandle(pClient, device->handle, &pDevice);
+    if (status != NV_OK)
+        return NV_ERR_INVALID_ARGUMENT;
+
+    GPU_RES_SET_THREAD_BC_STATE(pDevice);
+
+    pGpu = GPU_RES_GET_GPU(pDevice);
+    pKernelGmmu = GPU_GET_KERNEL_GMMU(pGpu);
+
+    return kgmmuIssueReplayableFaultBufferFlush_HAL(pGpu, pKernelGmmu);
 }
 
 static NV_STATUS nvGpuOpsVerifyChannel(struct gpuAddressSpace *vaSpace,
@@ -7926,7 +7946,7 @@ _shadowMemdescCreate(gpuRetainedChannel *retainedChannel,
                      MEMORY_DESCRIPTOR **ppMemDesc)
 {
     NvU32 j;
-    NvU32 pageSize = pCtxBufferInfo->pageSize;
+    NvU64 pageSize = pCtxBufferInfo->pageSize;
     NvU32 numBufferPages = NV_ROUNDUP(pCtxBufferInfo->size, pageSize) / pageSize;
     MEMORY_DESCRIPTOR *pMemDesc = NULL;
     MEMORY_DESCRIPTOR *pBufferHandle = (MEMORY_DESCRIPTOR *) pCtxBufferInfo->bufferHandle;
@@ -8222,6 +8242,11 @@ NV_STATUS nvGpuOpsGetChannelResourcePtes(struct gpuAddressSpace *vaSpace,
 
     if (!vaSpace || !resourceDescriptor || !pGpuExternalMappingInfo)
         return NV_ERR_INVALID_ARGUMENT;
+
+    if (pGpuExternalMappingInfo->mappingPageSize != 0)
+    {
+        return NV_ERR_NOT_SUPPORTED;
+    }
 
     threadStateInit(&threadState, THREAD_STATE_FLAGS_NONE);
     status = _nvGpuOpsLocksAcquireAll(RMAPI_LOCK_FLAGS_READ,

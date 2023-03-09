@@ -28,19 +28,6 @@
 #include "os/os.h"
 
 /*!
- * @brief generic host engine halt
- */
-NV_STATUS
-hostengHaltEngine_IMPL
-(
-    OBJGPU     *pGpu,
-    OBJHOSTENG *pHosteng
-)
-{
-    return NV_ERR_NOT_SUPPORTED;
-}
-
-/*!
  * @brief generic host engine error reset initialization
  */
 NV_STATUS
@@ -49,22 +36,6 @@ hostengHaltAndReset_IMPL
     OBJGPU     *pGpu,
     OBJHOSTENG *pHosteng,
     RMTIMEOUT  *pTimeout
-)
-{
-    return NV_ERR_NOT_SUPPORTED;
-}
-
-/*!
- * @brief generic host engine reset
- */
-NV_STATUS
-hostengReset_IMPL
-(
-    OBJGPU          *pGpu,
-    OBJHOSTENG      *pHosteng,
-    NvBool           bReload,
-    KernelChannel  *pKernelChannel,
-    KernelChannel **ppCurrentKernelChannel
 )
 {
     return NV_ERR_NOT_SUPPORTED;

@@ -2070,14 +2070,15 @@ kmigmgrEnableAllLCEs_IMPL
 }
 
 /*!
- * @brief   Retrieves instance(s) associated with a client, if applicable
+ * @brief   Retrieves instance(s) associated with a device, if applicable
  */
 NV_STATUS
-kmigmgrGetInstanceRefFromClient_IMPL
+kmigmgrGetInstanceRefFromDevice_IMPL
 (
     OBJGPU *pGpu,
     KernelMIGManager *pKernelMIGManager,
     NvHandle hClient,
+    NvHandle hDevice,
     MIG_INSTANCE_REF *pRef
 )
 {
@@ -2099,7 +2100,7 @@ kmigmgrGetInstanceRefFromClient_IMPL
     NV_ASSERT_OK_OR_RETURN(serverGetClientUnderLock(&g_resServ, hClient, &pRsClient));
 
     NV_CHECK_OK_OR_RETURN(LEVEL_ERROR,
-        subdeviceGetByGpu(pRsClient, pGpu, &pSubdevice));
+        subdeviceGetByInstance(pRsClient, hDevice, 0, &pSubdevice));
 
     NV_CHECK_OK_OR_RETURN(LEVEL_ERROR,
         gisubscriptionGetGPUInstanceSubscription(pRsClient, RES_GET_HANDLE(pSubdevice),
@@ -2128,14 +2129,48 @@ kmigmgrGetInstanceRefFromClient_IMPL
 }
 
 /*!
- * @brief   Retrieves GPU instance heap associated with a client, if applicable
+ * @brief   Retrieves instance(s) associated with a client, if applicable
  */
 NV_STATUS
-kmigmgrGetMemoryPartitionHeapFromClient_IMPL
+kmigmgrGetInstanceRefFromClient_IMPL
+(
+    OBJGPU *pGpu,
+    KernelMIGManager *pKernelMIGManager,
+    NvHandle hClient,
+    MIG_INSTANCE_REF *pRef
+)
+{
+    RsClient *pRsClient;
+    Device *pDevice;
+
+    NV_ASSERT_OR_RETURN(pRef != NULL, NV_ERR_INVALID_ARGUMENT);
+    *pRef = kmigmgrMakeNoMIGReference();
+
+    if (!IS_MIG_IN_USE(pGpu))
+    {
+        return NV_ERR_INVALID_STATE;
+    }
+
+    NV_ASSERT_OK_OR_RETURN(serverGetClientUnderLock(&g_resServ, hClient, &pRsClient));
+
+    NV_CHECK_OK_OR_RETURN(LEVEL_ERROR,
+        deviceGetByGpu(pRsClient, pGpu, NV_TRUE, &pDevice));
+
+    return kmigmgrGetInstanceRefFromDevice(pGpu, pKernelMIGManager,
+                                           hClient, RES_GET_HANDLE(pDevice),
+                                           pRef);
+}
+
+/*!
+ * @brief   Retrieves GPU instance heap associated with a device, if applicable
+ */
+NV_STATUS
+kmigmgrGetMemoryPartitionHeapFromDevice_IMPL
 (
     OBJGPU           *pGpu,
     KernelMIGManager *pKernelMIGManager,
     NvHandle          hClient,
+    NvHandle          hDevice,
     Heap            **ppMemoryPartitionHeap
 )
 {
@@ -2144,7 +2179,7 @@ kmigmgrGetMemoryPartitionHeapFromClient_IMPL
 
     NV_ASSERT_OR_RETURN(IS_MIG_IN_USE(pGpu), NV_ERR_INVALID_STATE);
 
-    rmStatus = kmigmgrGetInstanceRefFromClient(pGpu, pKernelMIGManager, hClient, &ref);
+    rmStatus = kmigmgrGetInstanceRefFromDevice(pGpu, pKernelMIGManager, hClient, hDevice, &ref);
     if ((rmStatus != NV_OK) || !kmigmgrIsMIGReferenceValid(&ref))
     {
         RS_PRIV_LEVEL privLevel = rmclientGetCachedPrivilegeByHandle(hClient);
@@ -2175,6 +2210,33 @@ kmigmgrGetMemoryPartitionHeapFromClient_IMPL
     }
 
     return rmStatus;
+}
+
+/*!
+ * @brief   Retrieves GPU instance heap associated with a client, if applicable
+ */
+NV_STATUS
+kmigmgrGetMemoryPartitionHeapFromClient_IMPL
+(
+    OBJGPU           *pGpu,
+    KernelMIGManager *pKernelMIGManager,
+    NvHandle          hClient,
+    Heap            **ppMemoryPartitionHeap
+)
+{
+    RsClient *pRsClient;
+    Device *pDevice;
+
+    NV_ASSERT_OR_RETURN(IS_MIG_IN_USE(pGpu), NV_ERR_INVALID_STATE);
+
+    NV_ASSERT_OK_OR_RETURN(serverGetClientUnderLock(&g_resServ, hClient, &pRsClient));
+
+    NV_CHECK_OK_OR_RETURN(LEVEL_ERROR,
+        deviceGetByGpu(pRsClient, pGpu, NV_TRUE, &pDevice));
+
+    return kmigmgrGetMemoryPartitionHeapFromDevice(pGpu, pKernelMIGManager,
+                                                   hClient, RES_GET_HANDLE(pDevice),
+                                                   ppMemoryPartitionHeap);
 }
 
 /*!
@@ -3071,6 +3133,8 @@ kmigmgrSaveComputeInstances_IMPL
         {
             pComputeInstanceSave->ciInfo.gpcMask = DRF_MASK(pMIGComputeInstance->resourceAllocation.gpcCount - 1 : 0);
         }
+
+        pComputeInstanceSave->ciInfo.gfxGpcCount = pMIGComputeInstance->resourceAllocation.gfxGpcCount;
         pComputeInstanceSave->ciInfo.veidOffset = pMIGComputeInstance->resourceAllocation.veidOffset;
         pComputeInstanceSave->ciInfo.veidCount = pMIGComputeInstance->resourceAllocation.veidCount;
         pComputeInstanceSave->ciInfo.smCount = pMIGComputeInstance->resourceAllocation.smCount;
@@ -3310,7 +3374,7 @@ kmigmgrCreateComputeInstances_FWCLIENT
         pComputeResourceAllocation->gpcIds[(pComputeResourceAllocation->gpcCount)++] = gpcIdx;
         tempGpcMask &= ~(NVBIT32(gpcIdx));
     }
-
+    pComputeResourceAllocation->gfxGpcCount = info.gfxGpcCount;
     pComputeResourceAllocation->veidCount = info.veidCount;
     pComputeResourceAllocation->veidOffset = info.veidOffset;
     pComputeResourceAllocation->smCount = info.smCount;
@@ -5965,10 +6029,9 @@ kmigmgrGetNextComputeSize_IMPL
 
         for (i = 1; i < NV_ARRAY_ELEMENTS(computeSizeFlags) - 1; i++)
             if (computeSizeFlags[i] == computeSize)
-                return (bGetNextSmallest) ? computeSizeFlags[i + 1] : computeSizeFlags[i - 1];
+                break;
 
-        // Requested input flag was not found
-        return KMIGMGR_COMPUTE_SIZE_INVALID;
+        return (bGetNextSmallest) ? computeSizeFlags[i + 1] : computeSizeFlags[i - 1];
     }
 }
 

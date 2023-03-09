@@ -29,13 +29,13 @@
 static const BINDATA_ARCHIVE
 __kgspGetBinArchiveGspRmBoot_GA102 = BINDATA_ARCHIVE_INIT(
 	BINDATA_ENTRY("ucode_image_dbg",
-		      "g_gsprm_skbl_dbg_ga102_riscv_image.bin", 12288),
+		      "g_gsprm_skbl_dbg_libos3_ga102_riscv_image.bin", 20480),
 	BINDATA_ENTRY("ucode_desc_dbg",
-		      "g_gsprm_skbl_dbg_ga102_riscv_desc.bin", 76),
+		      "g_gsprm_skbl_dbg_libos3_ga102_riscv_desc.bin", 84),
 	BINDATA_ENTRY("ucode_image_prod",
-		      "g_gsprm_skbl_prod_ga102_riscv_image.bin", 12288),
+		      "g_gsprm_skbl_prod_libos3_ga102_riscv_image.bin", 20480),
 	BINDATA_ENTRY("ucode_desc_prod",
-		      "g_gsprm_skbl_prod_ga102_riscv_desc.bin", 76),
+		      "g_gsprm_skbl_prod_libos3_ga102_riscv_desc.bin", 84),
 );
 
 const BINDATA_ARCHIVE *kgspGetBinArchiveGspRmBoot_GA102(struct KernelGsp *pKernelGsp)

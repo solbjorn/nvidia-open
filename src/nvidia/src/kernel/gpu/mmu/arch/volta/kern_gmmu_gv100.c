@@ -88,7 +88,7 @@ kgmmuChangeReplayableFaultOwnership_GV100(OBJGPU *pGpu, KernelGmmu *pKernelGmmu,
 }
 
 /*!
- * @brief Creates the shadow fault buffer for client handling of non-replayable faults
+ * @brief Creates the shadow fault buffer for client handling of replayable/non-replayable faults
  *
  * @param[in] pGpu
  * @param[in] pKernelGmmu
@@ -98,8 +98,9 @@ kgmmuChangeReplayableFaultOwnership_GV100(OBJGPU *pGpu, KernelGmmu *pKernelGmmu,
 NV_STATUS
 kgmmuClientShadowFaultBufferAlloc_GV100
 (
-    OBJGPU               *pGpu,
-    KernelGmmu           *pKernelGmmu
+    OBJGPU           *pGpu,
+    KernelGmmu       *pKernelGmmu,
+    FAULT_BUFFER_TYPE index
 )
 {
     if (IS_VIRTUAL_WITHOUT_SRIOV(pGpu))
@@ -111,7 +112,7 @@ kgmmuClientShadowFaultBufferAlloc_GV100
         NV_ASSERT_OR_RETURN(0, NV_ERR_INVALID_STATE);
     }
 
-    return kgmmuClientShadowFaultBufferNonreplayableAllocate(pGpu, pKernelGmmu);
+    return kgmmuClientShadowFaultBufferAllocate(pGpu, pKernelGmmu, index);
 }
 
 /*!
@@ -125,14 +126,15 @@ kgmmuClientShadowFaultBufferAlloc_GV100
 NV_STATUS
 kgmmuClientShadowFaultBufferFree_GV100
 (
-    OBJGPU               *pGpu,
-    KernelGmmu           *pKernelGmmu
+    OBJGPU           *pGpu,
+    KernelGmmu       *pKernelGmmu,
+    FAULT_BUFFER_TYPE index
 )
 {
     if (IS_VIRTUAL_WITHOUT_SRIOV(pGpu))
         return NV_OK;
 
-    return kgmmuClientShadowFaultBufferNonreplayableDestroy(pGpu, pKernelGmmu);
+    return kgmmuClientShadowFaultBufferDestroy(pGpu, pKernelGmmu, index);
 }
 
 /*!

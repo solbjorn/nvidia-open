@@ -44,7 +44,8 @@ typedef struct
     NvU64               timestamp;
     LOCK_TRACE_INFO     traceInfo;
     NvU64               tlsEntryId;
-
+	atomic_t	contentionCount;
+    NvU32               lowPriorityAging;
 } RMAPI_LOCK;
 
 RsServer          g_resServ;
@@ -175,8 +176,8 @@ _rmapiInitInterface
     pRmApi->AllocWithHandle = rmapiAllocWithHandle;
     pRmApi->AllocWithSecInfo = pRmApi->bTlsInternal ? rmapiAllocWithSecInfo : rmapiAllocWithSecInfoTls;
 
-    pRmApi->FreeClientList = rmapiFreeClientList;
-    pRmApi->FreeClientListWithSecInfo = pRmApi->bTlsInternal ? rmapiFreeClientListWithSecInfo : rmapiFreeClientListWithSecInfoTls;
+    pRmApi->DisableClients = rmapiDisableClients;
+    pRmApi->DisableClientsWithSecInfo = pRmApi->bTlsInternal ? rmapiDisableClientsWithSecInfo : rmapiDisableClientsWithSecInfoTls;
 
     pRmApi->Free = rmapiFree;
     pRmApi->FreeWithSecInfo = pRmApi->bTlsInternal ? rmapiFreeWithSecInfo : rmapiFreeWithSecInfoTls;
@@ -290,6 +291,13 @@ _rmapiLockAlloc(void)
     g_resServ.bUnlockedParamCopy = NV_TRUE;
 
     if ((osReadRegistryDword(NULL,
+                            NV_REG_STR_RM_LOCKING_LOW_PRIORITY_AGING,
+                            &val) == NV_OK))
+    {
+        g_RmApiLock.lowPriorityAging = val;
+    }
+
+    if ((osReadRegistryDword(NULL,
                             NV_REG_STR_RM_PARAM_COPY_NO_LOCK,
                             &val) == NV_OK))
     {
@@ -354,6 +362,7 @@ rmapiLockAcquire(NvU32 flags, NvU32 module)
         }
         else
         {
+            // Conditional acquires don't care about contention or priority
             if (portSyncRwLockAcquireWriteConditional(g_RmApiLock.pLock))
             {
                 g_RmApiLock.threadId = threadId;
@@ -373,7 +382,25 @@ rmapiLockAcquire(NvU32 flags, NvU32 module)
         else
         {
 
-            portSyncRwLockAcquireWrite(g_RmApiLock.pLock);
+			if (flags & RMAPI_LOCK_FLAGS_LOW_PRIORITY) {
+				NvS32 age = g_RmApiLock.lowPriorityAging;
+				const atomic_t *cc;
+
+				cc = &g_RmApiLock.contentionCount;
+
+                portSyncRwLockAcquireWrite(g_RmApiLock.pLock);
+				while (atomic_read(cc) > 0 && age--) {
+                    portSyncRwLockReleaseWrite(g_RmApiLock.pLock);
+                    osDelay(10);
+                    portSyncRwLockAcquireWrite(g_RmApiLock.pLock);
+                }
+            }
+            else
+            {
+                portAtomicIncrementU32(&g_RmApiLock.contentionCount);
+                portSyncRwLockAcquireWrite(g_RmApiLock.pLock);
+                portAtomicDecrementU32(&g_RmApiLock.contentionCount);
+            }
             g_RmApiLock.threadId = threadId;
         }
     }
@@ -739,7 +766,7 @@ rmapiGetClientHandlesFromOSInfo
         {
             pClient = *it.pValue;
             pRsClient = staticCast(pClient, RsClient);
-            
+
             NV_CHECK_OR_ELSE_STR(LEVEL_ERROR, pClient->pOSInfo == pOSInfo, "*** OS info mismatch", continue);
 
             pClientHandleList[k++] = pRsClient->hClient;

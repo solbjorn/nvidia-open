@@ -29,10 +29,10 @@
 static const BINDATA_ARCHIVE
 __kgspGetBinArchiveBooterLoadUcode_GA102 = BINDATA_ARCHIVE_INIT(
 	BINDATA_ENTRY("image_dbg",
-		      "g_booteruc_load_ga10x_dbg_image.bin", 36864),
+		      "g_booteruc_load_ga10x_dbg_image.bin", 41216),
 	BINDATA_ENTRY("header_dbg", "g_booteruc_load_ga10x_dbg_hdr.bin", 36),
 	BINDATA_ENTRY("image_prod",
-		      "g_booteruc_load_ga10x_prod_image.bin", 36864),
+		      "g_booteruc_load_ga10x_prod_image.bin", 41216),
 	BINDATA_ENTRY("header_prod", "g_booteruc_load_ga10x_prod_hdr.bin", 36),
 	BINDATA_ENTRY("sig_dbg",
 		      "g_booteruc_load_ga10x_ga102_rsa3k_0_dbg_sig.bin", 768),

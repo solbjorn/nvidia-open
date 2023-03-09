@@ -29,10 +29,10 @@
 static const BINDATA_ARCHIVE
 __kgspGetBinArchiveBooterLoadUcode_TU116 = BINDATA_ARCHIVE_INIT(
 	BINDATA_ENTRY("image_dbg",
-		      "g_booteruc_load_tu11x_dbg_image.bin", 35584),
+		      "g_booteruc_load_tu11x_dbg_image.bin", 39936),
 	BINDATA_ENTRY("header_dbg", "g_booteruc_load_tu11x_dbg_hdr.bin", 36),
 	BINDATA_ENTRY("image_prod",
-		      "g_booteruc_load_tu11x_prod_image.bin", 35584),
+		      "g_booteruc_load_tu11x_prod_image.bin", 39936),
 	BINDATA_ENTRY("header_prod", "g_booteruc_load_tu11x_prod_hdr.bin", 36),
 	BINDATA_ENTRY("sig_dbg",
 		      "g_booteruc_load_tu11x_tu116_aes_dbg_sig.bin", 16),

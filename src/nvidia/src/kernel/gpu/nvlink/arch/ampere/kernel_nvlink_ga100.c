@@ -166,7 +166,7 @@ knvlinkRemoveMapping_GA100
     status = knvlinkSyncLinkMasksAndVbiosInfo(pGpu, pKernelNvlink);
     if (status != NV_OK)
     {
-        NV_ASSERT(status == NV_OK);
+        NV_ASSERT(status != NV_OK);
         return status;
     }
 
@@ -184,6 +184,7 @@ knvlinkRemoveMapping_GA100
         if (!bBufferReady)
         {
             status = knvlinkUpdateCurrentConfig(pGpu, pKernelNvlink);
+
         }
     }
     else

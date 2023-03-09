@@ -639,3 +639,16 @@ subdeviceCtrlCmdBusGetPciBarInfo_IMPL
 
     return NV_OK;
 }
+
+NV_STATUS
+subdeviceCtrlCmdBusSysmemAccess_IMPL
+(
+    Subdevice* pSubdevice,
+    NV2080_CTRL_BUS_SYSMEM_ACCESS_PARAMS* pParams
+)
+{
+    OBJGPU      *pGpu       = GPU_RES_GET_GPU(pSubdevice);
+    KernelBif   *pKernelBif = GPU_GET_KERNEL_BIF(pGpu);
+
+    return kbifDisableSysmemAccess_HAL(pGpu, pKernelBif, pParams->bDisable);
+}

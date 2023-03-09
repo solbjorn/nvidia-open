@@ -297,7 +297,7 @@ NV_STATUS mmuWalkProcessPdes
             NvU32 entryIndexHi = mmuFmtVirtAddrToEntryIndex(pLevel->pFmt, vaHi);
             NvU32 entryIndex;
             NvU32 index;
-            NvU32 entryIndexFillStart;
+            NvU32 entryIndexFillStart = 0;
             NvU32 entryIndexFillEnd;
             NvU32 pendingFillCount = 0;
 
@@ -692,7 +692,7 @@ cleanupIter:
         NvU32        entryIndexHi = mmuFmtVirtAddrToEntryIndex(pLevel->pFmt, vaHi);
         NvU32        entryIndex;
         NvU32        index;
-        NvU32        entryIndexFillStart;
+        NvU32        entryIndexFillStart = 0;
         NvU32        entryIndexFillEnd;
         NvU32        pendingFillCount = 0;
 

@@ -183,7 +183,7 @@ static NV_STATUS __nvoc_thunk_RsResource_kgrobjControlLookup(struct KernelGraphi
     return resControlLookup((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_KernelGraphicsObject_RsResource.offset), pParams, ppEntry);
 }
 
-static NV_STATUS __nvoc_thunk_ChannelDescendant_kgrobjGetSwMethods(struct KernelGraphicsObject *pChannelDescendant, METHOD **ppMethods, NvU32 *pNumMethods) {
+static NV_STATUS __nvoc_thunk_ChannelDescendant_kgrobjGetSwMethods(struct KernelGraphicsObject *pChannelDescendant, const METHOD **ppMethods, NvU32 *pNumMethods) {
     return chandesGetSwMethods((struct ChannelDescendant *)(((unsigned char *)pChannelDescendant) + __nvoc_rtti_KernelGraphicsObject_ChannelDescendant.offset), ppMethods, pNumMethods);
 }
 
@@ -215,6 +215,10 @@ static NV_STATUS __nvoc_thunk_Notifier_kgrobjUnregisterEvent(struct KernelGraphi
     return notifyUnregisterEvent((struct Notifier *)(((unsigned char *)pNotifier) + __nvoc_rtti_KernelGraphicsObject_Notifier.offset), hNotifierClient, hNotifierResource, hEventClient, hEvent);
 }
 
+static NV_STATUS __nvoc_thunk_RmResource_kgrobjControlSerialization_Prologue(struct KernelGraphicsObject *pResource, struct CALL_CONTEXT *pCallContext, struct RS_RES_CONTROL_PARAMS_INTERNAL *pParams) {
+    return rmresControlSerialization_Prologue((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_KernelGraphicsObject_RmResource.offset), pCallContext, pParams);
+}
+
 static NvBool __nvoc_thunk_RsResource_kgrobjCanCopy(struct KernelGraphicsObject *pResource) {
     return resCanCopy((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_KernelGraphicsObject_RsResource.offset));
 }
@@ -225,6 +229,10 @@ static void __nvoc_thunk_RsResource_kgrobjPreDestruct(struct KernelGraphicsObjec
 
 static NV_STATUS __nvoc_thunk_RsResource_kgrobjIsDuplicate(struct KernelGraphicsObject *pResource, NvHandle hMemory, NvBool *pDuplicate) {
     return resIsDuplicate((struct RsResource *)(((unsigned char *)pResource) + __nvoc_rtti_KernelGraphicsObject_RsResource.offset), hMemory, pDuplicate);
+}
+
+static void __nvoc_thunk_RmResource_kgrobjControlSerialization_Epilogue(struct KernelGraphicsObject *pResource, struct CALL_CONTEXT *pCallContext, struct RS_RES_CONTROL_PARAMS_INTERNAL *pParams) {
+    rmresControlSerialization_Epilogue((struct RmResource *)(((unsigned char *)pResource) + __nvoc_rtti_KernelGraphicsObject_RmResource.offset), pCallContext, pParams);
 }
 
 static PEVENTNOTIFICATION *__nvoc_thunk_Notifier_kgrobjGetNotificationListPtr(struct KernelGraphicsObject *pNotifier) {
@@ -348,11 +356,15 @@ static void __nvoc_init_funcTable_KernelGraphicsObject_1(KernelGraphicsObject *p
 
     pThis->__kgrobjUnregisterEvent__ = &__nvoc_thunk_Notifier_kgrobjUnregisterEvent;
 
+    pThis->__kgrobjControlSerialization_Prologue__ = &__nvoc_thunk_RmResource_kgrobjControlSerialization_Prologue;
+
     pThis->__kgrobjCanCopy__ = &__nvoc_thunk_RsResource_kgrobjCanCopy;
 
     pThis->__kgrobjPreDestruct__ = &__nvoc_thunk_RsResource_kgrobjPreDestruct;
 
     pThis->__kgrobjIsDuplicate__ = &__nvoc_thunk_RsResource_kgrobjIsDuplicate;
+
+    pThis->__kgrobjControlSerialization_Epilogue__ = &__nvoc_thunk_RmResource_kgrobjControlSerialization_Epilogue;
 
     pThis->__kgrobjGetNotificationListPtr__ = &__nvoc_thunk_Notifier_kgrobjGetNotificationListPtr;
 
@@ -388,12 +400,15 @@ NV_STATUS __nvoc_objCreate_KernelGraphicsObject(KernelGraphicsObject **ppThis, D
     KernelGraphicsObject *pThis;
     RmHalspecOwner *pRmhalspecowner;
 
-    pThis = portMemAllocNonPaged(sizeof(KernelGraphicsObject));
-    if (pThis == NULL) return NV_ERR_NO_MEMORY;
+    status = __nvoc_handleObjCreateMemAlloc(createFlags, sizeof(KernelGraphicsObject), (void**)&pThis, (void**)ppThis);
+    if (status != NV_OK)
+        return status;
 
     portMemSet(pThis, 0, sizeof(KernelGraphicsObject));
 
     __nvoc_initRtti(staticCast(pThis, Dynamic), &__nvoc_class_def_KernelGraphicsObject);
+
+    pThis->__nvoc_base_ChannelDescendant.__nvoc_base_GpuResource.__nvoc_base_RmResource.__nvoc_base_RsResource.__nvoc_base_Object.createFlags = createFlags;
 
     if (pParent != NULL && !(createFlags & NVOC_OBJ_CREATE_FLAGS_PARENT_HALSPEC_ONLY))
     {
@@ -414,11 +429,17 @@ NV_STATUS __nvoc_objCreate_KernelGraphicsObject(KernelGraphicsObject **ppThis, D
     if (status != NV_OK) goto __nvoc_objCreate_KernelGraphicsObject_cleanup;
 
     *ppThis = pThis;
+
     return NV_OK;
 
 __nvoc_objCreate_KernelGraphicsObject_cleanup:
     // do not call destructors here since the constructor already called them
-    portMemFree(pThis);
+    if (createFlags & NVOC_OBJ_CREATE_FLAGS_IN_PLACE_CONSTRUCT)
+        portMemSet(pThis, 0, sizeof(KernelGraphicsObject));
+    else
+        portMemFree(pThis);
+
+    // coverity[leaked_storage:FALSE]
     return status;
 }
 

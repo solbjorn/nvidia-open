@@ -59,6 +59,7 @@ intrGetUvmSharedLeafEnDisableMask_GA100
     NvU32 intrVectorNonReplayableFault;
     NvU32 intrVectorTimerSwrl = NV_INTR_VECTOR_INVALID;
     NvU64 mask = 0;
+    NV2080_INTR_CATEGORY_SUBTREE_MAP uvmShared;
 
     //
     // Compile-time ascertain that we only have 1 client subtree (we assume
@@ -96,12 +97,30 @@ intrGetUvmSharedLeafEnDisableMask_GA100
                 NV_CTRL_INTR_GPU_VECTOR_TO_LEAF_REG(intrVectorTimerSwrl));
     }
 
+    NV_ASSERT_OK(intrGetSubtreeRange(pIntr,
+                                     NV2080_INTR_CATEGORY_UVM_SHARED,
+                                     &uvmShared));
+    //
+    // Ascertain that we only have 1 client subtree (we assume this since we
+    // cache only 64 bits).
+    //
+    NV_ASSERT(uvmShared.subtreeStart == uvmShared.subtreeEnd);
+
+    //
+    // Ascertain that we only have 2 subtrees as this is what we currently
+    // support by only caching 64 bits
+    //
+    NV_ASSERT(
+        (NV_CTRL_INTR_SUBTREE_TO_LEAF_IDX_END(uvmShared.subtreeEnd) - 1) ==
+        NV_CTRL_INTR_SUBTREE_TO_LEAF_IDX_START(uvmShared.subtreeStart));
+
     // On GSP we service non replayable faults in the bottom half, so we shouldn't mask them
     if (intrVectorNonReplayableFault != NV_INTR_VECTOR_INVALID)
     {
         // Ascertain that it's in the first leaf
-        NV_ASSERT(NV_CTRL_INTR_GPU_VECTOR_TO_LEAF_REG(intrVectorNonReplayableFault) ==
-                NV_CTRL_INTR_SUBTREE_TO_LEAF_IDX_START(NV_CPU_INTR_UVM_SHARED_SUBTREE_START));
+        NV_ASSERT(
+            NV_CTRL_INTR_GPU_VECTOR_TO_LEAF_REG(intrVectorNonReplayableFault) ==
+            NV_CTRL_INTR_SUBTREE_TO_LEAF_IDX_START(uvmShared.subtreeStart));
 
         mask |= NVBIT32(NV_CTRL_INTR_GPU_VECTOR_TO_LEAF_BIT(intrVectorNonReplayableFault));
     }
@@ -109,8 +128,9 @@ intrGetUvmSharedLeafEnDisableMask_GA100
     if (intrVectorTimerSwrl != NV_INTR_VECTOR_INVALID)
     {
         // Ascertain that it's in the first leaf
-        NV_ASSERT(NV_CTRL_INTR_GPU_VECTOR_TO_LEAF_REG(intrVectorTimerSwrl) ==
-                NV_CTRL_INTR_SUBTREE_TO_LEAF_IDX_START(NV_CPU_INTR_UVM_SHARED_SUBTREE_START));
+        NV_ASSERT(
+            NV_CTRL_INTR_GPU_VECTOR_TO_LEAF_REG(intrVectorTimerSwrl) ==
+            NV_CTRL_INTR_SUBTREE_TO_LEAF_IDX_START(uvmShared.subtreeStart));
 
         mask |= NVBIT32(NV_CTRL_INTR_GPU_VECTOR_TO_LEAF_BIT(intrVectorTimerSwrl));
     }
