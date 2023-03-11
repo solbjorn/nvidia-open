@@ -75,7 +75,7 @@ endif
 # $(EXTRA_CFLAGS) to ccflags-y for compatibility.
 #
 
-subdir-ccflags-y += -DNV_VERSION_STRING=$(call stringify,525.89.02)
+subdir-ccflags-y += -DNV_VERSION_STRING=$(call stringify,530.30.02)
 
 COMMON_CFLAGS += -I$(src)/common/inc
 COMMON_CFLAGS += -DNVRM
@@ -232,6 +232,7 @@ NV_HEADER_PRESENCE_TESTS = $(sort \
  linux/platform/tegra/dce/dce-client-ipc.h \
  linux/nvhost.h \
  linux/nvhost_t194.h \
+ linux/host1x-next.h \
  asm/book3s/64/hash-64k.h \
  asm/set_memory.h \
  asm/prom.h \
