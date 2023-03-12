@@ -37,9 +37,8 @@
 #ifndef _NV_SPECULATION_BARRIER_H_
 #define _NV_SPECULATION_BARRIER_H_
 
+#include <linux/build_bug.h>
 #include <linux/nospec.h>
-
-#define NV_SPECULATION_BARRIER_VERSION 2
 
 /*
  * GNU-C/MSC/clang - x86/x86_64 :  x86_64, __i386, __i386__
@@ -51,47 +50,23 @@
  * GHS - ARM modes              : __ghs__, __ARM__, __ARM64__
  */
 
-#if defined(_M_IX86) || defined(__i386__) || defined(__i386) \
-    || defined(__x86_64) || defined(AMD64) || defined(_M_AMD64)
- /* All x86 */
- #define NV_SPECULATION_BARRIER_x86
-
-#elif defined(macintosh) || defined(__APPLE__) \
-    || defined(__powerpc) || defined(__powerpc__) || defined(__powerpc64__) \
-    || defined(__POWERPC__) || defined(__ppc) || defined(__ppc__) \
-    || defined(__ppc64__) || defined(__PPC__) \
-    || defined(__PPC64__) || defined(_ARCH_PPC) || defined(_ARCH_PPC64)
- /* All PowerPC */
- #define NV_SPECULATION_BARRIER_PPC
-
-#elif (defined(__GNUC__) && defined(__thumb__)) \
+#if (defined(__GNUC__) && defined(__thumb__)) \
     || (defined(__ARMCC_VERSION) && defined(__thumb__)) \
     || (defined(__ghs__) && defined(__THUMB__))
  /* ARM-thumb mode(<=ARMv7)/T32 (ARMv8) */
  #define NV_SPECULATION_BARRIER_ARM_COMMON
- #define NV_SPEC_BARRIER_CSDB ".inst.w 0xf3af8014\n"
 
 #elif (defined(__GNUC__) && defined(__arm__)) \
     || (defined(__ARMCC_VERSION) && defined(__arm__)) \
     || (defined(__ghs__) && defined(__ARM__))
  /* aarch32(ARMv8) / arm(<=ARMv7) mode */
  #define NV_SPECULATION_BARRIER_ARM_COMMON
- #define NV_SPEC_BARRIER_CSDB ".inst 0xe320f014\n"
 
 #elif (defined(__GNUC__) && defined(__aarch64__)) \
     || (defined(__ARMCC_VERSION) && defined(__aarch64__)) \
     || (defined(__ghs__) && defined(__ARM64__))
  /* aarch64(ARMv8) mode */
  #define NV_SPECULATION_BARRIER_ARM_COMMON
- #define NV_SPEC_BARRIER_CSDB "HINT #20\n"
-#elif (defined(_MSC_VER) && ( defined(_M_ARM64) || defined(_M_ARM)) )
- /* Not currently implemented for MSVC/ARM64. See bug 3366890. */
-#   define nv_speculation_barrier()
-#   define speculation_barrier() nv_speculation_barrier()
-#elif defined(NVCPU_NVRISCV64) && NVOS_IS_LIBOS
-#   define nv_speculation_barrier()
-#else
- #error "Unknown compiler/chip family"
 #endif
 
 /*
@@ -118,32 +93,7 @@
  * }
  */
 
-#if defined(NV_SPECULATION_BARRIER_x86)
-// Delete after all references are changed to nv_speculation_barrier
-#define speculation_barrier() nv_speculation_barrier()
-
-static inline void nv_speculation_barrier(void)
-{
-
-#if defined(_MSC_VER) && !defined(__clang__)
-    _mm_lfence();
-#endif
-
-#if defined(__GNUC__) || defined(__clang__)
-    __asm__ __volatile__ ("lfence" : : : "memory");
-#endif
-
-}
-
-#elif defined(NV_SPECULATION_BARRIER_PPC)
-
-static inline void nv_speculation_barrier(void)
-{
-    asm volatile("ori 31,31,0");
-}
-
-#elif defined(NV_SPECULATION_BARRIER_ARM_COMMON)
-
+#ifdef NV_SPECULATION_BARRIER_ARM_COMMON
 /* Note: Cortex-A9 GNU-assembler seems to complain about DSB SY */
  #define nv_speculation_barrier()   \
     asm volatile                    \
@@ -152,7 +102,12 @@ static inline void nv_speculation_barrier(void)
         "ISB\n"                     \
         : : : "memory"              \
     )
+#else
+#define nv_speculation_barrier		barrier_nospec
 #endif
+
+// Delete after all references are changed to nv_speculation_barrier
+#define speculation_barrier		nv_speculation_barrier
 
 /*
  * nv_array_index_no_speculate -- Recommended variant-1 mitigation approach
@@ -190,10 +145,6 @@ static inline void nv_speculation_barrier(void)
  * (they will wait for the bounds check to complete).
  */
 
-static __always_inline unsigned long
-nv_array_index_no_speculate(unsigned long index, unsigned long count)
-{
-	return array_index_nospec(index, count);
-}
+#define nv_array_index_no_speculate	array_index_nospec
 
 #endif //_NV_SPECULATION_BARRIER_H_
