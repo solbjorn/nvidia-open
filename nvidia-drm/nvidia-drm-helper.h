@@ -161,9 +161,11 @@ nv_drm_prime_pages_to_sg(struct drm_device *dev,
 #define nv_drm_for_each_connector(connector, conn_iter, dev) \
     drm_for_each_connector(connector, dev)
 #else
-#define nv_drm_for_each_connector(connector, conn_iter, dev) \
-    WARN_ON(!mutex_is_locked(&dev->mode_config.mutex));      \
-    list_for_each_entry(connector, &(dev)->mode_config.connector_list, head)
+#define nv_drm_for_each_connector(connector, conn_iter, dev)		   \
+	WARN_ON(!(drm_drv_uses_atomic_modeset(dev) ||			   \
+		  mutex_is_locked(&(dev)->mode_config.mutex)));		   \
+	list_for_each_entry(connector, &(dev)->mode_config.connector_list, \
+			    head)
 #endif
 
 #if defined(drm_for_each_encoder)
