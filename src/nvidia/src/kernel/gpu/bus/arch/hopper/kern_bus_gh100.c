@@ -212,7 +212,6 @@ kbusVerifyBar2_GH100
     NvU64        size
 )
 {
-    MEMORY_DESCRIPTOR memDesc, *pMemDesc = NULL;
     NvU8             *pOffset          = NULL;
     NvU32             index            = 0;
     NvU64             bar0Window       = 0;
@@ -229,6 +228,7 @@ kbusVerifyBar2_GH100
     KernelMemorySystem *pKernelMemorySystem = GPU_GET_KERNEL_MEMORY_SYSTEM(pGpu);
     NvU32             flagsClean       = 0;
     NvU64             bar2VirtualAddr  = 0;
+    MEMORY_DESCRIPTOR *pMemDesc;
 
     NV_ASSERT_OR_RETURN(pGpu->getProperty(pGPU, PDB_PROP_GPU_COHERENT_CPU_MAPPING) == NV_FALSE, NV_ERR_INVALID_STATE);
 
@@ -275,18 +275,23 @@ kbusVerifyBar2_GH100
     }
     else
     {
+	MEMORY_DESCRIPTOR *md;
+
         offset = 0;
         size = FBSIZETESTED;
         // Allocate some memory to test virtual BAR2 with
         if (pGpu->getProperty(pGpu, PDB_PROP_GPU_IS_ALL_INST_IN_SYSMEM))
         {
-            memdescCreateExisting(&memDesc, pGpu, size, ADDR_SYSMEM, pGpu->instCacheOverride, MEMDESC_FLAGS_NONE);
+            status = memdescCreate(&md, pGpu, size, 0, true, ADDR_SYSMEM, pGpu->instCacheOverride, MEMDESC_FLAGS_NONE);
         }
         else
         {
-            memdescCreateExisting(&memDesc, pGpu, size, ADDR_FBMEM, NV_MEMORY_UNCACHED, MEMDESC_FLAGS_NONE);
+            status = memdescCreate(&md, pGpu, size, 0, true, ADDR_FBMEM, NV_MEMORY_UNCACHED, MEMDESC_FLAGS_NONE);
         }
-        status = memdescAlloc(&memDesc);
+		if (status)
+			return status;
+
+        status = memdescAlloc(md);
         if (status != NV_OK)
         {
             NV_PRINTF(LEVEL_ERROR,
@@ -296,13 +301,13 @@ kbusVerifyBar2_GH100
         }
 
         bIsStandaloneTest = NV_TRUE;
-        pOffset = kbusMapRmAperture_HAL(pGpu, &memDesc);
+        pOffset = kbusMapRmAperture_HAL(pGpu, md);
         if (pOffset == NULL)
         {
             status = NV_ERR_INSUFFICIENT_RESOURCES;
             goto kbusVerifyBar2_failed;
         }
-        pMemDesc = &memDesc;
+        pMemDesc = md;
     }
     testMemoryOffset = memdescGetPhysAddr(pMemDesc, AT_GPU, 0) + offset;
     testMemorySize   = NvU64_LO32(size);

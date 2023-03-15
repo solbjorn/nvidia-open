@@ -266,20 +266,14 @@ static NV_STATUS getNbsiDirSize
     if (pNbsiDir->d.nbsiHeaderString == NBSIDIRHDRSTRING)
     {
         nbsiDirVer = pNbsiDir->d.dirVer;
-        *pRtnDirSize =
-                   sizeof(pNbsiDir->d.nbsiHeaderString) +
-                   sizeof(pNbsiDir->d.size) +
-                   sizeof(pNbsiDir->d.numGlobs) +
-                   sizeof(pNbsiDir->d.dirVer) +
-                   (pNbsiDir->d.numGlobs * sizeof(pNbsiDir->d.globType[0]));
+		*pRtnDirSize = struct_size(&pNbsiDir->d, globType,
+					   pNbsiDir->d.numGlobs);
     }
     else
     {
         nbsiDirVer = pNbsiDir->od.dirVer;
-        *pRtnDirSize =
-                   sizeof(pNbsiDir->od.numGlobs) +
-                   sizeof(pNbsiDir->od.dirVer) +
-                   (pNbsiDir->od.numGlobs * sizeof(pNbsiDir->od.globType[0]));
+		*pRtnDirSize = struct_size(&pNbsiDir->od, globType,
+					   pNbsiDir->od.numGlobs);
     }
 
     if (nbsiDirVer > MAXNBSIDIRVER)
@@ -975,16 +969,14 @@ static NV_STATUS allocNbsiCache
 )
 {
     NvU32           cacheSize;
-    NBSI_CACHE_OBJ  cacheObj;
     PNBSI_CACHE_OBJ pCacheObj;
-    PNBSI_CACHE_ENTRY_OBJ pCacheEntryObj;
     NBSI_OBJ *pNbsiObj = getNbsiObject();
     NvU8            i;
 
     NV_ASSERT(pNbsiObj->pTblCache[idx] == NULL);
 
-    cacheSize = sizeof(cacheObj) +
-                (sizeof(pCacheEntryObj) * (cacheEntries - 1));
+	cacheSize = struct_size(pCacheObj, pCacheEntry, cacheEntries);
+
     pNbsiObj->pTblCache[idx] = portMemAllocNonPaged(cacheSize);
     if (pNbsiObj->pTblCache[idx] == NULL)
     {
@@ -1448,8 +1440,8 @@ static NV_STATUS getNbsiDirFromRegistry
         {
             NV_PRINTF(LEVEL_ERROR,
                       "Unable to read emulated NBSI table from reg.\n");
-            portMemFree((void*)pNbsiDir);
-            pNbsiDir = NULL;
+            portMemFree(*pNbsiDir);
+            *pNbsiDir = NULL;
             return status;
         }
 

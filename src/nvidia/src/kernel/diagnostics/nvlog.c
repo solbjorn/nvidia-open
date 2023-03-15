@@ -122,6 +122,7 @@ _allocateNvlogBuffer
 {
     NVLOG_BUFFER          *pBuffer;
     NVLOG_BUFFER_PUSHFUNC  pushfunc;
+	size_t total;
 
     // Sanity check on some invalid combos:
     if (FLD_TEST_DRF(LOG_BUFFER, _FLAGS, _EXPANDABLE, _YES, flags))
@@ -158,18 +159,20 @@ _allocateNvlogBuffer
         }
     }
 
+	total = struct_size(pBuffer, data, size);
+
     if (FLD_TEST_DRF(LOG_BUFFER, _FLAGS, _NONPAGED, _YES, flags))
-        pBuffer = portMemAllocNonPaged(sizeof(*pBuffer) + size);
+        pBuffer = portMemAllocNonPaged(total);
     else
-        pBuffer = portMemAllocPaged(sizeof(*pBuffer) + size);
+        pBuffer = portMemAllocPaged(total);
 
     if (!pBuffer)
         return NV_ERR_NO_MEMORY;
 
-    portMemSet(pBuffer, 0, sizeof(*pBuffer) + size);
+    portMemSet(pBuffer, 0, total);
     if (FLD_TEST_DRF(LOG_BUFFER, _FLAGS, _OCA, _YES, flags))
     {
-        osAddRecordForCrashLog(pBuffer, NV_OFFSETOF(NVLOG_BUFFER, data) + size);
+        osAddRecordForCrashLog(pBuffer, total);
     }
 
     pBuffer->push.fn  = pushfunc;

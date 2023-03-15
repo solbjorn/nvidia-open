@@ -273,15 +273,15 @@ _portMemFenceCheck
     if (pHead->fence.magic != PORT_MEM_FENCE_HEAD_MAGIC ||
         pTail->fence.magic != PORT_MEM_FENCE_TAIL_MAGIC)
     {
-        PORT_MEM_PRINT_ERROR("Memory corruption detected on block %p\n", pMem);
         PORT_ASSERT_CHECKED(pHead->fence.magic   == PORT_MEM_FENCE_HEAD_MAGIC);
         PORT_ASSERT_CHECKED(pTail->fence.magic   == PORT_MEM_FENCE_TAIL_MAGIC);
+		WARN(1, "Memory corruption detected on block %p\n", pMem);
     }
     if (pHead->fence.pAllocator != pAlloc)
     {
-        PORT_MEM_PRINT_ERROR("Freeing block %p using a wrong allocator (%p instead of %p)\n",
-                             pMem, pAlloc, pHead->fence.pAllocator);
         PORT_ASSERT_CHECKED(pHead->fence.pAllocator == pAlloc);
+		WARN(1, "Freeing block %p using a wrong allocator (%p instead of %p)\n",
+		     pMem, pAlloc, pHead->fence.pAllocator);
 
     }
 }

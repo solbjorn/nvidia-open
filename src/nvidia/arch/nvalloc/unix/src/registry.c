@@ -640,7 +640,7 @@ NV_STATUS RmPackageRegistry(
         pLocalRegistry = nvp->pRegistry;
 
     numEntries = 0;
-    totalSize  = NV_OFFSETOF(PACKED_REGISTRY_TABLE, entries);
+	totalSize = sizeof(*pRegTable);
 
     // Count the number of global entries and total size.
     regCountEntriesAndSize(&numEntries, &totalSize, the_registry);
@@ -649,7 +649,7 @@ NV_STATUS RmPackageRegistry(
     regCountEntriesAndSize(&numEntries, &totalSize, pLocalRegistry);
 
     // Add table record size into total size.
-    totalSize += sizeof(PACKED_REGISTRY_ENTRY) * numEntries;
+	totalSize += array_size(numEntries, sizeof(*pRegTable->entries));
 
     //
     // If this function is called to only compute total size of registry table,
@@ -677,8 +677,7 @@ NV_STATUS RmPackageRegistry(
     pRegTable->numEntries = numEntries;
 
     // Offset of first byte after the registry entry table.
-    totalSize  = NV_OFFSETOF(PACKED_REGISTRY_TABLE, entries) +
-                 (sizeof(PACKED_REGISTRY_ENTRY) * numEntries);
+	totalSize = struct_size(pRegTable, entries, numEntries);
 
     // Starting index in the registry entry table.
     numEntries = 0;

@@ -220,7 +220,7 @@ struct uvm_pmm_gpu_chunk_suballoc_struct
     // Array of all child subchunks
     // TODO: Bug 1765461: Can the array be inlined? It could save the parent
     //       pointer.
-    uvm_gpu_chunk_t *subchunks[0];
+    uvm_gpu_chunk_t *subchunks[];
 };
 
 typedef enum
@@ -3023,11 +3023,14 @@ static NV_STATUS init_chunk_split_cache_level(uvm_pmm_gpu_t *pmm, size_t level)
                 size = sizeof(uvm_gpu_chunk_t);
                 align = __alignof__(uvm_gpu_chunk_t);
             } else {
+				uvm_pmm_gpu_chunk_suballoc_t *sub;
+
                 snprintf(chunk_split_cache[level].name,
                          sizeof(chunk_split_cache[level].name),
                          "uvm_gpu_chunk_%u", (unsigned)level);
-                size = sizeof(uvm_pmm_gpu_chunk_suballoc_t) + (sizeof(uvm_gpu_chunk_t *) << level);
-                align = __alignof__(uvm_pmm_gpu_chunk_suballoc_t);
+
+				size = struct_size(sub, subchunks, BIT(level));
+				align = __alignof(*sub);
             }
             chunk_split_cache[level].cache =
                 nv_kmem_cache_create(chunk_split_cache[level].name, size, align);

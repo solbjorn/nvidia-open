@@ -55,9 +55,11 @@ typedef struct RpcHistoryEntry
 struct OBJRPC{
     OBJECT_BASE_DEFINITION(RPC);
 
-    struct {
-        NvU32 ipVersion;
-    }__nvoc_pbase_Object[1]; // This nested structure mechanism is to bypass NVOC
+	/* This nested structure mechanism is to bypass NVOC */
+#define OBJRPC_STATIC_CAST_HACK	1
+	struct {
+		NvU32	ipVersion;
+	} __nvoc_pbase_Object[OBJRPC_STATIC_CAST_HACK];
 
     // Message buffer fields
     NvU32 *message_buffer;

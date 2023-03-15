@@ -521,8 +521,8 @@ AuxBus::status DeviceImpl::transaction(Action action, Type type, int address,
         {
             bool isNoStopBit = (type == AuxBus::i2cMot) ? 1:0;
             RemoteI2cReadMessage remoteI2cRead;
-            I2cWriteTransaction i2cWriteTransactions[1];
-            i2cWriteTransactions[0] = I2cWriteTransaction(address,
+            I2cWriteTransaction i2cWriteTransactions;
+            i2cWriteTransactions = I2cWriteTransaction(address,
                                                           0,
                                                           &offset,
                                                           isNoStopBit);
@@ -536,7 +536,7 @@ AuxBus::status DeviceImpl::transaction(Action action, Type type, int address,
             remoteI2cRead.set(this->address.parent(), // topology Address
                 nWriteTransactions,                   // number of write transactions
                 this->address.tail(),                 // port of Device
-                i2cWriteTransactions,                 // list of write transactions
+                &i2cWriteTransactions,                 // list of write transactions
                 address,                              // right shifted DDC Address (request identifier in spec)
                 sizeRequested);                       // requested size
 

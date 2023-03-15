@@ -2681,17 +2681,19 @@ void parseEdidHDMILLCTiming(NVT_EDID_INFO *pInfo, VSDB_DATA *pVsdb, NvU32 *pMapS
                     (DataSz - DataCnt >= pHDMIVideo->HDMI_VIC_Len))
                 {
                     // handle HDMI VIC entries to add HDMI 1.4a 4kx2k extended modes
-                    NVT_HDMI_VIC_LIST * pVicList = (NVT_HDMI_VIC_LIST *) &pHdmiLLC->Data[DataCnt];
+					const u8 *vic;
+
+					vic = &pHdmiLLC->Data[DataCnt];
 
                     for ( k = 0; k < pHDMIVideo->HDMI_VIC_Len; ++k)
                     {
                         NVT_TIMING newTiming;
 
                         // extended mode VIC code from 1 - 4.
-                        if ((0 < pVicList->HDMI_VIC[k]) && (pVicList->HDMI_VIC[k] <= MAX_HDMI_EXT_4Kx2K_FORMAT))
+                        if (vic[k] && vic[k] <= MAX_HDMI_EXT_4Kx2K_FORMAT)
                         {
                             NVMISC_MEMCPY(&newTiming,
-                                          &HDMI_EXT_4Kx2K_TIMING[pVicList->HDMI_VIC[k] - 1],
+                                          &HDMI_EXT_4Kx2K_TIMING[vic[k] - 1],
                                           sizeof(newTiming));
 
                             // Fill in the pixel clock

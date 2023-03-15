@@ -44,7 +44,7 @@ EdidReadMultistream::~EdidReadMultistream()
 void EdidReadMultistream::startReadingEdid()
 {
     NvU8 offset = 0;
-    I2cWriteTransaction i2cWriteTransactions[1];
+    I2cWriteTransaction i2cWriteTransactions;
     Address::StringBuffer buffer;
     DP_USED(buffer);
     DP_LOG(("%s(): start for %s", __FUNCTION__,
@@ -56,7 +56,7 @@ void EdidReadMultistream::startReadingEdid()
     DDCAddress = ddcAddrList[ddcIndex];
 
     // set offset within segment 0, no need to set segment, because we're starting reading EDID
-    i2cWriteTransactions[0] = I2cWriteTransaction(DDCAddress >> 1,
+    i2cWriteTransactions = I2cWriteTransaction(DDCAddress >> 1,
                                                   sizeof(offset),
                                                   &offset,
                                                   true);
@@ -65,7 +65,7 @@ void EdidReadMultistream::startReadingEdid()
     remoteI2cRead.set(topologyAddress.parent(), // topology Address
         nWriteTransactions,             // number of write transactions
         topologyAddress.tail(),         // port of Device
-        i2cWriteTransactions,           // list of write transactions
+        &i2cWriteTransactions,           // list of write transactions
         DDCAddress >> 1,                // right shifted DDC Address (request identifier in spec)
         EDID_BLOCK_SIZE);               // requested size
 

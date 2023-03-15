@@ -128,7 +128,7 @@ struct IOVAMAPPING
     // one entry for each physical page in pPhysMemDesc. As a result, this
     // structure must be allocated from the heap.
     //
-    RmPhysAddr iovaArray[1];
+    RmPhysAddr iovaArray[];
     // WARNING: DO NOT place anything behind the IOVA array!
 };
 

@@ -557,12 +557,12 @@ NV_STATUS heapInitInternal_IMPL
             }
         }
 
-        // 
+        //
         // Define PMA-managed regions
         // This will be moved to memmgr once we refactor SMC partitions
         //
-        if (memmgrIsPmaEnabled(pMemoryManager) && 
-            memmgrIsPmaSupportedOnPlatform(pMemoryManager) && 
+        if (memmgrIsPmaEnabled(pMemoryManager) &&
+            memmgrIsPmaSupportedOnPlatform(pMemoryManager) &&
             (heapType != HEAP_TYPE_PARTITION_LOCAL))
         {
             memmgrSetPmaInitialized(pMemoryManager, NV_TRUE);
@@ -1197,8 +1197,7 @@ _heapBlacklistSingleChunk
     status = memdescCreate(&pBlacklistChunk->pMemDesc,
                            pGpu, pBlacklistChunk->size, RM_PAGE_SIZE,
                            NV_TRUE, ADDR_FBMEM, NV_MEMORY_UNCACHED,
-                           MEMDESC_FLAGS_FIXED_ADDRESS_ALLOCATE |
-                           MEMDESC_FLAGS_SKIP_RESOURCE_COMPUTE);
+                           MEMDESC_FLAGS_FIXED_ADDRESS_ALLOCATE);
     if (NV_OK != status)
     {
         NV_PRINTF(LEVEL_FATAL,
@@ -4302,8 +4301,7 @@ heapBlackListPages_IMPL
                                NV_TRUE,
                                ADDR_FBMEM,
                                NV_MEMORY_UNCACHED,
-                               MEMDESC_FLAGS_FIXED_ADDRESS_ALLOCATE |
-                               MEMDESC_FLAGS_SKIP_RESOURCE_COMPUTE);
+                               MEMDESC_FLAGS_FIXED_ADDRESS_ALLOCATE);
         if (NV_OK != status)
         {
             portMemSet(&pBlackList->pBlacklistChunks[j], 0, sizeof(BLACKLIST_CHUNK));

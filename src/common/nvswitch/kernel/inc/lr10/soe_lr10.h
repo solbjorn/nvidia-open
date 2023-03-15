@@ -45,7 +45,7 @@ typedef const struct
     NvU32 version;
     NvU32 numApps;
     NvU32 codeEntryPoint;
-    SOE_UCODE_APP_INFO_LR10 apps[0];
+    SOE_UCODE_APP_INFO_LR10 apps[];
 } SOE_UCODE_HDR_INFO_LR10, *PSOE_UCODE_HDR_INFO_LR10;
 
 #define NVSWITCH_SOE_WR32_LR10(_d, _instance, _dev, _reg, _data) \

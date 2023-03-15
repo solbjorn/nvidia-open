@@ -624,7 +624,6 @@ nvlink_lib_retrain_link_from_swcfg_to_active
 {
     nvlink_intranode_conn *conn   = NULL;
     NvlStatus              status = NVL_SUCCESS;
-    nvlink_intranode_conn *conns[1];
     nvlink_link           *links[2];
 
     if (!link)
@@ -669,9 +668,7 @@ nvlink_lib_retrain_link_from_swcfg_to_active
         return NVL_ERR_GENERIC;
     }
 
-    // create array of one conn and two link endpoints
-    conns[0] = conn;
-
+    // create array of two link endpoints
     links[0] = conn->end0;
     links[1] = conn->end1;
 
@@ -714,7 +711,7 @@ nvlink_lib_retrain_link_from_swcfg_to_active
 
         return status;
     }
-    
+
     if ((conn->end0->version >= NVLINK_DEVICE_VERSION_40) ||
         (conn->end1->version >= NVLINK_DEVICE_VERSION_40))
     {
@@ -726,7 +723,7 @@ nvlink_lib_retrain_link_from_swcfg_to_active
         else if (!conn->end0->dev->enableALI)
         {
             // ALI training for NVLink4.0+
-            status = nvlink_core_train_intranode_conns_from_swcfg_to_active_non_ALI(conns, 0x1, flags);
+            status = nvlink_core_train_intranode_conns_from_swcfg_to_active_non_ALI(&conn, 1, flags);
         }
     }
     else if ((conn->end0->version >= NVLINK_DEVICE_VERSION_30) ||
@@ -740,13 +737,13 @@ nvlink_lib_retrain_link_from_swcfg_to_active
         else
         {
             // ALT training for NVLink3.0+
-            status = nvlink_core_train_intranode_conns_from_swcfg_to_active_ALT(conns, 0x1, flags);
+            status = nvlink_core_train_intranode_conns_from_swcfg_to_active_ALT(&conn, 1, flags);
         }
     }
     else
     {
         // Legacy training for pre-NVLink3.0
-        status = nvlink_core_train_intranode_conns_from_swcfg_to_active_legacy(conns, 0x1, flags);
+        status = nvlink_core_train_intranode_conns_from_swcfg_to_active_legacy(&conn, 1, flags);
     }
 
     // Release the per-link locks
@@ -784,7 +781,7 @@ nvlink_lib_save_training_seeds
 
     size = seedData[0];
 
-    // check to make sure the size is not out of bounds 
+    // check to make sure the size is not out of bounds
     if (size > NVLINK_MAX_SEED_NUM)
     {
         NVLINK_PRINT((DBG_MODULE_NVLINK_CORE, NVLINK_DBG_LEVEL_ERRORS,

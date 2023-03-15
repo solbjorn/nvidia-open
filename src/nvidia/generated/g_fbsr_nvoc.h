@@ -56,7 +56,7 @@ typedef enum
 typedef struct _def_fbsr_node
 {
     struct _def_fbsr_node *pNext;
-    NvU32                  data[1];
+    NvU32                  data[];
 } FBSR_NODE, *PFBSR_NODE;
 
 typedef struct

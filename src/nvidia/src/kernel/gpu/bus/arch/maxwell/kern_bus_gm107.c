@@ -735,17 +735,20 @@ kbusInitBar1_GM107(OBJGPU *pGpu, KernelBus *pKernelBus, NvU32 gfid)
         NvU64              fbPhysOffset    = 0;
         NvU64              consoleSize     = 0;
         PMEMORY_DESCRIPTOR pConsoleMemDesc = NULL;
-        MEMORY_DESCRIPTOR  memdesc;
 
         if (bSmoothTransitionEnabled)
         {
+			int ret;
+
             //
             // Smooth transition - The physical fb offset 0 to uefiScanoutSurfaceSize(InMB) should be identity mapped.
             // The lower FB region at offset 0 is owned by PMA and OS in wddm and hence RM will not reserve the physical
             // FB memory but only describe it.
             //
-            pConsoleMemDesc = &memdesc;
-            memdescCreateExisting(pConsoleMemDesc, pGpu, pGpu->uefiScanoutSurfaceSizeInMB * 1024 * 1024, ADDR_FBMEM, NV_MEMORY_UNCACHED, MEMDESC_FLAGS_NONE);
+            ret = memdescCreate(&pConsoleMemDesc, pGpu, pGpu->uefiScanoutSurfaceSizeInMB * 1024 * 1024, 0, true, ADDR_FBMEM, NV_MEMORY_UNCACHED, MEMDESC_FLAGS_NONE);
+			if (ret)
+				return ret;
+
             memdescDescribe(pConsoleMemDesc, ADDR_FBMEM, 0, pGpu->uefiScanoutSurfaceSizeInMB * 1024 * 1024);
             pConsoleMemDesc->_pageSize = RM_PAGE_SIZE;
         }
@@ -939,6 +942,7 @@ kbusDestroyBar1_GM107
             }
 
             pKernelBus->bBar1ConsolePreserved = NV_FALSE;
+			memdescDestroy(pConsoleMemDesc);
         }
 
         vmmDestroyVaspace(pVmm, pKernelBus->bar1[gfid].pVAS);
@@ -3389,7 +3393,6 @@ kbusVerifyBar2_GM107
     NvU64        size
 )
 {
-    MEMORY_DESCRIPTOR memDesc, *pMemDesc = NULL;
     NvU8             *pOffset          = NULL;
     NvU32             index            = 0;
     NvU64             bar0Window       = 0;
@@ -3406,6 +3409,7 @@ kbusVerifyBar2_GM107
     NvU64             bar0TestAddr     = 0;
     KernelMemorySystem *pKernelMemorySystem = GPU_GET_KERNEL_MEMORY_SYSTEM(pGpu);
     NvU32             flagsClean       = 0;
+    MEMORY_DESCRIPTOR *pMemDesc;
 
     //
     // kbusVerifyBar2 will test BAR0 against sysmem on Tegra; otherwise skip
@@ -3450,18 +3454,23 @@ kbusVerifyBar2_GM107
     }
     else
     {
+		MEMORY_DESCRIPTOR *md;
+
         offset = 0;
         size = FBSIZETESTED;
         // Allocate some memory to test virtual BAR2 with
         if (pGpu->getProperty(pGpu, PDB_PROP_GPU_IS_ALL_INST_IN_SYSMEM))
         {
-            memdescCreateExisting(&memDesc, pGpu, size, ADDR_SYSMEM, pGpu->instCacheOverride, MEMDESC_FLAGS_NONE);
+            status = memdescCreate(&md, pGpu, size, 0, true, ADDR_SYSMEM, pGpu->instCacheOverride, MEMDESC_FLAGS_NONE);
         }
         else
         {
-            memdescCreateExisting(&memDesc, pGpu, size, ADDR_FBMEM, NV_MEMORY_UNCACHED, MEMDESC_FLAGS_NONE);
+            status = memdescCreate(&md, pGpu, size, 0, true, ADDR_FBMEM, NV_MEMORY_UNCACHED, MEMDESC_FLAGS_NONE);
         }
-        status = memdescAlloc(&memDesc);
+		if (status)
+			return status;
+
+        status = memdescAlloc(md);
         if (status != NV_OK)
         {
             NV_PRINTF(LEVEL_ERROR,
@@ -3471,13 +3480,13 @@ kbusVerifyBar2_GM107
         }
 
         bIsStandaloneTest = NV_TRUE;
-        pOffset = kbusMapRmAperture_HAL(pGpu, &memDesc);
+        pOffset = kbusMapRmAperture_HAL(pGpu, md);
         if (pOffset == NULL)
         {
             status = NV_ERR_INSUFFICIENT_RESOURCES;
             goto kbusVerifyBar2_failed;
         }
-        pMemDesc = &memDesc;
+        pMemDesc = md;
     }
     testMemoryOffset = memdescGetPhysAddr(pMemDesc, AT_GPU, 0) + offset;
     testMemorySize   = NvU64_LO32(size);

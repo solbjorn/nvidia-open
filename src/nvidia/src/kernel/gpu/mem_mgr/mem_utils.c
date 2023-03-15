@@ -636,7 +636,7 @@ memmgrMemBeginTransfer_IMPL
             }
             NV_ASSERT_OR_RETURN((pPtr = memdescMapInternal(pGpu, pMemDesc, flags)) != NULL, NULL);
             pPtr = &pPtr[offset];
-            
+
             break;
         case TRANSFER_TYPE_GSP_DMA:
         case TRANSFER_TYPE_CE:
@@ -967,14 +967,12 @@ memUtilsAllocMemDesc
     //
     if (pAllocRequest->pMemDesc == NULL)
     {
-        NvU64 memDescFlags = MEMDESC_FLAGS_SKIP_RESOURCE_COMPUTE;
-
         //
         // Allocate a contig vidmem descriptor now; if needed we'll
         // allocate a new noncontig memdesc later
         //
         status = memdescCreate(&pAllocRequest->pMemDesc, pGpu, pFbAllocInfo->adjustedSize, 0, bContig,
-                               addrSpace, NV_MEMORY_UNCACHED, memDescFlags);
+                               addrSpace, NV_MEMORY_UNCACHED, 0);
 
         if (status != NV_OK)
         {

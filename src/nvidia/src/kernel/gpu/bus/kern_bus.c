@@ -255,8 +255,7 @@ kbusSetupPeerBarAccess_IMPL
     if (pMemDesc == NULL)
     {
         status = memdescCreate(&pMemDesc, pLocalGpu, size, 0, NV_TRUE,
-                               ADDR_SYSMEM, NV_MEMORY_UNCACHED,
-                               MEMDESC_FLAGS_SKIP_RESOURCE_COMPUTE);
+                               ADDR_SYSMEM, NV_MEMORY_UNCACHED, 0);
         NV_ASSERT_OR_RETURN(status == NV_OK, ~0ULL);
 
         memdescDescribe(pMemDesc, ADDR_SYSMEM, base, size);

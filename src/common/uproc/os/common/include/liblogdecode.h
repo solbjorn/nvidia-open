@@ -94,7 +94,7 @@ typedef struct
     NvU32 rsvd1;
     NvU32 rsvd2;
     char taskPrefix[TASK_NAME_MAX_LENGTH]; // Prefix string printed before each line.
-    NvU8 data[0];
+    NvU8 data[];
 } LIBOS_LOG_NVLOG_BUFFER;
 
 struct LIBOS_LOG_DECODE_LOG

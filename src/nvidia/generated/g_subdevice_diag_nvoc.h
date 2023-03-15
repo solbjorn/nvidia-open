@@ -104,7 +104,7 @@ struct DiagApi {
     struct NotifShare *(*__diagapiGetNotificationShare__)(struct DiagApi *);
     NV_STATUS (*__diagapiMap__)(struct DiagApi *, struct CALL_CONTEXT *, struct RS_CPU_MAP_PARAMS *, struct RsCpuMapping *);
     NvBool (*__diagapiAccessCallback__)(struct DiagApi *, struct RsClient *, void *, RsAccessRight);
-    NvU32 notifyActions[1];
+    NvU32 notifyActions[NV208F_NOTIFIERS_MAXCOUNT];
 };
 
 #ifndef __NVOC_CLASS_DiagApi_TYPEDEF__

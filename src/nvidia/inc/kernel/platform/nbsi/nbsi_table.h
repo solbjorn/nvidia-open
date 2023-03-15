@@ -76,7 +76,7 @@ typedef struct _NBSI_CACHE_OBJ {
     // Maximum entries we might have.
     NvU8 tblCacheMaxNumEntries;
     // Pointers to cache entries
-    PNBSI_CACHE_ENTRY_OBJ pCacheEntry[1];
+    PNBSI_CACHE_ENTRY_OBJ pCacheEntry[];
 } NBSI_CACHE_OBJ, *PNBSI_CACHE_OBJ;
 
 //
@@ -241,7 +241,7 @@ typedef union _NBSI_DIRECTORY
     {
         NvU8  numGlobs;                 // number of globs
         NvU8  dirVer;                   // dirVer
-        NvU16 globType[1];              // NBSI_GLOB_TYPE (placeholder)
+        NvU16 globType[];              // NBSI_GLOB_TYPE (placeholder)
     } od;
     struct NEW_FORMAT                   // Shipping version
     {
@@ -249,7 +249,7 @@ typedef union _NBSI_DIRECTORY
         NvU32 size;                     // size of entire directory
         NvU8  numGlobs;                 // number of globs
         NvU8  dirVer;                   // dirVer
-        NvU16 globType[1];              // NBSI_GLOB_TYPE (placeholder
+        NvU16 globType[];              // NBSI_GLOB_TYPE (placeholder
     } d;
 } NBSI_DIRECTORY, *PNBSI_DIRECTORY;
 #pragma pack()

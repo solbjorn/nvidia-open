@@ -584,9 +584,10 @@ kfifoConvertInstToKernelChannel_GM107
     MemoryManager       *pMemoryManager   = GPU_GET_MEMORY_MANAGER(pGpu);
     KernelChannel       *pKernelChannel   = NULL;
     FIFO_INSTANCE_BLOCK *pInstanceBlock;
-    MEMORY_DESCRIPTOR    instMemDesc;
+    MEMORY_DESCRIPTOR   *instMemDesc;
     NV_ADDRESS_SPACE     instAperture;
     CHANNEL_ITERATOR     chanIt;
+	int ret;
 
     //
     // The MMU_PTE version of aperture is what the HW should always
@@ -618,11 +619,13 @@ kfifoConvertInstToKernelChannel_GM107
             return NV_ERR_INVALID_ADDRESS;
     }
 
-    memdescCreateExisting(&instMemDesc, pGpu, NV_RAMIN_ALLOC_SIZE,
-                          instAperture, NV_MEMORY_UNCACHED,
-                          MEMDESC_FLAGS_OWNED_BY_CURRENT_DEVICE);
+	ret = memdescCreate(&instMemDesc, pGpu, NV_RAMIN_ALLOC_SIZE, 0, true,
+			    instAperture, NV_MEMORY_UNCACHED,
+			    MEMDESC_FLAGS_OWNED_BY_CURRENT_DEVICE);
+	if (ret)
+		return ret;
 
-    memdescDescribe(&instMemDesc, instAperture, pInst->address, NV_RAMIN_ALLOC_SIZE);
+    memdescDescribe(instMemDesc, instAperture, pInst->address, NV_RAMIN_ALLOC_SIZE);
 
     kfifoGetChannelIterator(pGpu, pKernelFifo, &chanIt);
     while (kfifoGetNextKernelChannel(pGpu, pKernelFifo, &chanIt, &pKernelChannel) == NV_OK)
@@ -640,20 +643,20 @@ kfifoConvertInstToKernelChannel_GM107
                 memdescGetPhysAddr(pInstanceBlock->pInstanceBlockDesc,
                                    AT_GPU, 0),
                 kgmmuGetHwPteApertureFromMemdesc(GPU_GET_KERNEL_GMMU(pGpu),
-                                                &instMemDesc),
-                memdescGetPhysAddr(&instMemDesc, AT_GPU, 0)))
+                                                instMemDesc),
+                memdescGetPhysAddr(instMemDesc, AT_GPU, 0)))
         {
                 *ppKernelChannel = pKernelChannel;
-                memdescDestroy(&instMemDesc);
+                memdescDestroy(instMemDesc);
                 return NV_OK;
         }
     }
 
     NV_PRINTF(LEVEL_INFO,
               "No channel found for instance 0x%016llx (target 0x%x)\n",
-              memdescGetPhysAddr(&instMemDesc, AT_GPU, 0),
-              kgmmuGetHwPteApertureFromMemdesc(GPU_GET_KERNEL_GMMU(pGpu), &instMemDesc));
-    memdescDestroy(&instMemDesc);
+              memdescGetPhysAddr(instMemDesc, AT_GPU, 0),
+              kgmmuGetHwPteApertureFromMemdesc(GPU_GET_KERNEL_GMMU(pGpu), instMemDesc));
+    memdescDestroy(instMemDesc);
 
     return NV_ERR_INVALID_CHANNEL;
 }

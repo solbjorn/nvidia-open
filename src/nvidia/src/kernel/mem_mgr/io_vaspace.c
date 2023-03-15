@@ -216,14 +216,12 @@ _iovaspaceCreateMappingDataFromMemDesc
 )
 {
     PIOVAMAPPING pIovaMapping = NULL;
-    NvU64 mappingDataSize = 0;
+    NvU64 mappingDataSize;
+	size_t nents;
 
-    mappingDataSize = sizeof(IOVAMAPPING);
-    if (!memdescGetContiguity(pMemDesc, AT_CPU))
-    {
-        mappingDataSize += sizeof(RmPhysAddr) *
-            (NvU64_LO32(pMemDesc->PageCount) - 1);
-    }
+	nents = !memdescGetContiguity(pMemDesc, AT_CPU) ?
+		lower_32_bits(pMemDesc->PageCount) : 1;
+	mappingDataSize = struct_size(pIovaMapping, iovaArray, nents);
 
     //
     // The portMemAllocNonPaged() and portMemSet() interfaces work with 32-bit sizes,

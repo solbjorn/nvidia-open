@@ -33,10 +33,9 @@
 // allocations, this overhead is very small.
 //
 // We don't need this for kmalloc since we can use ksize().
-typedef struct
-{
-    size_t alloc_size;
-    uint8_t ptr[0];
+typedef struct {
+	size_t	alloc_size;
+	u8	ptr[];
 } uvm_vmalloc_hdr_t;
 
 typedef struct
@@ -263,10 +262,10 @@ static void *alloc_internal(size_t size, bool zero_memory)
         return kmalloc(size, NV_UVM_GFP_FLAGS);
     }
 
-    if (zero_memory)
-        hdr = vzalloc(sizeof(*hdr) + size);
-    else
-        hdr = vmalloc(sizeof(*hdr) + size);
+	if (zero_memory)
+		hdr = vzalloc(struct_size(hdr, ptr, size));
+	else
+		hdr = vmalloc(struct_size(hdr, ptr, size));
 
     if (!hdr)
         return NULL;

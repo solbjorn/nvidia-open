@@ -49,7 +49,8 @@ typedef struct
         // the most common use-case. If the tracker ever needs more space, a
         // dynamic allocation will be made as part of adding an entry and
         // dynamic_entries below will be used.
-        uvm_tracker_entry_t static_entries[1];
+#define UVM_TRACKER_STATIC_NENTS	1
+        uvm_tracker_entry_t static_entries[UVM_TRACKER_STATIC_NENTS];
 
         // Pointer to the array with dynamically allocated entries
         uvm_tracker_entry_t *dynamic_entries;

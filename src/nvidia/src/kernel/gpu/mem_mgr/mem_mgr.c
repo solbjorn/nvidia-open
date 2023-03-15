@@ -1347,8 +1347,7 @@ memmgrAllocateConsoleRegion_IMPL
 
         status = memdescCreate(&pMemoryManager->Ram.pReservedConsoleMemDesc, pGpu,
                             regionSize, RM_PAGE_SIZE_64K, NV_TRUE, ADDR_FBMEM,
-                            NV_MEMORY_UNCACHED,
-                            MEMDESC_FLAGS_SKIP_RESOURCE_COMPUTE);
+                            NV_MEMORY_UNCACHED, 0);
         if (status != NV_OK)
         {
             pConsoleFbRegion->base = pConsoleFbRegion->limit = 0;

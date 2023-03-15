@@ -286,7 +286,7 @@ static uvm_page_directory_t *allocate_directory(uvm_page_tree_t *tree,
     else
         entry_count = hal->entries_per_index(depth) << hal->index_bits(depth, page_size);
 
-    dir = uvm_kvmalloc_zero(sizeof(uvm_page_directory_t) + sizeof(dir->entries[0]) * entry_count);
+    dir = uvm_kvmalloc_zero(struct_size(dir, entries, entry_count));
     if (dir == NULL)
         return NULL;
 
@@ -1074,7 +1074,7 @@ static NV_STATUS map_remap(uvm_page_tree_t *tree, NvU64 start, NvLength size, uv
     NV_STATUS status;
     uvm_push_t push;
     NvU32 page_sizes;
-    uvm_mmu_page_table_alloc_t *phys_alloc[1];
+    uvm_mmu_page_table_alloc_t *phys_alloc;
 
     // TODO: Bug 2734399
     if (range->page_size != UVM_PAGE_SIZE_512M)
@@ -1099,13 +1099,13 @@ static NV_STATUS map_remap(uvm_page_tree_t *tree, NvU64 start, NvLength size, uv
     if (uvm_page_table_range_aperture(range) == UVM_APERTURE_VID)
         uvm_push_set_flag(&push, UVM_PUSH_FLAG_NEXT_MEMBAR_GPU);
 
-    phys_alloc[0] = &tree->map_remap.pde0;
+    phys_alloc = &tree->map_remap.pde0;
     pde_fill(tree,
              range->table->depth,
              &range->table->phys_alloc,
              range->start_index,
              range->entry_count,
-             (uvm_mmu_page_table_alloc_t **)&phys_alloc,
+             &phys_alloc,
              &push);
 
     tree->gpu->parent->host_hal->wait_for_idle(&push);

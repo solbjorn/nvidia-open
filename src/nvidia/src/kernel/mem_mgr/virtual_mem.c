@@ -484,7 +484,7 @@ virtmemConstruct_IMPL
                           pAllocRequest->pUserParams->size, 0, NV_TRUE,
                           ADDR_VIRTUAL,
                           NV_MEMORY_UNCACHED,
-                          MEMDESC_FLAGS_SKIP_RESOURCE_COMPUTE),
+                          0),
             done);
     }
     else

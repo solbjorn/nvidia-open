@@ -24,6 +24,8 @@
  * ----------------------------------------------------------------------
  */
 
+#include <linux/overflow.h>
+
 #ifdef NVRM
 
 #    include <core/core.h>
@@ -1145,7 +1147,7 @@ static NvBool libosCopyLogToNvlog_nowrap(LIBOS_LOG_DECODE_LOG *pLog)
     }
 
     if (putOffset + pLog->preservedNoWrapPos >
-        pNvLogBuffer->size - NV_OFFSETOF(LIBOS_LOG_NVLOG_BUFFER, data) - sizeof(NvU64))
+        pNvLogBuffer->size - sizeof(*pNoWrapBuf) - sizeof(NvU64))
     {
         // Are we done filling nowrap?
         return NV_FALSE;
@@ -1232,7 +1234,7 @@ static NvBool findPreservedNvlogBuffer(NvU32 tag, NvU32 gpuInstance, NVLOG_BUFFE
     pNvLogBuffer = NvLogLogger.pBuffers[handle];
     if (FLD_TEST_DRF(LOG_BUFFER, _FLAGS, _PRESERVE, _YES, pNvLogBuffer->flags) &&
         DRF_VAL(LOG, _BUFFER_FLAGS, _GPU_INSTANCE, pNvLogBuffer->flags) == gpuInstance &&
-        (pNvLogBuffer->pos < pNvLogBuffer->size - NV_OFFSETOF(LIBOS_LOG_NVLOG_BUFFER, data) - sizeof(NvU64)))
+        (pNvLogBuffer->pos < pNvLogBuffer->size - sizeof(LIBOS_LOG_NVLOG_BUFFER) - sizeof(NvU64)))
     {
         *pHandle = handle;
         return NV_TRUE;
@@ -1374,7 +1376,7 @@ void libosLogAddLogEx(LIBOS_LOG_DECODE *logDecode, void *buffer, NvU64 bufferSiz
     if (!bFoundPreserved)
     {
         status = nvlogAllocBuffer(
-            bufferSize + NV_OFFSETOF(LIBOS_LOG_NVLOG_BUFFER, data), libosNoWrapBufferFlags,
+            struct_size(pNoWrapBuf, data, bufferSize), libosNoWrapBufferFlags,
             tag,
             &pLog->hNvLogNoWrap);
 
@@ -1415,7 +1417,7 @@ void libosLogAddLogEx(LIBOS_LOG_DECODE *logDecode, void *buffer, NvU64 bufferSiz
     tag = LIBOS_LOG_NVLOG_BUFFER_TAG(logDecode->sourceName, i * 2 + 1);
 
     status = nvlogAllocBuffer(
-        bufferSize + NV_OFFSETOF(LIBOS_LOG_NVLOG_BUFFER, data), libosWrapBufferFlags,
+        struct_size(pWrapBuf, data, bufferSize), libosWrapBufferFlags,
         tag, &pLog->hNvLogWrap);
 
     if (status == NV_OK)

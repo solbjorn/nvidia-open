@@ -314,12 +314,11 @@ memdescCreate
 
     if (PhysicallyContiguous)
     {
-        MdSize = sizeof(MEMORY_DESCRIPTOR);
+        MdSize = struct_size(pMemDesc, _pteArray, 1);
     }
     else
     {
-        MdSize = sizeof(MEMORY_DESCRIPTOR) +
-            (sizeof(RmPhysAddr) * PageCount);
+        MdSize = struct_size(pMemDesc, _pteArray, PageCount + 1);
         NV_ASSERT(MdSize <= 0xffffffffULL);
         if (MdSize > 0xffffffffULL)
             return NV_ERR_INSUFFICIENT_RESOURCES;
@@ -331,25 +330,10 @@ memdescCreate
         return NV_ERR_NOT_SUPPORTED;
     }
 
-    if (Flags & MEMDESC_FLAGS_PRE_ALLOCATED)
+    pMemDesc = portMemAllocNonPaged((NvU32)MdSize);
+    if (pMemDesc == NULL)
     {
-        // Only fixed sized memDesc can be supported
-        if (PhysicallyContiguous == NV_FALSE)
-        {
-            return NV_ERR_BUFFER_TOO_SMALL;
-        }
-
-        NV_ASSERT_OR_RETURN(*ppMemDesc, NV_ERR_NOT_SUPPORTED);
-
-        pMemDesc = *ppMemDesc;
-    }
-    else
-    {
-        pMemDesc = portMemAllocNonPaged((NvU32)MdSize);
-        if (pMemDesc == NULL)
-        {
-            return NV_ERR_NO_MEMORY;
-        }
+        return NV_ERR_NO_MEMORY;
     }
 
     portMemSet(pMemDesc, 0, (NvU32)MdSize);
@@ -406,10 +390,7 @@ memdescCreate
 failed:
     if (status != NV_OK)
     {
-        if (!(Flags & MEMDESC_FLAGS_PRE_ALLOCATED))
-        {
-            portMemFree(pMemDesc);
-        }
+        portMemFree(pMemDesc);
     }
     else
     {
@@ -418,48 +399,6 @@ failed:
 
     return status;
 }
-
-/*!
- *  @brief Initialize an caller allocated memory descriptor
- *
- *  Helper to make it easier to get the memDesc **, and typically used
- *  with memdescDescribe.
- *
- *  Only can be used for physically contiguous regions with a fixed
- *  size PTE array.
- *
- *  memdescDestroy should be called to free a memory descriptor.
- *
- *  If MEMDESC_FLAGS_PRE_ALLOCATED is specified, use the memory descriptor
- *  supplied by the client instead of allocating a new one.
- *
- *  @param[out]  pMemDesc               Return pointer to new memory descriptor
- *  @param[in]   pGpu
- *  @param[in]   Size                   Size of memory descriptor in bytes
- *  @param[in]   AddressSpace           NV_ADDRESS_SPACE requested
- *  @param[in]   CpuCacheAttrib         CPU cacheability requested
- *  @param[in]   Flags                  MEMDESC_FLAGS_*
- *
- *  @returns void with no malloc there should be no failure cases
- */
-void
-memdescCreateExisting
-(
-    MEMORY_DESCRIPTOR *pMemDesc,
-    OBJGPU *pGpu,
-    NvU64 Size,
-    NV_ADDRESS_SPACE AddressSpace,
-    NvU32 CpuCacheAttrib,
-    NvU64 Flags
-)
-{
-    NV_STATUS status;
-    status = memdescCreate(&pMemDesc, pGpu, Size, 0, NV_TRUE, AddressSpace,
-                           CpuCacheAttrib,
-                           Flags | MEMDESC_FLAGS_PRE_ALLOCATED | MEMDESC_FLAGS_SKIP_RESOURCE_COMPUTE);
-    NV_ASSERT(status == NV_OK);
-}
-
 
 /*!
  * Increment ref count
@@ -620,8 +559,7 @@ memdescDestroy
 
         if (pMemDesc->_pParentDescriptor)
         {
-            if ((pMemDesc->_flags & MEMDESC_FLAGS_PRE_ALLOCATED) == 0)
-                pMemDesc->_pParentDescriptor->childDescriptorCnt--;
+            pMemDesc->_pParentDescriptor->childDescriptorCnt--;
             memdescDestroy(pMemDesc->_pParentDescriptor);
             pMemDesc->_pParentDescriptor = NULL;
         }
@@ -629,10 +567,7 @@ memdescDestroy
         // Verify memdesc is not top
         NV_ASSERT(memdescHasSubDeviceMemDescs(pMemDesc) == NV_FALSE);
 
-        if ((pMemDesc->_flags & MEMDESC_FLAGS_PRE_ALLOCATED) == 0)
-        {
-            portMemFree(pMemDesc);
-        }
+        portMemFree(pMemDesc);
     }
 }
 
@@ -2426,7 +2361,7 @@ memdescCreateSubMem
                            !!(pMemDesc->_flags & MEMDESC_FLAGS_PHYSICALLY_CONTIGUOUS),
                            pMemDesc->_addressSpace,
                            pMemDesc->_cpuCacheAttrib,
-                           ((pMemDesc->_flags & ~MEMDESC_FLAGS_PRE_ALLOCATED) | MEMDESC_FLAGS_SKIP_RESOURCE_COMPUTE));
+                           pMemDesc->_flags);
 
     if (status != NV_OK)
     {

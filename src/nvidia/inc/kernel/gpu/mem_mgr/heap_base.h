@@ -101,7 +101,7 @@ typedef struct _def_fb_alloc_info
     // one entry, otherwise it will have dynamically allocated memory
     // This will track the pages in 4KB granularity
     //
-    RmPhysAddr pteArray[1];
+    RmPhysAddr pteArray[];
 } FB_ALLOC_INFO;
 
 //
@@ -135,7 +135,7 @@ typedef struct PMA_ALLOC_INFO
     // has one entry for each physical page in the allocation.
     // As a result, this structure must be allocated from heap.
     //
-    NvU64  pageArray[1];
+    NvU64  pageArray[];
     //!!! Place nothing behind pageArray!!!
 } PMA_ALLOC_INFO;
 

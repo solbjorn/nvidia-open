@@ -258,11 +258,13 @@ retry_alloc:
     if (bContig)
     {
         allocOptions.flags |= PMA_ALLOCATE_CONTIGUOUS;
-        pmaInfoSize = sizeof(PMA_ALLOC_INFO);
+		pmaInfoSize = struct_size(*pAllocRequest->pPmaAllocInfo,
+					  pageArray, 1);
     }
     else
     {
-        pmaInfoSize = sizeof(PMA_ALLOC_INFO) + ((pageCount - 1) * sizeof(NvU64));
+		pmaInfoSize = struct_size(*pAllocRequest->pPmaAllocInfo,
+					  pageArray, pageCount);
     }
 
     // Alloc the tracking structure and store the values in it.

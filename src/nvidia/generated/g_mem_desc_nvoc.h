@@ -396,7 +396,7 @@ typedef struct MEMORY_DESCRIPTOR
     // TBD: for now, the array will be sized at one entry for every 4KB, but
     // we probably want to optimize this later to support 64KB pages.
     //
-    RmPhysAddr _pteArray[1];
+    RmPhysAddr _pteArray[];
     //!!! Place nothing behind PteArray!!!
 } MEMORY_DESCRIPTOR, *PMEMORY_DESCRIPTOR;
 
@@ -422,11 +422,6 @@ NV_STATUS memdescCreate(MEMORY_DESCRIPTOR **ppMemDesc, OBJGPU *pGpu, NvU64 Size,
 
 #define MEMDESC_FLAGS_ALLOC_PER_SUBDEVICE_FB_BC_ONLY(pGpu, addressSpace) \
     ((gpumgrGetBcEnabledStatus(pGpu) && (pGpu != NULL) && (addressSpace == ADDR_FBMEM)) ?  MEMDESC_FLAGS_ALLOC_PER_SUBDEVICE : MEMDESC_FLAGS_NONE)
-
-// Initialize a caller supplied memory descriptor for use with memdescDescribe()
-void memdescCreateExisting(MEMORY_DESCRIPTOR *pMemDesc, OBJGPU *pGpu, NvU64 Size,
-                           NV_ADDRESS_SPACE AddressSpace,
-                           NvU32 CpuCacheAttrib, NvU64 Flags);
 
 // Increment reference count
 void memdescAddRef(MEMORY_DESCRIPTOR *pMemDesc);
@@ -944,7 +939,7 @@ void memdescUnmapInternal(OBJGPU *pGpu, MEMORY_DESCRIPTOR *pMemDesc, NvU32 flags
 
 /*!
  * @brief Set the name of the surface.
- * 
+ *
  * @param[in] pGpu     OBJGPU pointer.
  * @param[in] pMemDesc MEMORY_DESCRIPTOR pointer that the name is to be set for.
  * @param[in] name     const char pointer to the name to be set.
@@ -997,7 +992,7 @@ void memdescSetName(OBJGPU*, MEMORY_DESCRIPTOR *pMemDesc, const char *name, cons
 #define MEMDESC_FLAGS_ALLOC_PER_SUBDEVICE          NVBIT64(0)
 #define MEMDESC_FLAGS_SET_KIND                     NVBIT64(1)
 #define MEMDESC_FLAGS_LOST_ON_SUSPEND              NVBIT64(2)
-#define MEMDESC_FLAGS_PRE_ALLOCATED                NVBIT64(3)
+/* Free, was MEMDESC_FLAGS_PRE_ALLOCATED NVBIT64(3) */
 #define MEMDESC_FLAGS_FIXED_ADDRESS_ALLOCATE       NVBIT64(4)
 #define MEMDESC_FLAGS_LOCKLESS_SYSMEM_ALLOC        NVBIT64(5)
 #define MEMDESC_FLAGS_GPU_IN_RESET                 NVBIT64(6)
@@ -1014,7 +1009,7 @@ void memdescSetName(OBJGPU*, MEMORY_DESCRIPTOR *pMemDesc, const char *name, cons
 // Don't use the below two flags. For memdesc internal use only.
 // These flags will be removed on memory allocation refactoring in RM
 #define MEMDESC_FLAGS_PROVIDE_IOMMU_MAP            NVBIT64(16)
-#define MEMDESC_FLAGS_SKIP_RESOURCE_COMPUTE        NVBIT64(17)
+/* Free, was MEMDESC_FLAGS_SKIP_RESOURCE_COMPUTE NVBIT64(17) */
 
 #define MEMDESC_FLAGS_CUSTOM_HEAP_ACR              NVBIT64(18)
 
@@ -1138,7 +1133,7 @@ void memdescSetName(OBJGPU*, MEMORY_DESCRIPTOR *pMemDesc, const char *name, cons
 //
 // Specical case to allocate the runlists for Guests from its GPA
 // In MODS, VM's GPA allocated from subheap so using this define to
-// Forcing memdesc to allocated from subheap 
+// Forcing memdesc to allocated from subheap
 //
 #define MEMDESC_FLAGS_FORCE_ALLOC_FROM_SUBHEAP      NVBIT64(48)
 

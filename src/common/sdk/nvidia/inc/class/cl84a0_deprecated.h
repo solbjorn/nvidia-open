@@ -80,7 +80,7 @@ typedef struct Nv01MemoryListRec {
     NvU32   ctagOffset;
     NvU64   size;
     NvU64   align;
-    NvU64   pageNumber[1];  /* variable length array of page numbers */
+    NvU64   pageNumber[];  /* variable length array of page numbers */
 } Nv01MemoryList;
 
 #ifdef __cplusplus

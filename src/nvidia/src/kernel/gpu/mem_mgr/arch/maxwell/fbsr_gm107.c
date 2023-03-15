@@ -825,10 +825,14 @@ fbsrCopyMemoryMemDesc_GM107(OBJGPU *pGpu, OBJFBSR *pFbsr, MEMORY_DESCRIPTOR *pVi
         {
             case FBSR_TYPE_CPU:
                 {
+					size_t nents;
                     PFBSR_NODE pNode;
 
+					nents = DIV_ROUND_UP(pVidMemDesc->Size,
+							     sizeof(u32));
+
                     pNode = portMemAllocNonPaged(
-                        sizeof(FBSR_NODE) + (NvU32)pVidMemDesc->Size - sizeof(pNode->data));
+                        struct_size(pNode, data, nents));
 
                     if (pNode == NULL)
                     {

@@ -99,7 +99,7 @@ struct _NVLOG_BUFFER
         NVLOG_RING_BUFFER_EXTRA_FIELDS ring;
     } extra;
     /** Buffer data. */
-    NvU8                    data[1];
+    NvU8                    data[];
 };
 
 #define NVLOG_MAX_BUFFERS_v11       16
@@ -217,7 +217,7 @@ typedef NvU32 NVLOG_BUFFER_HANDLE;
 
 #define NVLOG_PRINT_BUFFER_SIZE(pBuffer)               ((pBuffer)->size)
 #define NVLOG_BUFFER_SIZE(pBuffer)                                             \
-    (NV_OFFSETOF(NVLOG_BUFFER, data) + NVLOG_PRINT_BUFFER_SIZE(pBuffer))
+	struct_size(pBuffer, data, NVLOG_PRINT_BUFFER_SIZE(pBuffer))
 
 /********************************/
 /*********  Filtering  **********/

@@ -513,9 +513,9 @@ typedef struct INFOROM_NVL_OBJECT_V1
     INFOROM_OBJECT_HEADER_V1_00 header;
     inforom_U004                lastErrorRemoteType[
         INFOROM_NVL_OBJECT_V1_NUM_LINKS];
-    inforom_U008                reserved1[1];
+    inforom_U008                reserved1;
     INFOROM_NVL_OBJECT_V1_ERR_DATA errData[INFOROM_NVL_OBJECT_V1_NUM_LINKS];
-    inforom_U016                padding[1];
+    inforom_U016                padding;
     inforom_U032                reserved2[13];
 } INFOROM_NVL_OBJECT_V1;
 

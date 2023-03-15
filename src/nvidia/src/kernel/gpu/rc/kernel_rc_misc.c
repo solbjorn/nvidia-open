@@ -43,7 +43,7 @@ NV_STATUS krcReadVirtMem_IMPL
 )
 {
     VirtMemAllocator  *pDma = GPU_GET_DMA(pGpu);
-    MEMORY_DESCRIPTOR  memDesc;
+    MEMORY_DESCRIPTOR *memDesc;
 
     NvU32     pageStartOffset;
     NvU32     start4kPage;
@@ -81,14 +81,16 @@ NV_STATUS krcReadVirtMem_IMPL
         }
         else if (memtype == ADDR_FBMEM)
         {
-            memdescCreateExisting(&memDesc,
+            status = memdescCreate(&memDesc,
                                   pGpu,
-                                  RM_PAGE_SIZE,
+                                  RM_PAGE_SIZE, 0, true,
                                   ADDR_FBMEM,
                                   NV_MEMORY_UNCACHED,
                                   MEMDESC_FLAGS_NONE);
-            memdescDescribe(&memDesc, ADDR_FBMEM, physaddr, RM_PAGE_SIZE);
-            pMem = kbusMapRmAperture_HAL(pGpu, &memDesc);
+			if (status)
+				return status;
+            memdescDescribe(memDesc, ADDR_FBMEM, physaddr, RM_PAGE_SIZE);
+            pMem = kbusMapRmAperture_HAL(pGpu, memDesc);
         }
         if (pMem == NULL)
         {
@@ -110,8 +112,8 @@ NV_STATUS krcReadVirtMem_IMPL
         }
         else if (memtype == ADDR_FBMEM)
         {
-            kbusUnmapRmAperture_HAL(pGpu, &memDesc, &pMem, NV_TRUE);
-            memdescDestroy(&memDesc);
+            kbusUnmapRmAperture_HAL(pGpu, memDesc, &pMem, NV_TRUE);
+            memdescDestroy(memDesc);
         }
         pMem = NULL;
         pageStartOffset = 0;

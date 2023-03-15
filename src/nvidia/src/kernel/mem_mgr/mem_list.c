@@ -289,8 +289,7 @@ continue_alloc_object:
         }
 
         status = memdescCreate(&pMemDesc, pGpu, memSize, 0,
-                               bContig, addressSpace, Cache,
-                               MEMDESC_FLAGS_SKIP_RESOURCE_COMPUTE);
+                               bContig, addressSpace, Cache, 0);
         if (status != NV_OK)
         {
             return status;
