@@ -309,13 +309,19 @@ _fbGetFbInfos(OBJGPU *pGpu, NvHandle hClient, NvHandle hObject, NV2080_CTRL_FB_I
                 }
                 else
                 {
+                    const MEMORY_SYSTEM_STATIC_CONFIG *pMemsysConfig = 
+                            kmemsysGetStaticConfig(pGpu, pKernelMemorySystem);
                     NV_ASSERT(0 == NvU64_HI32(pMemoryManager->Ram.fbTotalMemSizeMb << 10));
-                    data = NvU64_LO32(NV_MIN((pMemoryManager->Ram.fbTotalMemSizeMb << 10), (pMemoryManager->Ram.fbOverrideSizeMb << 10)));
+                    data = NvU64_LO32(NV_MIN((pMemoryManager->Ram.fbTotalMemSizeMb << 10), 
+                                             (pMemoryManager->Ram.fbOverrideSizeMb << 10))
+                                             - pMemsysConfig->fbOverrideStartKb);
                     break;
                 }
             }
             case NV2080_CTRL_FB_INFO_INDEX_RAM_SIZE:
             {
+                const MEMORY_SYSTEM_STATIC_CONFIG *pMemsysConfig = 
+                        kmemsysGetStaticConfig(pGpu, pKernelMemorySystem);
                 if (pMemoryPartitionHeap != NULL)
                 {
                     NvU32 heapSizeKb;
@@ -337,11 +343,15 @@ _fbGetFbInfos(OBJGPU *pGpu, NvHandle hClient, NvHandle hObject, NV2080_CTRL_FB_I
                     break;
                 }
                 NV_ASSERT(0 == NvU64_HI32(pMemoryManager->Ram.fbTotalMemSizeMb << 10));
-                data = NvU64_LO32(NV_MIN((pMemoryManager->Ram.fbTotalMemSizeMb << 10), (pMemoryManager->Ram.fbOverrideSizeMb << 10)));
+                data = NvU64_LO32(NV_MIN((pMemoryManager->Ram.fbTotalMemSizeMb << 10),
+                                         (pMemoryManager->Ram.fbOverrideSizeMb << 10))
+                                         - pMemsysConfig->fbOverrideStartKb);
                 break;
             }
             case NV2080_CTRL_FB_INFO_INDEX_USABLE_RAM_SIZE:
             {
+                const MEMORY_SYSTEM_STATIC_CONFIG *pMemsysConfig = 
+                        kmemsysGetStaticConfig(pGpu, pKernelMemorySystem);
                 if (pMemoryPartitionHeap != NULL)
                 {
                     NvU32 heapSizeKb;
@@ -363,11 +373,15 @@ _fbGetFbInfos(OBJGPU *pGpu, NvHandle hClient, NvHandle hObject, NV2080_CTRL_FB_I
                     break;
                 }
                 NV_ASSERT(0 == NvU64_HI32(pMemoryManager->Ram.fbUsableMemSize >> 10));
-                data = NvU64_LO32(NV_MIN((pMemoryManager->Ram.fbUsableMemSize >> 10), (pMemoryManager->Ram.fbOverrideSizeMb << 10)));
+                data = NvU64_LO32(NV_MIN((pMemoryManager->Ram.fbUsableMemSize >> 10 ),
+                                         (pMemoryManager->Ram.fbOverrideSizeMb << 10))
+                                         - pMemsysConfig->fbOverrideStartKb);
                 break;
             }
             case NV2080_CTRL_FB_INFO_INDEX_HEAP_SIZE:
             {
+                const MEMORY_SYSTEM_STATIC_CONFIG *pMemsysConfig = 
+                        kmemsysGetStaticConfig(pGpu, pKernelMemorySystem);
                 if (bIsPmaEnabled)
                 {
                     pmaGetTotalMemory(&pHeap->pmaObject, &bytesTotal);
@@ -382,6 +396,7 @@ _fbGetFbInfos(OBJGPU *pGpu, NvHandle hClient, NvHandle hObject, NV2080_CTRL_FB_I
                     NV_ASSERT(NvU64_HI32(size >> 10) == 0);
                     data = NvU64_LO32(size >> 10);
                 }
+                data -= pMemsysConfig->fbOverrideStartKb;
                 break;
             }
             case NV2080_CTRL_FB_INFO_INDEX_HEAP_START:
@@ -401,13 +416,23 @@ _fbGetFbInfos(OBJGPU *pGpu, NvHandle hClient, NvHandle hObject, NV2080_CTRL_FB_I
                 }
                 else
                 {
-                    //
-                    // Returns start of heap in kbytes. This is zero unless
-                    // VGA display memory is reserved.
-                    //
-                    heapGetBase(pHeap, &heapBase);
-                    data = NvU64_LO32(heapBase >> 10);
-                    NV_ASSERT(((NvU64) data << 10ULL) == heapBase);
+                    const MEMORY_SYSTEM_STATIC_CONFIG *pMemsysConfig = 
+                            kmemsysGetStaticConfig(pGpu, pKernelMemorySystem);
+                    if (pMemsysConfig->fbOverrideStartKb != 0)
+                    {
+                        data = NvU64_LO32(pMemsysConfig->fbOverrideStartKb);
+                        NV_ASSERT(((NvU64) data << 10ULL) == pMemsysConfig->fbOverrideStartKb);
+                    }
+					else
+					{
+                        //
+                        // Returns start of heap in kbytes. This is zero unless
+                        // VGA display memory is reserved.
+                        //
+                        heapGetBase(pHeap, &heapBase);
+                        data = NvU64_LO32(heapBase >> 10);
+                        NV_ASSERT(((NvU64) data << 10ULL) == heapBase);
+                    }
                 }
                 break;
             }
@@ -489,6 +514,8 @@ _fbGetFbInfos(OBJGPU *pGpu, NvHandle hClient, NvHandle hObject, NV2080_CTRL_FB_I
 
             case NV2080_CTRL_FB_INFO_INDEX_MAPPABLE_HEAP_SIZE:
             {
+                const MEMORY_SYSTEM_STATIC_CONFIG *pMemsysConfig = 
+                            kmemsysGetStaticConfig(pGpu, pKernelMemorySystem);
                 if (bIsPmaEnabled)
                 {
                     NvU32 heapSizeKb;
@@ -514,6 +541,7 @@ _fbGetFbInfos(OBJGPU *pGpu, NvHandle hClient, NvHandle hObject, NV2080_CTRL_FB_I
                     if (data > heapSizeKb)
                         data = heapSizeKb;
                 }
+                data -= pMemsysConfig->fbOverrideStartKb;
                 break;
             }
             case NV2080_CTRL_FB_INFO_INDEX_BANK_COUNT:
