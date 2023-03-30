@@ -94,7 +94,7 @@ CHIPSET_SETUP_FUNC(Nvidia_T194_setupFunc)
 
 
 // Keep string length <=32 (including termination) to avoid string copy overflow
-CSINFO chipsetInfo[] =
+const CSINFO chipsetInfo[154] =
 {
     // PCI Express chipset
 
@@ -264,7 +264,7 @@ CSINFO chipsetInfo[] =
 };
 
 
-VENDORNAME vendorName[] =
+static const VENDORNAME vendorName[25] =
 {
     {PCI_VENDOR_ID_NVIDIA,      "NVIDIA"},
     {PCI_VENDOR_ID_INTEL,       "Intel"},
@@ -298,7 +298,7 @@ VENDORNAME vendorName[] =
 // Allowlist all chipsets with which dGPU over PCIe is supported on ARM
 // (both v7 and v8) platforms
 //
-ARMCSALLOWLISTINFO armChipsetAllowListInfo[] =
+const ARMCSALLOWLISTINFO armChipsetAllowListInfo[45] =
 {
     {PCI_VENDOR_ID_NVIDIA,      0x0FAE, CS_NVIDIA_T210},        // NVIDIA Tegra X1 RP0
     {PCI_VENDOR_ID_NVIDIA,      0x0FAF, CS_NVIDIA_T210},        // NVIDIA Tegra X1 RP1

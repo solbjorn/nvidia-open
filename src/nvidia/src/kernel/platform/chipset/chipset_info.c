@@ -51,7 +51,7 @@ static NV_STATUS Intel_Core_Nehalem_Processor_setupFunc(OBJCL *pCl);
 static NV_STATUS Intel_Huron_River_setupFunc(OBJCL *pCl);
 void _Set_ASPM_L0S_L1(OBJCL *pCl, NvBool bDisableL0S, NvBool bDisableL1);
 
-RPINFO rootPortInfo[] =
+const RPINFO rootPortInfo[30] =
 {
     {PCI_VENDOR_ID_BROADCOM, 0x0140, RP_BROADCOM_HT2100, Broadcom_HT2100_setupFunc},
     {PCI_VENDOR_ID_BROADCOM, 0x0142, RP_BROADCOM_HT2100, Broadcom_HT2100_setupFunc},
@@ -87,7 +87,7 @@ RPINFO rootPortInfo[] =
     {0,                   0,                              RP_UNKNOWN,    NULL}
 };
 
-BRINFO upstreamPortInfo[] =
+const BRINFO upstreamPortInfo[10] =
 {
     {PCI_VENDOR_ID_INTEL, DEVICE_ID_INTEL_1901_ROOT_PORT,  Intel_Skylake_setupFunc},
     {PCI_VENDOR_ID_INTEL, DEVICE_ID_INTEL_9D18_PCH_BRIDGE, Intel_Skylake_U_Pch_setupFunc},
@@ -1320,7 +1320,7 @@ csGetInfoStrings
         return ;
     }
 
-    for (i = 0; chipsetInfo[i].chipset; i++)
+    for (i = 0; i < ARRAY_SIZE(chipsetInfo) - 1; i++)
     {
         if ((pCl->chipsetIDInfo.vendorID == chipsetInfo[i].vendorID) &&
              (pCl->chipsetIDInfo.deviceID == chipsetInfo[i].deviceID))
@@ -1332,13 +1332,13 @@ csGetInfoStrings
             break;
         }
     }
-    if (!chipsetInfo[i].chipset)
+    if (i == ARRAY_SIZE(chipsetInfo) - 1)
     {
         portStringCopy((char *) pChipsetNameStr, szUnknownLen,
                        pszUnknown, szUnknownLen);
     }
 
-    for (i = 0; vendorName[i].vendorID; i++)
+    for (i = 0; i < ARRAY_SIZE(vendorName) - 1; i++)
     {
         if (pCl->chipsetIDInfo.vendorID == vendorName[i].vendorID)
         {
@@ -1349,13 +1349,13 @@ csGetInfoStrings
             break;
         }
     }
-    if (!vendorName[i].vendorID)
+    if (i == ARRAY_SIZE(vendorName) - 1)
     {
         portStringCopy((char *) pVendorNameStr, szUnknownLen,
                        pszUnknown, szUnknownLen);
     }
 
-    for (i = 0; vendorName[i].vendorID; i++)
+    for (i = 0; i < ARRAY_SIZE(vendorName) - 1; i++)
     {
         if (pCl->chipsetIDInfo.subvendorID == vendorName[i].vendorID)
         {
@@ -1366,7 +1366,7 @@ csGetInfoStrings
             break;
         }
     }
-    if (!vendorName[i].vendorID)
+    if (i == ARRAY_SIZE(vendorName) - 1)
     {
         portStringCopy((char *)pSubSysVendorNameStr, szUnknownLen,
                        pszUnknown, szUnknownLen);
@@ -1406,4 +1406,3 @@ _Set_ASPM_L0S_L1
         pCl->setProperty(pCl, PDB_PROP_CL_ASPM_L1_CHIPSET_DISABLED, NV_TRUE);
     }
 }
-

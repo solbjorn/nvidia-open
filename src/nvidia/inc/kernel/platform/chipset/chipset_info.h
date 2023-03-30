@@ -57,15 +57,13 @@ struct CSINFO
     NV_STATUS (*setupFunc)(OBJCL *);
 };
 
-extern CSINFO chipsetInfo[];
+extern const CSINFO chipsetInfo[154];
 
 struct VENDORNAME
 {
     NvU32 vendorID;
     const char *name;
 };
-
-extern VENDORNAME vendorName[];
 
 struct RPINFO
 {
@@ -74,7 +72,7 @@ struct RPINFO
     NV_STATUS (*setupFunc)(OBJGPU *, OBJCL *);
 };
 
-extern RPINFO rootPortInfo[];
+extern const RPINFO rootPortInfo[30];
 
 struct BRINFO
 {
@@ -82,7 +80,7 @@ struct BRINFO
     NV_STATUS (*setupFunc)(OBJGPU *, OBJCL *);
 };
 
-extern BRINFO upstreamPortInfo[];
+extern const BRINFO upstreamPortInfo[10];
 
 struct ARMCSALLOWLISTINFO
 {
@@ -90,7 +88,7 @@ struct ARMCSALLOWLISTINFO
     NvU32 chipset;
 };
 
-extern ARMCSALLOWLISTINFO armChipsetAllowListInfo[];
+extern const ARMCSALLOWLISTINFO armChipsetAllowListInfo[45];
 
 void csGetInfoStrings(OBJCL *, NvU8 *, NvU8 *, NvU8 *, NvU8 *, NvU32);
 

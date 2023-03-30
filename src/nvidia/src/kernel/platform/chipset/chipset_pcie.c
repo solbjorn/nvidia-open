@@ -266,7 +266,7 @@ objClInitPcieChipset(OBJGPU *pGpu, OBJCL *pCl)
 
         if (NVCPU_IS_FAMILY_ARM)
         {
-            for (i=0; armChipsetAllowListInfo[i].vendorID; i++)
+            for (i=0; i < ARRAY_SIZE(armChipsetAllowListInfo) - 1; i++)
             {
                 if (pCl->FHBBusInfo.vendorID == armChipsetAllowListInfo[i].vendorID &&
                     pCl->FHBBusInfo.deviceID == armChipsetAllowListInfo[i].deviceID)
@@ -275,7 +275,7 @@ objClInitPcieChipset(OBJGPU *pGpu, OBJCL *pCl)
                 }
             }
 
-            if (armChipsetAllowListInfo[i].vendorID == 0)
+            if (i == ARRAY_SIZE(armChipsetAllowListInfo) - 1)
             {
                 portDbgPrintf(
                     "NVRM: Chipset not recognized (vendor ID 0x%04x, device ID 0x%04x)\n",
@@ -386,7 +386,7 @@ objClInitPcieChipset(OBJGPU *pGpu, OBJCL *pCl)
             pHWBC = pHWBC->pSibling;
     }
 
-    for (i=0; rootPortInfo[i].vendorID; i++)
+    for (i=0; i < ARRAY_SIZE(rootPortInfo) - 1; i++)
         if (pGpu->gpuClData.rootPort.VendorID == rootPortInfo[i].vendorID &&
             pGpu->gpuClData.rootPort.DeviceID == rootPortInfo[i].deviceID)
             break;
@@ -398,7 +398,7 @@ objClInitPcieChipset(OBJGPU *pGpu, OBJCL *pCl)
         }
     }
 
-    for (i = 0; upstreamPortInfo[i].vendorID; i++)
+    for (i = 0; i < ARRAY_SIZE(upstreamPortInfo) - 1; i++)
     {
         if (pGpu->gpuClData.upstreamPort.VendorID == upstreamPortInfo[i].vendorID &&
             pGpu->gpuClData.upstreamPort.DeviceID == upstreamPortInfo[i].deviceID)

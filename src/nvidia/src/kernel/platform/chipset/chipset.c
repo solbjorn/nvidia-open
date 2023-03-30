@@ -296,7 +296,7 @@ clFindFHBAndGetChipsetInfoIndex_IMPL
     pCl->chipsetIDInfo.subdeviceID = PCI_INVALID_SUBDEVICEID;
     pCl->chipsetIDInfo.subvendorID = PCI_INVALID_SUBVENDORID;
 
-    for (i = 0; chipsetInfo[i].vendorID; i++)
+    for (i = 0; i < ARRAY_SIZE(chipsetInfo) - 1; i++)
     {
         pBusTopologyInfo = pCl->pBusTopologyInfo;
         while (pBusTopologyInfo)
@@ -386,7 +386,7 @@ clFindFHBAndGetChipsetInfoIndex_IMPL
     if ((!matchFound) && (pChipsetInfoIndex != NULL))
     {
         // This should be the entry with NULL information
-        NV_ASSERT(chipsetInfo[i].vendorID == 0);
+        NV_ASSERT(i == ARRAY_SIZE(chipsetInfo) - 1);
         *pChipsetInfoIndex = (NvU16) i;
     }
 
