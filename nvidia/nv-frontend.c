@@ -57,7 +57,7 @@ static NvU32 nv_num_instances;
 struct semaphore nv_module_table_lock;
 
 // minor number table
-const nvidia_module_t *nv_minor_num_table[NV_FRONTEND_CONTROL_DEVICE_MINOR_MAX + 1];
+const nvidia_module_t **nv_minor_num_table __ro_after_init;
 
 /* EXPORTS to Linux Kernel */
 
@@ -354,28 +354,36 @@ int nvidia_frontend_mmap(
 
 static int __init nvidia_frontend_init_module(void)
 {
-    int status = 0;
+	int status;
 
-    // initialise nvidia module table;
-    nv_num_instances = 0;
-    memset(nv_minor_num_table, 0, sizeof(nv_minor_num_table));
-    NV_INIT_MUTEX(&nv_module_table_lock);
+	// initialise nvidia module table;
+	nv_minor_num_table = kcalloc(NV_FRONTEND_CONTROL_DEVICE_MINOR_MAX + 1,
+				     sizeof(*nv_minor_num_table), GFP_KERNEL);
+	if (!nv_minor_num_table)
+		return -ENOMEM;
 
-    status = nvidia_init_module();
-    if (status < 0)
-    {
-        return status;
-    }
+	NV_INIT_MUTEX(&nv_module_table_lock);
 
-    // register char device
-    status = register_chrdev(NV_MAJOR_DEVICE_NUMBER, "nvidia-frontend", &nv_frontend_fops);
-    if (status < 0)
-    {
-        printk("NVRM: register_chrdev() failed!\n");
-        nvidia_exit_module();
-    }
+	status = nvidia_init_module();
+	if (status < 0)
+		goto err_free_minor;
 
-    return status;
+	// register char device
+	status = register_chrdev(NV_MAJOR_DEVICE_NUMBER, "nvidia-frontend",
+				 &nv_frontend_fops);
+	if (status < 0) {
+		pr_err("NVRM: register_chrdev() failed!\n");
+		goto err_exit_mod;
+	}
+
+	return 0;
+
+err_exit_mod:
+	nvidia_exit_module();
+err_free_minor:
+	kfree(nv_minor_num_table);
+
+	return status;
 }
 
 static void __exit nvidia_frontend_exit_module(void)
@@ -390,6 +398,7 @@ static void __exit nvidia_frontend_exit_module(void)
     }
 
     nvidia_exit_module();
+	kfree(nv_minor_num_table);
 }
 
 module_init(nvidia_frontend_init_module);

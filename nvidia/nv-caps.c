@@ -35,7 +35,10 @@ extern int NVreg_ModifyDeviceFiles;
 
 /* Hash table with 512 buckets */
 #define NV_CAP_HASH_BITS 9
-NV_DECLARE_HASHTABLE(g_nv_cap_hash_table, NV_CAP_HASH_BITS);
+static const struct nv_cap_htab {
+	NV_DECLARE_HASHTABLE(tbl, NV_CAP_HASH_BITS);
+} *nv_cap_hash_table __ro_after_init;
+#define g_nv_cap_hash_table		(nv_cap_hash_table->tbl)
 
 #define NV_CAP_HASH_SIZE NV_HASH_SIZE(g_nv_cap_hash_table)
 
@@ -112,8 +115,12 @@ static nv_cap_table_entry_t g_nv_cap_sys_table[] __ro_after_init =
     NV_CAP_ENTRY(_gpu "/gi14/access"),    \
     NV_CAP_MIG_CI_ENTRIES(_gpu "/gi14")
 
-static nv_cap_table_entry_t g_nv_cap_mig_gpu_table[] __ro_after_init =
-{
+/* This table has several thousand elements and is allocated dynamically */
+static const nv_cap_table_entry_t *g_nv_cap_mig_gpu_table __ro_after_init;
+
+static const char * const nv_cap_mig_names[] __initconst = {
+#undef NV_CAP_ENTRY
+#define NV_CAP_ENTRY(name)		name
     NV_CAP_MIG_GI_ENTRIES("/driver/nvidia/capabilities/gpu0/mig"),
     NV_CAP_MIG_GI_ENTRIES("/driver/nvidia/capabilities/gpu1/mig"),
     NV_CAP_MIG_GI_ENTRIES("/driver/nvidia/capabilities/gpu2/mig"),
@@ -146,7 +153,9 @@ static nv_cap_table_entry_t g_nv_cap_mig_gpu_table[] __ro_after_init =
     NV_CAP_MIG_GI_ENTRIES("/driver/nvidia/capabilities/gpu29/mig"),
     NV_CAP_MIG_GI_ENTRIES("/driver/nvidia/capabilities/gpu30/mig"),
     NV_CAP_MIG_GI_ENTRIES("/driver/nvidia/capabilities/gpu31/mig"),
+#undef NV_CAP_ENTRY
 };
+#define NV_CAP_NUM_MIG_ENTRIES		ARRAY_SIZE(nv_cap_mig_names)
 
 struct nv_cap
 {
@@ -236,7 +245,7 @@ static int nv_procfs_read_mig_minors(struct seq_file *s, void *v)
         }
     }
 
-    count = NV_CAP_NUM_ENTRIES(g_nv_cap_mig_gpu_table);
+    count = NV_CAP_NUM_MIG_ENTRIES;
     for (i = 0; i < count; i++)
     {
         if (sscanf(g_nv_cap_mig_gpu_table[i].name,
@@ -325,36 +334,73 @@ static int nv_cap_find_minor(const char *path)
     return -1;
 }
 
-static void __init _nv_cap_table_init(nv_cap_table_entry_t *table, int count)
+static void __init nv_cap_init_one(nv_cap_table_entry_t *entry,
+				   struct nv_cap_htab *hash)
 {
-    int i;
-    unsigned int key;
-    static int minor = 0;
+	static int minor;
+	u32 key;
 
-    for (i = 0; i < count; i++)
-    {
-        table[i].minor = minor++;
-        INIT_HLIST_NODE(&table[i].hlist);
-        key = nv_cap_hash_key(table[i].name);
-        nv_hash_add(g_nv_cap_hash_table, &table[i].hlist, key);
-    }
+	entry->minor = minor++;
+	INIT_HLIST_NODE(&entry->hlist);
+	key = nv_cap_hash_key(entry->name);
+	nv_hash_add(hash->tbl, &entry->hlist, key);
 
-    WARN_ON(minor > NV_CAP_DRV_MINOR_COUNT);
+	WARN_ON(minor > NV_CAP_DRV_MINOR_COUNT);
 }
 
-#define nv_cap_table_init(table) \
-    _nv_cap_table_init(table, NV_CAP_NUM_ENTRIES(table))
+#define nv_cap_table_init(table, hash) ({			\
+	for (u32 _i = 0; _i < NV_CAP_NUM_ENTRIES(table); _i++)	\
+		nv_cap_init_one(&(table)[_i], (hash));		\
+})
 
-static void __init nv_cap_tables_init(void)
+static bool __init nv_cap_mig_gpu_table_init(struct nv_cap_htab *hash)
 {
-    BUILD_BUG_ON(offsetof(nv_cap_table_entry_t, name) != 0);
+	nv_cap_table_entry_t *mig;
 
-    nv_hash_init(g_nv_cap_hash_table);
+	mig = kvcalloc(NV_CAP_NUM_MIG_ENTRIES, sizeof(*mig), GFP_KERNEL);
+	if (!mig)
+		return false;
 
-    nv_cap_table_init(g_nv_cap_nvlink_table);
-    nv_cap_table_init(g_nv_cap_mig_table);
-    nv_cap_table_init(g_nv_cap_mig_gpu_table);
-    nv_cap_table_init(g_nv_cap_sys_table);
+	for (u32 i = 0; i < NV_CAP_NUM_MIG_ENTRIES; i++) {
+		mig[i].name = nv_cap_mig_names[i];
+		nv_cap_init_one(&mig[i], hash);
+	}
+
+	g_nv_cap_mig_gpu_table = mig;
+
+	return true;
+}
+
+static int __init nv_cap_tables_init(void)
+{
+	struct nv_cap_htab *hash;
+
+	BUILD_BUG_ON(offsetof(nv_cap_table_entry_t, name) != 0);
+
+	hash = kzalloc(sizeof(*hash), GFP_KERNEL);
+	if (!hash)
+		return -ENOMEM;
+
+	nv_hash_init(hash->tbl);
+
+	nv_cap_table_init(g_nv_cap_nvlink_table, hash);
+	nv_cap_table_init(g_nv_cap_mig_table, hash);
+	nv_cap_table_init(g_nv_cap_sys_table, hash);
+
+	if (!nv_cap_mig_gpu_table_init(hash)) {
+		kfree(hash);
+		return -ENOMEM;
+	}
+
+	nv_cap_hash_table = hash;
+
+	return 0;
+}
+
+static void nv_cap_tables_exit(void)
+{
+	kvfree(g_nv_cap_mig_gpu_table);
+	kfree(nv_cap_hash_table);
 }
 
 static ssize_t nv_cap_procfs_write(struct file *file,
@@ -789,13 +835,15 @@ int NV_API_CALL __init nv_cap_drv_init(void)
 {
     int rc;
 
-    nv_cap_tables_init();
-
     if (g_nv_cap_drv.initialized)
     {
         nv_printf(NV_DBG_ERRORS, "nv-caps-drv is already initialized.\n");
         return -EBUSY;
     }
+
+	rc = nv_cap_tables_init();
+	if (rc)
+		return rc;
 
     rc = alloc_chrdev_region(&g_nv_cap_drv.devno,
                              0,
@@ -804,7 +852,7 @@ int NV_API_CALL __init nv_cap_drv_init(void)
     if (rc < 0)
     {
         nv_printf(NV_DBG_ERRORS, "nv-caps-drv failed to create cdev region.\n");
-        return rc;
+		goto err_exit_caps;
     }
 
     cdev_init(&g_nv_cap_drv.cdev, &g_nv_cap_drv_fops);
@@ -835,6 +883,8 @@ proc_init_fail:
 
 cdev_add_fail:
     unregister_chrdev_region(g_nv_cap_drv.devno, NV_CAP_DRV_MINOR_COUNT);
+err_exit_caps:
+	nv_cap_tables_exit();
 
     return rc;
 }
@@ -851,6 +901,8 @@ void NV_API_CALL nv_cap_drv_exit(void)
     cdev_del(&g_nv_cap_drv.cdev);
 
     unregister_chrdev_region(g_nv_cap_drv.devno, NV_CAP_DRV_MINOR_COUNT);
+
+	nv_cap_tables_exit();
 
     g_nv_cap_drv.initialized = NV_FALSE;
 }
